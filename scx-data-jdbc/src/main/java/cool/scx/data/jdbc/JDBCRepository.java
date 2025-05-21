@@ -78,10 +78,10 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         var groupByParser = new JDBCGroupByParser(columnNameParser);
         var orderByParser = new JDBCOrderByParser(columnNameParser);
         this.insertSQLBuilder = new InsertSQLBuilder(table, dialect, columnNameParser);
-        this.selectSQLBuilder = new SelectSQLBuilder(table, dialect, whereParser, groupByParser, orderByParser);
+        this.selectSQLBuilder = new SelectSQLBuilder(table, dialect, whereParser,  orderByParser);
         this.updateSQLBuilder = new UpdateSQLBuilder(table, dialect, columnNameParser, whereParser, orderByParser);
         this.deleteSQLBuilder = new DeleteSQLBuilder(table, dialect, whereParser, orderByParser);
-        this.countSQLBuilder = new CountSQLBuilder(table, dialect, whereParser, groupByParser);
+        this.countSQLBuilder = new CountSQLBuilder(table, dialect, whereParser);
     }
 
     @Override

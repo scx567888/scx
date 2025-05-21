@@ -6,7 +6,7 @@ import cool.scx.data.aggregation.GroupBy;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class JDBCGroupByParser  {
+public class JDBCGroupByParser {
 
     private final JDBCColumnNameParser columnNameParser;
 
@@ -14,7 +14,7 @@ public class JDBCGroupByParser  {
         this.columnNameParser = columnNameParser;
     }
 
-//    @Override
+    //    @Override
     public String[] parseGroupBy(GroupBy g) {
         var columnName = columnNameParser.parseColumnName(g);
         return new String[]{columnName};
