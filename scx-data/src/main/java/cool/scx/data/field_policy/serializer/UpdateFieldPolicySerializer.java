@@ -2,8 +2,10 @@ package cool.scx.data.field_policy.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
+import cool.scx.data.field_policy.Expression;
 import cool.scx.data.field_policy.UpdateFieldPolicy;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -31,7 +33,23 @@ public class UpdateFieldPolicySerializer {
         m.put("fieldNames", fieldPolicy.getFieldNames());
         m.put("ignoreNull", fieldPolicy.getIgnoreNull());
         m.put("ignoreNulls", fieldPolicy.getIgnoreNulls());
-        m.put("expressions", fieldPolicy.getExpressions());
+        m.put("expressions", serializeExpressions(fieldPolicy.getExpressions()));
+        return m;
+    }
+
+    public  ArrayList<Object> serializeExpressions(Expression... expressions) {
+        var s=new ArrayList<Object>();
+        for (Expression expression : expressions) {
+            s.add(serializeExpression(expression));
+        }
+        return s;
+    }
+
+    public Map<String, Object> serializeExpression(Expression expression) {
+        var m=new LinkedHashMap<String, Object>();
+        m.put("@type", "Expression");
+        m.put("fieldName", expression.fieldName());
+        m.put("expression", expression.expression());
         return m;
     }
 

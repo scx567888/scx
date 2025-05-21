@@ -4,10 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.ObjectUtils;
+import cool.scx.data.field_policy.Expression;
 import cool.scx.data.field_policy.FilterMode;
 import cool.scx.data.field_policy.UpdateFieldPolicy;
 import cool.scx.data.field_policy.UpdateFieldPolicyImpl;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import static cool.scx.common.util.ObjectUtils.convertValue;
@@ -74,13 +76,20 @@ public class UpdateFieldPolicyDeserializer {
         }
 
         if (expressionsNode != null && !expressionsNode.isNull()) {
-            var expressions = convertValue(expressionsNode, new TypeReference<Map<String, String>>() {});
-            for (var entry : expressions.entrySet()) {
-                fieldPolicy.expression(entry.getKey(), entry.getValue());
+            var a=new ArrayList<Expression>();
+            for (JsonNode jsonNode : expressionsNode) {
+                a.add(deserializeExpression(jsonNode));
             }
+            fieldPolicy.expressions(a.toArray(Expression[]::new));
         }
 
         return fieldPolicy;
+    }
+
+    public Expression deserializeExpression(JsonNode v) {
+        var fieldNameNode = v.get("fieldName");
+        var expressionNode = v.get("expression");
+        return new Expression(fieldNameNode.asText(), expressionNode.asText());
     }
 
 }
