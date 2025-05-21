@@ -5,8 +5,6 @@ import cool.scx.data.Aggregator;
 import cool.scx.data.Finder;
 import cool.scx.data.aggregation.Aggregation;
 import cool.scx.data.field_policy.FieldPolicy;
-import cool.scx.data.field_policy.QueryFieldPolicy;
-import cool.scx.data.field_policy.UpdateFieldPolicy;
 import cool.scx.data.jdbc.column_name_mapping.BeanColumnNameMapping;
 import cool.scx.data.jdbc.column_name_mapping.MapFieldNameMapping;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
@@ -87,22 +85,22 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
     }
 
     @Override
-    public final Long add(Entity entity, UpdateFieldPolicy fieldPolicy) {
+    public final Long add(Entity entity, FieldPolicy fieldPolicy) {
         return sqlRunner.update(buildInsertSQL(entity, fieldPolicy)).firstGeneratedKey();
     }
 
     @Override
-    public final List<Long> add(Collection<Entity> entityList, UpdateFieldPolicy fieldPolicy) {
+    public final List<Long> add(Collection<Entity> entityList, FieldPolicy fieldPolicy) {
         return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, fieldPolicy)).generatedKeys();
     }
 
     @Override
-    public final Finder<Entity> finder(Query query, QueryFieldPolicy fieldPolicy) {
+    public final Finder<Entity> finder(Query query, FieldPolicy fieldPolicy) {
         return new JDBCFinder<>(this, query, fieldPolicy);
     }
 
     @Override
-    public final long update(Entity entity, UpdateFieldPolicy fieldPolicy, Query query) {
+    public final long update(Entity entity, FieldPolicy fieldPolicy, Query query) {
         return sqlRunner.update(buildUpdateSQL(entity, fieldPolicy, query)).affectedItemsCount();
     }
 
@@ -149,23 +147,23 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         return jdbcContext;
     }
 
-    public SQL buildInsertSQL(Entity entity, UpdateFieldPolicy fieldPolicy) {
+    public SQL buildInsertSQL(Entity entity, FieldPolicy fieldPolicy) {
         return insertSQLBuilder.buildInsertSQL(entity, fieldPolicy);
     }
 
-    public SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, UpdateFieldPolicy fieldPolicy) {
+    public SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldPolicy fieldPolicy) {
         return insertSQLBuilder.buildInsertBatchSQL(entityList, fieldPolicy);
     }
 
-    public SQL buildSelectSQL(Query query, QueryFieldPolicy fieldPolicy) {
+    public SQL buildSelectSQL(Query query, FieldPolicy fieldPolicy) {
         return selectSQLBuilder.buildSelectSQL(query, fieldPolicy);
     }
 
-    public SQL buildGetSQL(Query query, QueryFieldPolicy fieldPolicy) {
+    public SQL buildGetSQL(Query query, FieldPolicy fieldPolicy) {
         return selectSQLBuilder.buildGetSQL(query, fieldPolicy);
     }
 
-    public SQL buildUpdateSQL(Entity entity, UpdateFieldPolicy fieldPolicy, Query query) {
+    public SQL buildUpdateSQL(Entity entity, FieldPolicy fieldPolicy, Query query) {
         return updateSQLBuilder.buildUpdateSQL(entity, fieldPolicy, query);
     }
 
@@ -177,11 +175,11 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         return countSQLBuilder.buildCountSQL(query);
     }
 
-    public SQL buildGetSQLWithAlias(Query query, QueryFieldPolicy fieldPolicy) {
+    public SQL buildGetSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
         return selectSQLBuilder.buildGetSQLWithAlias(query, fieldPolicy);
     }
 
-    public SQL buildSelectSQLWithAlias(Query query, QueryFieldPolicy fieldPolicy) {
+    public SQL buildSelectSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
         return selectSQLBuilder.buildSelectSQLWithAlias(query, fieldPolicy);
     }
 
