@@ -12,7 +12,7 @@ import cool.scx.jdbc.sql.SQL;
 
 import static cool.scx.common.util.ArrayUtils.tryConcat;
 import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.extractValues;
-import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByFieldPolicy;
+import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByUpdateFieldPolicy;
 import static cool.scx.jdbc.sql.SQL.sql;
 import static cool.scx.jdbc.sql.SQLBuilder.Update;
 
@@ -58,7 +58,7 @@ public class UpdateSQLBuilder {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         //1, 过滤需要更新的列
-        var updateSetColumns = filterByFieldPolicy(updateFilter, table, entity);
+        var updateSetColumns = filterByUpdateFieldPolicy(updateFilter, table, entity);
         //2, 创建 set 子句 其实都是 '?'
         var updateSetClauses = createUpdateSetClauses(updateSetColumns, dialect);
         //3, 创建 表达式 set 子句

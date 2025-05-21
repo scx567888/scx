@@ -84,7 +84,7 @@ public class JDBCWhereParser extends WhereParser {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
+                throw new WrongWhereTypeParamSizeException(w.selector(), w.whereType(), 1);
             }
         }
 
@@ -117,7 +117,7 @@ public class JDBCWhereParser extends WhereParser {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
+                throw new WrongWhereTypeParamSizeException(w.selector(), w.whereType(), 1);
             }
         }
 
@@ -152,7 +152,7 @@ public class JDBCWhereParser extends WhereParser {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
+                throw new WrongWhereTypeParamSizeException(w.selector(), w.whereType(), 1);
             }
         }
 
@@ -166,7 +166,7 @@ public class JDBCWhereParser extends WhereParser {
         try {
             v = toObjectArray(w.value1());
         } catch (Exception e) {
-            throw new WrongWhereParamTypeException(w.name(), w.whereType(), "数组");
+            throw new WrongWhereParamTypeException(w.selector(), w.whereType(), "数组");
         }
 
         //0, 先处理空数组
@@ -229,7 +229,7 @@ public class JDBCWhereParser extends WhereParser {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 2);
+                throw new WrongWhereTypeParamSizeException(w.selector(), w.whereType(), 2);
             }
         }
 
@@ -269,13 +269,13 @@ public class JDBCWhereParser extends WhereParser {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
+                throw new WrongWhereTypeParamSizeException(w.selector(), w.whereType(), 1);
             }
         }
-        var c = splitIntoColumnNameAndFieldPath(w.name());
-        var columnName = columnNameParser.parseColumnName(c.columnName(), w.info().useOriginalName());
+        var c = splitIntoColumnNameAndFieldPath(w.selector());
+        var columnName = columnNameParser.parseColumnName(c.columnName(), w.info().useExpression());
         if (StringUtils.isBlank(c.columnName())) {
-            throw new IllegalArgumentException("使用 " + w.whereType() + " 时, 查询名称不合法 !!! 字段名 : " + w.name());
+            throw new IllegalArgumentException("使用 " + w.whereType() + " 时, 查询名称不合法 !!! 字段名 : " + w.selector());
         }
         String v1;
         Object[] whereParams;
@@ -290,7 +290,7 @@ public class JDBCWhereParser extends WhereParser {
                 try {
                     whereParams = new Object[]{toJson(w.value1(), new ObjectUtils.Options().setIgnoreJsonIgnore(true).setIgnoreNullValue(true))};
                 } catch (JsonProcessingException e) {
-                    throw new IllegalArgumentException("使用 " + w.whereType() + " 时, 查询参数不合法(无法正确转换为 JSON) !!! 字段名 : " + w.name(), e);
+                    throw new IllegalArgumentException("使用 " + w.whereType() + " 时, 查询参数不合法(无法正确转换为 JSON) !!! 字段名 : " + w.selector(), e);
                 }
             }
         }

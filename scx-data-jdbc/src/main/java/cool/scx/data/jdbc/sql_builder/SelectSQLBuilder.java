@@ -11,7 +11,7 @@ import cool.scx.jdbc.sql.SQL;
 
 import static cool.scx.common.util.ArrayUtils.tryConcatAny;
 import static cool.scx.common.util.RandomUtils.randomString;
-import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByFieldPolicy;
+import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByQueryFieldPolicy;
 import static cool.scx.jdbc.sql.SQL.sql;
 import static cool.scx.jdbc.sql.SQLBuilder.Select;
 
@@ -48,7 +48,7 @@ public class SelectSQLBuilder {
 
     public SQL buildSelectSQL(Query query, QueryFieldPolicy fieldPolicy) {
         //1, 过滤查询列
-        var selectColumns = filterByFieldPolicy(fieldPolicy, table);
+        var selectColumns = filterByQueryFieldPolicy(fieldPolicy, table);
         //2, 创建虚拟查询列
         var virtualSelectColumns = createVirtualSelectColumns(fieldPolicy, dialect);
         //3, 创建最终查询列
@@ -72,7 +72,7 @@ public class SelectSQLBuilder {
 
     public SQL buildGetSQL(Query query, QueryFieldPolicy fieldPolicy) {
         //1, 过滤查询列
-        var selectColumns = filterByFieldPolicy(fieldPolicy, table);
+        var selectColumns = filterByQueryFieldPolicy(fieldPolicy, table);
         //2, 创建虚拟查询列
         var virtualSelectColumns = createVirtualSelectColumns(fieldPolicy, dialect);
         //3, 创建最终查询列
