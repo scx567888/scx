@@ -12,7 +12,7 @@ public interface UpdateFieldPolicy extends FieldPolicy<UpdateFieldPolicy> {
     UpdateFieldPolicy ignoreNull(String fieldName, boolean ignoreNull);
 
     /// 设置 字段表达式 (用于插入和更新)
-    UpdateFieldPolicy expression(String fieldName, String expression);
+    UpdateFieldPolicy expressions(Expression... expressions);
 
     /// 获取 全局是否忽略 空值
     boolean getIgnoreNull();
@@ -21,7 +21,7 @@ public interface UpdateFieldPolicy extends FieldPolicy<UpdateFieldPolicy> {
     Map<String, Boolean> getIgnoreNulls();
 
     /// 获取 字段表达式
-    Map<String, String> getExpressions();
+    Expression[] getExpressions();
 
     /// 清除 所有忽略空值
     UpdateFieldPolicy clearIgnoreNulls();
@@ -32,7 +32,7 @@ public interface UpdateFieldPolicy extends FieldPolicy<UpdateFieldPolicy> {
     /// 移除 是否忽略 空值
     UpdateFieldPolicy removeIgnoreNull(String fieldName);
 
-    /// 清除 某个表达式
-    UpdateFieldPolicy removeExpression(String fieldName);
+    /// 追加 表达式
+    UpdateFieldPolicy expression(String fieldName, String expression);
 
 }
