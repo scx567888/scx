@@ -177,7 +177,7 @@ public class JDBCWhereParser {
 
         return new WhereClause(columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " ?", w.value1());
     }
-    
+
     private WhereClause parseLIKE(Where w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
