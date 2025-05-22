@@ -3,9 +3,9 @@ package cool.scx.data.jdbc.parser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.StringUtils;
-import cool.scx.data.query.*;
 import cool.scx.data.jdbc.exception.WrongWhereParamTypeException;
 import cool.scx.data.jdbc.exception.WrongWhereTypeParamSizeException;
+import cool.scx.data.query.*;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sql.SQL;
 
@@ -34,13 +34,31 @@ public class JDBCWhereParser {
         this.dialect = dialect;
     }
 
+    public static String getWhereKeyWord(Where where) {
+        return switch (where.whereType()) {
+            case EQ -> "=";
+            case NE -> "<>";
+            case LT -> "<";
+            case LTE -> "<=";
+            case GT -> ">";
+            case GTE -> ">=";
+            case LIKE, LIKE_REGEX -> "LIKE";
+            case NOT_LIKE, NOT_LIKE_REGEX -> "NOT LIKE";
+            case IN -> "IN";
+            case NOT_IN -> "NOT IN";
+            case BETWEEN -> "BETWEEN";
+            case NOT_BETWEEN -> "NOT BETWEEN";
+            case JSON_CONTAINS -> "JSON_CONTAINS";
+            case JSON_OVERLAPS -> "JSON_OVERLAPS";
+        };
+    }
+
     public WhereClause parse(Object obj) {
         return switch (obj) {
             case String s -> parseString(s);
             case WhereClause w -> parseWhereClause(w);
             case Junction j -> parseJunction(j);
             case Not n -> parseNot(n);
-            case Object[] o -> parseAll(o);
             case SQL sql -> parseSQL(sql);
             case Where w -> parseWhere(w);
             case Query q -> parseQuery(q);
@@ -74,7 +92,12 @@ public class JDBCWhereParser {
             return new WhereClause(null);
         }
 
-        var clause = String.join(" " + getJunctionKeyWord(j) + " ", clauses);
+        var keyWord = switch (j) {
+            case Or _ -> "OR";
+            case And _ -> "AND";
+        };
+
+        var clause = String.join(" " + keyWord + " ", clauses);
         //只有 子句数量 大于 1 时, 我们才在两端拼接 括号
         if (clauses.size() > 1) {
             clause = "(" + clause + ")";
@@ -82,21 +105,35 @@ public class JDBCWhereParser {
         return new WhereClause(clause, whereParams.toArray());
     }
 
-    protected WhereClause parseNot(Not n) {
+    private WhereClause parseNot(Not n) {
 
         var w = parse(n.clause());
 
         if (w != null && !w.isEmpty()) {
             //因为其余解析方法已经保证了在可能出现歧义的子句两端拼接了括号, 所以这里直接添加 NOT 即可
-            return new WhereClause(getNotKeyWord(n) + " " + w.whereClause(), w.params());
+            return new WhereClause("NOT " + w.whereClause(), w.params());
         } else {
             return new WhereClause(null);
         }
 
     }
 
-    @Override
-    protected WhereClause parseEQ(Where w) {
+    private WhereClause parseSQL(SQL sql) {
+        return new WhereClause("(" + sql.sql() + ")", sql.params());
+    }
+
+    private WhereClause parseWhere(Where body) {
+        return switch (body.whereType()) {
+            case EQ, NE -> parseEQ(body);
+            case LT, LTE, GT, GTE, LIKE_REGEX, NOT_LIKE_REGEX -> parseLT(body);
+            case LIKE, NOT_LIKE -> parseLIKE(body);
+            case IN, NOT_IN -> parseIN(body);
+            case BETWEEN, NOT_BETWEEN -> parseBETWEEN(body);
+            case JSON_CONTAINS, JSON_OVERLAPS -> parseJSON_CONTAINS(body);
+        };
+    }
+
+    private WhereClause parseEQ(Where w) {
 
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
@@ -124,13 +161,7 @@ public class JDBCWhereParser {
 
     }
 
-    @Override
-    protected WhereClause parseNE(Where w) {
-        return parseEQ(w);
-    }
-
-    @Override
-    protected WhereClause parseLT(Where w) {
+    private WhereClause parseLT(Where w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
@@ -146,24 +177,8 @@ public class JDBCWhereParser {
 
         return new WhereClause(columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " ?", w.value1());
     }
-
-    @Override
-    protected WhereClause parseLTE(Where where) {
-        return parseLT(where);
-    }
-
-    @Override
-    protected WhereClause parseGT(Where where) {
-        return parseLT(where);
-    }
-
-    @Override
-    protected WhereClause parseGTE(Where where) {
-        return parseLT(where);
-    }
-
-    @Override
-    protected WhereClause parseLIKE(Where w) {
+    
+    private WhereClause parseLIKE(Where w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
@@ -182,23 +197,7 @@ public class JDBCWhereParser {
         return new WhereClause(columnDefinition + "CONCAT('%',?,'%')", w.value1());
     }
 
-    @Override
-    protected WhereClause parseNOT_LIKE(Where where) {
-        return parseLIKE(where);
-    }
-
-    @Override
-    protected WhereClause parseLIKE_REGEX(Where where) {
-        return parseLT(where);
-    }
-
-    @Override
-    protected WhereClause parseNOT_LIKE_REGEX(Where where) {
-        return parseLT(where);
-    }
-
-    @Override
-    public WhereClause parseIN(Where w) {
+    private WhereClause parseIN(Where w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
@@ -269,13 +268,7 @@ public class JDBCWhereParser {
 
     }
 
-    @Override
-    protected WhereClause parseNOT_IN(Where where) {
-        return parseIN(where);
-    }
-
-    @Override
-    protected WhereClause parseBETWEEN(Where w) {
+    private WhereClause parseBETWEEN(Where w) {
         if (w.value1() == null || w.value2() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
@@ -309,13 +302,7 @@ public class JDBCWhereParser {
         return new WhereClause(columnDefinition + v1 + " AND " + v2, whereParams.toArray());
     }
 
-    @Override
-    protected WhereClause parseNOT_BETWEEN(Where where) {
-        return parseBETWEEN(where);
-    }
-
-    @Override
-    protected WhereClause parseJSON_CONTAINS(Where w) {
+    private WhereClause parseJSON_CONTAINS(Where w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
@@ -353,125 +340,6 @@ public class JDBCWhereParser {
         }
         return new WhereClause(whereClause, whereParams);
     }
-
-    @Override
-    protected WhereClause parseJSON_OVERLAPS(Where where) {
-        return parseJSON_CONTAINS(where);
-    }
-
-    private WhereClause parseSQL(SQL sql) {
-        return new WhereClause("(" + sql.sql() + ")", sql.params());
-    }
-
-    public String getWhereKeyWord(Where where) {
-        return switch (where.whereType()) {
-            case EQ -> "=";
-            case NE -> "<>";
-            case LT -> "<";
-            case LTE -> "<=";
-            case GT -> ">";
-            case GTE -> ">=";
-            case LIKE, LIKE_REGEX -> "LIKE";
-            case NOT_LIKE, NOT_LIKE_REGEX -> "NOT LIKE";
-            case IN -> "IN";
-            case NOT_IN -> "NOT IN";
-            case BETWEEN -> "BETWEEN";
-            case NOT_BETWEEN -> "NOT BETWEEN";
-            case JSON_CONTAINS -> "JSON_CONTAINS";
-            case JSON_OVERLAPS -> "JSON_OVERLAPS";
-        };
-    }
-
-  
-
-
- 
-
-    protected String getJunctionKeyWord(Junction junction) {
-        return switch (junction) {
-            case Or _ -> "OR";
-            case And _ -> "AND";
-        };
-    }
-
-  
-
-    protected String getNotKeyWord(Not n) {
-        return "NOT";
-    }
-
-   
-
-    protected final WhereClause parseAll(Object[] objs) {
-        var clauses = new ArrayList<String>();
-        var whereParams = new ArrayList<>();
-        for (var obj : objs) {
-            var w = parse(obj);
-            if (w != null && !w.isEmpty()) {
-                clauses.add(w.whereClause());
-                addAll(whereParams, w.params());
-            }
-        }
-
-        if (clauses.isEmpty()) {
-            return new WhereClause(null);
-        }
-
-        return new WhereClause(String.join("", clauses), whereParams.toArray());
-    }
-
-    protected WhereClause parseWhere(Where body) {
-        return switch (body.whereType()) {
-            case EQ -> parseEQ(body);
-            case NE -> parseNE(body);
-            case LT -> parseLT(body);
-            case LTE -> parseLTE(body);
-            case GT -> parseGT(body);
-            case GTE -> parseGTE(body);
-            case LIKE -> parseLIKE(body);
-            case NOT_LIKE -> parseNOT_LIKE(body);
-            case LIKE_REGEX -> parseLIKE_REGEX(body);
-            case NOT_LIKE_REGEX -> parseNOT_LIKE_REGEX(body);
-            case IN -> parseIN(body);
-            case NOT_IN -> parseNOT_IN(body);
-            case BETWEEN -> parseBETWEEN(body);
-            case NOT_BETWEEN -> parseNOT_BETWEEN(body);
-            case JSON_CONTAINS -> parseJSON_CONTAINS(body);
-            case JSON_OVERLAPS -> parseJSON_OVERLAPS(body);
-        };
-    }
-
-    protected abstract WhereClause parseEQ(Where where);
-
-    protected abstract WhereClause parseNE(Where where);
-
-    protected abstract WhereClause parseLT(Where where);
-
-    protected abstract WhereClause parseLTE(Where where);
-
-    protected abstract WhereClause parseGT(Where where);
-
-    protected abstract WhereClause parseGTE(Where where);
-
-    protected abstract WhereClause parseLIKE(Where where);
-
-    protected abstract WhereClause parseNOT_LIKE(Where where);
-
-    protected abstract WhereClause parseLIKE_REGEX(Where where);
-
-    protected abstract WhereClause parseNOT_LIKE_REGEX(Where where);
-
-    protected abstract WhereClause parseIN(Where where);
-
-    protected abstract WhereClause parseNOT_IN(Where where);
-
-    protected abstract WhereClause parseBETWEEN(Where where);
-
-    protected abstract WhereClause parseNOT_BETWEEN(Where where);
-
-    protected abstract WhereClause parseJSON_CONTAINS(Where where);
-
-    protected abstract WhereClause parseJSON_OVERLAPS(Where where);
 
     private WhereClause parseQuery(Query query) {
         return parse(query.getWhere());
