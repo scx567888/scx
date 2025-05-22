@@ -60,7 +60,7 @@ public class SelectSQLBuilder {
         return sql(sql, whereClause.params());
     }
 
-    public SQL buildGetSQL(Query query, FieldPolicy fieldPolicy) {
+    public SQL buildSelectFirstSQL(Query query, FieldPolicy fieldPolicy) {
         //1, 过滤查询列
         var selectColumns = filterByQueryFieldPolicy(fieldPolicy, table);
         //2, 创建虚拟查询列
@@ -78,8 +78,8 @@ public class SelectSQLBuilder {
 
     /// 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
     /// 此方法便是用于生成嵌套的 sql 的
-    public SQL buildGetSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
-        var sql0 = buildGetSQL(query, fieldPolicy);
+    public SQL buildSelectFirstSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
+        var sql0 = buildSelectFirstSQL(query, fieldPolicy);
         var sql = GetWrapperSelectSQL(sql0.sql());
         return sql(sql, sql0.params());
     }

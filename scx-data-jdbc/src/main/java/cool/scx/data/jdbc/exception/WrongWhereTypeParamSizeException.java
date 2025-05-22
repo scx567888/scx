@@ -1,4 +1,4 @@
-package cool.scx.data.query.exception;
+package cool.scx.data.jdbc.exception;
 
 import cool.scx.data.query.WhereType;
 

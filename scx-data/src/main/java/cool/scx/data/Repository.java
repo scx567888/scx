@@ -103,11 +103,11 @@ public interface Repository<Entity, ID> {
         return finder().list();
     }
 
-    default Entity get(Query query, FieldPolicy fieldPolicy) {
+    default Entity findFirst(Query query, FieldPolicy fieldPolicy) {
         return finder(query, fieldPolicy).first();
     }
 
-    default Entity get(Query query) {
+    default Entity findFirst(Query query) {
         return finder(query).first();
     }
 

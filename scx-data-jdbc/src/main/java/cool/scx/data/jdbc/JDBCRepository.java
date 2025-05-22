@@ -54,6 +54,7 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
     final UpdateSQLBuilder updateSQLBuilder;
     final DeleteSQLBuilder deleteSQLBuilder;
     final CountSQLBuilder countSQLBuilder;
+    final AggregateSQLBuilder aggregateSQLBuilder;
 
     public JDBCRepository(Class<Entity> entityClass, JDBCContext jdbcContext) {
         //1, 初始化基本字段
@@ -82,6 +83,7 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         this.updateSQLBuilder = new UpdateSQLBuilder(table, dialect, columnNameParser, whereParser, orderByParser);
         this.deleteSQLBuilder = new DeleteSQLBuilder(table, dialect, whereParser, orderByParser);
         this.countSQLBuilder = new CountSQLBuilder(table, dialect, whereParser);
+        this.aggregateSQLBuilder = new AggregateSQLBuilder(table, dialect, whereParser, groupByParser, orderByParser);
     }
 
     @Override
@@ -159,8 +161,8 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         return selectSQLBuilder.buildSelectSQL(query, fieldPolicy);
     }
 
-    public SQL buildGetSQL(Query query, FieldPolicy fieldPolicy) {
-        return selectSQLBuilder.buildGetSQL(query, fieldPolicy);
+    public SQL buildSelectFirstSQL(Query query, FieldPolicy fieldPolicy) {
+        return selectSQLBuilder.buildSelectFirstSQL(query, fieldPolicy);
     }
 
     public SQL buildUpdateSQL(Entity entity, FieldPolicy fieldPolicy, Query query) {
@@ -175,12 +177,20 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         return countSQLBuilder.buildCountSQL(query);
     }
 
-    public SQL buildGetSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
-        return selectSQLBuilder.buildGetSQLWithAlias(query, fieldPolicy);
+    public SQL buildSelectFirstSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
+        return selectSQLBuilder.buildSelectFirstSQLWithAlias(query, fieldPolicy);
     }
 
     public SQL buildSelectSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
         return selectSQLBuilder.buildSelectSQLWithAlias(query, fieldPolicy);
+    }
+
+    public SQL buildAggregateSQL(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregateSQLBuilder.buildAggregateSQL(beforeAggregateQuery, aggregation, afterAggregateQuery);
+    }
+
+    public SQL buildAggregateFirstSQL(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregateSQLBuilder.buildAggregateFirstSQL(beforeAggregateQuery, aggregation, afterAggregateQuery);
     }
 
 }
