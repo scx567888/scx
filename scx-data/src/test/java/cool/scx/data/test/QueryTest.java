@@ -1,10 +1,7 @@
 package cool.scx.data.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Arrays;
 
 import static cool.scx.data.query.QueryBuilder.*;
 import static cool.scx.data.query.serializer.QueryDeserializer.QUERY_DESERIALIZER;

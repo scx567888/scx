@@ -11,10 +11,6 @@ import cool.scx.data.query.Query;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sql.SQL;
 
-import static cool.scx.common.util.ArrayUtils.tryConcatAny;
-import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByQueryFieldPolicy;
-import static cool.scx.jdbc.sql.SQL.sql;
-
 public class AggregateSQLBuilder {
 
 

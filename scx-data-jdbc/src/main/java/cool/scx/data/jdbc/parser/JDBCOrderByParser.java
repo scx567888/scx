@@ -4,8 +4,6 @@ import cool.scx.data.query.OrderBy;
 
 import java.util.ArrayList;
 
-import static java.util.Collections.addAll;
-
 /// JDBCDaoOrderByParser
 ///
 /// @author scx567888

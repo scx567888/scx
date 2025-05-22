@@ -298,7 +298,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     public final SQL buildGetSQLWithAlias(Query query, FieldPolicy selectFilter) {
-        return dao().buildGetSQLWithAlias(query, selectFilter);
+        return dao().buildSelectFirstSQLWithAlias(query, selectFilter);
     }
 
 }
