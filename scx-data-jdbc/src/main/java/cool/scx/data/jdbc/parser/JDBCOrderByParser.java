@@ -1,13 +1,14 @@
 package cool.scx.data.jdbc.parser;
 
 import cool.scx.data.query.OrderBy;
-import cool.scx.data.query.parser.OrderByParser;
+
+import java.util.ArrayList;
 
 /// JDBCDaoOrderByParser
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class JDBCOrderByParser extends OrderByParser {
+public class JDBCOrderByParser {
 
     private final JDBCColumnNameParser columnNameParser;
 
@@ -15,10 +16,18 @@ public class JDBCOrderByParser extends OrderByParser {
         this.columnNameParser = columnNameParser;
     }
 
-    @Override
-    protected String[] parseOrderBy(OrderBy o) {
+    public String[] parse(OrderBy[] orderBys) {
+        var list = new ArrayList<String>();
+        for (var obj : orderBys) {
+            var s = parseOrderBy(obj);
+            list.add(s);
+        }
+        return list.toArray(String[]::new);
+    }
+
+    private String parseOrderBy(OrderBy o) {
         var columnName = columnNameParser.parseColumnName(o);
-        return new String[]{columnName + " " + o.orderByType().name()};
+        return columnName + " " + o.orderByType().name();
     }
 
 }

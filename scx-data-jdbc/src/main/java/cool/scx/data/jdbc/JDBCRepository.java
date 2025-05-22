@@ -186,11 +186,11 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
     }
 
     public SQL buildAggregateSQL(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
-        return aggregateSQLBuilder.buildAggregateSQL(beforeAggregateQuery, aggregation,afterAggregateQuery);
+        return aggregateSQLBuilder.buildAggregateSQL(beforeAggregateQuery, aggregation, afterAggregateQuery);
     }
 
     public SQL buildAggregateFirstSQL(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
-        return aggregateSQLBuilder.buildAggregateFirstSQL(beforeAggregateQuery, aggregation,afterAggregateQuery);
+        return aggregateSQLBuilder.buildAggregateFirstSQL(beforeAggregateQuery, aggregation, afterAggregateQuery);
     }
 
 }
