@@ -78,8 +78,8 @@ public abstract class FieldPolicyLike<FL extends FieldPolicyLike<FL>> implements
     }
 
     @Override
-    public FL expressions(Expression... expressions) {
-        fieldPolicy().expressions(expressions);
+    public FL assignFields(AssignField... assignFields) {
+        fieldPolicy().assignFields(assignFields);
         return (FL) this;
     }
 
@@ -94,8 +94,8 @@ public abstract class FieldPolicyLike<FL extends FieldPolicyLike<FL>> implements
     }
 
     @Override
-    public Expression[] getExpressions() {
-        return fieldPolicy().getExpressions();
+    public AssignField[] getAssignFields() {
+        return fieldPolicy().getAssignFields();
     }
 
     @Override
@@ -105,8 +105,8 @@ public abstract class FieldPolicyLike<FL extends FieldPolicyLike<FL>> implements
     }
 
     @Override
-    public FL clearExpressions() {
-        fieldPolicy().clearExpressions();
+    public FL clearAssignFields() {
+        fieldPolicy().clearAssignFields();
         return (FL) this;
     }
 
@@ -117,8 +117,8 @@ public abstract class FieldPolicyLike<FL extends FieldPolicyLike<FL>> implements
     }
 
     @Override
-    public FL expression(String fieldName, String expression) {
-        fieldPolicy().expression(fieldName, expression);
+    public FL assignField(String fieldName, String expression) {
+        fieldPolicy().assignField(fieldName, expression);
         return (FL) this;
     }
 
