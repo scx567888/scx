@@ -32,14 +32,8 @@ public abstract class FieldPolicyLike<FL extends FieldPolicyLike<FL>> implements
     }
 
     @Override
-    public FL virtualField(String expression, String virtualFieldName) {
-        fieldPolicy().virtualField(expression, virtualFieldName);
-        return (FL) this;
-    }
-
-    @Override
-    public FL virtualField(String expression) {
-        fieldPolicy().virtualField(expression);
+    public FL virtualField(String virtualFieldName, String expression) {
+        fieldPolicy().virtualField(virtualFieldName, expression);
         return (FL) this;
     }
 

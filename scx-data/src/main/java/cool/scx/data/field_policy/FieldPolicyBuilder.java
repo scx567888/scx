@@ -40,12 +40,8 @@ public class FieldPolicyBuilder {
         return new Expression(fieldName, expression);
     }
 
-    public static VirtualField virtualField(String expression, String virtualFieldName) {
-        return new VirtualField(expression, virtualFieldName);
-    }
-
-    public static VirtualField virtualField(String expression) {
-        return new VirtualField(expression, null);
+    public static VirtualField virtualField(String virtualFieldName, String expression) {
+        return new VirtualField(virtualFieldName, expression);
     }
 
 }
