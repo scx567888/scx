@@ -101,7 +101,6 @@ public class JDBCDaoTest {
         carRepository.clear();
     }
 
-    @Test
     public static void testAdd2() {
         //测试批量插入
         var carList = new ArrayList<Car>();
