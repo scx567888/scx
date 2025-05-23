@@ -1,6 +1,6 @@
 package cool.scx.data.query;
 
-public class Not extends QueryLike<Not> implements Where {
+public final class Not extends QueryLike<Not> implements Where {
 
     private final Where clause;
 

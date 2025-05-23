@@ -74,7 +74,7 @@ public class JDBCDaoTest {
     public static void testAdd() throws SQLException {
         var s = new ArrayList<Long>();
         //测试单条插入
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i = i + 1) {
             var car = new Car();
             car.name = RandomUtils.randomGet("奔驰", "宝马", "奥迪");
             car.size = i;
@@ -111,7 +111,7 @@ public class JDBCDaoTest {
     public static void testAdd2() {
         //测试批量插入
         var carList = new ArrayList<Car>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i = i + 1) {
             var car = new Car();
             car.name = RandomUtils.randomGet("奔驰", "宝马", "奥迪");
             car.size = i;

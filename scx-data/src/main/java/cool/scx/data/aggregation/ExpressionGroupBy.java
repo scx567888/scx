@@ -5,7 +5,7 @@ import cool.scx.data.build_control.BuildControlInfo;
 
 import static cool.scx.data.build_control.BuildControlInfo.ofInfo;
 
-public non-sealed class ExpressionGroupBy extends GroupBy {
+public final class ExpressionGroupBy extends GroupBy {
 
     private final String alias;
     private final String expression;
