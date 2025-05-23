@@ -53,28 +53,22 @@ public class JDBCWhereParser {
         };
     }
 
-    public WhereClause parse(Object obj) {
+    public WhereClause parse(Where obj) {
         return switch (obj) {
-            case String s -> parseString(s);
             case WhereClause w -> parseWhereClause(w);
             case Junction j -> parseJunction(j);
             case Not n -> parseNot(n);
             case SQL sql -> parseSQL(sql);
             case Condition w -> parseCondition(w);
-            case Query q -> parseQuery(q);
             case null -> new WhereClause(null);
             default -> throw new IllegalArgumentException("Unsupported object type: " + obj.getClass());
         };
     }
 
-    private WhereClause parseString(String s) {
+    private WhereClause parseWhereClause(WhereClause w) {
         // 我们无法确定用户输入的内容 为了安全起见 我们为这种自定义查询 两端拼接 ()
         // 保证在和其他子句拼接的时候不产生歧义
-        return new WhereClause("(" + s + ")");
-    }
-
-    private WhereClause parseWhereClause(WhereClause w) {
-        return w;
+        return new WhereClause("(" + w.whereClause() + ")", w.params());
     }
 
     private WhereClause parseJunction(Junction j) {
@@ -339,10 +333,6 @@ public class JDBCWhereParser {
             whereClause = whereClause + ", " + v1 + ")";
         }
         return new WhereClause(whereClause, whereParams);
-    }
-
-    private WhereClause parseQuery(Query query) {
-        return parse(query.getWhere());
     }
 
 }
