@@ -277,7 +277,7 @@ public class BaseModelService<Entity extends BaseModel> {
         return dao().count(query);
     }
 
-    public final Aggregator aggregator(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery){
+    public final Aggregator aggregator(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
         return dao().aggregator(beforeAggregateQuery, aggregation, afterAggregateQuery);
     }
 
