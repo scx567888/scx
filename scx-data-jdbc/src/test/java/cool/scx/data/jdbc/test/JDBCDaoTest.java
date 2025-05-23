@@ -16,10 +16,15 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.mysql.cj.conf.PropertyKey.*;
+import static cool.scx.data.aggregation.AggregationBuilder.agg;
+import static cool.scx.data.aggregation.AggregationBuilder.groupBy;
 import static cool.scx.data.field_policy.FieldPolicyBuilder.exclude;
 import static cool.scx.data.field_policy.FieldPolicyBuilder.virtualField;
+import static cool.scx.data.query.QueryBuilder.eq;
+import static cool.scx.data.query.QueryBuilder.lt;
 
 public class JDBCDaoTest {
 
@@ -64,6 +69,7 @@ public class JDBCDaoTest {
         testAdd();
         testAdd2();
         testFind();
+        testAgg();
     }
 
     public static void testAdd() throws SQLException {
@@ -123,7 +129,13 @@ public class JDBCDaoTest {
         });
         Assert.assertEquals(carList.size(), 10);
         var cars = carRepository.finder(virtualField("name", "REVERSE(name)")).listMap();
+        Assert.assertEquals(cars.size(), 10);
+    }
 
+    public static void testAgg() {
+        var list1 = carRepository.aggregate(lt("id",3),groupBy("name").agg("totalSize","SUM(size)"),eq("name","奔驰"));
+        var list2 = carRepository.aggregateFirst(agg("totalSize","SUM(size)"));
+        System.out.println(list2);
     }
 
 }
