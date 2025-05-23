@@ -8,10 +8,10 @@ public class VirtualField extends FieldPolicyLike<VirtualField> {
     private final String expression;
 
     public VirtualField(String virtualFieldName, String expression) {
-        if (virtualFieldName == null){
+        if (virtualFieldName == null) {
             throw new NullPointerException("virtualFieldName is null");
         }
-        if (expression == null){
+        if (expression == null) {
             throw new NullPointerException("expression is null");
         }
         this.virtualFieldName = virtualFieldName;
