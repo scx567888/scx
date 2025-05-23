@@ -62,14 +62,8 @@ public class AggregationImpl implements Aggregation {
     }
 
     @Override
-    public AggregationImpl agg(String expression, BuildControl... controls) {
-        aggs.add(new Agg(expression, null, controls));
-        return this;
-    }
-
-    @Override
-    public AggregationImpl agg(String expression, String alias, BuildControl... controls) {
-        aggs.add(new Agg(expression, alias, controls));
+    public AggregationImpl agg(String alias, String expression, BuildControl... controls) {
+        aggs.add(new Agg(alias, expression, controls));
         return this;
     }
 

@@ -17,11 +17,7 @@ public class AggregationBuilder {
         return new GroupBy(selector, alias, controls);
     }
 
-    public static Agg agg(String expression, BuildControl... controls) {
-        return new Agg(expression, null, controls);
-    }
-
-    public static Agg agg(String expression, String alias, BuildControl... controls) {
+    public static Agg agg(String alias, String expression, BuildControl... controls) {
         return new Agg(expression, alias, controls);
     }
 

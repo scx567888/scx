@@ -30,9 +30,6 @@ public interface Aggregation {
     Aggregation groupBy(String selector, String alias, BuildControl... controls);
 
     /// 追加 聚合
-    Aggregation agg(String expression, BuildControl... controls);
-
-    /// 追加 聚合
-    Aggregation agg(String expression, String alias, BuildControl... controls);
+    Aggregation agg(String alias, String expression, BuildControl... controls);
 
 }
