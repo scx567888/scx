@@ -80,7 +80,7 @@ public class JDBCDaoTest {
             car.size = i;
             car.city = "city" + i;
             //测试混合插入
-            Long id = carRepository.add(car, exclude("city").expression("color", """
+            Long id = carRepository.add(car, exclude("city").assignField("color", """
                     CONCAT('#',
                         LPAD(HEX(FLOOR(RAND() * 256)), 2, '0'),
                         LPAD(HEX(FLOOR(RAND() * 256)), 2, '0'),
