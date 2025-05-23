@@ -97,7 +97,7 @@ public class QueryDeserializer {
                 case "Or" -> deserializeOr(v);
                 case "Not" -> deserializeNot(v);
                 case "WhereClause" -> deserializeWhereClause(v);
-                case "Where" -> deserializeWhere0(v);
+                case "Condition" -> deserializeCondition(v);
                 default -> v;
             };
         } else if (v.isTextual()) {
@@ -129,13 +129,13 @@ public class QueryDeserializer {
         return new WhereClause(whereClause, params);
     }
 
-    private Where deserializeWhere0(JsonNode v) {
+    private Condition deserializeCondition(JsonNode v) {
         var selector = v.get("selector").asText();
-        var whereType = convertValue(v.get("whereType"), WhereType.class);
+        var conditionType = convertValue(v.get("conditionType"), ConditionType.class);
         var value1 = convertValue(v.get("value1"), Object.class);
         var value2 = convertValue(v.get("value2"), Object.class);
         var info = convertValue(v.get("info"), BuildControlInfo.class);
-        return new Where(selector, whereType, value1, value2, info);
+        return new Condition(selector, conditionType, value1, value2, info);
     }
 
     private Object[] deserializeWhereAll(JsonNode v) {

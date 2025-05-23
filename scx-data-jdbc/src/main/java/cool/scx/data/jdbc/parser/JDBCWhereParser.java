@@ -3,8 +3,8 @@ package cool.scx.data.jdbc.parser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.StringUtils;
-import cool.scx.data.jdbc.exception.WrongWhereParamTypeException;
-import cool.scx.data.jdbc.exception.WrongWhereTypeParamSizeException;
+import cool.scx.data.jdbc.exception.WrongConditionParamTypeException;
+import cool.scx.data.jdbc.exception.WrongConditionTypeParamSizeException;
 import cool.scx.data.query.*;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sql.SQL;
@@ -34,8 +34,8 @@ public class JDBCWhereParser {
         this.dialect = dialect;
     }
 
-    public static String getWhereKeyWord(Where where) {
-        return switch (where.whereType()) {
+    public static String getWhereKeyWord(Condition condition) {
+        return switch (condition.conditionType()) {
             case EQ -> "=";
             case NE -> "<>";
             case LT -> "<";
@@ -60,7 +60,7 @@ public class JDBCWhereParser {
             case Junction j -> parseJunction(j);
             case Not n -> parseNot(n);
             case SQL sql -> parseSQL(sql);
-            case Where w -> parseWhere(w);
+            case Condition w -> parseCondition(w);
             case Query q -> parseQuery(q);
             case null -> new WhereClause(null);
             default -> throw new IllegalArgumentException("Unsupported object type: " + obj.getClass());
@@ -122,8 +122,8 @@ public class JDBCWhereParser {
         return new WhereClause("(" + sql.sql() + ")", sql.params());
     }
 
-    private WhereClause parseWhere(Where body) {
-        return switch (body.whereType()) {
+    private WhereClause parseCondition(Condition body) {
+        return switch (body.conditionType()) {
             case EQ, NE -> parseEQ(body);
             case LT, LTE, GT, GTE, LIKE_REGEX, NOT_LIKE_REGEX -> parseLT(body);
             case LIKE, NOT_LIKE -> parseLIKE(body);
@@ -133,7 +133,7 @@ public class JDBCWhereParser {
         };
     }
 
-    private WhereClause parseEQ(Where w) {
+    private WhereClause parseEQ(Condition w) {
 
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
@@ -141,10 +141,10 @@ public class JDBCWhereParser {
             } else {
                 var columnName = columnNameParser.parseColumnName(w);
 
-                return switch (w.whereType()) {
+                return switch (w.conditionType()) {
                     case EQ -> new WhereClause(columnName + " IS NULL");
                     case NE -> new WhereClause(columnName + " IS NOT NULL");
-                    default -> throw new IllegalArgumentException("Unexpected value: " + w.whereType());
+                    default -> throw new IllegalArgumentException("Unexpected value: " + w.conditionType());
                 };
             }
         }
@@ -161,12 +161,12 @@ public class JDBCWhereParser {
 
     }
 
-    private WhereClause parseLT(Where w) {
+    private WhereClause parseLT(Condition w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.selector(), w.whereType(), 1);
+                throw new WrongConditionTypeParamSizeException(w.selector(), w.conditionType(), 1);
             }
         }
 
@@ -178,12 +178,12 @@ public class JDBCWhereParser {
         return new WhereClause(columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " ?", w.value1());
     }
 
-    private WhereClause parseLIKE(Where w) {
+    private WhereClause parseLIKE(Condition w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.selector(), w.whereType(), 1);
+                throw new WrongConditionTypeParamSizeException(w.selector(), w.conditionType(), 1);
             }
         }
 
@@ -197,12 +197,12 @@ public class JDBCWhereParser {
         return new WhereClause(columnDefinition + "CONCAT('%',?,'%')", w.value1());
     }
 
-    private WhereClause parseIN(Where w) {
+    private WhereClause parseIN(Condition w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.selector(), w.whereType(), 1);
+                throw new WrongConditionTypeParamSizeException(w.selector(), w.conditionType(), 1);
             }
         }
 
@@ -216,7 +216,7 @@ public class JDBCWhereParser {
         try {
             v = toObjectArray(w.value1());
         } catch (Exception e) {
-            throw new WrongWhereParamTypeException(w.selector(), w.whereType(), "数组");
+            throw new WrongConditionParamTypeException(w.selector(), w.conditionType(), "数组");
         }
 
         //0, 先处理空数组
@@ -224,10 +224,10 @@ public class JDBCWhereParser {
             if (w.info().skipIfEmptyList()) {
                 return new WhereClause(null);
             } else {
-                return switch (w.whereType()) {
+                return switch (w.conditionType()) {
                     case IN -> new WhereClause(dialect.falseExpression());
                     case NOT_IN -> new WhereClause(dialect.trueExpression());
-                    default -> throw new IllegalArgumentException("Unexpected value: " + w.whereType());
+                    default -> throw new IllegalArgumentException("Unexpected value: " + w.conditionType());
                 };
             }
         }
@@ -238,10 +238,10 @@ public class JDBCWhereParser {
 
         //需要包含 null
         if (containsNull) {
-            var nullClause = switch (w.whereType()) {
+            var nullClause = switch (w.conditionType()) {
                 case IN -> new WhereClause(columnName + " IS NULL");
                 case NOT_IN -> new WhereClause(columnName + " IS NOT NULL");
-                default -> throw new IllegalArgumentException("Unexpected value: " + w.whereType());
+                default -> throw new IllegalArgumentException("Unexpected value: " + w.conditionType());
             };
 
             //只需要返回 null 即可
@@ -253,10 +253,10 @@ public class JDBCWhereParser {
 
             var inClause = new WhereClause(columnName + " " + getWhereKeyWord(w) + " (" + placeholder + ")", nonNullValues);
 
-            var j = switch (w.whereType()) {
+            var j = switch (w.conditionType()) {
                 case IN -> or(inClause, nullClause);
                 case NOT_IN -> and(inClause, nullClause);
-                default -> throw new IllegalArgumentException("Unexpected value: " + w.whereType());
+                default -> throw new IllegalArgumentException("Unexpected value: " + w.conditionType());
             };
 
             return parseJunction(j);
@@ -268,12 +268,12 @@ public class JDBCWhereParser {
 
     }
 
-    private WhereClause parseBETWEEN(Where w) {
+    private WhereClause parseBETWEEN(Condition w) {
         if (w.value1() == null || w.value2() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.selector(), w.whereType(), 2);
+                throw new WrongConditionTypeParamSizeException(w.selector(), w.conditionType(), 2);
             }
         }
 
@@ -302,18 +302,18 @@ public class JDBCWhereParser {
         return new WhereClause(columnDefinition + v1 + " AND " + v2, whereParams.toArray());
     }
 
-    private WhereClause parseJSON_CONTAINS(Where w) {
+    private WhereClause parseJSON_CONTAINS(Condition w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.selector(), w.whereType(), 1);
+                throw new WrongConditionTypeParamSizeException(w.selector(), w.conditionType(), 1);
             }
         }
         var c = splitIntoColumnNameAndFieldPath(w.selector());
         var columnName = columnNameParser.parseColumnName(c.columnName(), w.info().useExpression());
         if (StringUtils.isBlank(c.columnName())) {
-            throw new IllegalArgumentException("使用 " + w.whereType() + " 时, 查询名称不合法 !!! 字段名 : " + w.selector());
+            throw new IllegalArgumentException("使用 " + w.conditionType() + " 时, 查询名称不合法 !!! 字段名 : " + w.selector());
         }
         String v1;
         Object[] whereParams;
@@ -328,7 +328,7 @@ public class JDBCWhereParser {
                 try {
                     whereParams = new Object[]{toJson(w.value1(), new ObjectUtils.Options().setIgnoreJsonIgnore(true).setIgnoreNullValue(true))};
                 } catch (JsonProcessingException e) {
-                    throw new IllegalArgumentException("使用 " + w.whereType() + " 时, 查询参数不合法(无法正确转换为 JSON) !!! 字段名 : " + w.selector(), e);
+                    throw new IllegalArgumentException("使用 " + w.conditionType() + " 时, 查询参数不合法(无法正确转换为 JSON) !!! 字段名 : " + w.selector(), e);
                 }
             }
         }

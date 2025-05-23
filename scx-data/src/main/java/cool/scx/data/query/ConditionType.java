@@ -1,10 +1,10 @@
 package cool.scx.data.query;
 
-/// WhereType
+/// ConditionType
 ///
 /// @author scx567888
 /// @version 0.0.1
-public enum WhereType {
+public enum ConditionType {
 
     /// 等于 == (支持 null 比较)
     EQ,

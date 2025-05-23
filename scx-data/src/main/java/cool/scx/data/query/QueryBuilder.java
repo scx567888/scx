@@ -4,7 +4,7 @@ import cool.scx.data.build_control.BuildControl;
 
 import static cool.scx.data.query.OrderByType.ASC;
 import static cool.scx.data.query.OrderByType.DESC;
-import static cool.scx.data.query.WhereType.*;
+import static cool.scx.data.query.ConditionType.*;
 
 /// QueryBuilder
 ///
@@ -64,8 +64,8 @@ public final class QueryBuilder {
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where eq(String fieldName, Object value, BuildControl... options) {
-        return new Where(fieldName, EQ, value, null, options);
+    public static Condition eq(String fieldName, Object value, BuildControl... options) {
+        return new Condition(fieldName, EQ, value, null, options);
     }
 
     /// 不相等 (支持 null 比较)
@@ -74,8 +74,8 @@ public final class QueryBuilder {
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where ne(String fieldName, Object value, BuildControl... options) {
-        return new Where(fieldName, NE, value, null, options);
+    public static Condition ne(String fieldName, Object value, BuildControl... options) {
+        return new Condition(fieldName, NE, value, null, options);
     }
 
     /// 小于
@@ -84,8 +84,8 @@ public final class QueryBuilder {
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where lt(String fieldName, Object value, BuildControl... options) {
-        return new Where(fieldName, LT, value, null, options);
+    public static Condition lt(String fieldName, Object value, BuildControl... options) {
+        return new Condition(fieldName, LT, value, null, options);
     }
 
     /// 小于等于
@@ -94,8 +94,8 @@ public final class QueryBuilder {
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where lte(String fieldName, Object value, BuildControl... options) {
-        return new Where(fieldName, LTE, value, null, options);
+    public static Condition lte(String fieldName, Object value, BuildControl... options) {
+        return new Condition(fieldName, LTE, value, null, options);
     }
 
     /// 大于
@@ -104,8 +104,8 @@ public final class QueryBuilder {
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where gt(String fieldName, Object value, BuildControl... options) {
-        return new Where(fieldName, GT, value, null, options);
+    public static Condition gt(String fieldName, Object value, BuildControl... options) {
+        return new Condition(fieldName, GT, value, null, options);
     }
 
     /// 大于等于
@@ -114,8 +114,8 @@ public final class QueryBuilder {
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where gte(String fieldName, Object value, BuildControl... options) {
-        return new Where(fieldName, GTE, value, null, options);
+    public static Condition gte(String fieldName, Object value, BuildControl... options) {
+        return new Condition(fieldName, GTE, value, null, options);
     }
 
     /// 双端模糊匹配
@@ -124,8 +124,8 @@ public final class QueryBuilder {
     /// @param value     参数 默认会在首尾添加 %
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where like(String fieldName, Object value, BuildControl... options) {
-        return new Where(fieldName, LIKE, value, null, options);
+    public static Condition like(String fieldName, Object value, BuildControl... options) {
+        return new Condition(fieldName, LIKE, value, null, options);
     }
 
     /// NOT 双端模糊匹配
@@ -134,8 +134,8 @@ public final class QueryBuilder {
     /// @param value     默认会在首尾添加 %
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where notLike(String fieldName, Object value, BuildControl... options) {
-        return new Where(fieldName, NOT_LIKE, value, null, options);
+    public static Condition notLike(String fieldName, Object value, BuildControl... options) {
+        return new Condition(fieldName, NOT_LIKE, value, null, options);
     }
 
     /// 正则表达式匹配
@@ -144,8 +144,8 @@ public final class QueryBuilder {
     /// @param value     SQL 表达式
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where likeRegex(String fieldName, String value, BuildControl... options) {
-        return new Where(fieldName, LIKE_REGEX, value, null, options);
+    public static Condition likeRegex(String fieldName, String value, BuildControl... options) {
+        return new Condition(fieldName, LIKE_REGEX, value, null, options);
     }
 
     /// NOT 正则表达式匹配
@@ -154,8 +154,8 @@ public final class QueryBuilder {
     /// @param value     SQL 表达式
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where notLikeRegex(String fieldName, String value, BuildControl... options) {
-        return new Where(fieldName, NOT_LIKE_REGEX, value, null, options);
+    public static Condition notLikeRegex(String fieldName, String value, BuildControl... options) {
+        return new Condition(fieldName, NOT_LIKE_REGEX, value, null, options);
     }
 
     /// 在集合内 (集合元素中 null 也是合法匹配项, 空集合则表示不匹配任何项)
@@ -164,8 +164,8 @@ public final class QueryBuilder {
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where in(String fieldName, Object value, BuildControl... options) {
-        return new Where(fieldName, IN, value, null, options);
+    public static Condition in(String fieldName, Object value, BuildControl... options) {
+        return new Condition(fieldName, IN, value, null, options);
     }
 
     /// 不在集合内 (集合元素中 null 也是合法匹配项, 空集合则表示不匹配任何项)
@@ -174,8 +174,8 @@ public final class QueryBuilder {
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where notIn(String fieldName, Object value, BuildControl... options) {
-        return new Where(fieldName, NOT_IN, value, null, options);
+    public static Condition notIn(String fieldName, Object value, BuildControl... options) {
+        return new Condition(fieldName, NOT_IN, value, null, options);
     }
 
     /// 在范围内 (low <= field <= high)
@@ -185,8 +185,8 @@ public final class QueryBuilder {
     /// @param value2    比较值2
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where between(String fieldName, Object value1, Object value2, BuildControl... options) {
-        return new Where(fieldName, BETWEEN, value1, value2, options);
+    public static Condition between(String fieldName, Object value1, Object value2, BuildControl... options) {
+        return new Condition(fieldName, BETWEEN, value1, value2, options);
     }
 
     /// 不在范围内 (field < low 或 field > high)
@@ -196,8 +196,8 @@ public final class QueryBuilder {
     /// @param value2    比较值2
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where notBetween(String fieldName, Object value1, Object value2, BuildControl... options) {
-        return new Where(fieldName, NOT_BETWEEN, value1, value2, options);
+    public static Condition notBetween(String fieldName, Object value1, Object value2, BuildControl... options) {
+        return new Condition(fieldName, NOT_BETWEEN, value1, value2, options);
     }
 
     /// JSON 包含某子结构, 针对 JSON 对象或数组的子集匹配
@@ -206,8 +206,8 @@ public final class QueryBuilder {
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where jsonContains(String fieldName, Object value, BuildControl... options) {
-        return new Where(fieldName, JSON_CONTAINS, value, null, options);
+    public static Condition jsonContains(String fieldName, Object value, BuildControl... options) {
+        return new Condition(fieldName, JSON_CONTAINS, value, null, options);
     }
 
     /// JSON 数组之间有交集
@@ -216,8 +216,8 @@ public final class QueryBuilder {
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where jsonOverlaps(String fieldName, Object value, BuildControl... options) {
-        return new Where(fieldName, JSON_OVERLAPS, value, null, options);
+    public static Condition jsonOverlaps(String fieldName, Object value, BuildControl... options) {
+        return new Condition(fieldName, JSON_OVERLAPS, value, null, options);
     }
 
     public static WhereClause whereClause(String whereClause, Object... params) {
