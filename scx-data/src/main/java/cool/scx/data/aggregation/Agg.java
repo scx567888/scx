@@ -18,8 +18,8 @@ public class Agg extends AggregationLike<Agg> {
         if (expression == null) {
             throw new NullPointerException("Agg expression cannot be null");
         }
-        this.expression = expression;
         this.alias = alias;
+        this.expression = expression;
         this.info = info;
     }
 
