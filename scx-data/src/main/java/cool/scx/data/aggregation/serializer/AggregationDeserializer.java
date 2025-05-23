@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import static cool.scx.common.util.ObjectUtils.convertValue;
 
-//todo 未完成
 public class AggregationDeserializer {
 
     public static final AggregationDeserializer AGGREGATION_DEFINITION_DESERIALIZER = new AggregationDeserializer();

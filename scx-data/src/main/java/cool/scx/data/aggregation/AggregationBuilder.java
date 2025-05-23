@@ -18,7 +18,7 @@ public class AggregationBuilder {
     }
 
     public static Agg agg(String alias, String expression, BuildControl... controls) {
-        return new Agg(expression, alias, controls);
+        return new Agg(alias, expression, controls);
     }
 
 }

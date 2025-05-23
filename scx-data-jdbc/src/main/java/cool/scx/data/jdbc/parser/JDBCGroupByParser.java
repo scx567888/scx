@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.parser;
 
-import cool.scx.data.aggregation.GroupBy;
+import cool.scx.data.aggregation.FieldGroupBy;
 
 /// JDBCDaoGroupByParser
 ///
@@ -14,9 +14,8 @@ public class JDBCGroupByParser {
         this.columnNameParser = columnNameParser;
     }
 
-    public String[] parseGroupBy(GroupBy g) {
-        var columnName = columnNameParser.parseColumnName(g);
-        return new String[]{columnName};
+    public String parseGroupBy(FieldGroupBy g) {
+        return columnNameParser.parseColumnName(g);
     }
 
 }
