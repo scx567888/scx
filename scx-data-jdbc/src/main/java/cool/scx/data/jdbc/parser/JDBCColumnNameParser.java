@@ -42,7 +42,9 @@ public final class JDBCColumnNameParser {
     }
 
     public String parseColumnName(GroupBy g) {
-        return parseColumnName(g.selector(), g.info().useJsonExtract(), g.info().useExpression());
+        //todo
+//        return parseColumnName(g.selector(), g.info().useJsonExtract(), g.info().useExpression());
+        return null;
     }
 
     public String parseColumnName(OrderBy o) {

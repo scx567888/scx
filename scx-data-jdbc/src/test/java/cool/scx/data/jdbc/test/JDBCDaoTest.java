@@ -16,9 +16,11 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.mysql.cj.conf.PropertyKey.*;
 import static cool.scx.data.field_policy.FieldPolicyBuilder.exclude;
+import static cool.scx.data.field_policy.FieldPolicyBuilder.virtualField;
 
 public class JDBCDaoTest {
 
@@ -62,6 +64,7 @@ public class JDBCDaoTest {
     public static void testAll() throws SQLException {
         testAdd();
         testAdd2();
+        testFind();
     }
 
     public static void testAdd() throws SQLException {
@@ -112,6 +115,16 @@ public class JDBCDaoTest {
         }
         List<Long> add = carRepository.add(carList, exclude("id"));
         Assert.assertEquals(add, List.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L));
+    }
+
+    public static void testFind() {
+        var carList = new ArrayList<Car>();
+        carRepository.finder().forEach(c -> {
+            carList.add(c);
+        });
+        Assert.assertEquals(carList.size(), 10);
+        var cars = carRepository.finder(virtualField("name","REVERSE(name)")).listMap();
+        
     }
 
 }
