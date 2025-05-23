@@ -1,6 +1,6 @@
 package cool.scx.data.build_control;
 
-import cool.scx.data.query.WhereType;
+import cool.scx.data.query.ConditionType;
 
 public enum BuildControl {
 
@@ -24,7 +24,7 @@ public enum BuildControl {
     USE_EXPRESSION,
 
     /// 使用 JSON 查询
-    /// 注意和 {@link WhereType#JSON_CONTAINS} 一起使用时无效 因为 {@link WhereType#JSON_CONTAINS} 自己有针对 Json 的特殊实现
+    /// 注意和 {@link ConditionType#JSON_CONTAINS} 一起使用时无效 因为 {@link ConditionType#JSON_CONTAINS} 自己有针对 Json 的特殊实现
     USE_JSON_EXTRACT,
 
     /// 注意只适用于 JSON_CONTAINS
