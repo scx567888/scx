@@ -5,7 +5,7 @@ import cool.scx.data.build_control.BuildControlInfo;
 
 import static cool.scx.data.build_control.BuildControlInfo.ofInfo;
 
-public non-sealed class FieldGroupBy extends GroupBy {
+public final class FieldGroupBy extends GroupBy {
 
     private final String fieldName;
     private final BuildControlInfo info;
