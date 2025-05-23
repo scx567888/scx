@@ -11,7 +11,7 @@ import static cool.scx.data.query.ConditionType.*;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public abstract sealed class Junction extends QueryLike<Junction> permits And, Or {
+public abstract sealed class Junction extends QueryLike<Junction> implements Where permits And, Or {
 
     private final List<Object> clauses;
 
