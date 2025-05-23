@@ -2,12 +2,12 @@ package cool.scx.data.field_policy;
 
 import static cool.scx.data.field_policy.FilterMode.EXCLUDED;
 
-public class Expression extends FieldPolicyLike<Expression> {
+public class AssignField extends FieldPolicyLike<AssignField> {
 
     private final String fieldName;
     private final String expression;
 
-    public Expression(String fieldName, String expression) {
+    public AssignField(String fieldName, String expression) {
         if (fieldName == null) {
             throw new NullPointerException("fieldName is null");
         }
@@ -29,7 +29,7 @@ public class Expression extends FieldPolicyLike<Expression> {
     @Override
     protected FieldPolicyImpl toFieldPolicy() {
         //排除 0个 就是包含所有
-        return new FieldPolicyImpl(EXCLUDED).expressions(this);
+        return new FieldPolicyImpl(EXCLUDED).assignFields(this);
     }
 
 }

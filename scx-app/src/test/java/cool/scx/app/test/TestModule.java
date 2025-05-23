@@ -89,7 +89,7 @@ public class TestModule extends ScxAppModule {
         var carService = ScxAppContext.getBean(CarService.class);
         var carService1 = new BaseModelService<>(Car.class);
         //纯表达式插入
-        var name = carService.add(expression("name", "RAND()"));
+        var name = carService.add(assignField("name", "RAND()"));
         try {
             if (carService1.count() < 1500) {
                 System.err.println("开始: 方式1 (批量) 插入");
@@ -130,7 +130,7 @@ public class TestModule extends ScxAppModule {
             carService.update(ignoreNull("name", false), query().where(gt("id", 200)));
 
             //方式3
-            carService.update(expression("name", "NULL"), query().where(gt("id", 200)));
+            carService.update(assignField("name", "NULL"), query().where(gt("id", 200)));
 
             System.err.println("查询所有数据条数 !!! : " + carService.find().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.find(gt("id", 200)).size());
@@ -159,8 +159,8 @@ public class TestModule extends ScxAppModule {
             System.err.println("出错了 后滚后数据库中数据条数 : " + carService.count());
         }
         //测试虚拟字段
-        carService.update(expression("name", "REVERSE(name)"), where("1 = 1"));
-        var list = carService.find(expression("reverseName", "REVERSE(name)"));
+        carService.update(assignField("name", "REVERSE(name)"), where("1 = 1"));
+        var list = carService.find(assignField("reverseName", "REVERSE(name)"));
         System.out.println(list.get(0).reverseName);
 
     }

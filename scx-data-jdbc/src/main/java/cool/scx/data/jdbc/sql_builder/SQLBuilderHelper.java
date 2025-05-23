@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.sql_builder;
 
-import cool.scx.data.field_policy.Expression;
+import cool.scx.data.field_policy.AssignField;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.field_policy.VirtualField;
 import cool.scx.data.jdbc.mapping.AnnotationConfigColumn;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static java.util.Collections.addAll;
 
-public class SQLBuilderHelper {
+class SQLBuilderHelper {
 
     /// 根据 字段策略过滤 可以插入的列
     public static AnnotationConfigColumn[] filterByUpdateFieldPolicy(FieldPolicy fieldPolicy, AnnotationConfigTable table, Object entity) {
@@ -21,8 +21,8 @@ public class SQLBuilderHelper {
         var columns = filterByFilterMode(fieldPolicy, table);
 
         //2, 再根据 fieldExpressions 过滤
-        var fieldExpressions = fieldPolicy.getExpressions();
-        columns = filterByFieldExpressions(fieldExpressions, table, columns);
+        var assignFields = fieldPolicy.getAssignFields();
+        columns = filterByAssignFields(assignFields, table, columns);
 
         //3, 根据 是否包含空值进行过滤 
         var globalIgnoreNull = fieldPolicy.getIgnoreNull();
@@ -37,8 +37,8 @@ public class SQLBuilderHelper {
         var columns = filterByFilterMode(fieldPolicy, table);
 
         //2, 再根据 fieldExpressions 过滤
-        var fieldExpressions = fieldPolicy.getExpressions();
-        return filterByFieldExpressions(fieldExpressions, table, columns);
+        var assignFields = fieldPolicy.getAssignFields();
+        return filterByAssignFields(assignFields, table, columns);
     }
 
     /// 根据 字段策略过滤 可以插入的列 (注意在 fieldExpressions 中存在的 fieldName 也会被移除)
@@ -135,16 +135,16 @@ public class SQLBuilderHelper {
         return result.toArray(AnnotationConfigColumn[]::new);
     }
 
-    public static AnnotationConfigColumn[] filterByFieldExpressions(Expression[] fieldExpressions, AnnotationConfigTable table, AnnotationConfigColumn... columns) {
+    public static AnnotationConfigColumn[] filterByAssignFields(AssignField[] assignFields, AnnotationConfigTable table, AnnotationConfigColumn... columns) {
         // 快速判断
-        if (fieldExpressions.length == 0) {
+        if (assignFields.length == 0) {
             return columns;
         }
 
         var result = new ArrayList<AnnotationConfigColumn>();
         addAll(result, columns);
         //表达式中存在的就不应该 存在了
-        for (var fieldName : fieldExpressions) {
+        for (var fieldName : assignFields) {
             result.remove(table.getColumn(fieldName.fieldName()));
         }
         return result.toArray(AnnotationConfigColumn[]::new);

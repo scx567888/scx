@@ -46,7 +46,7 @@ public interface FieldPolicy {
     FieldPolicy ignoreNull(String fieldName, boolean ignoreNull);
 
     /// 设置 字段表达式 (用于插入和更新)
-    FieldPolicy expressions(Expression... expressions);
+    FieldPolicy assignFields(AssignField... assignFields);
 
     /// 获取 全局是否忽略 空值
     boolean getIgnoreNull();
@@ -55,18 +55,18 @@ public interface FieldPolicy {
     Map<String, Boolean> getIgnoreNulls();
 
     /// 获取 字段表达式
-    Expression[] getExpressions();
+    AssignField[] getAssignFields();
 
     /// 清除 所有忽略空值
     FieldPolicy clearIgnoreNulls();
 
     /// 清除 所有表达式
-    FieldPolicy clearExpressions();
+    FieldPolicy clearAssignFields();
 
     /// 移除 是否忽略 空值
     FieldPolicy removeIgnoreNull(String fieldName);
 
     /// 追加 表达式
-    FieldPolicy expression(String fieldName, String expression);
+    FieldPolicy assignField(String fieldName, String expression);
 
 }

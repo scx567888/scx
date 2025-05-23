@@ -1,8 +1,10 @@
 package cool.scx.app.base;
 
 import cool.scx.app.ScxAppContext;
+import cool.scx.data.Aggregator;
 import cool.scx.data.Finder;
 import cool.scx.data.Repository;
+import cool.scx.data.aggregation.Aggregation;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.JDBCRepository;
 import cool.scx.data.query.Query;
@@ -11,6 +13,7 @@ import cool.scx.jdbc.sql.SQLRunner;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static cool.scx.app.ScxAppHelper.findBaseModelServiceEntityClass;
 import static cool.scx.data.field_policy.FieldPolicyBuilder.includeAll;
@@ -272,6 +275,54 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @return 数据条数
     public final long count(Query query) {
         return dao().count(query);
+    }
+
+    public final Aggregator aggregator(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
+        return dao().aggregator(beforeAggregateQuery, aggregation, afterAggregateQuery);
+    }
+
+    public final Aggregator aggregator(Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregator(query(), aggregation, afterAggregateQuery);
+    }
+
+    public final Aggregator aggregator(Query beforeAggregateQuery, Aggregation aggregation) {
+        return aggregator(beforeAggregateQuery, aggregation, query());
+    }
+
+    public final Aggregator aggregator(Aggregation aggregation) {
+        return aggregator(query(), aggregation, query());
+    }
+
+    public final List<Map<String, Object>> aggregate(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregator(beforeAggregateQuery, aggregation, afterAggregateQuery).list();
+    }
+
+    public final List<Map<String, Object>> aggregate(Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregator(aggregation, afterAggregateQuery).list();
+    }
+
+    public final List<Map<String, Object>> aggregate(Query beforeAggregateQuery, Aggregation aggregation) {
+        return aggregator(beforeAggregateQuery, aggregation).list();
+    }
+
+    public final List<Map<String, Object>> aggregate(Aggregation aggregation) {
+        return aggregator(aggregation).list();
+    }
+
+    public final Map<String, Object> aggregateFirst(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregator(beforeAggregateQuery, aggregation, afterAggregateQuery).first();
+    }
+
+    public final Map<String, Object> aggregateFirst(Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregator(aggregation, afterAggregateQuery).first();
+    }
+
+    public final Map<String, Object> aggregateFirst(Query beforeAggregateQuery, Aggregation aggregation) {
+        return aggregator(beforeAggregateQuery, aggregation).first();
+    }
+
+    public final Map<String, Object> aggregateFirst(Aggregation aggregation) {
+        return aggregator(aggregation).first();
     }
 
     public final JDBCRepository<Entity> dao() {
