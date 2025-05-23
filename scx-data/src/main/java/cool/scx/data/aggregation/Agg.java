@@ -7,29 +7,32 @@ import static cool.scx.data.build_control.BuildControlInfo.ofInfo;
 
 public class Agg extends AggregationLike<Agg> {
 
-    private final String expression;
     private final String alias;
+    private final String expression;
     private final BuildControlInfo info;
 
-    public Agg(String expression, String alias, BuildControlInfo info) {
+    public Agg(String alias, String expression, BuildControlInfo info) {
+        if (alias == null) {
+            throw new NullPointerException("alias is null");
+        }
         if (expression == null) {
-            throw new IllegalArgumentException("Agg expression cannot be null");
+            throw new NullPointerException("Agg expression cannot be null");
         }
         this.expression = expression;
         this.alias = alias;
         this.info = info;
     }
 
-    public Agg(String expression, String alias, BuildControl... controls) {
-        this(expression, alias, ofInfo(controls));
-    }
-
-    public String expression() {
-        return expression;
+    public Agg(String alias, String expression, BuildControl... controls) {
+        this(alias, expression, ofInfo(controls));
     }
 
     public String alias() {
         return alias;
+    }
+
+    public String expression() {
+        return expression;
     }
 
     public BuildControlInfo info() {
