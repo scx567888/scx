@@ -17,14 +17,16 @@ public class AggregationTest {
 
     @Test
     public static void test1() throws JsonProcessingException {
-        var aggregationDefinition = groupBy("name", USE_JSON_EXTRACT).agg("SUM(name)", "name");
+        var aggregationDefinition = groupBy("name", USE_JSON_EXTRACT)
+                .groupBy("reverseName", "REVERSE(name)")
+                .agg("name", "SUM(name)");
 
         var json = AGGREGATION_DEFINITION_SERIALIZER.toJson(aggregationDefinition);
         var aggregationDefinition1 = AGGREGATION_DEFINITION_DESERIALIZER.fromJson(json);
 
         System.out.println(json);
         Assert.assertEquals(aggregationDefinition1.getAggs().length, 1);
-        Assert.assertEquals(aggregationDefinition1.getGroupBys().length, 1);
+        Assert.assertEquals(aggregationDefinition1.getGroupBys().length, 2);
 
     }
 
