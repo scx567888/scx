@@ -41,7 +41,7 @@ public class QuerySerializer {
             case And a -> serializeAnd(a);
             case Or o -> serializeOr(o);
             case Not n -> serializeNot(n);
-            case Where whereBody -> serializeWhere(whereBody);
+            case Condition conditionBody -> serializeCondition(conditionBody);
             case Query q -> serializeWhere(q.getWhere());
             case Object[] o -> serializeWhereAll(o);
             default -> obj;
@@ -81,11 +81,11 @@ public class QuerySerializer {
         return m;
     }
 
-    private Map<String, Object> serializeWhere(Where w) {
+    private Map<String, Object> serializeCondition(Condition w) {
         var m = new LinkedHashMap<String, Object>();
-        m.put("@type", "Where");
+        m.put("@type", "Condition");
         m.put("selector", w.selector());
-        m.put("whereType", w.whereType());
+        m.put("conditionType", w.conditionType());
         m.put("value1", w.value1());
         m.put("value2", w.value2());
         m.put("info", w.info());
