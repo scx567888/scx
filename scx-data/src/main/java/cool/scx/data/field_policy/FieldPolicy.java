@@ -35,10 +35,7 @@ public interface FieldPolicy {
     FieldPolicy clearVirtualFields();
 
     /// 追加 虚拟列 (用于查询)
-    FieldPolicy virtualField(String expression, String virtualFieldName);
-
-    /// 追加 虚拟列 (用于查询)
-    FieldPolicy virtualField(String expression);
+    FieldPolicy virtualField(String virtualFieldName, String expression);
 
     //***************** 插入/更新 专用 *****************
 
