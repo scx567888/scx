@@ -10,7 +10,7 @@ import static cool.scx.data.build_control.BuildControlInfo.ofInfo;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class Condition extends QueryLike<Condition> {
+public final class Condition extends QueryLike<Condition> implements Where {
 
     // fieldName 或者 表达式
     private final String selector;

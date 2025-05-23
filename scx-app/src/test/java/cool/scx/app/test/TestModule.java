@@ -159,7 +159,7 @@ public class TestModule extends ScxAppModule {
             System.err.println("出错了 后滚后数据库中数据条数 : " + carService.count());
         }
         //测试虚拟字段
-        carService.update(assignField("name", "REVERSE(name)"), where("1 = 1"));
+        carService.update(assignField("name", "REVERSE(name)"), whereClause("1 = 1"));
         var list = carService.find(assignField("reverseName", "REVERSE(name)"));
         System.out.println(list.get(0).reverseName);
 

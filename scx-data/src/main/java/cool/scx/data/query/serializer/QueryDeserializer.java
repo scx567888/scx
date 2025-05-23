@@ -77,10 +77,6 @@ public class QueryDeserializer {
         return new OrderBy(selector, orderByType, info);
     }
 
-    private String deserializeString(JsonNode v) {
-        return v.textValue();
-    }
-
     private OrderBy[] deserializeOrderByAll(JsonNode v) {
         var s = new ArrayList<OrderBy>();
         for (var jsonNode : v) {
@@ -89,23 +85,28 @@ public class QueryDeserializer {
         return s.toArray(OrderBy[]::new);
     }
 
-    public Object deserializeWhere(JsonNode v) {
+    public Where deserializeWhere(JsonNode v) {
         if (v.isObject()) {
             var type = v.get("@type").asText();
-            return switch (type) {
-                case "And" -> deserializeAnd(v);
-                case "Or" -> deserializeOr(v);
-                case "Not" -> deserializeNot(v);
-                case "WhereClause" -> deserializeWhereClause(v);
-                case "Condition" -> deserializeCondition(v);
-                default -> v;
-            };
-        } else if (v.isTextual()) {
-            return deserializeString(v);
-        } else if (v.isArray()) {
-            return deserializeWhereAll(v);
+            switch (type) {
+                case "And" -> {
+                    return deserializeAnd(v);
+                }
+                case "Or" -> {
+                    return deserializeOr(v);
+                }
+                case "Not" -> {
+                    return deserializeNot(v);
+                }
+                case "WhereClause" -> {
+                    return deserializeWhereClause(v);
+                }
+                case "Condition" -> {
+                    return deserializeCondition(v);
+                }
+            }
         }
-        return null;
+        throw new IllegalArgumentException("Unknown query type: " + v);
     }
 
     private Junction deserializeAnd(JsonNode v) {
@@ -138,12 +139,12 @@ public class QueryDeserializer {
         return new Condition(selector, conditionType, value1, value2, info);
     }
 
-    private Object[] deserializeWhereAll(JsonNode v) {
-        var s = new ArrayList<>();
+    private Where[] deserializeWhereAll(JsonNode v) {
+        var s = new ArrayList<Where>();
         for (var jsonNode : v) {
             s.add(deserializeWhere(jsonNode));
         }
-        return s.toArray();
+        return s.toArray(Where[]::new);
     }
 
 }

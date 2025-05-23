@@ -9,7 +9,7 @@ import cool.scx.data.build_control.BuildControl;
 public interface Query {
 
     /// 设置 过滤条件
-    Query where(Object where);
+    Query where(Where where);
 
     /// 设置 排序列表
     Query orderBys(OrderBy... orderBys);
@@ -21,7 +21,7 @@ public interface Query {
     Query limit(long limit);
 
     /// 获取 过滤条件
-    Object getWhere();
+    Where getWhere();
 
     /// 获取 排序列表
     OrderBy[] getOrderBys();

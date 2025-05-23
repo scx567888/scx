@@ -15,7 +15,7 @@ import static java.util.Collections.addAll;
 /// @version 0.0.1
 public class QueryImpl implements Query {
 
-    private Object where;
+    private Where where;
     private List<OrderBy> orderBys;
     private Long offset;
     private Long limit;
@@ -40,7 +40,7 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl where(Object where) {
+    public QueryImpl where(Where where) {
         this.where = where;
         return this;
     }
@@ -70,7 +70,7 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public Object getWhere() {
+    public Where getWhere() {
         return where;
     }
 

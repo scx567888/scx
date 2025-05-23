@@ -34,22 +34,16 @@ public class QuerySerializer {
         return m;
     }
 
-    public Object serializeWhere(Object obj) {
+    public Object serializeWhere(Where obj) {
         return switch (obj) {
-            case String str -> serializeString(str);
             case WhereClause w -> serializeWhereClause(w);
             case And a -> serializeAnd(a);
             case Or o -> serializeOr(o);
             case Not n -> serializeNot(n);
             case Condition conditionBody -> serializeCondition(conditionBody);
             case Query q -> serializeWhere(q.getWhere());
-            case Object[] o -> serializeWhereAll(o);
-            default -> obj;
+            default -> throw new IllegalArgumentException("Unknown Where type: " + obj);
         };
-    }
-
-    private String serializeString(String str) {
-        return str;
     }
 
     private LinkedHashMap<String, Object> serializeWhereClause(WhereClause w) {
@@ -92,7 +86,7 @@ public class QuerySerializer {
         return m;
     }
 
-    private Object[] serializeWhereAll(Object[] objs) {
+    private Object[] serializeWhereAll(Where[] objs) {
         var arr = new Object[objs.length];
         for (int i = 0; i < objs.length; i = i + 1) {
             arr[i] = serializeWhere(objs[i]);
