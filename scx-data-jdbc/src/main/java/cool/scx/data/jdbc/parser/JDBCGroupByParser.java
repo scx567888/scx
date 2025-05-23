@@ -1,7 +1,6 @@
 package cool.scx.data.jdbc.parser;
 
 import cool.scx.data.aggregation.FieldGroupBy;
-import cool.scx.data.aggregation.GroupBy;
 
 /// JDBCDaoGroupByParser
 ///

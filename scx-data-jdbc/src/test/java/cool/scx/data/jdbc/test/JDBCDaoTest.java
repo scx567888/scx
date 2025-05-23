@@ -16,7 +16,6 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static com.mysql.cj.conf.PropertyKey.*;
 import static cool.scx.data.aggregation.AggregationBuilder.agg;
@@ -133,8 +132,8 @@ public class JDBCDaoTest {
     }
 
     public static void testAgg() {
-        var list1 = carRepository.aggregate(lt("id",3),groupBy("name").agg("totalSize","SUM(size)"),eq("name","奔驰"));
-        var list2 = carRepository.aggregateFirst(agg("totalSize","SUM(size)"));
+        var list1 = carRepository.aggregate(lt("id", 3), groupBy("name").agg("totalSize", "SUM(size)"), eq("name", "奔驰"));
+        var list2 = carRepository.aggregateFirst(agg("totalSize", "SUM(size)"));
         System.out.println(list2);
     }
 
