@@ -2,7 +2,7 @@ package cool.scx.data.field_policy.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.data.field_policy.Expression;
+import cool.scx.data.field_policy.AssignField;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.field_policy.VirtualField;
 
@@ -43,7 +43,7 @@ public class FieldPolicySerializer {
         m.put("virtualFields", serializeVirtualFields(fieldPolicy.getVirtualFields()));
         m.put("ignoreNull", fieldPolicy.getIgnoreNull());
         m.put("ignoreNulls", fieldPolicy.getIgnoreNulls());
-        m.put("expressions", serializeExpressions(fieldPolicy.getExpressions()));
+        m.put("expressions", serializeExpressions(fieldPolicy.getAssignFields()));
         return m;
     }
 
@@ -55,7 +55,7 @@ public class FieldPolicySerializer {
         return s;
     }
 
-    public ArrayList<Object> serializeExpressions(Expression... expressions) {
+    public ArrayList<Object> serializeExpressions(AssignField... expressions) {
         var s = new ArrayList<>();
         for (var expression : expressions) {
             s.add(serializeExpression(expression));
@@ -63,9 +63,9 @@ public class FieldPolicySerializer {
         return s;
     }
 
-    public Map<String, Object> serializeExpression(Expression expression) {
+    public Map<String, Object> serializeExpression(AssignField expression) {
         var m = new LinkedHashMap<String, Object>();
-        m.put("@type", "Expression");
+        m.put("@type", "AssignField");
         m.put("fieldName", expression.fieldName());
         m.put("expression", expression.expression());
         return m;

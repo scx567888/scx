@@ -20,14 +20,14 @@ public class FieldPolicyTest {
         var fieldPolicy = exclude("a", "b", "c", "d", "e", "f", "g", "h", "i")
                 .ignoreNull(false)
                 .ignoreNull("name", true)
-                .expression("w", "w * 2");
+                .assignField("w", "w * 2");
         var json = FIELD_POLICY_SERIALIZER.toJson(fieldPolicy);
         var newFieldPolicy = FIELD_POLICY_DESERIALIZER.fromJson(json);
         Assert.assertEquals(fieldPolicy.getFieldNames(), newFieldPolicy.getFieldNames());
         Assert.assertEquals(fieldPolicy.getFilterMode(), newFieldPolicy.getFilterMode());
         Assert.assertEquals(fieldPolicy.getIgnoreNull(), newFieldPolicy.getIgnoreNull());
         Assert.assertEquals(fieldPolicy.getIgnoreNulls(), newFieldPolicy.getIgnoreNulls());
-        Assert.assertEquals(fieldPolicy.getExpressions().length, newFieldPolicy.getExpressions().length);
+        Assert.assertEquals(fieldPolicy.getAssignFields().length, newFieldPolicy.getAssignFields().length);
     }
 
     @Test

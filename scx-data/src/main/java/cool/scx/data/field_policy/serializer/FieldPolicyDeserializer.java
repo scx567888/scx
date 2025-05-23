@@ -82,11 +82,11 @@ public class FieldPolicyDeserializer {
         }
 
         if (expressionsNode != null && !expressionsNode.isNull()) {
-            var a = new ArrayList<Expression>();
+            var a = new ArrayList<AssignField>();
             for (var jsonNode : expressionsNode) {
-                a.add(deserializeExpression(jsonNode));
+                a.add(deserializeAssignField(jsonNode));
             }
-            fieldPolicy.expressions(a.toArray(Expression[]::new));
+            fieldPolicy.assignFields(a.toArray(AssignField[]::new));
         }
 
         return fieldPolicy;
@@ -99,10 +99,10 @@ public class FieldPolicyDeserializer {
         return new VirtualField(expressionNode.asText(), virtualFieldNameNode.asText());
     }
 
-    public Expression deserializeExpression(JsonNode v) {
+    public AssignField deserializeAssignField(JsonNode v) {
         var fieldNameNode = v.get("fieldName");
         var expressionNode = v.get("expression");
-        return new Expression(fieldNameNode.asText(), expressionNode.asText());
+        return new AssignField(fieldNameNode.asText(), expressionNode.asText());
     }
 
 }
