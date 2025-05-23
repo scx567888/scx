@@ -45,15 +45,15 @@ public class AggregationSerializer {
         };
     }
 
-    public static Map<String, Object> serializeFieldGroupBy(FieldGroupBy groupBy) {
+    public Map<String, Object> serializeFieldGroupBy(FieldGroupBy groupBy) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "FieldGroupBy");
         m.put("fieldName", groupBy.fieldName());
         m.put("info", groupBy.info());
         return m;
-    } 
-    
-    public static Map<String, Object> serializeExpressionGroupBy(ExpressionGroupBy groupBy) {
+    }
+
+    public  Map<String, Object> serializeExpressionGroupBy(ExpressionGroupBy groupBy) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "ExpressionGroupBy");
         m.put("alias", groupBy.alias());
