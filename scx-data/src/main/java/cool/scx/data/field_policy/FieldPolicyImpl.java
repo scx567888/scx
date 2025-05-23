@@ -14,15 +14,15 @@ public class FieldPolicyImpl implements FieldPolicy {
     private final Set<String> fieldNames;
     private final Map<String, Boolean> ignoreNulls;
     private List<VirtualField> virtualFields;
-    private List<Expression> expressions;
+    private List<AssignField> assignFields;
     private boolean ignoreNull;
 
     public FieldPolicyImpl(FilterMode filterMode) {
         this.filterMode = filterMode;
         this.fieldNames = new HashSet<>();
         this.virtualFields = new ArrayList<>();
-        this.expressions = new ArrayList<>();//保证顺序很重要
-        this.ignoreNulls = new LinkedHashMap<>();
+        this.assignFields = new ArrayList<>();
+        this.ignoreNulls = new LinkedHashMap<>();//保证顺序很重要
         this.ignoreNull = true;
     }
 
@@ -106,8 +106,8 @@ public class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FieldPolicyImpl expressions(Expression... expressions) {
-        this.expressions = new ArrayList<>(List.of(expressions));
+    public FieldPolicyImpl assignFields(AssignField... assignFields) {
+        this.assignFields = new ArrayList<>(List.of(assignFields));
         return this;
     }
 
@@ -122,8 +122,8 @@ public class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public Expression[] getExpressions() {
-        return expressions.toArray(Expression[]::new);
+    public AssignField[] getAssignFields() {
+        return assignFields.toArray(AssignField[]::new);
     }
 
     @Override
@@ -133,8 +133,8 @@ public class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FieldPolicyImpl clearExpressions() {
-        expressions.clear();
+    public FieldPolicyImpl clearAssignFields() {
+        assignFields.clear();
         return this;
     }
 
@@ -145,8 +145,8 @@ public class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FieldPolicyImpl expression(String fieldName, String expression) {
-        this.expressions.add(new Expression(fieldName, expression));
+    public FieldPolicyImpl assignField(String fieldName, String expression) {
+        this.assignFields.add(new AssignField(fieldName, expression));
         return this;
     }
 
