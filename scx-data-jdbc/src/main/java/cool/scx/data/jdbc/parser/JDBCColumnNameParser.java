@@ -2,7 +2,7 @@ package cool.scx.data.jdbc.parser;
 
 import cool.scx.data.aggregation.FieldGroupBy;
 import cool.scx.data.query.OrderBy;
-import cool.scx.data.query.Where;
+import cool.scx.data.query.Condition;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Table;
 
@@ -37,7 +37,7 @@ public final class JDBCColumnNameParser {
         return new ColumnNameAndFieldPath(columnName, fieldPath);
     }
 
-    public String parseColumnName(Where w) {
+    public String parseColumnName(Condition w) {
         return parseColumnName(w.selector(), w.info().useJsonExtract(), w.info().useExpression());
     }
 
