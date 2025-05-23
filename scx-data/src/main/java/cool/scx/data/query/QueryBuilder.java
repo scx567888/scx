@@ -2,9 +2,9 @@ package cool.scx.data.query;
 
 import cool.scx.data.build_control.BuildControl;
 
+import static cool.scx.data.query.ConditionType.*;
 import static cool.scx.data.query.OrderByType.ASC;
 import static cool.scx.data.query.OrderByType.DESC;
-import static cool.scx.data.query.ConditionType.*;
 
 /// QueryBuilder
 ///
