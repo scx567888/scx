@@ -53,7 +53,7 @@ public class AggregationSerializer {
         return m;
     }
 
-    public  Map<String, Object> serializeExpressionGroupBy(ExpressionGroupBy groupBy) {
+    public Map<String, Object> serializeExpressionGroupBy(ExpressionGroupBy groupBy) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "ExpressionGroupBy");
         m.put("alias", groupBy.alias());
