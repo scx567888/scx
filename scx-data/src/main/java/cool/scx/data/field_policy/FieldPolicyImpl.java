@@ -88,14 +88,8 @@ public class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FieldPolicyImpl virtualField(String expression, String virtualFieldName) {
-        this.virtualFields.add(new VirtualField(expression, virtualFieldName));
-        return this;
-    }
-
-    @Override
-    public FieldPolicyImpl virtualField(String expression) {
-        this.virtualFields.add(new VirtualField(expression, null));
+    public FieldPolicyImpl virtualField(String virtualFieldName, String expression) {
+        this.virtualFields.add(new VirtualField(virtualFieldName, expression));
         return this;
     }
 
