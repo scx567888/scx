@@ -1,5 +1,6 @@
 package cool.scx.data.jdbc.parser;
 
+import cool.scx.data.aggregation.FieldGroupBy;
 import cool.scx.data.aggregation.GroupBy;
 import cool.scx.data.query.OrderBy;
 import cool.scx.data.query.Where;
@@ -41,10 +42,8 @@ public final class JDBCColumnNameParser {
         return parseColumnName(w.selector(), w.info().useJsonExtract(), w.info().useExpression());
     }
 
-    public String parseColumnName(GroupBy g) {
-        //todo
-//        return parseColumnName(g.selector(), g.info().useJsonExtract(), g.info().useExpression());
-        return null;
+    public String parseColumnName(FieldGroupBy g) {
+        return parseColumnName(g.fieldName(), g.info().useJsonExtract(), g.info().useExpression());
     }
 
     public String parseColumnName(OrderBy o) {
