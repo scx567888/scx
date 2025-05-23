@@ -24,10 +24,10 @@ public interface Aggregation {
     Aggregation clearAggs();
 
     /// 追加 分组
-    Aggregation groupBy(String selector, BuildControl... controls);
+    Aggregation groupBy(String fieldName, BuildControl... controls);
 
     /// 追加 分组
-    Aggregation groupBy(String selector, String alias, BuildControl... controls);
+    Aggregation groupBy(String alias, String expression, BuildControl... controls);
 
     /// 追加 聚合
     Aggregation agg(String alias, String expression, BuildControl... controls);
