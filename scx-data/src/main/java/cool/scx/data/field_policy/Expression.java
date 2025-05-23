@@ -8,6 +8,12 @@ public class Expression extends FieldPolicyLike<Expression> {
     private final String expression;
 
     public Expression(String fieldName, String expression) {
+        if (fieldName == null) {
+            throw new NullPointerException("fieldName is null");
+        }
+        if (expression == null) {
+            throw new NullPointerException("expression is null");
+        }
         this.fieldName = fieldName;
         this.expression = expression;
     }

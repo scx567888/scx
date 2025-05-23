@@ -5,25 +5,26 @@ import cool.scx.data.build_control.BuildControlInfo;
 
 import static cool.scx.data.build_control.BuildControlInfo.ofInfo;
 
-public class Agg extends AggregationLike<Agg> {
+public non-sealed class ExpressionGroupBy extends GroupBy {
 
     private final String alias;
     private final String expression;
     private final BuildControlInfo info;
 
-    public Agg(String alias, String expression, BuildControlInfo info) {
+    public ExpressionGroupBy(String alias, String expression, BuildControlInfo info) {
+        //名称不能为空
         if (alias == null) {
-            throw new NullPointerException("alias is null");
+            throw new NullPointerException("GroupBy 参数错误 : alias 不能为空 !!!");
         }
         if (expression == null) {
-            throw new NullPointerException("Agg expression cannot be null");
+            throw new NullPointerException("GroupBy  : expression can not be null !!!");
         }
         this.alias = alias;
         this.expression = expression;
         this.info = info;
     }
 
-    public Agg(String alias, String expression, BuildControl... controls) {
+    public ExpressionGroupBy(String alias, String expression, BuildControl... controls) {
         this(alias, expression, ofInfo(controls));
     }
 
@@ -37,11 +38,6 @@ public class Agg extends AggregationLike<Agg> {
 
     public BuildControlInfo info() {
         return info;
-    }
-
-    @Override
-    protected AggregationImpl toAggregation() {
-        return new AggregationImpl().aggs(this);
     }
 
 }

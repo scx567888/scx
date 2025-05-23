@@ -2,9 +2,7 @@ package cool.scx.data.aggregation.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.data.aggregation.Agg;
-import cool.scx.data.aggregation.Aggregation;
-import cool.scx.data.aggregation.GroupBy;
+import cool.scx.data.aggregation.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -41,11 +39,26 @@ public class AggregationSerializer {
     }
 
     private Map<String, Object> serializeGroupBy(GroupBy g) {
+        return switch (g) {
+            case FieldGroupBy fieldGroupBy -> serializeFieldGroupBy(fieldGroupBy);
+            case ExpressionGroupBy fieldGroupBy -> serializeExpressionGroupBy(fieldGroupBy);
+        };
+    }
+
+    public Map<String, Object> serializeFieldGroupBy(FieldGroupBy groupBy) {
         var m = new LinkedHashMap<String, Object>();
-        m.put("@type", "GroupBy");
-        m.put("selector", g.selector());
-        m.put("alias", g.alias());
-        m.put("info", g.info());
+        m.put("@type", "FieldGroupBy");
+        m.put("fieldName", groupBy.fieldName());
+        m.put("info", groupBy.info());
+        return m;
+    }
+
+    public Map<String, Object> serializeExpressionGroupBy(ExpressionGroupBy groupBy) {
+        var m = new LinkedHashMap<String, Object>();
+        m.put("@type", "ExpressionGroupBy");
+        m.put("alias", groupBy.alias());
+        m.put("expression", groupBy.expression());
+        m.put("info", groupBy.info());
         return m;
     }
 

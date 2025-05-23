@@ -50,26 +50,20 @@ public class AggregationImpl implements Aggregation {
     }
 
     @Override
-    public AggregationImpl groupBy(String selector, BuildControl... controls) {
-        groupBys.add(new GroupBy(selector, null, controls));
+    public AggregationImpl groupBy(String fieldName, BuildControl... controls) {
+        groupBys.add(new FieldGroupBy(fieldName, controls));
         return this;
     }
 
     @Override
-    public AggregationImpl groupBy(String selector, String alias, BuildControl... controls) {
-        groupBys.add(new GroupBy(selector, alias, controls));
+    public AggregationImpl groupBy(String alias, String expression, BuildControl... controls) {
+        groupBys.add(new ExpressionGroupBy(alias, expression, controls));
         return this;
     }
 
     @Override
-    public AggregationImpl agg(String expression, BuildControl... controls) {
-        aggs.add(new Agg(expression, null, controls));
-        return this;
-    }
-
-    @Override
-    public AggregationImpl agg(String expression, String alias, BuildControl... controls) {
-        aggs.add(new Agg(expression, alias, controls));
+    public AggregationImpl agg(String alias, String expression, BuildControl... controls) {
+        aggs.add(new Agg(alias, expression, controls));
         return this;
     }
 

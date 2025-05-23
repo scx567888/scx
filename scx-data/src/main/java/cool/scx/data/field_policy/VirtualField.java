@@ -4,20 +4,26 @@ import static cool.scx.data.field_policy.FilterMode.EXCLUDED;
 
 public class VirtualField extends FieldPolicyLike<VirtualField> {
 
-    private final String expression;
     private final String virtualFieldName;
+    private final String expression;
 
-    public VirtualField(String expression, String virtualFieldName) {
-        this.expression = expression;
+    public VirtualField(String virtualFieldName, String expression) {
+        if (virtualFieldName == null) {
+            throw new NullPointerException("virtualFieldName is null");
+        }
+        if (expression == null) {
+            throw new NullPointerException("expression is null");
+        }
         this.virtualFieldName = virtualFieldName;
-    }
-
-    public String expression() {
-        return expression;
+        this.expression = expression;
     }
 
     public String virtualFieldName() {
         return virtualFieldName;
+    }
+
+    public String expression() {
+        return expression;
     }
 
     @Override

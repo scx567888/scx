@@ -3,10 +3,7 @@ package cool.scx.data.aggregation.serializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.data.aggregation.Agg;
-import cool.scx.data.aggregation.Aggregation;
-import cool.scx.data.aggregation.AggregationImpl;
-import cool.scx.data.aggregation.GroupBy;
+import cool.scx.data.aggregation.*;
 import cool.scx.data.build_control.BuildControlInfo;
 
 import java.util.ArrayList;
@@ -66,21 +63,32 @@ public class AggregationDeserializer {
     public GroupBy deserializeGroupBy(JsonNode v) {
         if (v.isObject()) {
             var type = v.get("@type").asText();
-            if (type.equals("GroupBy")) {
-                return deserializeGroupBy0(v);
+            if (type.equals("FieldGroupBy")) {
+                return deserializeFieldGroupBy(v);
+            }
+            if (type.equals("ExpressionGroupBy")) {
+                return deserializeExpressionGroupBy(v);
             }
         }
         throw new IllegalArgumentException("Invalid Group By: " + v);
     }
 
-    private GroupBy deserializeGroupBy0(JsonNode v) {
-        var selectorNode = v.path("selector");
-        var aliasNode = v.path("alias");
+    private GroupBy deserializeFieldGroupBy(JsonNode v) {
+        var fieldNameNode = v.path("fieldName");
         var infoNode = v.path("info");
-        var name = selectorNode.asText();
-        var expression = aliasNode == null || aliasNode.isNull() ? null : aliasNode.asText();
+        var fieldName = fieldNameNode.asText();
         var info = convertValue(infoNode, BuildControlInfo.class);
-        return new GroupBy(name, expression, info);
+        return new FieldGroupBy(fieldName, info);
+    }
+
+    private GroupBy deserializeExpressionGroupBy(JsonNode v) {
+        var aliasNode = v.path("alias");
+        var expressionNode = v.path("expression");
+        var infoNode = v.path("info");
+        var alias = aliasNode.asText();
+        var expression = expressionNode.asText();
+        var info = convertValue(infoNode, BuildControlInfo.class);
+        return new ExpressionGroupBy(alias, expression, info);
     }
 
     public Agg deserializeAgg(JsonNode v) {

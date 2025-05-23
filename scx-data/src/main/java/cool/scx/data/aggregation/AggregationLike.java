@@ -49,26 +49,20 @@ public abstract class AggregationLike<AL extends AggregationLike<AL>> implements
     }
 
     @Override
-    public AL groupBy(String selector, BuildControl... controls) {
-        aggregation().groupBy(selector, controls);
+    public AL groupBy(String fieldName, BuildControl... controls) {
+        aggregation().groupBy(fieldName, controls);
         return (AL) this;
     }
 
     @Override
-    public AL groupBy(String selector, String alias, BuildControl... controls) {
-        aggregation().groupBy(selector, alias, controls);
+    public AL groupBy(String alias, String expression, BuildControl... controls) {
+        aggregation().groupBy(alias, expression, controls);
         return (AL) this;
     }
 
     @Override
-    public AL agg(String expression, BuildControl... controls) {
-        aggregation().agg(expression, controls);
-        return (AL) this;
-    }
-
-    @Override
-    public AL agg(String expression, String alias, BuildControl... controls) {
-        aggregation().agg(expression, alias, controls);
+    public AL agg(String alias, String expression, BuildControl... controls) {
+        aggregation().agg(alias, expression, controls);
         return (AL) this;
     }
 
