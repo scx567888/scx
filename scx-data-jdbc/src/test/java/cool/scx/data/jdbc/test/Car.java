@@ -9,15 +9,15 @@ public class Car {
     /// id
     @Column(primary = true, autoIncrement = true)
     public Long id;
-    
+
     public String name;
 
     @Column(columnName = "sIzE")
     public Integer size;
-    
+
     public String color;
-    
+
     @Column(columnName = "CITY")
     public String city;
-    
+
 }

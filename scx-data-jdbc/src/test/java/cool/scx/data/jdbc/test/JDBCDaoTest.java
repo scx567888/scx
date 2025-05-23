@@ -16,7 +16,6 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.mysql.cj.conf.PropertyKey.*;
 import static cool.scx.data.field_policy.FieldPolicyBuilder.exclude;
@@ -24,13 +23,13 @@ import static cool.scx.data.field_policy.FieldPolicyBuilder.virtualField;
 
 public class JDBCDaoTest {
 
-    static {
-        ScxLoggerFactory.getLogger("ScxSpy").config().setLevel(System.Logger.Level.DEBUG);
-    }
-
     public static final DataSource dataSource = getMySQLDataSource();
     public static final JDBCContext jdbcContext = new JDBCContext(dataSource);
     public static JDBCRepository<Car> carRepository;
+
+    static {
+        ScxLoggerFactory.getLogger("ScxSpy").config().setLevel(System.Logger.Level.DEBUG);
+    }
 
     public static void main(String[] args) throws SQLException {
         beforeTest();
@@ -123,8 +122,8 @@ public class JDBCDaoTest {
             carList.add(c);
         });
         Assert.assertEquals(carList.size(), 10);
-        var cars = carRepository.finder(virtualField("name","REVERSE(name)")).listMap();
-        
+        var cars = carRepository.finder(virtualField("name", "REVERSE(name)")).listMap();
+
     }
 
 }
