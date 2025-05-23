@@ -13,23 +13,19 @@ import static cool.scx.data.query.ConditionType.*;
 /// @version 0.0.1
 public abstract sealed class Junction extends QueryLike<Junction> implements Where permits And, Or {
 
-    private final List<Object> clauses;
+    private final List<Where> clauses;
 
     protected Junction() {
         this.clauses = new ArrayList<>();
     }
 
-    public Object[] clauses() {
-        return clauses.toArray();
+    public Where[] clauses() {
+        return clauses.toArray(Where[]::new);
     }
 
-    public Junction add(Object... logicCauses) {
+    public Junction add(Where... logicCauses) {
         for (var logicCause : logicCauses) {
             if (logicCause == null) {
-                continue;
-            }
-            if (logicCause instanceof Object[] objs) {
-                add(objs);
                 continue;
             }
             if (logicCause instanceof Condition w && w.info().replace()) {
@@ -109,15 +105,15 @@ public abstract sealed class Junction extends QueryLike<Junction> implements Whe
         return add(new Condition(selector, JSON_OVERLAPS, value, null, options));
     }
 
-    public final Junction and(Object... clauses) {
+    public final Junction and(Where... clauses) {
         return add(new And().add(clauses));
     }
 
-    public final Junction or(Object... clauses) {
+    public final Junction or(Where... clauses) {
         return add(new Or().add(clauses));
     }
 
-    public final Junction not(Object clause) {
+    public final Junction not(Where clause) {
         return add(new Not(clause));
     }
 
