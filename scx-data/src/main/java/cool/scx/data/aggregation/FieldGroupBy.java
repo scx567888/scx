@@ -19,8 +19,8 @@ public non-sealed class FieldGroupBy extends GroupBy {
         this.info = info;
     }
 
-    public FieldGroupBy(String fieldName,  BuildControl... controls) {
-        this(fieldName,  ofInfo(controls));
+    public FieldGroupBy(String fieldName, BuildControl... controls) {
+        this(fieldName, ofInfo(controls));
     }
 
     public String fieldName() {
@@ -30,5 +30,5 @@ public non-sealed class FieldGroupBy extends GroupBy {
     public BuildControlInfo info() {
         return info;
     }
-    
+
 }

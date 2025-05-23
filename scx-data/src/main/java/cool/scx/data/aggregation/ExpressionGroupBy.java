@@ -23,7 +23,7 @@ public non-sealed class ExpressionGroupBy extends GroupBy {
         this.expression = expression;
         this.info = info;
     }
-    
+
     public ExpressionGroupBy(String alias, String expression, BuildControl... controls) {
         this(alias, expression, ofInfo(controls));
     }
