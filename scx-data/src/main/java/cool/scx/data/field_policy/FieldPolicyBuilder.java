@@ -36,8 +36,8 @@ public class FieldPolicyBuilder {
     }
 
     /// 默认包含所有
-    public static Expression expression(String fieldName, String expression) {
-        return new Expression(fieldName, expression);
+    public static AssignField assignField(String fieldName, String expression) {
+        return new AssignField(fieldName, expression);
     }
 
     public static VirtualField virtualField(String virtualFieldName, String expression) {
