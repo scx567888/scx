@@ -4,7 +4,7 @@ package cool.scx.data.query;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class WhereClause extends QueryLike<WhereClause> {
+public final class WhereClause extends QueryLike<WhereClause> implements Where {
 
     private final String whereClause;
     private final Object[] params;

@@ -20,7 +20,7 @@ public final class QueryBuilder {
         return new QueryImpl(oldQuery);
     }
 
-    public static Query where(Object where) {
+    public static Query where(Where where) {
         return new QueryImpl().where(where);
     }
 
@@ -36,15 +36,15 @@ public final class QueryBuilder {
         return new QueryImpl().limit(limit);
     }
 
-    public static Junction and(Object... clauses) {
+    public static Junction and(Where... clauses) {
         return new And().add(clauses);
     }
 
-    public static Junction or(Object... clauses) {
+    public static Junction or(Where... clauses) {
         return new Or().add(clauses);
     }
 
-    public static Not not(Object clause) {
+    public static Not not(Where clause) {
         return new Not(clause);
     }
 

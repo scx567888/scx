@@ -19,7 +19,7 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL where(Object where) {
+    public QL where(Where where) {
         query().where(where);
         return (QL) this;
     }
@@ -43,7 +43,7 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public Object getWhere() {
+    public Where getWhere() {
         return query().getWhere();
     }
 
