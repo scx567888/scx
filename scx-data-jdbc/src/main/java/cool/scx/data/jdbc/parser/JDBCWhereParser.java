@@ -3,8 +3,8 @@ package cool.scx.data.jdbc.parser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.StringUtils;
-import cool.scx.data.jdbc.exception.WrongWhereParamTypeException;
-import cool.scx.data.jdbc.exception.WrongWhereTypeParamSizeException;
+import cool.scx.data.jdbc.exception.WrongConditionParamTypeException;
+import cool.scx.data.jdbc.exception.WrongConditionTypeParamSizeException;
 import cool.scx.data.query.*;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sql.SQL;
@@ -166,7 +166,7 @@ public class JDBCWhereParser {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.selector(), w.conditionType(), 1);
+                throw new WrongConditionTypeParamSizeException(w.selector(), w.conditionType(), 1);
             }
         }
 
@@ -183,7 +183,7 @@ public class JDBCWhereParser {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.selector(), w.conditionType(), 1);
+                throw new WrongConditionTypeParamSizeException(w.selector(), w.conditionType(), 1);
             }
         }
 
@@ -202,7 +202,7 @@ public class JDBCWhereParser {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.selector(), w.conditionType(), 1);
+                throw new WrongConditionTypeParamSizeException(w.selector(), w.conditionType(), 1);
             }
         }
 
@@ -216,7 +216,7 @@ public class JDBCWhereParser {
         try {
             v = toObjectArray(w.value1());
         } catch (Exception e) {
-            throw new WrongWhereParamTypeException(w.selector(), w.conditionType(), "数组");
+            throw new WrongConditionParamTypeException(w.selector(), w.conditionType(), "数组");
         }
 
         //0, 先处理空数组
@@ -273,7 +273,7 @@ public class JDBCWhereParser {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.selector(), w.conditionType(), 2);
+                throw new WrongConditionTypeParamSizeException(w.selector(), w.conditionType(), 2);
             }
         }
 
@@ -307,7 +307,7 @@ public class JDBCWhereParser {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                throw new WrongWhereTypeParamSizeException(w.selector(), w.conditionType(), 1);
+                throw new WrongConditionTypeParamSizeException(w.selector(), w.conditionType(), 1);
             }
         }
         var c = splitIntoColumnNameAndFieldPath(w.selector());
