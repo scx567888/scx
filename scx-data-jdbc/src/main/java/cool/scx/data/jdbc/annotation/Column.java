@@ -16,9 +16,15 @@ import static cool.scx.common.constant.AnnotationValue.NULL;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
 
-    /// 列的名称 默认取字段名并进行 驼峰 转下划线
+    /// 用于标注字段对应的数据库列名.
     ///
-    /// @return 列的名称
+    /// 如果未显式指定列名 (即 `columnName` 为空), 将默认使用字段名作为列名.
+    ///
+    /// 本注解不会进行任何隐式命名转换, 例如 `fileMD5` 不会自动转换为 `file_md5` 或 `file_m_d5`.
+    ///
+    /// 这种设计经过明确考量, 旨在保持命名一致性, 减少认知负担, 并避免因自动转换导致的歧义或错误.
+    ///
+    /// @return 数据库列名，默认为字段名
     String columnName() default NULL;
 
     /// 数据库字段类型 仅用于 创建或修复表时
@@ -52,7 +58,7 @@ public @interface Column {
     /// @return 是否为主键
     boolean primary() default false;
 
-    /// 是否唯一 (注意 : 当 ScxContext.coreConfig().tombstone() 为 true 时) 会和 tombstone 字段 创建联合的唯一约束
+    /// 是否唯一
     ///
     /// @return 是否唯一
     boolean unique() default false;
