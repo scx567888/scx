@@ -16,7 +16,9 @@ import static cool.scx.common.constant.AnnotationValue.NULL;
 public @interface Table {
 
     /// 表名称
-    /// 不指定时为类名转下划线如 UserInfo -> user_info
+    /// 不指定时为类名 
+    /// 此处我们不进行任何隐式转换 比如 UserInfo -> user_info, 而是直接使用类名本身
+    /// 这是经过严格考量推敲的, 最大化的减少开发人员的理解成本
     ///
     /// @return 表全限定名称
     String value() default NULL;
