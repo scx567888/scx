@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static cool.scx.common.constant.AnnotationValue.NULL;
+
 /// Table
 ///
 /// @author scx567888
@@ -13,9 +15,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Table {
 
-    /// 用于标注实体类对应的数据库表名.
+    /// 表名称
+    /// 不指定时为类名转下划线如 UserInfo -> user_info
     ///
-    /// @return 表的名称（全限定)
-    String value();
+    /// @return 表全限定名称
+    String value() default NULL;
 
 }
