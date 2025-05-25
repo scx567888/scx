@@ -1,6 +1,7 @@
 package cool.scx.data.jdbc.mapping;
 
 import cool.scx.common.multi_map.MultiMap;
+import cool.scx.common.util.StringUtils;
 import cool.scx.data.jdbc.annotation.NoColumn;
 import cool.scx.jdbc.mapping.Table;
 import cool.scx.reflect.ClassInfoFactory;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static cool.scx.reflect.ClassType.RECORD;
 
@@ -42,17 +42,15 @@ public class AnnotationConfigTable implements Table {
     /// @return c
     public static String initTableName(Class<?> clazz) {
         var table = clazz.getAnnotation(cool.scx.data.jdbc.annotation.Table.class);
-        var defaultTableName = clazz.getSimpleName();
-
-        if (table != null) {
-            var _tableName = getRealValue(table.value());
-
-            if (_tableName != null) {
-                return _tableName;
-            }
+        if (table == null) {
+            throw new IllegalArgumentException("@Table annotation not found");
         }
 
-        return defaultTableName;
+        if (StringUtils.isBlank(table.value())) {
+            throw new IllegalArgumentException("@Table annotation value is empty");
+        }
+
+        return table.value();
     }
 
     private static AnnotationConfigColumn[] initAllColumns(Class<?> clazz) {
