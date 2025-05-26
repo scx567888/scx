@@ -101,15 +101,15 @@ public abstract sealed class Junction extends QueryLike<Junction> implements Whe
     }
 
     public final Junction and(Where... clauses) {
-        return add(QueryBuilder.and(clauses));
+        return add(new And().add(clauses));
     }
 
     public final Junction or(Where... clauses) {
-        return add(QueryBuilder.or(clauses));
+        return add(new Or().add(clauses));
     }
 
     public final Junction not(Where clause) {
-        return add(QueryBuilder.not(clause));
+        return add(new Not(clause));
     }
 
     @Override
