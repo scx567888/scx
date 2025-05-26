@@ -16,7 +16,7 @@ public enum BuildControl {
     /// 只是为了简化书写
     SKIP_IF_EMPTY_STRING,
 
-    /// 如果参数值为 空字符串 "    " 则跳过添加
+    /// 如果参数值为 空白字符串 "    " 则跳过添加
     /// 只是为了简化书写
     SKIP_IF_BLANK_STRING,
 

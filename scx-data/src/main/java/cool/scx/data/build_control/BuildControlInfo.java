@@ -1,30 +1,30 @@
 package cool.scx.data.build_control;
 
-public record BuildControlInfo(boolean replace,
-                               boolean skipIfNull,
+public record BuildControlInfo(boolean skipIfNull,
                                boolean skipIfEmptyList,
+                               boolean skipIfEmptyString,
+                               boolean skipIfBlankString,
                                boolean useExpression,
-                               boolean useJsonExtract,
-                               boolean useOriginalValue) {
+                               boolean useExpressionValue) {
 
     public static BuildControlInfo ofInfo(BuildControl... controls) {
-        var replace = false;
         var skipIfNull = false;
         var skipIfEmptyList = false;
+        var skipIfEmptyString = false;
+        var skipIfBlankString = false;
         var useExpression = false;
-        var useJsonExtract = false;
-        var useOriginalValue = false;
+        var useExpressionValue = false;
         for (var c : controls) {
             switch (c) {
-                case REPLACE -> replace = true;
                 case SKIP_IF_NULL -> skipIfNull = true;
                 case SKIP_IF_EMPTY_LIST -> skipIfEmptyList = true;
+                case SKIP_IF_EMPTY_STRING -> skipIfEmptyString = true;
+                case SKIP_IF_BLANK_STRING -> skipIfBlankString = true;
                 case USE_EXPRESSION -> useExpression = true;
-                case USE_JSON_EXTRACT -> useJsonExtract = true;
-                case USE_ORIGINAL_VALUE -> useOriginalValue = true;
+                case USE_EXPRESSION_VALUE -> useExpressionValue = true;
             }
         }
-        return new BuildControlInfo(replace, skipIfNull, skipIfEmptyList, useExpression, useJsonExtract, useOriginalValue);
+        return new BuildControlInfo(skipIfNull, skipIfEmptyList, skipIfEmptyString, skipIfBlankString, useExpression, useExpressionValue);
     }
 
 }
