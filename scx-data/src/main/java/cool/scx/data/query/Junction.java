@@ -3,6 +3,8 @@ package cool.scx.data.query;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.addAll;
+
 /// Junction
 ///
 /// @author scx567888
@@ -20,13 +22,7 @@ public abstract sealed class Junction extends QueryLike<Junction> implements Whe
     }
 
     public Junction add(Where... wheres) {
-        for (var w : wheres) {
-            //跳过空
-            if (w == null) {
-                continue;
-            }
-            clauses.add(w);
-        }
+        addAll(clauses, wheres);
         return this;
     }
 
@@ -113,11 +109,8 @@ public abstract sealed class Junction extends QueryLike<Junction> implements Whe
 
     @Override
     public boolean isEmpty() {
-        if (clauses.isEmpty()) {
-            return true;
-        }
         for (var clause : clauses) {
-            if (!clause.isEmpty()) {
+            if (clause != null && !clause.isEmpty()) {
                 return false;
             }
         }
