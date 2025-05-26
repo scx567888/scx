@@ -199,18 +199,25 @@ public class JDBCWhereParser {
 
         var columnName = columnNameParser.parseColumnName(w);
 
-        if (w.value1() instanceof SQL a) {
-            return new WhereClause(columnName + " " + getWhereKeyWord(w) + " " + "(" + a.sql() + ")", a.params());
+        // 使用表达式值，不解析为数组或 SQL，仅拼接表达式
+        if (w.useExpressionValue()) {
+            return new WhereClause(columnName + " " + getWhereKeyWord(w) + " (" + w.value1() + ")");
         }
 
-        var v = new Object[]{};
+        // ✅ SQL 子查询
+        if (w.value1() instanceof SQL a) {
+            return new WhereClause(columnName + " " + getWhereKeyWord(w) + " (" + a.sql() + ")", a.params());
+        }
+
+        // 普通数组值
+        Object[] v;
         try {
             v = toObjectArray(w.value1());
         } catch (Exception e) {
             throw new WrongConditionParamTypeException(w.selector(), w.conditionType(), "数组");
         }
 
-        //0, 先处理空数组
+        // 空数组
         if (v.length == 0) {
             return switch (w.conditionType()) {
                 case IN -> new WhereClause(dialect.falseExpression());
@@ -219,12 +226,13 @@ public class JDBCWhereParser {
             };
         }
 
-        //1, 处理参数
+        // 去重非 null 元素，检测是否含 null
         var nonNullValues = Arrays.stream(v).filter(Objects::nonNull).distinct().toArray();
         var containsNull = Arrays.stream(v).anyMatch(Objects::isNull);
 
-        //需要包含 null
+        // 处理 null 情况（拼接 IS NULL）
         if (containsNull) {
+
             var nullClause = switch (w.conditionType()) {
                 case IN -> new WhereClause(columnName + " IS NULL");
                 case NOT_IN -> new WhereClause(columnName + " IS NOT NULL");
@@ -249,11 +257,13 @@ public class JDBCWhereParser {
             return parseJunction(j);
         }
 
+        // 正常拼接参数占位符
         var placeholder = StringUtils.repeat("?", ", ", nonNullValues.length);
 
         return new WhereClause(columnName + " " + getWhereKeyWord(w) + " (" + placeholder + ")", nonNullValues);
 
     }
+
 
     private WhereClause parseBETWEEN(Condition w) {
         if (w.value1() == null || w.value2() == null) {
@@ -267,14 +277,14 @@ public class JDBCWhereParser {
         String v2;
         var whereParams = new ArrayList<>();
 
-        // ✅ 表达式值：直接拼接 SQL，不加参数
+        // 表达式值：直接拼接 SQL，不加参数
         if (w.useExpressionValue()) {
             v1 = "(" + w.value1() + ")";
             v2 = "(" + w.value2() + ")";
             return new WhereClause(columnDefinition + v1 + " AND " + v2);
         }
 
-        // ✅ SQL 对象
+        // SQL 对象
         if (w.value1() instanceof SQL a1) {
             v1 = "(" + a1.sql() + ")";
             addAll(whereParams, a1.params());
