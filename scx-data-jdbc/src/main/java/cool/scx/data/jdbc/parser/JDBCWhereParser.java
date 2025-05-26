@@ -204,7 +204,7 @@ public class JDBCWhereParser {
             return new WhereClause(columnName + " " + getWhereKeyWord(w) + " (" + w.value1() + ")");
         }
 
-        // ✅ SQL 子查询
+        // SQL 子查询
         if (w.value1() instanceof SQL a) {
             return new WhereClause(columnName + " " + getWhereKeyWord(w) + " (" + a.sql() + ")", a.params());
         }
