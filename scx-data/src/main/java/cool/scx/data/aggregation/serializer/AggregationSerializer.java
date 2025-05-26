@@ -71,8 +71,8 @@ public class AggregationSerializer {
     private Map<String, Object> serializeAgg(Agg g) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "Agg");
-        m.put("expression", g.expression());
         m.put("alias", g.alias());
+        m.put("expression", g.expression());
         return m;
     }
 
