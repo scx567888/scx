@@ -26,6 +26,24 @@ public enum BuildControl {
     USE_EXPRESSION,
 
     /// 使用表达式值 (不进行转换)
-    USE_EXPRESSION_VALUE
+    USE_EXPRESSION_VALUE;
+
+    public static boolean checkUseExpression(BuildControl... controls) {
+        for (var control : controls) {
+            if (control == BuildControl.USE_EXPRESSION) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean checkUseExpressionValue(BuildControl... controls) {
+        for (var control : controls) {
+            if (control == BuildControl.USE_EXPRESSION_VALUE) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
