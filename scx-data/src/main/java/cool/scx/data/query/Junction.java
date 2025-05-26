@@ -19,12 +19,13 @@ public abstract sealed class Junction extends QueryLike<Junction> implements Whe
         return clauses.toArray(Where[]::new);
     }
 
-    public Junction add(Where... logicCauses) {
-        for (var logicCause : logicCauses) {
-            if (logicCause == null) {
+    public Junction add(Where... wheres) {
+        for (var w : wheres) {
+            //跳过空
+            if (w == null) {
                 continue;
             }
-            clauses.add(logicCause);
+            clauses.add(w);
         }
         return this;
     }
@@ -108,6 +109,19 @@ public abstract sealed class Junction extends QueryLike<Junction> implements Whe
 
     public final Junction not(Where clause) {
         return add(new Not(clause));
+    }
+
+    @Override
+    public boolean isEmpty() {
+        if (clauses.isEmpty()) {
+            return true;
+        }
+        for (var clause : clauses) {
+            if (!clause.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

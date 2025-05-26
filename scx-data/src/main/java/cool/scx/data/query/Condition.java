@@ -70,6 +70,7 @@ public final class Condition extends QueryLike<Condition> implements Where {
         return useExpressionValue;
     }
 
+    @Override
     public boolean isEmpty() {
         return conditionType == null;
     }
