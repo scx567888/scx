@@ -48,10 +48,4 @@ public enum ConditionType {
     /// 不在范围内 (field < low 或 field > high)
     NOT_BETWEEN,
 
-    /// JSON 包含某子结构, 针对 JSON 对象或数组的子集匹配
-    JSON_CONTAINS,
-
-    /// JSON 数组之间有交集
-    JSON_OVERLAPS
-
 }

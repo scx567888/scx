@@ -224,24 +224,4 @@ public final class QueryBuilder {
         return condition(fieldName, NOT_BETWEEN, value1, value2, controls);
     }
 
-    /// JSON 包含某子结构, 针对 JSON 对象或数组的子集匹配
-    ///
-    /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
-    /// @param value     比较值
-    /// @param controls  配置
-    /// @return this 方便链式调用
-    public static Condition jsonContains(String fieldName, Object value, BuildControl... controls) {
-        return condition(fieldName, JSON_CONTAINS, value, controls);
-    }
-
-    /// JSON 数组之间有交集
-    ///
-    /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
-    /// @param value     比较值
-    /// @param controls  配置
-    /// @return this 方便链式调用
-    public static Condition jsonOverlaps(String fieldName, Object value, BuildControl... controls) {
-        return condition(fieldName, JSON_OVERLAPS, value, controls);
-    }
-
 }

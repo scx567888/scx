@@ -87,14 +87,6 @@ public abstract sealed class Junction extends QueryLike<Junction> implements Whe
         return add(QueryBuilder.notBetween(selector, value1, value2, controls));
     }
 
-    public final Junction jsonContains(String selector, Object value, BuildControl... controls) {
-        return add(QueryBuilder.jsonOverlaps(selector, value, controls));
-    }
-
-    public final Junction jsonOverlaps(String selector, Object value, BuildControl... controls) {
-        return add(QueryBuilder.jsonOverlaps(selector, value, controls));
-    }
-
     public final Junction and(Where... clauses) {
         return add(new And().add(clauses));
     }
