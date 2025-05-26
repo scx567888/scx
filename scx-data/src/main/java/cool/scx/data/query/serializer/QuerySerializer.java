@@ -35,13 +35,15 @@ public class QuerySerializer {
     }
 
     public Object serializeWhere(Where obj) {
+        if (obj == null) {
+            return null;
+        }
         return switch (obj) {
             case WhereClause w -> serializeWhereClause(w);
             case And a -> serializeAnd(a);
             case Or o -> serializeOr(o);
             case Not n -> serializeNot(n);
             case Condition conditionBody -> serializeCondition(conditionBody);
-            case Query q -> serializeWhere(q.getWhere());
             default -> throw new IllegalArgumentException("Unknown Where type: " + obj);
         };
     }

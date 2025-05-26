@@ -85,6 +85,9 @@ public class QueryDeserializer {
     }
 
     public Where deserializeWhere(JsonNode v) {
+        if (v == null || v.isNull()) {
+            return null;
+        }
         if (v.isObject()) {
             var type = v.get("@type").asText();
             switch (type) {
