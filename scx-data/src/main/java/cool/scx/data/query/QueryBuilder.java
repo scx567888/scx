@@ -5,7 +5,7 @@ import static cool.scx.data.query.BuildControl.checkUseExpressionValue;
 import static cool.scx.data.query.ConditionType.*;
 import static cool.scx.data.query.OrderByType.ASC;
 import static cool.scx.data.query.OrderByType.DESC;
-import static cool.scx.data.query.SkipIfInfo.ofInfo;
+import static cool.scx.data.query.SkipIfInfo.ofSkipIfInfo;
 
 /// QueryBuilder
 ///
@@ -52,15 +52,15 @@ public final class QueryBuilder {
     public static Condition condition(String fieldName, ConditionType conditionType, Object value, BuildControl... controls) {
         var useExpression = checkUseExpression(controls);
         var useExpressionValue = checkUseExpressionValue(controls);
-        var info = ofInfo(controls);
-        return new Condition(fieldName, conditionType, value, null, useExpression, useExpressionValue, info);
+        var skipIfInfo = ofSkipIfInfo(controls);
+        return new Condition(fieldName, conditionType, value, null, useExpression, useExpressionValue, skipIfInfo);
     }
 
     public static Condition condition(String fieldName, ConditionType conditionType, Object value1, Object value2, BuildControl... controls) {
         var useExpression = checkUseExpression(controls);
         var useExpressionValue = checkUseExpressionValue(controls);
-        var info = ofInfo(controls);
-        return new Condition(fieldName, conditionType, value1, value2, useExpression, useExpressionValue, info);
+        var skipIfInfo = ofSkipIfInfo(controls);
+        return new Condition(fieldName, conditionType, value1, value2, useExpression, useExpressionValue, skipIfInfo);
     }
 
     public static OrderBy orderBy(String selector, OrderByType orderByType, BuildControl... controls) {
