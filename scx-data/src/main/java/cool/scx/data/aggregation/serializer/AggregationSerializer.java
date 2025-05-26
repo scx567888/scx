@@ -49,7 +49,6 @@ public class AggregationSerializer {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "FieldGroupBy");
         m.put("fieldName", groupBy.fieldName());
-        m.put("info", groupBy.info());
         return m;
     }
 
@@ -58,7 +57,6 @@ public class AggregationSerializer {
         m.put("@type", "ExpressionGroupBy");
         m.put("alias", groupBy.alias());
         m.put("expression", groupBy.expression());
-        m.put("info", groupBy.info());
         return m;
     }
 
@@ -75,7 +73,6 @@ public class AggregationSerializer {
         m.put("@type", "Agg");
         m.put("expression", g.expression());
         m.put("alias", g.alias());
-        m.put("info", g.info());
         return m;
     }
 
