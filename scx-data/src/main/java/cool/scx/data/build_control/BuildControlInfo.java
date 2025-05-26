@@ -1,5 +1,6 @@
 package cool.scx.data.build_control;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 
 public record BuildControlInfo(boolean skipIfNull,
@@ -38,8 +39,8 @@ public record BuildControlInfo(boolean skipIfNull,
             return skipIfEmptyList && collection.isEmpty();
         }
 
-        if (value1 instanceof Object[] array) {
-            return skipIfEmptyList && array.length == 0;
+        if (value1.getClass().isArray()) {
+            return skipIfEmptyList && Array.getLength(value1) == 0;
         }
 
         if (value1 instanceof String s) {
