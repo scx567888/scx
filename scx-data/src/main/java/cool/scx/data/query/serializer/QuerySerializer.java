@@ -82,7 +82,8 @@ public class QuerySerializer {
         m.put("conditionType", w.conditionType());
         m.put("value1", w.value1());
         m.put("value2", w.value2());
-        m.put("info", w.info());
+        m.put("useExpression", w.useExpression());
+        m.put("useExpressionValue", w.useExpressionValue());
         return m;
     }
 
@@ -107,7 +108,7 @@ public class QuerySerializer {
         m.put("@type", "OrderBy");
         m.put("selector", orderByBody.selector());
         m.put("orderByType", orderByBody.orderByType());
-        m.put("info", orderByBody.info());
+        m.put("useExpression", orderByBody.useExpression());
         return m;
     }
 

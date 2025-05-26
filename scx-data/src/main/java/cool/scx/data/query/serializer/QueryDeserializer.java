@@ -3,7 +3,6 @@ package cool.scx.data.query.serializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.data.build_control.BuildControlInfo;
 import cool.scx.data.query.*;
 
 import java.util.ArrayList;
@@ -73,8 +72,8 @@ public class QueryDeserializer {
     private OrderBy deserializeOrderBy0(JsonNode v) {
         var selector = v.get("selector").asText();
         var orderByType = convertValue(v.get("orderByType"), OrderByType.class);
-        var info = convertValue(v.path("info"), BuildControlInfo.class);
-        return new OrderBy(selector, orderByType, info);
+        var useExpression = v.path("useExpression").asBoolean();
+        return new OrderBy(selector, orderByType, useExpression);
     }
 
     private OrderBy[] deserializeOrderByAll(JsonNode v) {
@@ -135,8 +134,9 @@ public class QueryDeserializer {
         var conditionType = convertValue(v.get("conditionType"), ConditionType.class);
         var value1 = convertValue(v.get("value1"), Object.class);
         var value2 = convertValue(v.get("value2"), Object.class);
-        var info = convertValue(v.get("info"), BuildControlInfo.class);
-        return new Condition(selector, conditionType, value1, value2, info);
+        var useExpression = v.get("useExpression").asBoolean();
+        var useExpressionValue = v.get("useExpressionValue").asBoolean();
+        return new Condition(selector, conditionType, value1, value2, useExpression, useExpressionValue);
     }
 
     private Where[] deserializeWhereAll(JsonNode v) {
