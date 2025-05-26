@@ -60,8 +60,8 @@ public final class Condition extends QueryLike<Condition> implements Where {
     public boolean useExpressionValue() {
         return useExpressionValue;
     }
-    
-    public SkipIfInfo skipIfInfo(){
+
+    public SkipIfInfo skipIfInfo() {
         return skipIfInfo;
     }
 

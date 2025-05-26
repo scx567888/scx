@@ -4,5 +4,5 @@ package cool.scx.data.query;
 public interface Where {
 
     boolean isEmpty();
-    
+
 }
