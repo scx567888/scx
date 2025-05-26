@@ -8,7 +8,7 @@ public record SkipIfInfo(boolean skipIfNull,
                          boolean skipIfEmptyString,
                          boolean skipIfBlankString) {
 
-    public static SkipIfInfo ofInfo(BuildControl... controls) {
+    public static SkipIfInfo ofSkipIfInfo(BuildControl... controls) {
         var skipIfNull = false;
         var skipIfEmptyList = false;
         var skipIfEmptyString = false;
