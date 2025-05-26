@@ -24,12 +24,12 @@ public interface Aggregation {
     Aggregation clearAggs();
 
     /// 追加 分组
-    Aggregation groupBy(String fieldName, BuildControl... controls);
+    Aggregation groupBy(String fieldName);
 
     /// 追加 分组
-    Aggregation groupBy(String alias, String expression, BuildControl... controls);
+    Aggregation groupBy(String alias, String expression);
 
     /// 追加 聚合
-    Aggregation agg(String alias, String expression, BuildControl... controls);
+    Aggregation agg(String alias, String expression);
 
 }

@@ -1,17 +1,11 @@
 package cool.scx.data.aggregation;
 
-import cool.scx.data.build_control.BuildControl;
-import cool.scx.data.build_control.BuildControlInfo;
-
-import static cool.scx.data.build_control.BuildControlInfo.ofInfo;
-
 public class Agg extends AggregationLike<Agg> {
 
     private final String alias;
     private final String expression;
-    private final BuildControlInfo info;
 
-    public Agg(String alias, String expression, BuildControlInfo info) {
+    public Agg(String alias, String expression) {
         if (alias == null) {
             throw new NullPointerException("alias is null");
         }
@@ -20,11 +14,6 @@ public class Agg extends AggregationLike<Agg> {
         }
         this.alias = alias;
         this.expression = expression;
-        this.info = info;
-    }
-
-    public Agg(String alias, String expression, BuildControl... controls) {
-        this(alias, expression, ofInfo(controls));
     }
 
     public String alias() {
@@ -33,10 +22,6 @@ public class Agg extends AggregationLike<Agg> {
 
     public String expression() {
         return expression;
-    }
-
-    public BuildControlInfo info() {
-        return info;
     }
 
     @Override
