@@ -1,7 +1,5 @@
 package cool.scx.data.aggregation;
 
-import cool.scx.data.build_control.BuildControl;
-
 /// 聚合定义
 public interface Aggregation {
 
