@@ -1,6 +1,7 @@
 package cool.scx.data.query;
 
 import cool.scx.data.build_control.BuildControl;
+import cool.scx.data.build_control.BuildControlInfo;
 
 import static cool.scx.data.query.ConditionType.*;
 import static cool.scx.data.query.OrderByType.ASC;
@@ -48,134 +49,161 @@ public final class QueryBuilder {
         return new Not(clause);
     }
 
+    public static Condition condition(String fieldName, ConditionType conditionType, Object value, BuildControl... controls) {
+        var controlInfo = BuildControlInfo.ofInfo(controls);
+        var skip = controlInfo.shouldSkip(value);
+        if (skip) {
+            return null;
+        }
+        return new Condition(fieldName, conditionType, value, null, controlInfo.useExpression(), controlInfo.useExpressionValue());
+    }
+
+    public static Condition condition(String fieldName, ConditionType conditionType, Object value1, Object value2, BuildControl... controls) {
+        var controlInfo = BuildControlInfo.ofInfo(controls);
+        var skip = controlInfo.shouldSkip(value1, value2);
+        if (skip) {
+            return null;
+        }
+        return new Condition(fieldName, conditionType, value1, value2, controlInfo.useExpression(), controlInfo.useExpressionValue());
+    }
+
+    public static OrderBy orderBy(String selector, OrderByType orderByType, BuildControl... controls) {
+        var controlInfo = BuildControlInfo.ofInfo(controls);
+        return new OrderBy(selector, orderByType, controlInfo.useExpression());
+    }
+
+    public static WhereClause whereClause(String whereClause, Object... params) {
+        return new WhereClause(whereClause, params);
+    }
+
     /// 正序 : 也就是从小到大 (1,2,3,4,5,6)
-    public static OrderBy asc(String name, BuildControl... options) {
-        return new OrderBy(name, ASC, options);
+    public static OrderBy asc(String selector, BuildControl... controls) {
+        return orderBy(selector, ASC, controls);
     }
 
     /// 倒序 : 也就是从大到小 (6,5,4,3,2,1)
-    public static OrderBy desc(String name, BuildControl... options) {
-        return new OrderBy(name, DESC, options);
+    public static OrderBy desc(String selector, BuildControl... controls) {
+        return orderBy(selector, DESC, controls);
     }
 
     /// 相等 (支持 null 比较)
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition eq(String fieldName, Object value, BuildControl... options) {
-        return new Condition(fieldName, EQ, value, null, options);
+    public static Condition eq(String fieldName, Object value, BuildControl... controls) {
+        return condition(fieldName, EQ, value, controls);
     }
 
     /// 不相等 (支持 null 比较)
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition ne(String fieldName, Object value, BuildControl... options) {
-        return new Condition(fieldName, NE, value, null, options);
+    public static Condition ne(String fieldName, Object value, BuildControl... controls) {
+        return condition(fieldName, NE, value, controls);
     }
 
     /// 小于
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition lt(String fieldName, Object value, BuildControl... options) {
-        return new Condition(fieldName, LT, value, null, options);
+    public static Condition lt(String fieldName, Object value, BuildControl... controls) {
+        return condition(fieldName, LT, value, controls);
     }
 
     /// 小于等于
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition lte(String fieldName, Object value, BuildControl... options) {
-        return new Condition(fieldName, LTE, value, null, options);
+    public static Condition lte(String fieldName, Object value, BuildControl... controls) {
+        return condition(fieldName, LTE, value, controls);
     }
 
     /// 大于
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition gt(String fieldName, Object value, BuildControl... options) {
-        return new Condition(fieldName, GT, value, null, options);
+    public static Condition gt(String fieldName, Object value, BuildControl... controls) {
+        return condition(fieldName, GT, value, controls);
     }
 
     /// 大于等于
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition gte(String fieldName, Object value, BuildControl... options) {
-        return new Condition(fieldName, GTE, value, null, options);
+    public static Condition gte(String fieldName, Object value, BuildControl... controls) {
+       return condition(fieldName, GTE, value, controls);
     }
 
     /// 双端模糊匹配
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     参数 默认会在首尾添加 %
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition like(String fieldName, Object value, BuildControl... options) {
-        return new Condition(fieldName, LIKE, value, null, options);
+    public static Condition like(String fieldName, Object value, BuildControl... controls) {
+        return condition(fieldName, LIKE, value, controls);
     }
 
     /// NOT 双端模糊匹配
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     默认会在首尾添加 %
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition notLike(String fieldName, Object value, BuildControl... options) {
-        return new Condition(fieldName, NOT_LIKE, value, null, options);
+    public static Condition notLike(String fieldName, Object value, BuildControl... controls) {
+        return condition(fieldName, NOT_LIKE, value, controls);
     }
 
     /// 正则表达式匹配
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     SQL 表达式
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition likeRegex(String fieldName, String value, BuildControl... options) {
-        return new Condition(fieldName, LIKE_REGEX, value, null, options);
+    public static Condition likeRegex(String fieldName, String value, BuildControl... controls) {
+        return condition(fieldName, LIKE_REGEX, value, controls);
     }
 
     /// NOT 正则表达式匹配
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     SQL 表达式
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition notLikeRegex(String fieldName, String value, BuildControl... options) {
-        return new Condition(fieldName, NOT_LIKE_REGEX, value, null, options);
+    public static Condition notLikeRegex(String fieldName, String value, BuildControl... controls) {
+        return condition(fieldName, NOT_LIKE_REGEX, value, controls);
     }
 
     /// 在集合内 (集合元素中 null 也是合法匹配项, 空集合则表示不匹配任何项)
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition in(String fieldName, Object value, BuildControl... options) {
-        return new Condition(fieldName, IN, value, null, options);
+    public static Condition in(String fieldName, Object value, BuildControl... controls) {
+        return condition(fieldName, IN, value, controls);
     }
 
     /// 不在集合内 (集合元素中 null 也是合法匹配项, 空集合则表示不匹配任何项)
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition notIn(String fieldName, Object value, BuildControl... options) {
-        return new Condition(fieldName, NOT_IN, value, null, options);
+    public static Condition notIn(String fieldName, Object value, BuildControl... controls) {
+        return condition(fieldName, NOT_IN, value, controls);
     }
 
     /// 在范围内 (low <= field <= high)
@@ -183,10 +211,10 @@ public final class QueryBuilder {
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value1    比较值1
     /// @param value2    比较值2
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition between(String fieldName, Object value1, Object value2, BuildControl... options) {
-        return new Condition(fieldName, BETWEEN, value1, value2, options);
+    public static Condition between(String fieldName, Object value1, Object value2, BuildControl... controls) {
+        return condition(fieldName, BETWEEN, value1, value2, controls);
     }
 
     /// 不在范围内 (field < low 或 field > high)
@@ -194,34 +222,30 @@ public final class QueryBuilder {
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value1    比较值1
     /// @param value2    比较值2
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition notBetween(String fieldName, Object value1, Object value2, BuildControl... options) {
-        return new Condition(fieldName, NOT_BETWEEN, value1, value2, options);
+    public static Condition notBetween(String fieldName, Object value1, Object value2, BuildControl... controls) {
+        return condition(fieldName, NOT_BETWEEN, value1, value2, controls);
     }
 
     /// JSON 包含某子结构, 针对 JSON 对象或数组的子集匹配
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition jsonContains(String fieldName, Object value, BuildControl... options) {
-        return new Condition(fieldName, JSON_CONTAINS, value, null, options);
+    public static Condition jsonContains(String fieldName, Object value, BuildControl... controls) {
+        return condition(fieldName, JSON_CONTAINS, value, controls);
     }
 
     /// JSON 数组之间有交集
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
-    /// @param options   配置
+    /// @param controls  配置
     /// @return this 方便链式调用
-    public static Condition jsonOverlaps(String fieldName, Object value, BuildControl... options) {
-        return new Condition(fieldName, JSON_OVERLAPS, value, null, options);
-    }
-
-    public static WhereClause whereClause(String whereClause, Object... params) {
-        return new WhereClause(whereClause, params);
+    public static Condition jsonOverlaps(String fieldName, Object value, BuildControl... controls) {
+        return condition(fieldName, JSON_OVERLAPS, value, controls);
     }
 
 }
