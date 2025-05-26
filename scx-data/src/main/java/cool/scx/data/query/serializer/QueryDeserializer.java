@@ -136,7 +136,8 @@ public class QueryDeserializer {
         var value2 = convertValue(v.get("value2"), Object.class);
         var useExpression = v.get("useExpression").asBoolean();
         var useExpressionValue = v.get("useExpressionValue").asBoolean();
-        return new Condition(selector, conditionType, value1, value2, useExpression, useExpressionValue);
+        var skipIfInfo = convertValue(v.get("skipIfInfo"), SkipIfInfo.class);
+        return new Condition(selector, conditionType, value1, value2, useExpression, useExpressionValue, skipIfInfo);
     }
 
     private Where[] deserializeWhereAll(JsonNode v) {

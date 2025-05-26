@@ -84,6 +84,7 @@ public class QuerySerializer {
         m.put("value2", w.value2());
         m.put("useExpression", w.useExpression());
         m.put("useExpressionValue", w.useExpressionValue());
+        m.put("skipIfInfo",serializeSkipIfInfo( w.skipIfInfo()));
         return m;
     }
 
@@ -109,6 +110,16 @@ public class QuerySerializer {
         m.put("selector", orderByBody.selector());
         m.put("orderByType", orderByBody.orderByType());
         m.put("useExpression", orderByBody.useExpression());
+        return m;
+    }
+
+    public static LinkedHashMap<String, Object> serializeSkipIfInfo(SkipIfInfo info) {
+        var m = new LinkedHashMap<String, Object>();
+        m.put("@type", "SkipIfInfo");
+        m.put("skipIfNull", info.skipIfNull());
+        m.put("skipIfEmptyList", info.skipIfEmptyList());
+        m.put("skipIfEmptyString", info.skipIfEmptyString());
+        m.put("skipIfBlankString", info.skipIfBlankString());
         return m;
     }
 

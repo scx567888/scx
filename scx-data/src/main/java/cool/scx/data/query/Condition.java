@@ -1,6 +1,8 @@
 package cool.scx.data.query;
 
 import static cool.scx.common.util.StringUtils.isBlank;
+import static cool.scx.data.query.ConditionType.BETWEEN;
+import static cool.scx.data.query.ConditionType.NOT_BETWEEN;
 
 /// Where
 ///
@@ -15,8 +17,9 @@ public final class Condition extends QueryLike<Condition> implements Where {
     private final Object value2;
     private final boolean useExpression;
     private final boolean useExpressionValue;
+    private final SkipIfInfo skipIfInfo;
 
-    public Condition(String selector, ConditionType conditionType, Object value1, Object value2, boolean useExpression, boolean useExpressionValue) {
+    public Condition(String selector, ConditionType conditionType, Object value1, Object value2, boolean useExpression, boolean useExpressionValue, SkipIfInfo skipIfInfo) {
         //名称不能为空
         if (isBlank(selector)) {
             throw new IllegalArgumentException("Condition 参数错误 : selector 不能为空 !!!");
@@ -31,19 +34,7 @@ public final class Condition extends QueryLike<Condition> implements Where {
         this.value2 = value2;
         this.useExpression = useExpression;
         this.useExpressionValue = useExpressionValue;
-    }
-
-    private Condition() {
-        this.selector = null;
-        this.conditionType = null;
-        this.value1 = null;
-        this.value2 = null;
-        this.useExpression = false;
-        this.useExpressionValue = false;    
-    }
-
-    public static Condition empty() {
-        return new Condition();
+        this.skipIfInfo = skipIfInfo;
     }
 
     public String selector() {
@@ -69,10 +60,17 @@ public final class Condition extends QueryLike<Condition> implements Where {
     public boolean useExpressionValue() {
         return useExpressionValue;
     }
+    
+    public SkipIfInfo skipIfInfo(){
+        return skipIfInfo;
+    }
 
     @Override
     public boolean isEmpty() {
-        return conditionType == null;
+        if (conditionType == BETWEEN || conditionType == NOT_BETWEEN) {
+            return skipIfInfo.shouldSkip(value1, value2);
+        }
+        return skipIfInfo.shouldSkip(value1);
     }
 
     @Override
