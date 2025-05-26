@@ -1,4 +1,4 @@
-package cool.scx.data.build_control;
+package cool.scx.data.query;
 
 import java.lang.reflect.Array;
 import java.util.Collection;

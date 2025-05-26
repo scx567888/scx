@@ -1,4 +1,4 @@
-package cool.scx.data.build_control;
+package cool.scx.data.query;
 
 public enum BuildControl {
 

@@ -1,7 +1,5 @@
 package cool.scx.data.query;
 
-import cool.scx.data.build_control.BuildControl;
-
 /// QueryLike
 ///
 /// @author scx567888
