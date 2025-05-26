@@ -1,10 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.build_control.BuildControl;
-import cool.scx.data.build_control.BuildControlInfo;
-
 import static cool.scx.common.util.StringUtils.isBlank;
-import static cool.scx.data.build_control.BuildControlInfo.ofInfo;
 
 /// Where
 ///
@@ -17,9 +13,10 @@ public final class Condition extends QueryLike<Condition> implements Where {
     private final ConditionType conditionType;
     private final Object value1;
     private final Object value2;
-    private final BuildControlInfo info;
+    private final boolean useExpression;
+    private final boolean useExpressionValue;
 
-    public Condition(String selector, ConditionType conditionType, Object value1, Object value2, BuildControlInfo info) {
+    public Condition(String selector, ConditionType conditionType, Object value1, Object value2, boolean useExpression, boolean useExpressionValue) {
         //名称不能为空
         if (isBlank(selector)) {
             throw new IllegalArgumentException("Condition 参数错误 : selector 不能为空 !!!");
@@ -32,11 +29,8 @@ public final class Condition extends QueryLike<Condition> implements Where {
         this.conditionType = conditionType;
         this.value1 = value1;
         this.value2 = value2;
-        this.info = info;
-    }
-
-    public Condition(String selector, ConditionType conditionType, Object value1, Object value2, BuildControl... controls) {
-        this(selector, conditionType, value1, value2, ofInfo(controls));
+        this.useExpression = useExpression;
+        this.useExpressionValue = useExpressionValue;
     }
 
     public String selector() {
@@ -55,8 +49,12 @@ public final class Condition extends QueryLike<Condition> implements Where {
         return value2;
     }
 
-    public BuildControlInfo info() {
-        return info;
+    public boolean useExpression() {
+        return useExpression;
+    }
+
+    public boolean useExpressionValue() {
+        return useExpressionValue;
     }
 
     @Override
