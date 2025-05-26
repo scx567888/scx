@@ -143,7 +143,7 @@ public final class QueryBuilder {
     /// @param controls  配置
     /// @return this 方便链式调用
     public static Condition gte(String fieldName, Object value, BuildControl... controls) {
-       return condition(fieldName, GTE, value, controls);
+        return condition(fieldName, GTE, value, controls);
     }
 
     /// 双端模糊匹配

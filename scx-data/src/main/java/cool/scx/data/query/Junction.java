@@ -89,11 +89,11 @@ public abstract sealed class Junction extends QueryLike<Junction> implements Whe
     }
 
     public final Junction notBetween(String selector, Object value1, Object value2, BuildControl... controls) {
-        return add(QueryBuilder.notBetween(selector, value1, value2,controls));
+        return add(QueryBuilder.notBetween(selector, value1, value2, controls));
     }
 
     public final Junction jsonContains(String selector, Object value, BuildControl... controls) {
-        return add(QueryBuilder.jsonOverlaps(selector, value,controls));
+        return add(QueryBuilder.jsonOverlaps(selector, value, controls));
     }
 
     public final Junction jsonOverlaps(String selector, Object value, BuildControl... controls) {
