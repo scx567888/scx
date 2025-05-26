@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import static cool.scx.data.aggregation.AggregationBuilder.groupBy;
 import static cool.scx.data.aggregation.serializer.AggregationDeserializer.AGGREGATION_DEFINITION_DESERIALIZER;
 import static cool.scx.data.aggregation.serializer.AggregationSerializer.AGGREGATION_DEFINITION_SERIALIZER;
-import static cool.scx.data.build_control.BuildControl.USE_JSON_EXTRACT;
 
 public class AggregationTest {
 
@@ -17,7 +16,7 @@ public class AggregationTest {
 
     @Test
     public static void test1() throws JsonProcessingException {
-        var aggregationDefinition = groupBy("name", USE_JSON_EXTRACT)
+        var aggregationDefinition = groupBy("name")
                 .groupBy("reverseName", "REVERSE(name)")
                 .agg("name", "SUM(name)");
 
