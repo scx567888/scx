@@ -1,8 +1,11 @@
 package cool.scx.data.query;
 
+import static cool.scx.data.query.BuildControl.checkUseExpression;
+import static cool.scx.data.query.BuildControl.checkUseExpressionValue;
 import static cool.scx.data.query.ConditionType.*;
 import static cool.scx.data.query.OrderByType.ASC;
 import static cool.scx.data.query.OrderByType.DESC;
+import static cool.scx.data.query.SkipIfInfo.ofInfo;
 
 /// QueryBuilder
 ///
@@ -47,26 +50,22 @@ public final class QueryBuilder {
     }
 
     public static Condition condition(String fieldName, ConditionType conditionType, Object value, BuildControl... controls) {
-        var controlInfo = BuildControlInfo.ofInfo(controls);
-        var skip = controlInfo.shouldSkip(value);
-        if (skip) {
-            return Condition.empty();
-        }
-        return new Condition(fieldName, conditionType, value, null, controlInfo.useExpression(), controlInfo.useExpressionValue());
+        var useExpression = checkUseExpression(controls);
+        var useExpressionValue = checkUseExpressionValue(controls);
+        var info = ofInfo(controls);
+        return new Condition(fieldName, conditionType, value, null, useExpression, useExpressionValue, info);
     }
 
     public static Condition condition(String fieldName, ConditionType conditionType, Object value1, Object value2, BuildControl... controls) {
-        var controlInfo = BuildControlInfo.ofInfo(controls);
-        var skip = controlInfo.shouldSkip(value1, value2);
-        if (skip) {
-            return Condition.empty();
-        }
-        return new Condition(fieldName, conditionType, value1, value2, controlInfo.useExpression(), controlInfo.useExpressionValue());
+        var useExpression = checkUseExpression(controls);
+        var useExpressionValue = checkUseExpressionValue(controls);
+        var info = ofInfo(controls);
+        return new Condition(fieldName, conditionType, value1, value2, useExpression, useExpressionValue, info);
     }
 
     public static OrderBy orderBy(String selector, OrderByType orderByType, BuildControl... controls) {
-        var controlInfo = BuildControlInfo.ofInfo(controls);
-        return new OrderBy(selector, orderByType, controlInfo.useExpression());
+        var useExpression = checkUseExpression(controls);
+        return new OrderBy(selector, orderByType, useExpression);
     }
 
     public static WhereClause whereClause(String whereClause, Object... params) {
