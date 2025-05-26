@@ -140,7 +140,7 @@ public class JDBCWhereParser {
 
         //表达式值
         if (w.useExpressionValue()) {
-            return new WhereClause(columnDefinition + w.value1());
+            return new WhereClause(columnDefinition + "(" + w.value1() + ")");
         }
 
         //针对 参数类型是 SQL 的情况进行特殊处理 下同
@@ -156,12 +156,12 @@ public class JDBCWhereParser {
         if (w.value1() == null) {
             throw new WrongConditionTypeParamSizeException(w.selector(), w.conditionType(), 1);
         }
-        
+
         var columnDefinition = columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " ";
 
         //表达式值
         if (w.useExpressionValue()) {
-            return new WhereClause(columnDefinition + w.value1());
+            return new WhereClause(columnDefinition + "(" + w.value1() + ")");
         }
 
         //针对 参数类型是 SQL 的情况进行特殊处理 下同
@@ -303,6 +303,5 @@ public class JDBCWhereParser {
 
         return new WhereClause(columnDefinition + v1 + " AND " + v2, whereParams.toArray());
     }
-
 
 }
