@@ -138,6 +138,11 @@ public class JDBCWhereParser {
         // 类似这种 "name = " 
         var columnDefinition = columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " ";
 
+        //表达式值
+        if (w.useExpressionValue()) {
+            return new WhereClause(columnDefinition + w.value1());
+        }
+
         //针对 参数类型是 SQL 的情况进行特殊处理 下同
         if (w.value1() instanceof SQL a) {
             return new WhereClause(columnDefinition + "(" + a.sql() + ")", a.params());
@@ -151,13 +156,20 @@ public class JDBCWhereParser {
         if (w.value1() == null) {
             throw new WrongConditionTypeParamSizeException(w.selector(), w.conditionType(), 1);
         }
+        
+        var columnDefinition = columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " ";
+
+        //表达式值
+        if (w.useExpressionValue()) {
+            return new WhereClause(columnDefinition + w.value1());
+        }
 
         //针对 参数类型是 SQL 的情况进行特殊处理 下同
         if (w.value1() instanceof SQL a) {
-            return new WhereClause(columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " (" + a.sql() + ")", a.params());
+            return new WhereClause(columnDefinition + "(" + a.sql() + ")", a.params());
         }
 
-        return new WhereClause(columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " ?", w.value1());
+        return new WhereClause(columnDefinition + "?", w.value1());
     }
 
     private WhereClause parseLIKE(Condition w) {
@@ -167,6 +179,11 @@ public class JDBCWhereParser {
 
         // 类似这种 "name = " 
         var columnDefinition = columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " ";
+
+        //表达式值
+        if (w.useExpressionValue()) {
+            return new WhereClause(columnDefinition + "CONCAT('%',(" + w.value1() + "),'%')");
+        }
 
         if (w.value1() instanceof SQL a) {
             return new WhereClause(columnDefinition + "CONCAT('%',(" + a.sql() + "),'%')", a.params());
