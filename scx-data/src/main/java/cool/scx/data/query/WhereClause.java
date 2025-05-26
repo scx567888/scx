@@ -9,8 +9,8 @@ public final class WhereClause extends QueryLike<WhereClause> implements Where {
     private final String expression;
     private final Object[] params;
 
-    public WhereClause(String expression , Object... params) {
-        this.expression = expression ;
+    public WhereClause(String expression, Object... params) {
+        this.expression = expression;
         this.params = params;
     }
 

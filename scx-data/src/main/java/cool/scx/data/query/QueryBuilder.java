@@ -69,7 +69,7 @@ public final class QueryBuilder {
     }
 
     public static WhereClause whereClause(String expression, Object... params) {
-        return new WhereClause(expression , params);
+        return new WhereClause(expression, params);
     }
 
     /// 正序 : 也就是从小到大 (1,2,3,4,5,6)
