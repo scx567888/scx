@@ -50,7 +50,7 @@ public final class QueryBuilder {
         var controlInfo = BuildControlInfo.ofInfo(controls);
         var skip = controlInfo.shouldSkip(value);
         if (skip) {
-            return null;
+            return Condition.empty();
         }
         return new Condition(fieldName, conditionType, value, null, controlInfo.useExpression(), controlInfo.useExpressionValue());
     }
@@ -59,7 +59,7 @@ public final class QueryBuilder {
         var controlInfo = BuildControlInfo.ofInfo(controls);
         var skip = controlInfo.shouldSkip(value1, value2);
         if (skip) {
-            return null;
+            return Condition.empty();
         }
         return new Condition(fieldName, conditionType, value1, value2, controlInfo.useExpression(), controlInfo.useExpressionValue());
     }

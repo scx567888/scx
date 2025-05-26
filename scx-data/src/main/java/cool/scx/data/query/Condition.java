@@ -33,6 +33,19 @@ public final class Condition extends QueryLike<Condition> implements Where {
         this.useExpressionValue = useExpressionValue;
     }
 
+    private Condition() {
+        this.selector = null;
+        this.conditionType = null;
+        this.value1 = null;
+        this.value2 = null;
+        this.useExpression = false;
+        this.useExpressionValue = false;    
+    }
+
+    public static Condition empty() {
+        return new Condition();
+    }
+
     public String selector() {
         return selector;
     }
@@ -55,6 +68,10 @@ public final class Condition extends QueryLike<Condition> implements Where {
 
     public boolean useExpressionValue() {
         return useExpressionValue;
+    }
+
+    public boolean isEmpty() {
+        return conditionType == null;
     }
 
     @Override
