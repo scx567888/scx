@@ -49,19 +49,19 @@ public class AggregationImpl implements Aggregation {
 
     @Override
     public AggregationImpl groupBy(String fieldName) {
-        groupBys.add(new FieldGroupBy(fieldName));
+        groupBys.add(AggregationBuilder.groupBy(fieldName));
         return this;
     }
 
     @Override
     public AggregationImpl groupBy(String alias, String expression) {
-        groupBys.add(new ExpressionGroupBy(alias, expression));
+        groupBys.add(AggregationBuilder.groupBy(alias, expression));
         return this;
     }
 
     @Override
     public AggregationImpl agg(String alias, String expression) {
-        aggs.add(new Agg(alias, expression));
+        aggs.add(AggregationBuilder.agg(alias, expression));
         return this;
     }
 

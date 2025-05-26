@@ -4,11 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.aggregation.*;
-import cool.scx.data.build_control.BuildControlInfo;
 
 import java.util.ArrayList;
-
-import static cool.scx.common.util.ObjectUtils.convertValue;
 
 public class AggregationDeserializer {
 
@@ -99,7 +96,7 @@ public class AggregationDeserializer {
     private Agg deserializeAgg0(JsonNode v) {
         var aliasNode = v.path("alias");
         var expressionNode = v.path("expression");
-        var alias =  aliasNode.asText();
+        var alias = aliasNode.asText();
         var expression = expressionNode.asText();
         return new Agg(alias, expression);
     }
