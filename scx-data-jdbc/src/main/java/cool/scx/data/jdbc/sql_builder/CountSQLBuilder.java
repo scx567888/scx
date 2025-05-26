@@ -23,7 +23,7 @@ public class CountSQLBuilder {
 
     public SQL buildCountSQL(Query query) {
         var whereClause = whereParser.parse(query.getWhere());
-        var sql = GetCountSQL(whereClause.whereClause());
+        var sql = GetCountSQL(whereClause.expression());
         return sql(sql, whereClause.params());
     }
 

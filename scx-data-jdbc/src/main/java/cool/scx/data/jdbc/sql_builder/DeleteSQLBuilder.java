@@ -27,7 +27,7 @@ public class DeleteSQLBuilder {
     public SQL buildDeleteSQL(Query query) {
         var whereClause = whereParser.parse(query.getWhere());
         var orderByClauses = orderByParser.parse(query.getOrderBys());
-        var sql = GetDeleteSQL(whereClause.whereClause(), orderByClauses, query.getLimit());
+        var sql = GetDeleteSQL(whereClause.expression(), orderByClauses, query.getLimit());
         return sql(sql, whereClause.params());
     }
 
