@@ -89,7 +89,7 @@ public class FieldPolicyImpl implements FieldPolicy {
 
     @Override
     public FieldPolicyImpl virtualField(String virtualFieldName, String expression) {
-        this.virtualFields.add(FieldPolicyBuilder.virtualField(virtualFieldName, expression));
+        this.virtualFields.add(new VirtualField(virtualFieldName, expression));
         return this;
     }
 
@@ -146,7 +146,7 @@ public class FieldPolicyImpl implements FieldPolicy {
 
     @Override
     public FieldPolicyImpl assignField(String fieldName, String expression) {
-        this.assignFields.add(FieldPolicyBuilder.assignField(fieldName, expression));
+        this.assignFields.add(new AssignField(fieldName, expression));
         return this;
     }
 
