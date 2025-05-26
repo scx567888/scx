@@ -3,7 +3,7 @@ package cool.scx.data.query;
 import java.lang.reflect.Array;
 import java.util.Collection;
 
-public record BuildControlInfo(boolean skipIfNull,
+record BuildControlInfo(boolean skipIfNull,
                                boolean skipIfEmptyList,
                                boolean skipIfEmptyString,
                                boolean skipIfBlankString,
