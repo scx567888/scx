@@ -4,11 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.aggregation.*;
-import cool.scx.data.build_control.BuildControlInfo;
 
 import java.util.ArrayList;
-
-import static cool.scx.common.util.ObjectUtils.convertValue;
 
 public class AggregationDeserializer {
 
@@ -74,20 +71,16 @@ public class AggregationDeserializer {
 
     private GroupBy deserializeFieldGroupBy(JsonNode v) {
         var fieldNameNode = v.path("fieldName");
-        var infoNode = v.path("info");
         var fieldName = fieldNameNode.asText();
-        var info = convertValue(infoNode, BuildControlInfo.class);
-        return new FieldGroupBy(fieldName, info);
+        return new FieldGroupBy(fieldName);
     }
 
     private GroupBy deserializeExpressionGroupBy(JsonNode v) {
         var aliasNode = v.path("alias");
         var expressionNode = v.path("expression");
-        var infoNode = v.path("info");
         var alias = aliasNode.asText();
         var expression = expressionNode.asText();
-        var info = convertValue(infoNode, BuildControlInfo.class);
-        return new ExpressionGroupBy(alias, expression, info);
+        return new ExpressionGroupBy(alias, expression);
     }
 
     public Agg deserializeAgg(JsonNode v) {
@@ -101,13 +94,11 @@ public class AggregationDeserializer {
     }
 
     private Agg deserializeAgg0(JsonNode v) {
-        var expressionNode = v.path("expression");
         var aliasNode = v.path("alias");
-        var infoNode = v.path("info");
-        var name = expressionNode.asText();
-        var expression = aliasNode == null || aliasNode.isNull() ? null : aliasNode.asText();
-        var info = convertValue(infoNode, BuildControlInfo.class);
-        return new Agg(name, expression, info);
+        var expressionNode = v.path("expression");
+        var alias = aliasNode.asText();
+        var expression = expressionNode.asText();
+        return new Agg(alias, expression);
     }
 
 }

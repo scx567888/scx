@@ -13,6 +13,11 @@ public final class Not extends QueryLike<Not> implements Where {
     }
 
     @Override
+    public boolean isEmpty() {
+        return clause == null || clause.isEmpty();
+    }
+
+    @Override
     protected QueryImpl toQuery() {
         return new QueryImpl().where(this);
     }

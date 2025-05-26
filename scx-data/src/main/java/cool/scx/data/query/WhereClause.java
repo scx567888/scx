@@ -14,16 +14,17 @@ public final class WhereClause extends QueryLike<WhereClause> implements Where {
         this.params = params;
     }
 
-    public boolean isEmpty() {
-        return (whereClause == null || whereClause.isEmpty()) && (params == null || params.length == 0);
-    }
-
     public String whereClause() {
         return whereClause;
     }
 
     public Object[] params() {
         return params;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return (whereClause == null || whereClause.isEmpty()) && (params == null || params.length == 0);
     }
 
     @Override

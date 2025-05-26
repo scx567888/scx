@@ -1,10 +1,8 @@
 package cool.scx.data.query;
 
-import cool.scx.data.build_control.BuildControl;
-import cool.scx.data.build_control.BuildControlInfo;
-
 import static cool.scx.common.util.StringUtils.isBlank;
-import static cool.scx.data.build_control.BuildControlInfo.ofInfo;
+import static cool.scx.data.query.ConditionType.BETWEEN;
+import static cool.scx.data.query.ConditionType.NOT_BETWEEN;
 
 /// Where
 ///
@@ -17,9 +15,11 @@ public final class Condition extends QueryLike<Condition> implements Where {
     private final ConditionType conditionType;
     private final Object value1;
     private final Object value2;
-    private final BuildControlInfo info;
+    private final boolean useExpression;
+    private final boolean useExpressionValue;
+    private final SkipIfInfo skipIfInfo;
 
-    public Condition(String selector, ConditionType conditionType, Object value1, Object value2, BuildControlInfo info) {
+    public Condition(String selector, ConditionType conditionType, Object value1, Object value2, boolean useExpression, boolean useExpressionValue, SkipIfInfo skipIfInfo) {
         //名称不能为空
         if (isBlank(selector)) {
             throw new IllegalArgumentException("Condition 参数错误 : selector 不能为空 !!!");
@@ -32,11 +32,9 @@ public final class Condition extends QueryLike<Condition> implements Where {
         this.conditionType = conditionType;
         this.value1 = value1;
         this.value2 = value2;
-        this.info = info;
-    }
-
-    public Condition(String selector, ConditionType conditionType, Object value1, Object value2, BuildControl... controls) {
-        this(selector, conditionType, value1, value2, ofInfo(controls));
+        this.useExpression = useExpression;
+        this.useExpressionValue = useExpressionValue;
+        this.skipIfInfo = skipIfInfo;
     }
 
     public String selector() {
@@ -55,8 +53,24 @@ public final class Condition extends QueryLike<Condition> implements Where {
         return value2;
     }
 
-    public BuildControlInfo info() {
-        return info;
+    public boolean useExpression() {
+        return useExpression;
+    }
+
+    public boolean useExpressionValue() {
+        return useExpressionValue;
+    }
+
+    public SkipIfInfo skipIfInfo() {
+        return skipIfInfo;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        if (conditionType == BETWEEN || conditionType == NOT_BETWEEN) {
+            return skipIfInfo.shouldSkip(value1, value2);
+        }
+        return skipIfInfo.shouldSkip(value1);
     }
 
     @Override

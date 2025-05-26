@@ -1,7 +1,5 @@
 package cool.scx.data.aggregation;
 
-import cool.scx.data.build_control.BuildControl;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,20 +48,20 @@ public class AggregationImpl implements Aggregation {
     }
 
     @Override
-    public AggregationImpl groupBy(String fieldName, BuildControl... controls) {
-        groupBys.add(new FieldGroupBy(fieldName, controls));
+    public AggregationImpl groupBy(String fieldName) {
+        groupBys.add(new FieldGroupBy(fieldName));
         return this;
     }
 
     @Override
-    public AggregationImpl groupBy(String alias, String expression, BuildControl... controls) {
-        groupBys.add(new ExpressionGroupBy(alias, expression, controls));
+    public AggregationImpl groupBy(String alias, String expression) {
+        groupBys.add(new ExpressionGroupBy(alias, expression));
         return this;
     }
 
     @Override
-    public AggregationImpl agg(String alias, String expression, BuildControl... controls) {
-        aggs.add(new Agg(alias, expression, controls));
+    public AggregationImpl agg(String alias, String expression) {
+        aggs.add(new Agg(alias, expression));
         return this;
     }
 

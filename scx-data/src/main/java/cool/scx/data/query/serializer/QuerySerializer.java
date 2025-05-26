@@ -35,13 +35,15 @@ public class QuerySerializer {
     }
 
     public Object serializeWhere(Where obj) {
+        if (obj == null) {
+            return null;
+        }
         return switch (obj) {
             case WhereClause w -> serializeWhereClause(w);
             case And a -> serializeAnd(a);
             case Or o -> serializeOr(o);
             case Not n -> serializeNot(n);
             case Condition conditionBody -> serializeCondition(conditionBody);
-            case Query q -> serializeWhere(q.getWhere());
             default -> throw new IllegalArgumentException("Unknown Where type: " + obj);
         };
     }
@@ -82,7 +84,9 @@ public class QuerySerializer {
         m.put("conditionType", w.conditionType());
         m.put("value1", w.value1());
         m.put("value2", w.value2());
-        m.put("info", w.info());
+        m.put("useExpression", w.useExpression());
+        m.put("useExpressionValue", w.useExpressionValue());
+        m.put("skipIfInfo", serializeSkipIfInfo(w.skipIfInfo()));
         return m;
     }
 
@@ -107,7 +111,17 @@ public class QuerySerializer {
         m.put("@type", "OrderBy");
         m.put("selector", orderByBody.selector());
         m.put("orderByType", orderByBody.orderByType());
-        m.put("info", orderByBody.info());
+        m.put("useExpression", orderByBody.useExpression());
+        return m;
+    }
+
+    public LinkedHashMap<String, Object> serializeSkipIfInfo(SkipIfInfo info) {
+        var m = new LinkedHashMap<String, Object>();
+        m.put("@type", "SkipIfInfo");
+        m.put("skipIfNull", info.skipIfNull());
+        m.put("skipIfEmptyList", info.skipIfEmptyList());
+        m.put("skipIfEmptyString", info.skipIfEmptyString());
+        m.put("skipIfBlankString", info.skipIfBlankString());
         return m;
     }
 

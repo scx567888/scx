@@ -41,8 +41,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static cool.scx.data.build_control.BuildControl.USE_JSON_EXTRACT;
 import static cool.scx.data.field_policy.FieldPolicyBuilder.*;
+import static cool.scx.data.query.BuildControl.USE_EXPRESSION;
 import static cool.scx.data.query.QueryBuilder.*;
 import static java.lang.System.Logger.Level.ERROR;
 import static org.testng.AssertJUnit.assertEquals;
@@ -135,10 +135,10 @@ public class TestModule extends ScxAppModule {
             System.err.println("查询所有数据条数 !!! : " + carService.find().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.find(gt("id", 200)).size());
             System.err.println("查询所有 name 为空 条数 !!! : " + carService.find(eq("name", null)).size());
-            System.err.println("查询所有 车主为 Jack 的条数 !!! : " + carService.find(eq("owner.name", "Jack", USE_JSON_EXTRACT)).size());
-            System.err.println("查询所有 车主年龄大于 18 的条数 !!! : " + carService.find(gt("owner.age", 18, USE_JSON_EXTRACT)).size());
-            System.err.println("查询所有 拥有 fast 和 big 标签的条数 !!! : " + carService.find(jsonContains("tags", "fast,big")).size());
-            System.err.println("查询所有 汽车 中 车主 的 电话号 中 包含 666666666 的条数 !!! : " + carService.find(jsonContains("owner.phoneNumber", "666666666")).size());
+            System.err.println("查询所有 车主为 Jack 的条数 !!! : " + carService.find(eq("JSON_EXTRACT(owner,'$.name')", "Jack", USE_EXPRESSION)).size());
+            System.err.println("查询所有 车主年龄大于 18 的条数 !!! : " + carService.find(gt("JSON_EXTRACT(owner,'$.age')", 18, USE_EXPRESSION)).size());
+            System.err.println("查询所有 拥有 fast 和 big 标签的条数 !!! : " + carService.find(whereClause("JSON_CONTAINS(tags, ?)", "[\"fast\",\"big\"]")).size());
+            System.err.println("查询所有 汽车 中 车主 的 电话号 中 包含 666666666 的条数 !!! : " + carService.find(whereClause("JSON_CONTAINS(owner,?,'$.phoneNumber')", "[\"666666666\"]")).size());
 
             System.err.println("------------------------- 测试事务 --------------------------------");
             // 测试事务
@@ -255,7 +255,7 @@ public class TestModule extends ScxAppModule {
         z.order.where = "123";
         var a = bean.add(z);
         var b = bean.update(a);
-        var c = bean.find(eq("order.where", "123", USE_JSON_EXTRACT));
+        var c = bean.find(eq("JSON_EXTRACT(`order`, '$.where')", "123", USE_EXPRESSION));
         var d = bean.delete(b.id);
         System.out.println(b);
     }

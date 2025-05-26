@@ -1,12 +1,8 @@
 package cool.scx.data.query;
 
-import cool.scx.data.build_control.BuildControl;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.data.query.OrderByType.ASC;
-import static cool.scx.data.query.OrderByType.DESC;
 import static java.util.Collections.addAll;
 
 /// QueryImpl
@@ -120,14 +116,14 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl asc(String selector, BuildControl... options) {
-        orderBy(new OrderBy(selector, ASC, options));
+    public QueryImpl asc(String selector, BuildControl... controls) {
+        orderBy(QueryBuilder.asc(selector, controls));
         return this;
     }
 
     @Override
-    public QueryImpl desc(String selector, BuildControl... options) {
-        orderBy(new OrderBy(selector, DESC, options));
+    public QueryImpl desc(String selector, BuildControl... controls) {
+        orderBy(QueryBuilder.desc(selector, controls));
         return this;
     }
 

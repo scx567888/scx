@@ -43,7 +43,7 @@ public class FieldPolicySerializer {
         m.put("virtualFields", serializeVirtualFields(fieldPolicy.getVirtualFields()));
         m.put("ignoreNull", fieldPolicy.getIgnoreNull());
         m.put("ignoreNulls", fieldPolicy.getIgnoreNulls());
-        m.put("expressions", serializeExpressions(fieldPolicy.getAssignFields()));
+        m.put("assignFields", serializeAssignFields(fieldPolicy.getAssignFields()));
         return m;
     }
 
@@ -55,15 +55,15 @@ public class FieldPolicySerializer {
         return s;
     }
 
-    public ArrayList<Object> serializeExpressions(AssignField... expressions) {
+    public ArrayList<Object> serializeAssignFields(AssignField... expressions) {
         var s = new ArrayList<>();
         for (var expression : expressions) {
-            s.add(serializeExpression(expression));
+            s.add(serializeAssignField(expression));
         }
         return s;
     }
 
-    public Map<String, Object> serializeExpression(AssignField expression) {
+    public Map<String, Object> serializeAssignField(AssignField expression) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "AssignField");
         m.put("fieldName", expression.fieldName());

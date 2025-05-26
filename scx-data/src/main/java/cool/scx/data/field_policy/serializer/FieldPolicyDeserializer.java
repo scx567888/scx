@@ -47,7 +47,7 @@ public class FieldPolicyDeserializer {
         var virtualFieldsNode = objectNode.get("virtualFields");
         var ignoreNullNode = objectNode.get("ignoreNull");
         var ignoreNullsNode = objectNode.get("ignoreNulls");
-        var expressionsNode = objectNode.get("expressions");
+        var assignFieldsNode = objectNode.get("assignFields");
 
 
         if (filterModeNode != null && !filterModeNode.isNull()) {
@@ -81,9 +81,9 @@ public class FieldPolicyDeserializer {
             }
         }
 
-        if (expressionsNode != null && !expressionsNode.isNull()) {
+        if (assignFieldsNode != null && !assignFieldsNode.isNull()) {
             var a = new ArrayList<AssignField>();
-            for (var jsonNode : expressionsNode) {
+            for (var jsonNode : assignFieldsNode) {
                 a.add(deserializeAssignField(jsonNode));
             }
             fieldPolicy.assignFields(a.toArray(AssignField[]::new));
@@ -94,9 +94,9 @@ public class FieldPolicyDeserializer {
     }
 
     public VirtualField deserializeVirtualField(JsonNode v) {
-        var expressionNode = v.get("expression");
         var virtualFieldNameNode = v.get("virtualFieldName");
-        return new VirtualField(expressionNode.asText(), virtualFieldNameNode.asText());
+        var expressionNode = v.get("expression");
+        return new VirtualField(virtualFieldNameNode.asText(), expressionNode.asText());
     }
 
     public AssignField deserializeAssignField(JsonNode v) {
