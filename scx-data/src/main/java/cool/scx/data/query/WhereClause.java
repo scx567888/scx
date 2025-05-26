@@ -6,16 +6,16 @@ package cool.scx.data.query;
 /// @version 0.0.1
 public final class WhereClause extends QueryLike<WhereClause> implements Where {
 
-    private final String whereClause;
+    private final String expression;
     private final Object[] params;
 
-    public WhereClause(String whereClause, Object... params) {
-        this.whereClause = whereClause;
+    public WhereClause(String expression , Object... params) {
+        this.expression = expression ;
         this.params = params;
     }
 
-    public String whereClause() {
-        return whereClause;
+    public String expression() {
+        return expression;
     }
 
     public Object[] params() {
@@ -24,7 +24,7 @@ public final class WhereClause extends QueryLike<WhereClause> implements Where {
 
     @Override
     public boolean isEmpty() {
-        return (whereClause == null || whereClause.isEmpty()) && (params == null || params.length == 0);
+        return (expression == null || expression.isEmpty()) && (params == null || params.length == 0);
     }
 
     @Override

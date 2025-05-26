@@ -99,8 +99,8 @@ public abstract sealed class Junction extends QueryLike<Junction> implements Whe
         return add(new Not(clause));
     }
 
-    public final Junction whereClause(String whereClause, Object... params) {
-        return add(new WhereClause(whereClause, params));
+    public final Junction whereClause(String expression, Object... params) {
+        return add(new WhereClause(expression, params));
     }
 
     @Override

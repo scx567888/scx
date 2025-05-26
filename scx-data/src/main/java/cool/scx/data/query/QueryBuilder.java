@@ -68,8 +68,8 @@ public final class QueryBuilder {
         return new OrderBy(selector, orderByType, useExpression);
     }
 
-    public static WhereClause whereClause(String whereClause, Object... params) {
-        return new WhereClause(whereClause, params);
+    public static WhereClause whereClause(String expression, Object... params) {
+        return new WhereClause(expression , params);
     }
 
     /// 正序 : 也就是从小到大 (1,2,3,4,5,6)
