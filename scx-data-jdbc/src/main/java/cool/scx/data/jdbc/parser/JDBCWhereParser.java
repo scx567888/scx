@@ -261,22 +261,31 @@ public class JDBCWhereParser {
         }
 
         var columnName = columnNameParser.parseColumnName(w);
-
         var columnDefinition = columnName + " " + getWhereKeyWord(w) + " ";
 
         String v1;
         String v2;
         var whereParams = new ArrayList<>();
-        if (w.value1() instanceof SQL a) {
-            v1 = "(" + a.sql() + ")";
-            addAll(whereParams, a.params());
+
+        // ✅ 表达式值：直接拼接 SQL，不加参数
+        if (w.useExpressionValue()) {
+            v1 = "(" + w.value1() + ")";
+            v2 = "(" + w.value2() + ")";
+            return new WhereClause(columnDefinition + v1 + " AND " + v2);
+        }
+
+        // ✅ SQL 对象
+        if (w.value1() instanceof SQL a1) {
+            v1 = "(" + a1.sql() + ")";
+            addAll(whereParams, a1.params());
         } else {
             v1 = "?";
             whereParams.add(w.value1());
         }
-        if (w.value2() instanceof SQL a) {
-            v2 = "(" + a.sql() + ")";
-            addAll(whereParams, a.params());
+
+        if (w.value2() instanceof SQL a2) {
+            v2 = "(" + a2.sql() + ")";
+            addAll(whereParams, a2.params());
         } else {
             v2 = "?";
             whereParams.add(w.value2());
@@ -284,5 +293,6 @@ public class JDBCWhereParser {
 
         return new WhereClause(columnDefinition + v1 + " AND " + v2, whereParams.toArray());
     }
+
 
 }
