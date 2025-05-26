@@ -127,9 +127,9 @@ public class QueryDeserializer {
     }
 
     private WhereClause deserializeWhereClause(JsonNode v) {
-        var whereClause = v.get("whereClause").asText();
+        var expression = v.get("expression").asText();
         var params = convertValue(v.get("params"), Object[].class);
-        return new WhereClause(whereClause, params);
+        return new WhereClause(expression, params);
     }
 
     private Condition deserializeCondition(JsonNode v) {

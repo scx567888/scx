@@ -99,6 +99,10 @@ public abstract sealed class Junction extends QueryLike<Junction> implements Whe
         return add(new Not(clause));
     }
 
+    public final Junction whereClause(String expression, Object... params) {
+        return add(new WhereClause(expression, params));
+    }
+
     @Override
     public boolean isEmpty() {
         for (var clause : clauses) {

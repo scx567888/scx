@@ -51,7 +51,7 @@ public class QuerySerializer {
     private LinkedHashMap<String, Object> serializeWhereClause(WhereClause w) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "WhereClause");
-        m.put("whereClause", w.whereClause());
+        m.put("expression", w.expression());
         m.put("params", w.params());
         return m;
     }

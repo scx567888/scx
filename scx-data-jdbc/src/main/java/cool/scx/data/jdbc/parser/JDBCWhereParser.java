@@ -62,7 +62,7 @@ public class JDBCWhereParser {
     private WhereClause parseWhereClause(WhereClause w) {
         // 我们无法确定用户输入的内容 为了安全起见 我们为这种自定义查询 两端拼接 ()
         // 保证在和其他子句拼接的时候不产生歧义
-        return new WhereClause("(" + w.whereClause() + ")", w.params());
+        return new WhereClause("(" + w.expression() + ")", w.params());
     }
 
     private WhereClause parseJunction(Junction j) {
@@ -71,7 +71,7 @@ public class JDBCWhereParser {
         for (var c : j.clauses()) {
             var w = parse(c);
             if (w != null && !w.isEmpty()) {
-                clauses.add(w.whereClause());
+                clauses.add(w.expression());
                 addAll(whereParams, w.params());
             }
         }
@@ -99,7 +99,7 @@ public class JDBCWhereParser {
 
         if (w != null && !w.isEmpty()) {
             //因为其余解析方法已经保证了在可能出现歧义的子句两端拼接了括号, 所以这里直接添加 NOT 即可
-            return new WhereClause("NOT " + w.whereClause(), w.params());
+            return new WhereClause("NOT " + w.expression(), w.params());
         } else {
             return new WhereClause(null);
         }

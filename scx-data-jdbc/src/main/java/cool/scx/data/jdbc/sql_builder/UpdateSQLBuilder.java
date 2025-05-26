@@ -70,7 +70,7 @@ public class UpdateSQLBuilder {
         //6, 创建 orderBy 子句
         var orderByClauses = orderByParser.parse(query.getOrderBys());
         //7, 创建 SQL
-        var sql = GetUpdateSQL(finalUpdateSetClauses, whereClause.whereClause(), orderByClauses, query.getLimit());
+        var sql = GetUpdateSQL(finalUpdateSetClauses, whereClause.expression(), orderByClauses, query.getLimit());
         //8, 提取 entity 参数
         var entityParams = extractValues(updateSetColumns, entity);
         //9, 拼接参数 

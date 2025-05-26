@@ -44,7 +44,7 @@ public class AggregateSQLBuilder {
         //5, 创建 orderBy 子句
         var orderByClauses = orderByParser.parse(afterAggregateQuery.getOrderBys());
         //6, 创建 SQL
-        var sql = GetAggregateSQL(selectColumns, whereClause.whereClause(), groupByColumn, havingClause.whereClause(), orderByClauses, afterAggregateQuery.getOffset(), afterAggregateQuery.getLimit());
+        var sql = GetAggregateSQL(selectColumns, whereClause.expression(), groupByColumn, havingClause.expression(), orderByClauses, afterAggregateQuery.getOffset(), afterAggregateQuery.getLimit());
         var finalParams = tryConcat(whereClause.params(), havingClause.params());
         return SQL.sql(sql, finalParams);
     }
@@ -61,7 +61,7 @@ public class AggregateSQLBuilder {
         //5, 创建 orderBy 子句
         var orderByClauses = orderByParser.parse(afterAggregateQuery.getOrderBys());
         //6, 创建 SQL
-        var sql = GetAggregateSQL(selectColumns, whereClause.whereClause(), groupByColumn, havingClause.whereClause(), orderByClauses, null, 1L);
+        var sql = GetAggregateSQL(selectColumns, whereClause.expression(), groupByColumn, havingClause.expression(), orderByClauses, null, 1L);
         var finalParams = tryConcat(whereClause.params(), havingClause.params());
         return SQL.sql(sql, finalParams);
     }

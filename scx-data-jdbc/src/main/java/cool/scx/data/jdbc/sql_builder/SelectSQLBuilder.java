@@ -56,7 +56,7 @@ public class SelectSQLBuilder {
         //6, 创建 orderBy 子句
         var orderByClauses = orderByParser.parse(query.getOrderBys());
         //7, 创建 SQL
-        var sql = GetSelectSQL(finalSelectColumns, whereClause.whereClause(), orderByClauses, query.getOffset(), query.getLimit());
+        var sql = GetSelectSQL(finalSelectColumns, whereClause.expression(), orderByClauses, query.getOffset(), query.getLimit());
         return sql(sql, whereClause.params());
     }
 
@@ -72,7 +72,7 @@ public class SelectSQLBuilder {
         //6, 创建 orderBy 子句
         var orderByClauses = orderByParser.parse(query.getOrderBys());
         //7, 创建 SQL
-        var sql = GetSelectSQL(finalSelectColumns, whereClause.whereClause(), orderByClauses, null, 1L);
+        var sql = GetSelectSQL(finalSelectColumns, whereClause.expression(), orderByClauses, null, 1L);
         return sql(sql, whereClause.params());
     }
 
