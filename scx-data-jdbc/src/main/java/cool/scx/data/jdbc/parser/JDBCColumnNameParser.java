@@ -6,8 +6,6 @@ import cool.scx.data.query.OrderBy;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Table;
 
-import static cool.scx.common.util.StringUtils.notBlank;
-
 /// ColumnNameParser
 ///
 /// @author scx567888
@@ -37,7 +35,8 @@ public final class JDBCColumnNameParser {
     public String parseColumnName(String name, boolean useExpression) {
         // 这里就是普通的判断一下是否使用 原始名称即可
         if (useExpression) {
-            return dialect.quoteIdentifier(name);
+            //包裹表达式
+            return "(" + name + ")";
         }
         var column = tableInfo.getColumn(name);
         if (column == null) {
