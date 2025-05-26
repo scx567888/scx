@@ -118,14 +118,14 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl asc(String selector, BuildControl... options) {
-        orderBy(QueryBuilder.asc(selector, options));
+    public QueryImpl asc(String selector, BuildControl... controls) {
+        orderBy(QueryBuilder.asc(selector, controls));
         return this;
     }
 
     @Override
-    public QueryImpl desc(String selector, BuildControl... options) {
-        orderBy(QueryBuilder.desc(selector, options));
+    public QueryImpl desc(String selector, BuildControl... controls) {
+        orderBy(QueryBuilder.desc(selector, controls));
         return this;
     }
 

@@ -48,9 +48,9 @@ public interface Query {
     Query orderBy(OrderBy... orderBys);
 
     /// 追加 正序
-    Query asc(String selector, BuildControl... options);
+    Query asc(String selector, BuildControl... controls);
 
     /// 追加 倒序
-    Query desc(String selector, BuildControl... options);
+    Query desc(String selector, BuildControl... controls);
 
 }

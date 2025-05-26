@@ -93,14 +93,14 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL asc(String selector, BuildControl... options) {
-        query().asc(selector, options);
+    public QL asc(String selector, BuildControl... controls) {
+        query().asc(selector, controls);
         return (QL) this;
     }
 
     @Override
-    public QL desc(String selector, BuildControl... options) {
-        query().desc(selector, options);
+    public QL desc(String selector, BuildControl... controls) {
+        query().desc(selector, controls);
         return (QL) this;
     }
 
