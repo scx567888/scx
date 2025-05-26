@@ -52,8 +52,8 @@ public class JDBCWhereParser {
             case WhereClause w -> parseWhereClause(w);
             case Junction j -> parseJunction(j);
             case Not n -> parseNot(n);
-            case SQL sql -> parseSQL(sql);
             case Condition w -> parseCondition(w);
+            case SQL sql -> parseSQL(sql);
             case null -> new WhereClause(null);
             default -> throw new IllegalArgumentException("Unsupported object type: " + obj.getClass());
         };
