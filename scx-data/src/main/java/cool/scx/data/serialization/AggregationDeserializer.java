@@ -9,93 +9,111 @@ import java.util.ArrayList;
 
 public class AggregationDeserializer {
 
-    public static final AggregationDeserializer AGGREGATION_DEFINITION_DESERIALIZER = new AggregationDeserializer();
-
-    public Aggregation fromJson(String json) throws JsonProcessingException {
-        var v = ObjectUtils.jsonMapper().readTree(json);
-        return deserialize(v);
+    public static Aggregation deserializeAggregationFromJson(String json) throws DeserializationException {
+        try {
+            var v = ObjectUtils.jsonMapper().readTree(json);
+            return deserializeAggregation(v);
+        } catch (JsonProcessingException e) {
+            throw new DeserializationException(e);
+        }
     }
 
-    public Aggregation deserialize(JsonNode v) {
-        if (v.isObject()) {
-            var type = v.get("@type").asText();
-            if (type.equals("Aggregation")) {
-                return deserializeAggregationDefinition(v);
-            }
+    public static Aggregation deserializeAggregation(JsonNode v) throws DeserializationException {
+        if (v == null || v.isNull()) {
+            throw new DeserializationException("Aggregation object is null or empty");
         }
-        throw new IllegalArgumentException("Invalid aggregation definition: " + v);
+        if (!v.isObject()) {
+            throw new DeserializationException("FieldPolicy node is not an object: " + v);
+        }
+        var typeNode = v.get("@type");
+        if (typeNode == null || !"Aggregation".equals(typeNode.asText())) {
+            throw new DeserializationException("Unknown or missing @type for Aggregation: " + v);
+        }
+
+        var groupBysNode = v.get("groupBys");
+
+        if (groupBysNode == null || !groupBysNode.isArray()) {
+            throw new DeserializationException("FieldPolicy node is not an array: " + v);
+        }
+
+        var groupByList = new ArrayList<GroupBy>();
+        for (JsonNode gbNode : groupBysNode) {
+            groupByList.add(deserializeGroupBy(gbNode));
+        }
+        var groupBys = groupByList.toArray(GroupBy[]::new);
+
+
+        var aggsNode = v.get("aggs");
+        if (aggsNode == null || !aggsNode.isArray()) {
+            throw new DeserializationException("FieldPolicy node is not an array: " + v);
+        }
+        var aggList = new ArrayList<Agg>();
+        for (JsonNode aggNode : aggsNode) {
+            aggList.add(deserializeAgg(aggNode));
+        }
+        var aggs = aggList.toArray(Agg[]::new);
+        return new AggregationImpl().aggs(aggs).groupBys(groupBys);
     }
 
-    public Aggregation deserializeAggregationDefinition(JsonNode objectNode) {
-
-        if (objectNode == null) {
-            return new AggregationImpl();
+    private static GroupBy deserializeGroupBy(JsonNode node) throws DeserializationException {
+        if (node == null || node.isNull()) {
+            throw new DeserializationException("Invalid JSON for GroupBy");
+        }
+        var typeNode = node.get("@type");
+        if (typeNode == null) {
+            throw new DeserializationException("Unknown or missing @type for GroupBy: " + node);
+        }
+        var type = typeNode.asText();
+        if (type.equals("FieldGroupBy")) {
+            return deserializeFieldGroupBy(node);
+        } else if (type.equals("ExpressionGroupBy")) {
+            return deserializeExpressionGroupBy(node);
         }
 
-        var aggregationDefinition = new AggregationImpl();
-
-        var groupBysNode = objectNode.get("groupBys");
-        var aggsNode = objectNode.get("aggs");
-
-        if (groupBysNode != null && !groupBysNode.isNull()) {
-            var s = new ArrayList<GroupBy>();
-            for (var groupByNode : groupBysNode) {
-                s.add(deserializeGroupBy(groupByNode));
-            }
-            aggregationDefinition.groupBys(s.toArray(GroupBy[]::new));
-        }
-
-        if (aggsNode != null && !aggsNode.isNull()) {
-            var s = new ArrayList<Agg>();
-            for (var aggNode : aggsNode) {
-                s.add(deserializeAgg(aggNode));
-            }
-            aggregationDefinition.aggs(s.toArray(Agg[]::new));
-        }
-
-        return aggregationDefinition;
+        throw new DeserializationException("Unknown GroupBy type: " + type);
     }
 
-    public GroupBy deserializeGroupBy(JsonNode v) {
-        if (v.isObject()) {
-            var type = v.get("@type").asText();
-            if (type.equals("FieldGroupBy")) {
-                return deserializeFieldGroupBy(v);
-            }
-            if (type.equals("ExpressionGroupBy")) {
-                return deserializeExpressionGroupBy(v);
-            }
+    public static FieldGroupBy deserializeFieldGroupBy(JsonNode node) throws DeserializationException {
+        //不允许为空
+        var fieldNameNode = node.get("fieldName");
+        if (fieldNameNode == null || fieldNameNode.isNull()) {
+            throw new DeserializationException("Invalid JSON for FieldGroupBy");
         }
-        throw new IllegalArgumentException("Invalid Group By: " + v);
-    }
-
-    private GroupBy deserializeFieldGroupBy(JsonNode v) {
-        var fieldNameNode = v.path("fieldName");
         var fieldName = fieldNameNode.asText();
         return new FieldGroupBy(fieldName);
     }
 
-    private GroupBy deserializeExpressionGroupBy(JsonNode v) {
-        var aliasNode = v.path("alias");
-        var expressionNode = v.path("expression");
+    public static ExpressionGroupBy deserializeExpressionGroupBy(JsonNode node) throws DeserializationException {
+        var aliasNode = node.get("alias");
+        if (aliasNode == null || aliasNode.isNull()) {
+            throw new DeserializationException("Invalid JSON for ExpressionGroupBy");
+        }
+        var expressionNode = node.get("expression");
+        if (expressionNode == null || expressionNode.isNull()) {
+            throw new DeserializationException("Invalid JSON for ExpressionGroupBy");
+        }
         var alias = aliasNode.asText();
         var expression = expressionNode.asText();
         return new ExpressionGroupBy(alias, expression);
     }
 
-    public Agg deserializeAgg(JsonNode v) {
-        if (v.isObject()) {
-            var type = v.get("@type").asText();
-            if (type.equals("Agg")) {
-                return deserializeAgg0(v);
-            }
+    private static Agg deserializeAgg(JsonNode node) throws DeserializationException {
+        if (node == null || node.isNull()) {
+            throw new DeserializationException("Invalid JSON for Agg");
         }
-        throw new IllegalArgumentException("Invalid Group By: " + v);
-    }
-
-    private Agg deserializeAgg0(JsonNode v) {
-        var aliasNode = v.path("alias");
-        var expressionNode = v.path("expression");
+        var typeNode = node.get("@type");
+        if (typeNode == null || !"Aggregation".equals(typeNode.asText())) {
+            throw new DeserializationException("Unknown or missing @type for Agg: " + node);
+        }
+        //这两个都不允许为空
+        var aliasNode = node.get("alias");
+        if (aliasNode == null || !aliasNode.isTextual()) {
+            throw new DeserializationException("Invalid JSON for Agg");
+        }
+        var expressionNode = node.get("expression");
+        if (expressionNode == null || !expressionNode.isTextual()) {
+            throw new DeserializationException("Invalid JSON for Agg");
+        }
         var alias = aliasNode.asText();
         var expression = expressionNode.asText();
         return new Agg(alias, expression);
