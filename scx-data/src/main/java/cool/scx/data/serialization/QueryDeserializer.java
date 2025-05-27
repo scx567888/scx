@@ -6,149 +6,157 @@ import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.query.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static cool.scx.common.util.ObjectUtils.convertValue;
-
-/// QueryDeserializer
-///
-/// @author scx567888
-/// @version 0.0.1
 public class QueryDeserializer {
 
-    public static final QueryDeserializer QUERY_DESERIALIZER = new QueryDeserializer();
-
-    public Query fromJson(String json) throws JsonProcessingException {
-        var v = ObjectUtils.jsonMapper().readTree(json);
-        return deserialize(v);
-    }
-
-    public Query deserialize(JsonNode v) {
-        if (v.isObject()) {
-            var type = v.get("@type").asText();
-            if (type.equals("Query")) {
-                return deserializeQuery(v);
-            }
+    public static Query deserializeQueryFromJson(String json) throws DeserializationException {
+        try {
+            var v = ObjectUtils.jsonMapper().readTree(json);
+            return deserializeQuery(v);
+        } catch (JsonProcessingException e) {
+            throw new DeserializationException(e);
         }
-        throw new IllegalArgumentException("Unknown query type: " + v);
     }
 
-    public Query deserializeQuery(JsonNode objectNode) {
+    public static Query deserializeQuery(JsonNode v) throws DeserializationException {
+        if (v == null || v.isNull()) {
+            throw new DeserializationException("Query node is null");
+        }
+        if (!v.isObject()) {
+            throw new DeserializationException("Query node is not an object: " + v);
+        }
+        var typeNode = v.get("@type");
+        if (typeNode == null || !"Query".equals(typeNode.asText())) {
+            throw new DeserializationException("Unknown or missing @type for Query: " + v);
+        }
+
         var query = new QueryImpl();
-        if (objectNode == null) {
-            return query;
+
+        Where where = deserializeWhere(v.get("where"));
+
+        query.where(where);
+
+        OrderBy[] orderBys = deserializeOrderBys(v.get("orderBys"));
+
+        query.orderBys(orderBys);
+
+        if (v.has("offset") && !v.get("offset").isNull()) {
+            var offset = v.get("offset").asInt();
+            query.offset(offset);
         }
 
-        var whereNode = objectNode.get("where");
-        var orderBysNode = objectNode.get("orderBys");
-        var offsetNode = objectNode.get("offset");
-        var limitNode = objectNode.get("limit");
-        if (whereNode != null && !whereNode.isNull()) {
-            var where = deserializeWhere(whereNode);
-            query.where(where);
+        if (v.has("limit") && !v.get("limit").isNull()) {
+            var limit = v.get("limit").asInt();
+            query.limit(limit);
         }
-        if (orderBysNode != null && !orderBysNode.isNull()) {
-            var orderBys = deserializeOrderByAll(orderBysNode);
-            query.orderBys(orderBys);
-        }
-        if (offsetNode != null && !offsetNode.isNull()) {
-            query.offset(offsetNode.asLong());
-        }
-        if (limitNode != null && !limitNode.isNull()) {
-            query.limit(limitNode.asLong());
-        }
+
         return query;
     }
 
-    public OrderBy deserializeOrderBy(JsonNode v) {
-        if (v.isObject()) {
-            var type = v.get("@type").asText();
-            if (type.equals("OrderBy")) {
-                return deserializeOrderBy0(v);
-            }
-        }
-        throw new IllegalArgumentException("Unknown orderBy type: " + v);
-    }
-
-    private OrderBy deserializeOrderBy0(JsonNode v) {
-        var selector = v.get("selector").asText();
-        var orderByType = convertValue(v.get("orderByType"), OrderByType.class);
-        var useExpression = v.path("useExpression").asBoolean();
-        return new OrderBy(selector, orderByType, useExpression);
-    }
-
-    private OrderBy[] deserializeOrderByAll(JsonNode v) {
-        var s = new ArrayList<OrderBy>();
-        for (var jsonNode : v) {
-            s.add(deserializeOrderBy(jsonNode));
-        }
-        return s.toArray(OrderBy[]::new);
-    }
-
-    public Where deserializeWhere(JsonNode v) {
-        if (v == null || v.isNull()) {
+    private static Where deserializeWhere(JsonNode node) throws DeserializationException {
+        if (node == null || node.isNull()) {
             return null;
         }
-        if (v.isObject()) {
-            var type = v.get("@type").asText();
-            switch (type) {
-                case "And" -> {
-                    return deserializeAnd(v);
-                }
-                case "Or" -> {
-                    return deserializeOr(v);
-                }
-                case "Not" -> {
-                    return deserializeNot(v);
-                }
-                case "WhereClause" -> {
-                    return deserializeWhereClause(v);
-                }
-                case "Condition" -> {
-                    return deserializeCondition(v);
-                }
-            }
+        if (!node.isObject()) {
+            throw new DeserializationException("Where node is not an object: " + node);
         }
-        throw new IllegalArgumentException("Unknown query type: " + v);
+        var typeNode = node.get("@type");
+        if (typeNode == null) {
+            throw new DeserializationException("Missing @type in Where node: " + node);
+        }
+        String type = typeNode.asText();
+        return switch (type) {
+            case "WhereClause" -> deserializeWhereClause(node);
+            case "And" -> deserializeAnd(node);
+            case "Or" -> deserializeOr(node);
+            case "Not" -> deserializeNot(node);
+            case "Condition" -> deserializeCondition(node);
+            default -> throw new DeserializationException("Unknown Where type: " + type);
+        };
     }
 
-    private Junction deserializeAnd(JsonNode v) {
-        var clauses = deserializeWhereAll(v.get("clauses"));
-        return new And().add(clauses);
-    }
-
-    private Junction deserializeOr(JsonNode v) {
-        var clauses = deserializeWhereAll(v.get("clauses"));
-        return new Or().add(clauses);
-    }
-
-    private Not deserializeNot(JsonNode v) {
-        var clause = deserializeWhere(v.get("clause"));
-        return new Not(clause);
-    }
-
-    private WhereClause deserializeWhereClause(JsonNode v) {
-        var expression = v.get("expression").asText();
-        var params = convertValue(v.get("params"), Object[].class);
+    private static WhereClause deserializeWhereClause(JsonNode node) {
+        String expression = node.has("expression") ? node.get("expression").asText() : null;
+        JsonNode paramsNode = node.get("params");
+        Object[] params = ObjectUtils.jsonMapper().convertValue(paramsNode, Object[].class);
         return new WhereClause(expression, params);
     }
 
-    private Condition deserializeCondition(JsonNode v) {
-        var selector = v.get("selector").asText();
-        var conditionType = convertValue(v.get("conditionType"), ConditionType.class);
-        var value1 = convertValue(v.get("value1"), Object.class);
-        var value2 = convertValue(v.get("value2"), Object.class);
-        var useExpression = v.get("useExpression").asBoolean();
-        var useExpressionValue = v.get("useExpressionValue").asBoolean();
-        var skipIfInfo = convertValue(v.get("skipIfInfo"), SkipIfInfo.class);
+    private static Junction deserializeAnd(JsonNode node) throws DeserializationException {
+        JsonNode clausesNode = node.get("clauses");
+        Where[] clauses = deserializeWhereArray(clausesNode);
+        return new And().add(clauses);
+    }
+
+    private static Junction deserializeOr(JsonNode node) throws DeserializationException {
+        JsonNode clausesNode = node.get("clauses");
+        Where[] clauses = deserializeWhereArray(clausesNode);
+        return new Or().add(clauses);
+    }
+
+    private static Not deserializeNot(JsonNode node) throws DeserializationException {
+        JsonNode clauseNode = node.get("clause");
+        Where clause = deserializeWhere(clauseNode);
+        return new Not(clause);
+    }
+
+    private static Condition deserializeCondition(JsonNode node) {
+        String selector = node.has("selector") ? node.get("selector").asText() : null;
+        ConditionType conditionType = node.has("conditionType")
+                ? ConditionType.valueOf(node.get("conditionType").asText())
+                : null;
+        JsonNode value1Node = node.get("value1");
+        Object value1 = ObjectUtils.jsonMapper().convertValue(value1Node, Object.class);
+        JsonNode value2Node = node.get("value2");
+        Object value2 = ObjectUtils.jsonMapper().convertValue(value2Node, Object.class);
+        boolean useExpression = node.has("useExpression") && node.get("useExpression").asBoolean(false);
+        boolean useExpressionValue = node.has("useExpressionValue") && node.get("useExpressionValue").asBoolean(false);
+        SkipIfInfo skipIfInfo = node.has("skipIfInfo") ? deserializeSkipIfInfo(node.get("skipIfInfo")) : null;
+
         return new Condition(selector, conditionType, value1, value2, useExpression, useExpressionValue, skipIfInfo);
     }
 
-    private Where[] deserializeWhereAll(JsonNode v) {
-        var s = new ArrayList<Where>();
-        for (var jsonNode : v) {
-            s.add(deserializeWhere(jsonNode));
+    private static Where[] deserializeWhereArray(JsonNode arrayNode) throws DeserializationException {
+        if (arrayNode == null || !arrayNode.isArray()) {
+            return new Where[0];
         }
-        return s.toArray(Where[]::new);
+        List<Where> list = new ArrayList<>();
+        for (JsonNode node : arrayNode) {
+            list.add(deserializeWhere(node));
+        }
+        return list.toArray(new Where[0]);
+    }
+
+    public static OrderBy[] deserializeOrderBys(JsonNode arrayNode) {
+        if (arrayNode == null || !arrayNode.isArray()) {
+            return new OrderBy[0];
+        }
+        List<OrderBy> list = new ArrayList<>();
+        for (JsonNode node : arrayNode) {
+            list.add(deserializeOrderBy(node));
+        }
+        return list.toArray(new OrderBy[0]);
+    }
+
+    private static OrderBy deserializeOrderBy(JsonNode node) {
+        String selector = node.has("selector") ? node.get("selector").asText() : null;
+        OrderByType orderByType = node.has("orderByType")
+                ? OrderByType.valueOf(node.get("orderByType").asText())
+                : null;
+        boolean useExpression = node.has("useExpression") && node.get("useExpression").asBoolean(false);
+        return new OrderBy(selector, orderByType, useExpression);
+    }
+
+    private static SkipIfInfo deserializeSkipIfInfo(JsonNode node) {
+        if (node == null || node.isNull()) {
+            return null;
+        }
+        boolean skipIfNull = node.has("skipIfNull") && node.get("skipIfNull").asBoolean(false);
+        boolean skipIfEmptyList = node.has("skipIfEmptyList") && node.get("skipIfEmptyList").asBoolean(false);
+        boolean skipIfEmptyString = node.has("skipIfEmptyString") && node.get("skipIfEmptyString").asBoolean(false);
+        boolean skipIfBlankString = node.has("skipIfBlankString") && node.get("skipIfBlankString").asBoolean(false);
+        return new SkipIfInfo(skipIfNull, skipIfEmptyList, skipIfEmptyString, skipIfBlankString);
     }
 
 }
