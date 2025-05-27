@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 import static org.testng.AssertJUnit.*;
 import static org.testng.internal.junit.ArrayAsserts.assertArrayEquals;
 
-public class FieldPolicyTest {
+public class FieldPolicySerializationTest {
     
     public static void main(String[] args) throws Exception {
         testInclude();
