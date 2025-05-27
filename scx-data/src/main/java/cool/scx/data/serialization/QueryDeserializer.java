@@ -57,6 +57,7 @@ public class QueryDeserializer {
     }
 
     private static Where deserializeWhere(JsonNode node) throws DeserializationException {
+        //这里不应该抛异常 where 的节点允许 null
         if (node == null || node.isNull()) {
             return null;
         }
