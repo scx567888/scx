@@ -2,19 +2,19 @@ package cool.scx.data.serialization;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.query.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.common.util.ObjectUtils.convertValue;
+import static cool.scx.common.util.ObjectUtils.jsonMapper;
 
 public class QueryDeserializer {
 
     public static Query deserializeQueryFromJson(String json) throws DeserializationException {
         try {
-            var v = ObjectUtils.jsonMapper().readTree(json);
+            var v = jsonMapper().readTree(json);
             return deserializeQuery(v);
         } catch (JsonProcessingException e) {
             throw new DeserializationException(e);
@@ -81,7 +81,7 @@ public class QueryDeserializer {
     private static WhereClause deserializeWhereClause(JsonNode node) {
         String expression = node.has("expression") ? node.get("expression").asText() : null;
         JsonNode paramsNode = node.get("params");
-        Object[] params = ObjectUtils.jsonMapper().convertValue(paramsNode, Object[].class);
+        Object[] params = convertValue(paramsNode, Object[].class);
         return new WhereClause(expression, params);
     }
 
