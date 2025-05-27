@@ -162,10 +162,10 @@ public class QueryDeserializer {
         for (JsonNode node : arrayNode) {
             list.add(deserializeWhere(node));
         }
-        return list.toArray(new Where[0]);
+        return list.toArray(Where[]::new);
     }
 
-    public static OrderBy[] deserializeOrderBys(JsonNode arrayNode) {
+    public static OrderBy[] deserializeOrderBys(JsonNode arrayNode) throws DeserializationException {
         if (arrayNode == null || !arrayNode.isArray()) {
             return new OrderBy[0];
         }
@@ -173,15 +173,30 @@ public class QueryDeserializer {
         for (JsonNode node : arrayNode) {
             list.add(deserializeOrderBy(node));
         }
-        return list.toArray(new OrderBy[0]);
+        return list.toArray(OrderBy[]::new);
     }
 
-    private static OrderBy deserializeOrderBy(JsonNode node) {
-        String selector = node.has("selector") ? node.get("selector").asText() : null;
-        OrderByType orderByType = node.has("orderByType")
-                ? OrderByType.valueOf(node.get("orderByType").asText())
-                : null;
-        boolean useExpression = node.has("useExpression") && node.get("useExpression").asBoolean(false);
+    private static OrderBy deserializeOrderBy(JsonNode node) throws DeserializationException {
+        //selector 不允许为空
+        var selectorNode = node.get("selector");
+        if (selectorNode == null || !selectorNode.isTextual()) {
+            throw new DeserializationException("Missing selector in OrderBy node: " + node);
+        }
+        var selector = selectorNode.asText();
+
+        //orderByTypeNode 也不允许为空
+        var orderByTypeNode = node.get("orderByType");
+        if (orderByTypeNode == null || !orderByTypeNode.isTextual()) {
+            throw new DeserializationException("Missing orderByType in OrderBy node: " + node);
+        }
+        var orderByType = convertValue(orderByTypeNode, OrderByType.class);
+
+        //可以为空但是必须有默认值
+        var useExpressionNode = node.get("useExpression");
+        var useExpression = false;
+        if (useExpressionNode != null && !useExpressionNode.isNull()) {
+            useExpression = useExpressionNode.asBoolean(false);
+        }
         return new OrderBy(selector, orderByType, useExpression);
     }
 
