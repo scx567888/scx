@@ -34,7 +34,7 @@ public class QuerySerializer {
         return m;
     }
 
-    public static Map<String,Object> serializeWhere(Where obj) {
+    public static Map<String, Object> serializeWhere(Where obj) {
         return switch (obj) {
             case WhereClause w -> serializeWhereClause(w);
             case And a -> serializeAnd(a);

@@ -1,6 +1,9 @@
 package cool.scx.data.test;
 
-import cool.scx.data.field_policy.*;
+import cool.scx.data.field_policy.AssignField;
+import cool.scx.data.field_policy.FieldPolicyBuilder;
+import cool.scx.data.field_policy.FilterMode;
+import cool.scx.data.field_policy.VirtualField;
 import cool.scx.data.serialization.FieldPolicyDeserializer;
 import cool.scx.data.serialization.FieldPolicySerializer;
 import org.testng.annotations.Test;
@@ -9,7 +12,7 @@ import static org.testng.AssertJUnit.*;
 import static org.testng.internal.junit.ArrayAsserts.assertArrayEquals;
 
 public class FieldPolicySerializationTest {
-    
+
     public static void main(String[] args) throws Exception {
         testInclude();
         testExclude();

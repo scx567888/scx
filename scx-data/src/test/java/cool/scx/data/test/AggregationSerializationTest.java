@@ -66,7 +66,7 @@ public class AggregationSerializationTest {
 
         assertEquals(1, deserialized.getGroupBys().length);
         assertEquals(0, deserialized.getAggs().length);
-        assertEquals("onlyField", ((FieldGroupBy)deserialized.getGroupBys()[0]).fieldName());
+        assertEquals("onlyField", ((FieldGroupBy) deserialized.getGroupBys()[0]).fieldName());
     }
 
     @Test
@@ -105,9 +105,9 @@ public class AggregationSerializationTest {
         Aggregation deserialized = AggregationDeserializer.deserializeAggregationFromJson(json);
 
         assertEquals(3, deserialized.getGroupBys().length);
-        assertEquals("f1", ((FieldGroupBy)deserialized.getGroupBys()[0]).fieldName());
-        assertEquals("f2", ((FieldGroupBy)deserialized.getGroupBys()[1]).fieldName());
-        assertEquals("f3", ((FieldGroupBy)deserialized.getGroupBys()[2]).fieldName());
+        assertEquals("f1", ((FieldGroupBy) deserialized.getGroupBys()[0]).fieldName());
+        assertEquals("f2", ((FieldGroupBy) deserialized.getGroupBys()[1]).fieldName());
+        assertEquals("f3", ((FieldGroupBy) deserialized.getGroupBys()[2]).fieldName());
     }
 
     @Test
@@ -120,10 +120,10 @@ public class AggregationSerializationTest {
         Aggregation deserialized = AggregationDeserializer.deserializeAggregationFromJson(json);
 
         assertEquals(2, deserialized.getGroupBys().length);
-        assertEquals("a1", ((ExpressionGroupBy)deserialized.getGroupBys()[0]).alias());
-        assertEquals("expr1", ((ExpressionGroupBy)deserialized.getGroupBys()[0]).expression());
-        assertEquals("a2", ((ExpressionGroupBy)deserialized.getGroupBys()[1]).alias());
-        assertEquals("expr2", ((ExpressionGroupBy)deserialized.getGroupBys()[1]).expression());
+        assertEquals("a1", ((ExpressionGroupBy) deserialized.getGroupBys()[0]).alias());
+        assertEquals("expr1", ((ExpressionGroupBy) deserialized.getGroupBys()[0]).expression());
+        assertEquals("a2", ((ExpressionGroupBy) deserialized.getGroupBys()[1]).alias());
+        assertEquals("expr2", ((ExpressionGroupBy) deserialized.getGroupBys()[1]).expression());
     }
 
     @Test
@@ -179,7 +179,7 @@ public class AggregationSerializationTest {
     @Test
     public static void testDeserializeNullThrows() {
         assertThrows(DeserializationException.class, () -> {
-            AggregationDeserializer.deserializeAggregationFromJson("null");    
+            AggregationDeserializer.deserializeAggregationFromJson("null");
         });
     }
 
@@ -187,8 +187,8 @@ public class AggregationSerializationTest {
     public static void testDeserializeWrongTypeThrows() {
         String json = "{\"@type\":\"WrongType\"}";
         assertThrows(DeserializationException.class, () -> {
-            AggregationDeserializer.deserializeAggregationFromJson(json);    
+            AggregationDeserializer.deserializeAggregationFromJson(json);
         });
     }
-    
+
 }
