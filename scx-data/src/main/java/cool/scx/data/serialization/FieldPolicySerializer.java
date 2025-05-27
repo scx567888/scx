@@ -16,26 +16,16 @@ import java.util.Map;
 /// @version 0.0.1
 public class FieldPolicySerializer {
 
-    public static final FieldPolicySerializer FIELD_POLICY_SERIALIZER = new FieldPolicySerializer();
-
-    public String toJson(FieldPolicy fieldPolicy) throws JsonProcessingException {
-        var v = serialize(fieldPolicy);
-        return ObjectUtils.jsonMapper().writeValueAsString(v);
+    public static String serializeFieldPolicyToJson(FieldPolicy fieldPolicy) throws SerializationException {
+        var m = serializeFieldPolicy(fieldPolicy);
+        try {
+            return ObjectUtils.jsonMapper().writeValueAsString(m);
+        } catch (JsonProcessingException e) {
+            throw new SerializationException(e);
+        }
     }
 
-    public Map<String, Object> serializeVirtualField(VirtualField args) {
-        var s = new LinkedHashMap<String, Object>();
-        s.put("@type", "VirtualField");
-        s.put("expression", args.expression());
-        s.put("virtualFieldName", args.virtualFieldName());
-        return s;
-    }
-
-    public Map<String, Object> serialize(FieldPolicy fieldPolicy) {
-        return serializeFieldPolicy(fieldPolicy);
-    }
-
-    private Map<String, Object> serializeFieldPolicy(FieldPolicy fieldPolicy) {
+    public static Map<String, Object> serializeFieldPolicy(FieldPolicy fieldPolicy) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "FieldPolicy");
         m.put("filterMode", fieldPolicy.getFilterMode());
@@ -47,28 +37,36 @@ public class FieldPolicySerializer {
         return m;
     }
 
-    public ArrayList<Object> serializeVirtualFields(VirtualField... virtualFields) {
+    private static Map<String, Object> serializeVirtualField(VirtualField virtualField) {
+        var s = new LinkedHashMap<String, Object>();
+        s.put("@type", "VirtualField");
+        s.put("expression", virtualField.expression());
+        s.put("virtualFieldName", virtualField.virtualFieldName());
+        return s;
+    }
+
+    private static Map<String, Object> serializeAssignField(AssignField assignField) {
+        var m = new LinkedHashMap<String, Object>();
+        m.put("@type", "AssignField");
+        m.put("fieldName", assignField.fieldName());
+        m.put("expression", assignField.expression());
+        return m;
+    }
+
+    private static ArrayList<Object> serializeVirtualFields(VirtualField[] virtualFields) {
         var s = new ArrayList<>();
-        for (VirtualField virtualField : virtualFields) {
+        for (var virtualField : virtualFields) {
             s.add(serializeVirtualField(virtualField));
         }
         return s;
     }
 
-    public ArrayList<Object> serializeAssignFields(AssignField... expressions) {
+    private static ArrayList<Object> serializeAssignFields(AssignField[] assignFields) {
         var s = new ArrayList<>();
-        for (var expression : expressions) {
-            s.add(serializeAssignField(expression));
+        for (var assignField : assignFields) {
+            s.add(serializeAssignField(assignField));
         }
         return s;
-    }
-
-    public Map<String, Object> serializeAssignField(AssignField expression) {
-        var m = new LinkedHashMap<String, Object>();
-        m.put("@type", "AssignField");
-        m.put("fieldName", expression.fieldName());
-        m.put("expression", expression.expression());
-        return m;
     }
 
 }
