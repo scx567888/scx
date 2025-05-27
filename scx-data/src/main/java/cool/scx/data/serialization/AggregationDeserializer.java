@@ -23,7 +23,7 @@ public class AggregationDeserializer {
             throw new DeserializationException("Aggregation object is null or empty");
         }
         if (!v.isObject()) {
-            throw new DeserializationException("FieldPolicy node is not an object: " + v);
+            throw new DeserializationException("Aggregation node is not an object: " + v);
         }
         var typeNode = v.get("@type");
         if (typeNode == null || !"Aggregation".equals(typeNode.asText())) {
@@ -33,7 +33,7 @@ public class AggregationDeserializer {
         var groupBysNode = v.get("groupBys");
 
         if (groupBysNode == null || !groupBysNode.isArray()) {
-            throw new DeserializationException("FieldPolicy node is not an array: " + v);
+            throw new DeserializationException("groupBys node is not an array: " + v);
         }
 
         var groupByList = new ArrayList<GroupBy>();
@@ -45,7 +45,7 @@ public class AggregationDeserializer {
 
         var aggsNode = v.get("aggs");
         if (aggsNode == null || !aggsNode.isArray()) {
-            throw new DeserializationException("FieldPolicy node is not an array: " + v);
+            throw new DeserializationException("aggs node is not an array: " + v);
         }
         var aggList = new ArrayList<Agg>();
         for (JsonNode aggNode : aggsNode) {
@@ -102,7 +102,7 @@ public class AggregationDeserializer {
             throw new DeserializationException("Invalid JSON for Agg");
         }
         var typeNode = node.get("@type");
-        if (typeNode == null || !"Aggregation".equals(typeNode.asText())) {
+        if (typeNode == null || !"Agg".equals(typeNode.asText())) {
             throw new DeserializationException("Unknown or missing @type for Agg: " + node);
         }
         //这两个都不允许为空
