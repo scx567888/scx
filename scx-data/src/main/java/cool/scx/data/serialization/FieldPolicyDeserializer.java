@@ -1,4 +1,4 @@
-package cool.scx.data.field_policy.serializer;
+package cool.scx.data.serialization;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

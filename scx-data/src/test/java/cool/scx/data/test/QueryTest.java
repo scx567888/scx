@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.testng.annotations.Test;
 
 import static cool.scx.data.query.QueryBuilder.*;
-import static cool.scx.data.query.serializer.QueryDeserializer.QUERY_DESERIALIZER;
-import static cool.scx.data.query.serializer.QuerySerializer.QUERY_SERIALIZER;
+import static cool.scx.data.serialization.QueryDeserializer.QUERY_DESERIALIZER;
+import static cool.scx.data.serialization.QuerySerializer.QUERY_SERIALIZER;
 
 public class QueryTest {
 

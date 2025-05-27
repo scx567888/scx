@@ -5,8 +5,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static cool.scx.data.aggregation.AggregationBuilder.groupBy;
-import static cool.scx.data.aggregation.serializer.AggregationDeserializer.AGGREGATION_DEFINITION_DESERIALIZER;
-import static cool.scx.data.aggregation.serializer.AggregationSerializer.AGGREGATION_DEFINITION_SERIALIZER;
+import static cool.scx.data.serialization.AggregationDeserializer.AGGREGATION_DEFINITION_DESERIALIZER;
+import static cool.scx.data.serialization.AggregationSerializer.AGGREGATION_DEFINITION_SERIALIZER;
 
 public class AggregationTest {
 

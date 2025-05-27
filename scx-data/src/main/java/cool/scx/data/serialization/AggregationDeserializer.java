@@ -1,4 +1,4 @@
-package cool.scx.data.aggregation.serializer;
+package cool.scx.data.serialization;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

@@ -5,8 +5,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static cool.scx.data.field_policy.FieldPolicyBuilder.exclude;
-import static cool.scx.data.field_policy.serializer.FieldPolicyDeserializer.FIELD_POLICY_DESERIALIZER;
-import static cool.scx.data.field_policy.serializer.FieldPolicySerializer.FIELD_POLICY_SERIALIZER;
+import static cool.scx.data.serialization.FieldPolicyDeserializer.FIELD_POLICY_DESERIALIZER;
+import static cool.scx.data.serialization.FieldPolicySerializer.FIELD_POLICY_SERIALIZER;
 
 public class FieldPolicyTest {
 
