@@ -1,6 +1,7 @@
 package cool.scx.data.jdbc;
 
 import cool.scx.data.Finder;
+import cool.scx.data.LockMode;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.query.Query;
 
@@ -15,11 +16,20 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     private final JDBCRepository<Entity> repository;
     private final Query query;
     private final FieldPolicy fieldPolicy;
+    private final LockMode lockMode;
 
     public JDBCFinder(JDBCRepository<Entity> repository, Query query, FieldPolicy fieldPolicy) {
         this.repository = repository;
         this.query = query;
         this.fieldPolicy = fieldPolicy;
+        this.lockMode = null;
+    }
+
+    public JDBCFinder(JDBCRepository<Entity> repository, Query query, FieldPolicy fieldPolicy, LockMode lockMode) {
+        this.repository = repository;
+        this.query = query;
+        this.fieldPolicy = fieldPolicy;
+        this.lockMode = lockMode;
     }
 
     @Override

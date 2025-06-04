@@ -1,8 +1,6 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.data.AggregatableRepository;
-import cool.scx.data.Aggregator;
-import cool.scx.data.Finder;
+import cool.scx.data.*;
 import cool.scx.data.aggregation.Aggregation;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.column_name_mapping.BeanColumnNameMapping;
@@ -31,7 +29,7 @@ import static cool.scx.jdbc.sql.SQL.sql;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Long> {
+public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Long>, LockableRepository<Entity, Long> {
 
     // *********** 基本字段 ***************
     final Class<Entity> entityClass;
@@ -94,6 +92,11 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
     @Override
     public final List<Long> add(Collection<Entity> entityList, FieldPolicy fieldPolicy) {
         return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, fieldPolicy)).generatedKeys();
+    }
+
+    @Override
+    public final Finder<Entity> finder(Query query, FieldPolicy fieldPolicy, LockMode lockMode) {
+        return new JDBCFinder<>(this, query, fieldPolicy, lockMode);
     }
 
     @Override
