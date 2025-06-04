@@ -8,6 +8,12 @@ import java.util.List;
 import static cool.scx.data.field_policy.FieldPolicyBuilder.includeAll;
 import static cool.scx.data.query.QueryBuilder.query;
 
+/// 拥有在查询时指定锁模式能力的 Repository
+///
+/// @param <Entity>
+/// @param <ID>
+/// @author scx567888
+/// @version 0.0.1
 public interface LockableRepository<Entity, ID> extends Repository<Entity, ID> {
 
     Finder<Entity> finder(Query query, FieldPolicy fieldPolicy, LockMode lockMode);
