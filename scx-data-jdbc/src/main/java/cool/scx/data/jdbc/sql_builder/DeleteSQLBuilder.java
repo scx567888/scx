@@ -37,7 +37,7 @@ public class DeleteSQLBuilder {
         }
         var sql = "DELETE FROM " + getTableName() + getWhereClause(whereClause) + getOrderByClause(orderByClauses);
         // 删除时 limit 不能有 offset (偏移量)
-        return dialect.getLimitSQL(sql, null, limit);
+        return dialect.applyLimit(sql, null, limit);
     }
 
     private String getTableName() {

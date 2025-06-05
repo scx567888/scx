@@ -168,7 +168,7 @@ public class MySQLDialect implements Dialect {
     }
 
     @Override
-    public String defaultDateType() {
+    public String defaultDataType() {
         return "VARCHAR(128)";
     }
 

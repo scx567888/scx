@@ -88,7 +88,7 @@ public class UpdateSQLBuilder {
         }
         var sql = "UPDATE " + getTableName() + " SET " + String.join(", ", updateSetClauses) + getWhereClause(whereClause) + getOrderByClause(orderByClauses);
         // 更新时 limit 不能有 offset (偏移量)
-        return dialect.getLimitSQL(sql, null, limit);
+        return dialect.applyLimit(sql, null, limit);
     }
 
     private String getTableName() {
