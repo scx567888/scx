@@ -23,7 +23,7 @@ import static cool.scx.common.util.StringUtils.notEmpty;
 /// @author scx567888
 /// @version 0.0.1
 public interface Dialect {
-    
+
     //*************************** jdbc 相关 **************************
 
     /// 是否可以处理
@@ -45,8 +45,8 @@ public interface Dialect {
 
     /// 　获取最终的 SQL, 一般用于 Debug
     String getFinalSQL(Statement statement);
-    
-    
+
+
     //************************* 类型处理相关 *************************
 
     /// 查找
@@ -64,7 +64,7 @@ public interface Dialect {
     /// @return 方言数据类型
     String jdbcTypeToDialectDataType(JDBCType jdbcType);
 
-    
+
     //******************************* 语法区别相关 *******************************
 
     /// 将字段名或表名用数据库对应的转义符包装（如 MySQL 使用反引号）
@@ -106,7 +106,6 @@ public interface Dialect {
     default String applyExclusiveLock(String sql) {
         return sql + " FOR UPDATE";
     }
-    
 
 
     //**************************** DLL 相关 *********************************
@@ -183,7 +182,7 @@ public interface Dialect {
         return null;
     }
 
-    default String getDataTypeNameByJDBCType(JDBCType dataType){
+    default String getDataTypeNameByJDBCType(JDBCType dataType) {
         return dataType.name();
     }
 
