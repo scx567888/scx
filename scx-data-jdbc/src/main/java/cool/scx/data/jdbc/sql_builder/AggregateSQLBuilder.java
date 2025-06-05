@@ -73,7 +73,7 @@ public class AggregateSQLBuilder {
         var sql = "SELECT " + String.join(", ", selectColumns) + " FROM " + getTableName() +
                 getWhereClause(whereClause) + getGroupByColumns(groupByColumns) +
                 getHavingClause(havingClause) + getOrderByClause(orderByClauses);
-        return dialect.getLimitSQL(sql, offset, limit);
+        return dialect.applyLimit(sql, offset, limit);
     }
 
     private String getOrderByClause(String[] orderByClauses) {
