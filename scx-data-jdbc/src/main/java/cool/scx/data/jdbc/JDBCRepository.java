@@ -196,4 +196,12 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         return aggregateSQLBuilder.buildAggregateFirstSQL(beforeAggregateQuery, aggregation, afterAggregateQuery);
     }
 
+    public SQL buildSelectSQL(Query query, FieldPolicy fieldPolicy, LockMode lockMode) {
+        return selectSQLBuilder.buildSelectSQL(query, fieldPolicy, lockMode);
+    }
+
+    public SQL buildSelectFirstSQL(Query query, FieldPolicy fieldPolicy, LockMode lockMode) {
+        return selectSQLBuilder.buildSelectFirstSQL(query, fieldPolicy, lockMode);
+    }
+
 }
