@@ -51,7 +51,7 @@ public class TransferTest {
 
             userRepository.update(fromUser, include("money"), eq("id", fromUserId));
             userRepository.update(toUser, include("money"), eq("id", toUserId));
-            
+
         });
     }
 
