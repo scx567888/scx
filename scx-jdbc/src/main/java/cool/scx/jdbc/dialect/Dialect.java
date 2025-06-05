@@ -48,17 +48,6 @@ public interface Dialect {
     /// @return SQL 语句
     String getFinalSQL(Statement statement);
 
-    /// 获取分页 SQL (默认采用最常见的 LIMIT 关键词分页)
-    ///
-    /// @param sql    原始 SQL
-    /// @param offset 偏移量
-    /// @param limit  行数
-    /// @return SQL 语句
-    default String getLimitSQL(String sql, Long offset, Long limit) {
-        var limitClauses = limit == null ? "" : offset == null || offset == 0 ? " LIMIT " + limit : " LIMIT " + offset + "," + limit;
-        return sql + limitClauses;
-    }
-
     /// 创建数据源
     ///
     /// @param url        a
@@ -91,14 +80,6 @@ public interface Dialect {
     /// @param jdbcType 标准数据类型
     /// @return 方言数据类型
     String jdbcTypeToDialectDataType(JDBCType jdbcType);
-
-    /// 将字段名或表名用数据库对应的转义符包装（如 MySQL 使用反引号）
-    ///
-    /// @param identifier 原始字段名或表名
-    /// @return 加了转义符的 SQL 标识符
-    default String quoteIdentifier(String identifier) {
-        return identifier;
-    }
 
     /// 获取建表语句
     ///
@@ -207,13 +188,47 @@ public interface Dialect {
         s.append("\n;");
         return s.toString();
     }
+    
+    //******************************* 语法区别相关 *******************************
 
+    /// 将字段名或表名用数据库对应的转义符包装（如 MySQL 使用反引号）
+    ///
+    /// @param identifier 原始字段名或表名
+    /// @return 加了转义符的 SQL 标识符
+    default String quoteIdentifier(String identifier) {
+        return "`" + identifier + "`";
+    }
+
+    /// false 表达式
     default String falseExpression() {
         return "FALSE";
     }
 
+    /// true 表达式
     default String trueExpression() {
         return "TRUE";
+    }
+
+    /// 应用分页
+    default String applyLimit(String sql, Long offset, Long limit) {
+        if (limit == null) {
+            return sql;
+        }
+        if (offset == null || offset == 0) {
+            return sql + " LIMIT " + limit;
+        } else {
+            return sql + " LIMIT " + offset + "," + limit;
+        }
+    }
+
+    /// 应用锁
+    default String applySharedLock(String sql) {
+        return sql + " FOR SHARE";
+    }
+
+    /// 应用锁
+    default String applyExclusiveLock(String sql) {
+        return sql + " FOR UPDATE";
     }
 
 }
