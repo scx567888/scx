@@ -23,48 +23,31 @@ import static cool.scx.common.util.StringUtils.notEmpty;
 /// @author scx567888
 /// @version 0.0.1
 public interface Dialect {
+    
+    //*************************** jdbc 相关 **************************
 
     /// 是否可以处理
-    ///
-    /// @param url 数据连接地址
-    /// @return 是否可以处理
     boolean canHandle(String url);
 
     /// 是否可以处理
-    ///
-    /// @param dataSource 数据源
-    /// @return 是否可以处理
     boolean canHandle(DataSource dataSource);
 
     /// 是否可以处理
-    ///
-    /// @param driver 驱动
-    /// @return 是否可以处理
     boolean canHandle(Driver driver);
 
-    /// 　获取最终的 SQL, 一般用于 Debug
-    ///
-    /// @param statement s
-    /// @return SQL 语句
-    String getFinalSQL(Statement statement);
-
     /// 创建数据源
-    ///
-    /// @param url        a
-    /// @param username   a
-    /// @param password   a
-    /// @param parameters a
-    /// @return a
     DataSource createDataSource(String url, String username, String password, String[] parameters);
 
-    /// 执行前
-    ///
-    /// @param preparedStatement a
-    /// @return a
-    /// @throws SQLException a
+    /// 执行前处理
     default PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
         return preparedStatement;
     }
+
+    /// 　获取最终的 SQL, 一般用于 Debug
+    String getFinalSQL(Statement statement);
+    
+    
+    //************************* 类型处理相关 *************************
 
     /// 查找
     <T> TypeHandler<T> findTypeHandler(Type type);
@@ -80,7 +63,6 @@ public interface Dialect {
     /// @param jdbcType 标准数据类型
     /// @return 方言数据类型
     String jdbcTypeToDialectDataType(JDBCType jdbcType);
-
 
     
     //******************************* 语法区别相关 *******************************
