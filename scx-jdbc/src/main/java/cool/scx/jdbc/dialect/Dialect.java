@@ -163,7 +163,7 @@ public interface Dialect {
 
     default String getDataTypeDefinition(Column column) {
         if (column.dataType() == null) {
-            return defaultDateType();
+            return defaultDataType();
         }
         var _dataType = column.dataType();
         var _name = _dataType.name();
@@ -178,7 +178,7 @@ public interface Dialect {
     /// todo 是否需要 ?
     ///
     /// @return 默认类型值
-    default String defaultDateType() {
+    default String defaultDataType() {
         return null;
     }
 
