@@ -1,5 +1,6 @@
 package cool.scx.data.jdbc.sql_builder;
 
+import cool.scx.data.LockMode;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
 import cool.scx.data.jdbc.parser.JDBCOrderByParser;
@@ -11,6 +12,8 @@ import cool.scx.jdbc.sql.SQL;
 import static cool.scx.common.util.ArrayUtils.tryConcatAny;
 import static cool.scx.common.util.RandomUtils.randomString;
 import static cool.scx.common.util.StringUtils.notEmpty;
+import static cool.scx.data.LockMode.EXCLUSIVE;
+import static cool.scx.data.LockMode.SHARED;
 import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByQueryFieldPolicy;
 import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.joinWithQuoteIdentifier;
 import static cool.scx.jdbc.sql.SQL.sql;
@@ -44,7 +47,7 @@ public class SelectSQLBuilder {
         return virtualSelectColumns;
     }
 
-    public SQL buildSelectSQL(Query query, FieldPolicy fieldPolicy) {
+    public SQL buildSelectSQL(Query query, FieldPolicy fieldPolicy, LockMode lockMode) {
         //1, 过滤查询列
         var selectColumns = filterByQueryFieldPolicy(fieldPolicy, table);
         //2, 创建虚拟查询列
@@ -56,11 +59,11 @@ public class SelectSQLBuilder {
         //6, 创建 orderBy 子句
         var orderByClauses = orderByParser.parse(query.getOrderBys());
         //7, 创建 SQL
-        var sql = GetSelectSQL(finalSelectColumns, whereClause.expression(), orderByClauses, query.getOffset(), query.getLimit());
+        var sql = GetSelectSQL(finalSelectColumns, whereClause.expression(), orderByClauses, query.getOffset(), query.getLimit(), lockMode);
         return sql(sql, whereClause.params());
     }
 
-    public SQL buildSelectFirstSQL(Query query, FieldPolicy fieldPolicy) {
+    public SQL buildSelectFirstSQL(Query query, FieldPolicy fieldPolicy, LockMode lockMode) {
         //1, 过滤查询列
         var selectColumns = filterByQueryFieldPolicy(fieldPolicy, table);
         //2, 创建虚拟查询列
@@ -72,7 +75,7 @@ public class SelectSQLBuilder {
         //6, 创建 orderBy 子句
         var orderByClauses = orderByParser.parse(query.getOrderBys());
         //7, 创建 SQL
-        var sql = GetSelectSQL(finalSelectColumns, whereClause.expression(), orderByClauses, null, 1L);
+        var sql = GetSelectSQL(finalSelectColumns, whereClause.expression(), orderByClauses, null, 1L, lockMode);
         return sql(sql, whereClause.params());
     }
 
@@ -92,16 +95,30 @@ public class SelectSQLBuilder {
         return sql(sql, sql0.params());
     }
 
+    public SQL buildSelectSQL(Query query, FieldPolicy fieldPolicy) {
+        return buildSelectSQL(query, fieldPolicy, null);
+    }
+
+    public SQL buildSelectFirstSQL(Query query, FieldPolicy fieldPolicy) {
+        return buildSelectFirstSQL(query, fieldPolicy, null);
+    }
+
     private String GetWrapperSelectSQL(String sql) {
         return "SELECT * FROM (" + sql + ") AS " + getRandomTableName();
     }
 
-    private String GetSelectSQL(Object[] selectColumns, String whereClause, String[] orderByClauses, Long offset, Long limit) {
+    private String GetSelectSQL(Object[] selectColumns, String whereClause, String[] orderByClauses, Long offset, Long limit, LockMode lockMode) {
         if (selectColumns.length == 0) {
             throw new IllegalArgumentException("Select 子句错误 : 待查询的数据列 不能为空 !!!");
         }
         var sql = "SELECT " + getSelectColumns(selectColumns) + " FROM " + getTableName() + getWhereClause(whereClause) + getOrderByClause(orderByClauses);
-        return dialect.getLimitSQL(sql, offset, limit);
+        sql = dialect.applyLimit(sql, offset, limit);
+        if (lockMode == SHARED) {
+            sql = dialect.applySharedLock(sql);
+        } else if (lockMode == EXCLUSIVE) {
+            sql = dialect.applyExclusiveLock(sql);
+        }
+        return sql;
     }
 
     private String getSelectColumns(Object[] selectColumns) {
