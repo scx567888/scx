@@ -9,7 +9,7 @@ package cool.scx.common.functional;
 /// @version 0.0.1
 /// @see java.util.function.Function
 @FunctionalInterface
-public interface ScxFunction<T, R, E extends Exception> {
+public interface ScxFunction<T, R, E extends Throwable> {
 
     /// apply
     ///

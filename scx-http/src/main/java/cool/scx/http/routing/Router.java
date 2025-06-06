@@ -1,15 +1,15 @@
 package cool.scx.http.routing;
 
+import cool.scx.common.functional.ScxConsumer;
 import cool.scx.http.ScxHttpServerRequest;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 /// Router
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface Router extends Consumer<ScxHttpServerRequest> {
+public interface Router extends ScxConsumer<ScxHttpServerRequest, Throwable> {
 
     static Router of() {
         return new RouterImpl();

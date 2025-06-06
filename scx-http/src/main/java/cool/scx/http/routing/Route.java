@@ -1,9 +1,9 @@
 package cool.scx.http.routing;
 
+import cool.scx.common.functional.ScxConsumer;
 import cool.scx.http.method.HttpMethod;
 
 import java.util.Set;
-import java.util.function.Consumer;
 
 /// Route 路由只保存状态不做行为处理
 ///
@@ -27,6 +27,6 @@ public interface Route {
 
     int order();
 
-    Consumer<RoutingContext> handler();
+    ScxConsumer<RoutingContext, ?> handler();
 
 }

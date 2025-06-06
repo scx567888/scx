@@ -42,7 +42,7 @@ public class RoutingContextImpl implements RoutingContext {
     }
 
     @Override
-    public void next() {
+    public void next() throws Throwable {
         ScxHttpException e = new NotFoundException();
 
         while (iter.hasNext()) {

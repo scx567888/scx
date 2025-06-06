@@ -7,7 +7,7 @@ package cool.scx.common.functional;
 /// @version 0.0.1
 /// @see java.lang.Runnable
 @FunctionalInterface
-public interface ScxRunnable<E extends Exception> {
+public interface ScxRunnable<E extends Throwable> {
 
     /// run
     ///

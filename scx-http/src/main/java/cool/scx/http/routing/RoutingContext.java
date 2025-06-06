@@ -17,7 +17,7 @@ public interface RoutingContext {
 
     <T extends ScxHttpServerResponse> T response();
 
-    void next();
+    void next() throws Throwable;
 
     Parameters<String, String> pathParams();
 

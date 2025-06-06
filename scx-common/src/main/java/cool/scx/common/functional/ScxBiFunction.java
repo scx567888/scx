@@ -10,7 +10,7 @@ package cool.scx.common.functional;
 /// @version 0.0.1
 /// @see java.util.function.BiFunction
 @FunctionalInterface
-public interface ScxBiFunction<T, U, R, E extends Exception> {
+public interface ScxBiFunction<T, U, R, E extends Throwable> {
 
     /// apply
     ///

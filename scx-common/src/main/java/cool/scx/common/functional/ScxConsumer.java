@@ -8,7 +8,7 @@ package cool.scx.common.functional;
 /// @version 0.0.1
 /// @see java.util.function.Consumer
 @FunctionalInterface
-public interface ScxConsumer<T, E extends Exception> {
+public interface ScxConsumer<T, E extends Throwable> {
 
     /// accept
     ///
