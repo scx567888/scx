@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static cool.scx.common.exception.ScxExceptionHelper.wrap;
@@ -287,26 +288,68 @@ public final class SQLRunner {
     ///```
     ///
     /// @param handler 连接消费者
-    public void autoTransaction(ScxRunnable<?> handler) {
+    @SuppressWarnings("unchecked")
+    public <E extends Throwable> void autoTransaction(ScxRunnable<E> handler) throws E, TransactionException {
         var promise = new CompletableFuture<Void>();
         Thread.ofVirtual().name("scx-auto-transaction-thread-", threadNumber.getAndIncrement()).start(() -> {
+
             try (var con = getConnection(false)) {
                 CONNECTION_THREAD_LOCAL.set(con);
+
+                //尝试执行业务逻辑
                 try {
                     handler.run();
-                    con.commit();
-                    promise.complete(null);
-                } catch (Throwable e) {
-                    con.rollback();
-                    throw e;
-                } finally {
-                    CONNECTION_THREAD_LOCAL.remove();
+                } catch (Throwable handlerE) {
+                    // 业务异常发生，尝试回滚事务
+                    try {
+                        con.rollback();
+                    } catch (SQLException rollbackE) {
+                        // 回滚失败，将业务异常作为附加异常抛出
+                        rollbackE.addSuppressed(handlerE);
+                        throw new TransactionException("Rollback failed after business exception", rollbackE);
+                    }
+                    // 回滚成功，抛出业务异常
+                    throw handlerE;
                 }
+
+                try {
+                    //提交事务
+                    con.commit();
+                } catch (SQLException commitE) {
+                    try {
+                        con.rollback();
+                    } catch (SQLException rollbackE) {
+                        // 回滚失败，优先抛出回滚异常，同时附加提交异常
+                        rollbackE.addSuppressed(commitE);
+                        throw new TransactionException("Rollback failed after commit failure", rollbackE);
+                    }
+                    throw new TransactionException("Commit failed", commitE);
+                }
+
+                //通知线程完成
+                promise.complete(null);
             } catch (Throwable e) {
+                //通知线程失败
                 promise.completeExceptionally(e);
+            } finally {
+                CONNECTION_THREAD_LOCAL.remove();
             }
+
         });
-        wrap(() -> promise.get());
+
+        try {
+            promise.get();
+        } catch (InterruptedException e) {
+            // 这里怎么处理? 
+            Thread.currentThread().interrupt();
+            throw new TransactionException("Transaction thread was interrupted", e);
+        } catch (ExecutionException e) {
+            var cause = e.getCause();
+            if (cause instanceof TransactionException transactionException) {
+                throw transactionException;
+            }
+            throw (E) cause;
+        }
     }
 
     /// 同上 [#autoTransaction(ScxRunnable)] 但是有返回值
