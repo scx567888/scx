@@ -335,10 +335,10 @@ public final class SQLRunner {
         try {
             return promise.get();
         } catch (InterruptedException e) {
-            // 这里怎么处理? 
             Thread.currentThread().interrupt();
             throw new TransactionException("Transaction thread was interrupted", e);
         } catch (ExecutionException e) {
+            //这里理论只有两种可能 一种是 TransactionException 一种是 E 所以这种处理是安全的
             var cause = e.getCause();
             if (cause instanceof TransactionException transactionException) {
                 throw transactionException;
