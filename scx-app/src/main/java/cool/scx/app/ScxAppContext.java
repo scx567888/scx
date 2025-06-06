@@ -12,7 +12,7 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.sql.SQLRunner;
-import cool.scx.jdbc.sql.TransactionException;
+import cool.scx.jdbc.sql.SQLRunnerException;
 import cool.scx.web.ScxWeb;
 
 import javax.sql.DataSource;
@@ -110,11 +110,11 @@ public final class ScxAppContext {
         return scx().sqlRunner();
     }
 
-    public static <E extends Throwable> void autoTransaction(ScxRunnable<E> handler) throws E, TransactionException {
+    public static <E extends Throwable> void autoTransaction(ScxRunnable<E> handler) throws E, SQLRunnerException {
         sqlRunner().autoTransaction(handler);
     }
 
-    public static <T, E extends Throwable> T autoTransaction(ScxCallable<T, E> handler) throws E, TransactionException {
+    public static <T, E extends Throwable> T autoTransaction(ScxCallable<T, E> handler) throws E, SQLRunnerException {
         return sqlRunner().autoTransaction(handler);
     }
 
