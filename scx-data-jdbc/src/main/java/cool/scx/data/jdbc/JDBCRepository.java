@@ -2,6 +2,7 @@ package cool.scx.data.jdbc;
 
 import cool.scx.data.*;
 import cool.scx.data.aggregation.Aggregation;
+import cool.scx.data.exception.DataAccessException;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.column_name_mapping.BeanColumnNameMapping;
 import cool.scx.data.jdbc.column_name_mapping.MapFieldNameMapping;
@@ -18,6 +19,7 @@ import cool.scx.jdbc.result_handler.bean_builder.BeanBuilder;
 import cool.scx.jdbc.result_handler.map_builder.MapBuilder;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.jdbc.sql.SQLRunner;
+import cool.scx.jdbc.sql.SQLRunnerException;
 
 import java.util.Collection;
 import java.util.List;
@@ -85,13 +87,22 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
     }
 
     @Override
-    public final Long add(Entity entity, FieldPolicy fieldPolicy) {
-        return sqlRunner.update(buildInsertSQL(entity, fieldPolicy)).firstGeneratedKey();
+    public final Long add(Entity entity, FieldPolicy fieldPolicy) throws DataAccessException {
+        try {
+            return sqlRunner.update(buildInsertSQL(entity, fieldPolicy)).firstGeneratedKey();
+        } catch (SQLRunnerException e) {
+            // SQLRunnerException 本身就是包装层, 没必要二次包装 这里直接提取原始异常
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public final List<Long> add(Collection<Entity> entityList, FieldPolicy fieldPolicy) {
-        return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, fieldPolicy)).generatedKeys();
+    public final List<Long> add(Collection<Entity> entityList, FieldPolicy fieldPolicy) throws DataAccessException {
+        try {
+            return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, fieldPolicy)).generatedKeys();
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
@@ -105,18 +116,30 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
     }
 
     @Override
-    public final long update(Entity entity, FieldPolicy fieldPolicy, Query query) {
-        return sqlRunner.update(buildUpdateSQL(entity, fieldPolicy, query)).affectedItemsCount();
+    public final long update(Entity entity, FieldPolicy fieldPolicy, Query query) throws DataAccessException {
+        try {
+            return sqlRunner.update(buildUpdateSQL(entity, fieldPolicy, query)).affectedItemsCount();
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public final long delete(Query query) {
-        return sqlRunner.update(buildDeleteSQL(query)).affectedItemsCount();
+    public final long delete(Query query) throws DataAccessException {
+        try {
+            return sqlRunner.update(buildDeleteSQL(query)).affectedItemsCount();
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public final void clear() {
-        sqlRunner.execute(sql("truncate " + table.name()));
+    public final void clear() throws DataAccessException {
+        try {
+            sqlRunner.execute(sql("truncate " + table.name()));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override

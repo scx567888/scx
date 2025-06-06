@@ -2,7 +2,9 @@ package cool.scx.data.jdbc;
 
 import cool.scx.data.Aggregator;
 import cool.scx.data.aggregation.Aggregation;
+import cool.scx.data.exception.DataAccessException;
 import cool.scx.data.query.Query;
+import cool.scx.jdbc.sql.SQLRunnerException;
 
 import java.util.List;
 import java.util.Map;
@@ -25,33 +27,57 @@ public class JDBCAggregator implements Aggregator {
     }
 
     @Override
-    public <T> List<T> list(Class<T> resultType) {
-        return repository.sqlRunner.query(repository.buildAggregateSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofBeanList(resultType, repository.beanColumnNameMapping));
+    public <T> List<T> list(Class<T> resultType) throws DataAccessException {
+        try {
+            return repository.sqlRunner.query(repository.buildAggregateSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofBeanList(resultType, repository.beanColumnNameMapping));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public List<Map<String, Object>> list() {
-        return repository.sqlRunner.query(repository.buildAggregateSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofMapList(repository.mapBuilder));
+    public List<Map<String, Object>> list() throws DataAccessException {
+        try {
+            return repository.sqlRunner.query(repository.buildAggregateSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofMapList(repository.mapBuilder));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public <T> void forEach(Consumer<T> resultConsumer, Class<T> resultType) {
-        repository.sqlRunner.query(repository.buildAggregateSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofBeanConsumer(resultType, repository.beanColumnNameMapping, resultConsumer));
+    public <T> void forEach(Consumer<T> resultConsumer, Class<T> resultType) throws DataAccessException {
+        try {
+            repository.sqlRunner.query(repository.buildAggregateSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofBeanConsumer(resultType, repository.beanColumnNameMapping, resultConsumer));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public void forEach(Consumer<Map<String, Object>> resultConsumer) {
-        repository.sqlRunner.query(repository.buildAggregateSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofMapConsumer(repository.mapBuilder, resultConsumer));
+    public void forEach(Consumer<Map<String, Object>> resultConsumer) throws DataAccessException {
+        try {
+            repository.sqlRunner.query(repository.buildAggregateSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofMapConsumer(repository.mapBuilder, resultConsumer));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public <T> T first(Class<T> resultType) {
-        return repository.sqlRunner.query(repository.buildAggregateFirstSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofBean(resultType, repository.beanColumnNameMapping));
+    public <T> T first(Class<T> resultType) throws DataAccessException {
+        try {
+            return repository.sqlRunner.query(repository.buildAggregateFirstSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofBean(resultType, repository.beanColumnNameMapping));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public Map<String, Object> first() {
-        return repository.sqlRunner.query(repository.buildAggregateFirstSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofMap(repository.mapBuilder));
+    public Map<String, Object> first() throws DataAccessException {
+        try {
+            return repository.sqlRunner.query(repository.buildAggregateFirstSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofMap(repository.mapBuilder));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
 }

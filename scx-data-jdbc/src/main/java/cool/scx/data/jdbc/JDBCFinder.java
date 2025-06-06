@@ -2,8 +2,10 @@ package cool.scx.data.jdbc;
 
 import cool.scx.data.Finder;
 import cool.scx.data.LockMode;
+import cool.scx.data.exception.DataAccessException;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.query.Query;
+import cool.scx.jdbc.sql.SQLRunnerException;
 
 import java.util.List;
 import java.util.Map;
@@ -30,53 +32,94 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public List<Entity> list() {
-        return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), repository.entityBeanListHandler);
+    public List<Entity> list() throws DataAccessException {
+        try {
+            return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), repository.entityBeanListHandler);
+        } catch (SQLRunnerException e) {
+            // SQLRunnerException 本身就是包装层, 没必要二次包装 这里直接提取原始异常
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public <T> List<T> list(Class<T> resultType) {
-        return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanList(resultType, repository.beanColumnNameMapping));
+    public <T> List<T> list(Class<T> resultType) throws DataAccessException {
+        try {
+            return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanList(resultType, repository.beanColumnNameMapping));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public List<Map<String, Object>> listMap() {
-        return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofMapList(repository.mapBuilder));
+    public List<Map<String, Object>> listMap() throws DataAccessException {
+        try {
+            return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofMapList(repository.mapBuilder));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public void forEach(Consumer<Entity> entityConsumer) {
-        repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanConsumer(repository.beanBuilder, entityConsumer));
+    public void forEach(Consumer<Entity> entityConsumer) throws DataAccessException {
+        try {
+            repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanConsumer(repository.beanBuilder, entityConsumer));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public <T> void forEach(Consumer<T> entityConsumer, Class<T> resultType) {
-        repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanConsumer(resultType, repository.beanColumnNameMapping, entityConsumer));
+    public <T> void forEach(Consumer<T> entityConsumer, Class<T> resultType) throws DataAccessException {
+        try {
+            repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanConsumer(resultType, repository.beanColumnNameMapping, entityConsumer));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public void forEachMap(Consumer<Map<String, Object>> entityConsumer) {
-        repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofMapConsumer(repository.mapBuilder, entityConsumer));
+    public void forEachMap(Consumer<Map<String, Object>> entityConsumer) throws DataAccessException {
+        try {
+            repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofMapConsumer(repository.mapBuilder, entityConsumer));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public Entity first() {
-        return repository.sqlRunner.query(repository.buildSelectFirstSQL(query, fieldPolicy, lockMode), repository.entityBeanHandler);
+    public Entity first() throws DataAccessException {
+        try {
+            return repository.sqlRunner.query(repository.buildSelectFirstSQL(query, fieldPolicy, lockMode), repository.entityBeanHandler);
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public <T> T first(Class<T> resultType) {
-        return repository.sqlRunner.query(repository.buildSelectFirstSQL(query, fieldPolicy, lockMode), ofBean(resultType, repository.beanColumnNameMapping));
+    public <T> T first(Class<T> resultType) throws DataAccessException {
+        try {
+            return repository.sqlRunner.query(repository.buildSelectFirstSQL(query, fieldPolicy, lockMode), ofBean(resultType, repository.beanColumnNameMapping));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public Map<String, Object> firstMap() {
-        return repository.sqlRunner.query(repository.buildSelectFirstSQL(query, fieldPolicy, lockMode), ofMap(repository.mapBuilder));
+    public Map<String, Object> firstMap() throws DataAccessException {
+        try {
+            return repository.sqlRunner.query(repository.buildSelectFirstSQL(query, fieldPolicy, lockMode), ofMap(repository.mapBuilder));
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
     @Override
-    public long count() {
-        return repository.sqlRunner.query(repository.buildCountSQL(query), repository.countResultHandler);
+    public long count() throws DataAccessException {
+        try {
+            return repository.sqlRunner.query(repository.buildCountSQL(query), repository.countResultHandler);
+        } catch (SQLRunnerException e) {
+            throw new DataAccessException(e.getCause());
+        }
     }
 
 }
