@@ -1,5 +1,6 @@
 package cool.scx.jdbc.sql;
 
+import cool.scx.common.functional.ScxCallable;
 import cool.scx.common.functional.ScxConsumer;
 import cool.scx.common.functional.ScxFunction;
 import cool.scx.common.functional.ScxRunnable;
@@ -13,7 +14,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -259,38 +259,18 @@ public final class SQLRunner {
 
     /// 自动处理事务并在产生异常时进行自动回滚
     /// 注意 其中的操作会在另一个线程中执行 所以需要注意线程的操作
-    /// 当抛出异常时 请使用 {@link cool.scx.common.exception.ScxExceptionHelper#getRootCause(Throwable)} 来获取真正的异常
-    /// 用法
-    ///
-    /// ```sql
-    /// 假设有以下结构的数据表
-    /// create table test (
-    ///    name varchar(32) null unique,
-    ///);
-    ///
-    ///```
-    /// ```java
-    /// 在连接消费者中传入要执行的操作
-    /// SQLRunner sqlRunner = xxx;
-    /// try {
-    ///    sqlRunner.autoTransaction(() -> {
-    ///        // 这句代码会正确执行
-    ///        sqlRunner.execute(NoParametersSQL.of("insert into test(name) values('uniqueName') "));
-    ///        // 这句会产生异常 这时上一个语句会进行回滚 (rollback) 同时将异常抛出
-    ///        sqlRunner.execute(NoParametersSQL.of("insert into test(name) values('uniqueName') "));
-    ///});
-    ///} catch (Exception e){
-    ///   //这里会捕获 getConnection 可能产生的 SQLException 和 autoTransaction 代码块中产生的所有异常
-    ///   //因为会进行多层包裹 所以建议使用 ScxExceptionHelper.getRootCause(e); 来获取真正的异常
-    ///   ScxExceptionHelper.getRootCause(e).printStackTrace();
-    ///}
-    ///}
-    ///```
-    ///
-    /// @param handler 连接消费者
-    @SuppressWarnings("unchecked")
     public <E extends Throwable> void autoTransaction(ScxRunnable<E> handler) throws E, TransactionException {
-        var promise = new CompletableFuture<Void>();
+        autoTransaction(() -> {
+            handler.run();
+            return null;
+        });
+    }
+
+    /// 自动处理事务并在产生异常时进行自动回滚
+    /// 注意 其中的操作会在另一个线程中执行 所以需要注意线程的操作
+    @SuppressWarnings("unchecked")
+    public <T, E extends Throwable> T autoTransaction(ScxCallable<T, E> handler) throws E, TransactionException {
+        var promise = new CompletableFuture<T>();
         Thread.ofVirtual().name("scx-auto-transaction-thread-", threadNumber.getAndIncrement()).start(() -> {
 
             //这个 try 的功能是配合 CONNECTION_THREAD_LOCAL 和 promise 实现线程的等待和将异常穿透到 promise 
@@ -307,10 +287,9 @@ public final class SQLRunner {
                 try (con) {
                     CONNECTION_THREAD_LOCAL.set(con);
 
-                    // 业务逻辑执行 + 提交 + 回滚处理
                     try {
                         //尝试执行业务逻辑
-                        handler.run();
+                        handler.call();
                     } catch (Throwable handlerE) {
                         // 业务异常发生，尝试回滚事务
                         try {
@@ -350,7 +329,7 @@ public final class SQLRunner {
         });
 
         try {
-            promise.get();
+            return promise.get();
         } catch (InterruptedException e) {
             // 这里怎么处理? 
             Thread.currentThread().interrupt();
@@ -362,33 +341,6 @@ public final class SQLRunner {
             }
             throw (E) cause;
         }
-    }
-
-    /// 同上 [#autoTransaction(ScxRunnable)] 但是有返回值
-    ///
-    /// @param handler a
-    /// @param <T>     a
-    /// @return a
-    public <T> T autoTransaction(Callable<T> handler) {
-        var promise = new CompletableFuture<T>();
-        Thread.ofVirtual().name("scx-auto-transaction-thread-", threadNumber.getAndIncrement()).start(() -> {
-            try (var con = getConnection(false)) {
-                CONNECTION_THREAD_LOCAL.set(con);
-                try {
-                    T result = handler.call();
-                    con.commit();
-                    promise.complete(result);
-                } catch (Exception e) {
-                    con.rollback();
-                    throw e;
-                } finally {
-                    CONNECTION_THREAD_LOCAL.remove();
-                }
-            } catch (Exception e) {
-                promise.completeExceptionally(e);
-            }
-        });
-        return wrap(() -> promise.get());
     }
 
     private Connection getConnection() throws SQLException {
