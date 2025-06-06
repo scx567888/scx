@@ -1,5 +1,6 @@
 package cool.scx.data;
 
+import cool.scx.data.exception.DataAccessException;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.query.Query;
 
@@ -30,27 +31,27 @@ public interface LockableRepository<Entity, ID> extends Repository<Entity, ID> {
         return finder(query(), includeAll(), lockMode);
     }
 
-    default List<Entity> find(Query query, FieldPolicy fieldPolicy, LockMode lockMode) {
+    default List<Entity> find(Query query, FieldPolicy fieldPolicy, LockMode lockMode) throws DataAccessException {
         return finder(query, fieldPolicy, lockMode).list();
     }
 
-    default List<Entity> find(Query query, LockMode lockMode) {
+    default List<Entity> find(Query query, LockMode lockMode) throws DataAccessException {
         return finder(query, lockMode).list();
     }
 
-    default List<Entity> find(FieldPolicy fieldPolicy, LockMode lockMode) {
+    default List<Entity> find(FieldPolicy fieldPolicy, LockMode lockMode) throws DataAccessException {
         return finder(fieldPolicy, lockMode).list();
     }
 
-    default List<Entity> find(LockMode lockMode) {
+    default List<Entity> find(LockMode lockMode) throws DataAccessException {
         return finder(lockMode).list();
     }
 
-    default Entity findFirst(Query query, FieldPolicy fieldPolicy, LockMode lockMode) {
+    default Entity findFirst(Query query, FieldPolicy fieldPolicy, LockMode lockMode) throws DataAccessException {
         return finder(query, fieldPolicy, lockMode).first();
     }
 
-    default Entity findFirst(Query query, LockMode lockMode) {
+    default Entity findFirst(Query query, LockMode lockMode) throws DataAccessException {
         return finder(query, lockMode).first();
     }
 
