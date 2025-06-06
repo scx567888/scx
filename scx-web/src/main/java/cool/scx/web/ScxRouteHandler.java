@@ -1,7 +1,7 @@
 package cool.scx.web;
 
 import cool.scx.common.exception.ScxExceptionHelper;
-import cool.scx.common.exception.ScxRuntimeException;
+import cool.scx.common.functional.ScxConsumer;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.URIUtils;
 import cool.scx.http.method.HttpMethod;
@@ -13,7 +13,6 @@ import cool.scx.web.parameter_handler.ParameterHandler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.web.RouteRegistrar.findScxRouteOrThrow;
@@ -23,7 +22,7 @@ import static cool.scx.websocket.routing.WebSocketTypeMatcher.NOT_WEB_SOCKET_HAN
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
+public final class ScxRouteHandler implements Route, ScxConsumer<RoutingContext, Throwable> {
 
     public final MethodInfo method;
     public final boolean isVoid;
@@ -78,7 +77,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
     }
 
     @Override
-    public void accept(RoutingContext context) {
+    public void accept(RoutingContext context) throws Throwable {
         //0, 将 routingContext 注入到 ThreadLocal 中去 以方便后续从静态方法调用
         ScxWeb._routingContext(context);
         try {
@@ -97,8 +96,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
         } catch (Throwable e) {
             //1, 如果是反射调用时发生异常 则使用反射异常的内部异常 否则使用异常
             //2, 如果是包装类型异常 (ScxWrappedRuntimeException) 则使用其内部的异常
-            var exception = ScxExceptionHelper.getRootCause(e instanceof InvocationTargetException ? e.getCause() : e);
-            throw new ScxRuntimeException(exception);
+            throw ScxExceptionHelper.getRootCause(e instanceof InvocationTargetException ? e.getCause() : e);
         }
     }
 
@@ -133,7 +131,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
     }
 
     @Override
-    public Consumer<RoutingContext> handler() {
+    public ScxConsumer<RoutingContext, Throwable> handler() {
         return this;
     }
 
