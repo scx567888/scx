@@ -1,12 +1,13 @@
 package cool.scx.tcp;
 
+import cool.scx.common.functional.ScxConsumer;
+
 import java.io.IOException;
 import java.lang.System.Logger;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.function.Consumer;
 
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.TRACE;
@@ -21,7 +22,7 @@ public class TCPServer implements ScxTCPServer {
 
     private final TCPServerOptions options;
     private final Thread serverThread;
-    private Consumer<ScxTCPSocket> connectHandler;
+    private ScxConsumer<ScxTCPSocket, ?> connectHandler;
     private ServerSocket serverSocket;
     private volatile boolean running;
 
@@ -36,7 +37,7 @@ public class TCPServer implements ScxTCPServer {
     }
 
     @Override
-    public ScxTCPServer onConnect(Consumer<ScxTCPSocket> connectHandler) {
+    public ScxTCPServer onConnect(ScxConsumer<ScxTCPSocket, ?> connectHandler) {
         this.connectHandler = connectHandler;
         return this;
     }
