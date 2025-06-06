@@ -13,24 +13,24 @@ import java.util.function.Consumer;
 /// @version 0.0.1
 public interface Finder<Entity> {
 
-    List<Entity> list()  throws DataAccessException;
+    List<Entity> list() throws DataAccessException;
 
-    <T> List<T> list(Class<T> resultType)  throws DataAccessException;
+    <T> List<T> list(Class<T> resultType) throws DataAccessException;
 
-    List<Map<String, Object>> listMap()  throws DataAccessException;
+    List<Map<String, Object>> listMap() throws DataAccessException;
 
-    void forEach(Consumer<Entity> entityConsumer)  throws DataAccessException;
+    void forEach(Consumer<Entity> entityConsumer) throws DataAccessException;
 
-    <T> void forEach(Consumer<T> entityConsumer, Class<T> resultType)  throws DataAccessException;
+    <T> void forEach(Consumer<T> entityConsumer, Class<T> resultType) throws DataAccessException;
 
-    void forEachMap(Consumer<Map<String, Object>> entityConsumer)  throws DataAccessException;
+    void forEachMap(Consumer<Map<String, Object>> entityConsumer) throws DataAccessException;
 
-    Entity first()  throws DataAccessException;
+    Entity first() throws DataAccessException;
 
-    <T> T first(Class<T> resultType)  throws DataAccessException;
+    <T> T first(Class<T> resultType) throws DataAccessException;
 
-    Map<String, Object> firstMap()  throws DataAccessException;
+    Map<String, Object> firstMap() throws DataAccessException;
 
-    long count()  throws DataAccessException;
+    long count() throws DataAccessException;
 
 }
