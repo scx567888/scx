@@ -1,5 +1,6 @@
 package cool.scx.data;
 
+import cool.scx.data.exception.DataAccessException;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.query.Query;
 
@@ -24,7 +25,7 @@ public interface Repository<Entity, ID> {
     /// @param entity      待插入的数据 (可以为 null)
     /// @param fieldPolicy 字段策略
     /// @return 主键 ID (若数据没有主键, 则为 null)
-    ID add(Entity entity, FieldPolicy fieldPolicy);
+    ID add(Entity entity, FieldPolicy fieldPolicy) throws DataAccessException;
 
     /// 添加多条数据
     ///
@@ -33,7 +34,7 @@ public interface Repository<Entity, ID> {
     /// @param entityList  待插入的数据列表 (成员 可以为 null)
     /// @param fieldPolicy 字段策略
     /// @return 主键 ID 列表 (若数据没有主键, 则为 null 列表)
-    List<ID> add(Collection<Entity> entityList, FieldPolicy fieldPolicy);
+    List<ID> add(Collection<Entity> entityList, FieldPolicy fieldPolicy) throws DataAccessException;
 
     /// 创建一个数据查询器
     ///
@@ -52,26 +53,26 @@ public interface Repository<Entity, ID> {
     /// @param query       查询条件
     /// @param fieldPolicy 字段策略
     /// @return 更新成功的条数
-    long update(Entity entity, FieldPolicy fieldPolicy, Query query);
+    long update(Entity entity, FieldPolicy fieldPolicy, Query query) throws DataAccessException;
 
     /// 删除数据
     ///
     /// @param query 查询条件
     /// @return 删除成功的条数
-    long delete(Query query);
+    long delete(Query query) throws DataAccessException;
 
     /// 清空整个数据源 (慎用)
-    void clear();
+    void clear() throws DataAccessException;
 
-    default ID add(Entity entity) {
+    default ID add(Entity entity) throws DataAccessException {
         return add(entity, includeAll());
     }
 
-    default ID add(FieldPolicy fieldPolicy) {
+    default ID add(FieldPolicy fieldPolicy) throws DataAccessException {
         return add((Entity) null, fieldPolicy);
     }
 
-    default List<ID> add(Collection<Entity> entityList) {
+    default List<ID> add(Collection<Entity> entityList) throws DataAccessException {
         return add(entityList, includeAll());
     }
 
@@ -87,43 +88,43 @@ public interface Repository<Entity, ID> {
         return finder(query(), includeAll());
     }
 
-    default List<Entity> find(Query query, FieldPolicy fieldPolicy) {
+    default List<Entity> find(Query query, FieldPolicy fieldPolicy) throws DataAccessException {
         return finder(query, fieldPolicy).list();
     }
 
-    default List<Entity> find(Query query) {
+    default List<Entity> find(Query query) throws DataAccessException {
         return finder(query).list();
     }
 
-    default List<Entity> find(FieldPolicy fieldPolicy) {
+    default List<Entity> find(FieldPolicy fieldPolicy) throws DataAccessException {
         return finder(fieldPolicy).list();
     }
 
-    default List<Entity> find() {
+    default List<Entity> find() throws DataAccessException {
         return finder().list();
     }
 
-    default Entity findFirst(Query query, FieldPolicy fieldPolicy) {
+    default Entity findFirst(Query query, FieldPolicy fieldPolicy) throws DataAccessException {
         return finder(query, fieldPolicy).first();
     }
 
-    default Entity findFirst(Query query) {
+    default Entity findFirst(Query query) throws DataAccessException {
         return finder(query).first();
     }
 
-    default long update(Entity entity, Query query) {
+    default long update(Entity entity, Query query) throws DataAccessException {
         return update(entity, includeAll(), query);
     }
 
-    default long update(FieldPolicy fieldPolicy, Query query) {
+    default long update(FieldPolicy fieldPolicy, Query query) throws DataAccessException {
         return update(null, fieldPolicy, query);
     }
 
-    default long count(Query query) {
+    default long count(Query query) throws DataAccessException {
         return finder(query).count();
     }
 
-    default long count() {
+    default long count() throws DataAccessException {
         return finder().count();
     }
 
