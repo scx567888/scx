@@ -293,48 +293,60 @@ public final class SQLRunner {
         var promise = new CompletableFuture<Void>();
         Thread.ofVirtual().name("scx-auto-transaction-thread-", threadNumber.getAndIncrement()).start(() -> {
 
-            try (var con = getConnection(false)) {
-                CONNECTION_THREAD_LOCAL.set(con);
-
-                //尝试执行业务逻辑
+            //这个 try 的功能是配合 CONNECTION_THREAD_LOCAL 和 promise 实现线程的等待和将异常穿透到 promise 
+            // 如果 ScopeValue 成熟可移除这种写法 
+            try {
+                //获取连接
+                Connection con;
                 try {
-                    handler.run();
-                } catch (Throwable handlerE) {
-                    // 业务异常发生，尝试回滚事务
-                    try {
-                        con.rollback();
-                    } catch (SQLException rollbackE) {
-                        // 回滚失败，将业务异常作为附加异常抛出
-                        rollbackE.addSuppressed(handlerE);
-                        throw new TransactionException("Rollback failed after business exception", rollbackE);
-                    }
-                    // 回滚成功，抛出业务异常
-                    throw handlerE;
+                    con = getConnection(false);
+                } catch (SQLException e) {
+                    throw new TransactionException("Failed to acquire connection", e);
                 }
 
-                try {
-                    //提交事务
-                    con.commit();
-                } catch (SQLException commitE) {
-                    try {
-                        con.rollback();
-                    } catch (SQLException rollbackE) {
-                        // 回滚失败，优先抛出回滚异常，同时附加提交异常
-                        rollbackE.addSuppressed(commitE);
-                        throw new TransactionException("Rollback failed after commit failure", rollbackE);
-                    }
-                    throw new TransactionException("Commit failed", commitE);
-                }
+                try (con) {
+                    CONNECTION_THREAD_LOCAL.set(con);
 
-                //通知线程完成
-                promise.complete(null);
+                    // 业务逻辑执行 + 提交 + 回滚处理
+                    try {
+                        //尝试执行业务逻辑
+                        handler.run();
+                    } catch (Throwable handlerE) {
+                        // 业务异常发生，尝试回滚事务
+                        try {
+                            con.rollback();
+                        } catch (SQLException rollbackE) {
+                            // 回滚失败，将业务异常作为附加异常抛出
+                            rollbackE.addSuppressed(handlerE);
+                            throw new TransactionException("Rollback failed after business exception", rollbackE);
+                        }
+                        // 回滚成功，抛出业务异常
+                        throw handlerE;
+                    }
+
+                    try {
+                        //提交事务
+                        con.commit();
+                    } catch (SQLException commitE) {
+                        try {
+                            con.rollback();
+                        } catch (SQLException rollbackE) {
+                            // 回滚失败，优先抛出回滚异常，同时附加提交异常
+                            rollbackE.addSuppressed(commitE);
+                            throw new TransactionException("Rollback failed after commit failure", rollbackE);
+                        }
+                        throw new TransactionException("Commit failed", commitE);
+                    }
+
+                    //通知线程完成
+                    promise.complete(null);
+                } finally {
+                    CONNECTION_THREAD_LOCAL.remove();
+                }
             } catch (Throwable e) {
                 //通知线程失败
                 promise.completeExceptionally(e);
-            } finally {
-                CONNECTION_THREAD_LOCAL.remove();
             }
-
         });
 
         try {
