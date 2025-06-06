@@ -9,7 +9,7 @@ package cool.scx.common.functional;
 /// @version 0.0.1
 /// @see java.util.function.BiConsumer
 @FunctionalInterface
-public interface ScxBiConsumer<T, U, E extends Exception> {
+public interface ScxBiConsumer<T, U, E extends Throwable> {
 
     /// accept
     ///
