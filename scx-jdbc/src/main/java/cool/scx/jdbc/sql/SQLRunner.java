@@ -233,7 +233,11 @@ public final class SQLRunner {
     public UpdateResult updateBatch(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
             fillParams(sql, preparedStatement, jdbcContext.dialect());
-            var affectedItemsCount = preparedStatement.executeLargeBatch().length;
+            var counts = preparedStatement.executeLargeBatch();
+            long affectedItemsCount = 0;
+            for (long count : counts) {
+                affectedItemsCount += count;
+            }
             var generatedKeys = getGeneratedKeys(preparedStatement);
             return new UpdateResult(affectedItemsCount, generatedKeys);
         }
