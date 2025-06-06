@@ -113,7 +113,7 @@ public class WebSiteController {
     /// @param c a
     /// @throws IOException a
     @ScxRoute(value = "", methods = HttpMethod.GET, order = 5)
-    public void TestIndex1(RoutingContext c) throws IOException {
+    public void TestIndex1(RoutingContext c) throws Throwable {
         System.err.println("第二个匹配的路由" + c.request().path());
         c.put("name", "小明");
         c.next();
@@ -124,7 +124,7 @@ public class WebSiteController {
     /// @param c a
     /// @throws IOException a
     @ScxRoute(value = "/*", methods = HttpMethod.GET, order = 1)
-    public void TestIndex1a(RoutingContext c) throws IOException {
+    public void TestIndex1a(RoutingContext c) throws Throwable {
         System.err.println("两个 carService 是否相等 " + (carService == carService1));
         System.err.println("第一个匹配的路由" + c.request().path());
         c.next();
