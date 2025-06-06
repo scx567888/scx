@@ -1,5 +1,6 @@
 package cool.scx.http.x.http2;
 
+import cool.scx.common.functional.ScxConsumer;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
 import cool.scx.http.x.HttpServerOptions;
@@ -24,14 +25,14 @@ public class Http2ServerConnection {
 
     private final ScxTCPSocket tcpSocket;
     private final HttpServerOptions options;
-    private final Consumer<ScxHttpServerRequest> requestHandler;
+    private final ScxConsumer<ScxHttpServerRequest,?> requestHandler;
     private final ScxHttpServerErrorHandler errorHandler;
     private final LinkedDataReader dataReader;
     private final OutputStream dataWriter;
     private final HPACKDecoder hpackDecoder;
     private State state;
 
-    public Http2ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler, ScxHttpServerErrorHandler errorHandler) {
+    public Http2ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, ScxConsumer<ScxHttpServerRequest,?> requestHandler, ScxHttpServerErrorHandler errorHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;

@@ -1,5 +1,6 @@
 package cool.scx.http.x;
 
+import cool.scx.common.functional.ScxConsumer;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import java.lang.System.Logger;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.util.function.Consumer;
 
 import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 import static cool.scx.http.version.HttpVersion.HTTP_2;
@@ -29,7 +29,7 @@ public class HttpServer implements ScxHttpServer {
 
     private final HttpServerOptions options;
     private final ScxTCPServer tcpServer;
-    private Consumer<ScxHttpServerRequest> requestHandler;
+    private ScxConsumer<ScxHttpServerRequest, ?> requestHandler;
     private ScxHttpServerErrorHandler errorHandler;
 
     public HttpServer(HttpServerOptions options) {
@@ -88,7 +88,7 @@ public class HttpServer implements ScxHttpServer {
     }
 
     @Override
-    public ScxHttpServer onRequest(Consumer<ScxHttpServerRequest> requestHandler) {
+    public ScxHttpServer onRequest(ScxConsumer<ScxHttpServerRequest, ?> requestHandler) {
         this.requestHandler = requestHandler;
         return this;
     }
