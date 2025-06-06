@@ -5,7 +5,6 @@ import cool.scx.http.method.HttpMethod;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /// RouteImpl 路由只保存状态不做行为处理
 ///
@@ -101,7 +100,7 @@ class RouteImpl implements RouteWritable {
     }
 
     @Override
-    public ScxConsumer<RoutingContext,?> handler() {
+    public ScxConsumer<RoutingContext, ?> handler() {
         return handler;
     }
 

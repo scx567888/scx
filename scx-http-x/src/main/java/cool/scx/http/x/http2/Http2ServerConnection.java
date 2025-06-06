@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static cool.scx.http.x.http2.Http2Helper.HTTP2_CONNECTION_PREFACE;
 import static cool.scx.http.x.http2.Http2SettingsHelper.readHttp2Settings;
@@ -25,14 +24,14 @@ public class Http2ServerConnection {
 
     private final ScxTCPSocket tcpSocket;
     private final HttpServerOptions options;
-    private final ScxConsumer<ScxHttpServerRequest,?> requestHandler;
+    private final ScxConsumer<ScxHttpServerRequest, ?> requestHandler;
     private final ScxHttpServerErrorHandler errorHandler;
     private final LinkedDataReader dataReader;
     private final OutputStream dataWriter;
     private final HPACKDecoder hpackDecoder;
     private State state;
 
-    public Http2ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, ScxConsumer<ScxHttpServerRequest,?> requestHandler, ScxHttpServerErrorHandler errorHandler) {
+    public Http2ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, ScxConsumer<ScxHttpServerRequest, ?> requestHandler, ScxHttpServerErrorHandler errorHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;

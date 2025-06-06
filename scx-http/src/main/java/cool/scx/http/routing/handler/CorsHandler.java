@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import static cool.scx.http.headers.HttpFieldName.*;
 import static java.util.Collections.addAll;
@@ -21,7 +20,7 @@ import static java.util.Collections.addAll;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class CorsHandler implements ScxConsumer<RoutingContext,Throwable> {
+public class CorsHandler implements ScxConsumer<RoutingContext, Throwable> {
 
     private final Set<String> allowedMethods = new LinkedHashSet<>();
     private final Set<String> allowedHeaders = new LinkedHashSet<>();

@@ -18,7 +18,6 @@ import cool.scx.tcp.ScxTCPSocket;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.System.Logger;
-import java.util.function.Consumer;
 
 import static cool.scx.http.error_handler.DefaultHttpServerErrorHandler.DEFAULT_HTTP_SERVER_ERROR_HANDLER;
 import static cool.scx.http.error_handler.ErrorPhase.SYSTEM;
@@ -41,7 +40,7 @@ public class Http1ServerConnection {
 
     public final ScxTCPSocket tcpSocket;
     public final HttpServerOptions options;
-    public final ScxConsumer<ScxHttpServerRequest,?> requestHandler;
+    public final ScxConsumer<ScxHttpServerRequest, ?> requestHandler;
     public final ScxHttpServerErrorHandler errorHandler;
 
     public final DataReader dataReader;
@@ -49,7 +48,7 @@ public class Http1ServerConnection {
 
     private boolean running;
 
-    public Http1ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, ScxConsumer<ScxHttpServerRequest,?> requestHandler, ScxHttpServerErrorHandler errorHandler) {
+    public Http1ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, ScxConsumer<ScxHttpServerRequest, ?> requestHandler, ScxHttpServerErrorHandler errorHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;
