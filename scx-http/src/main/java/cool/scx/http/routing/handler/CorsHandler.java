@@ -1,5 +1,6 @@
 package cool.scx.http.routing.handler;
 
+import cool.scx.common.functional.ScxConsumer;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.exception.ForbiddenException;
 import cool.scx.http.headers.ScxHttpHeaderName;
@@ -20,7 +21,7 @@ import static java.util.Collections.addAll;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class CorsHandler implements Consumer<RoutingContext> {
+public class CorsHandler implements ScxConsumer<RoutingContext,Throwable> {
 
     private final Set<String> allowedMethods = new LinkedHashSet<>();
     private final Set<String> allowedHeaders = new LinkedHashSet<>();
@@ -94,7 +95,7 @@ public class CorsHandler implements Consumer<RoutingContext> {
     }
 
     @Override
-    public void accept(RoutingContext context) {
+    public void accept(RoutingContext context) throws Throwable {
         var request = context.request();
         var response = context.response();
         var origin = context.request().getHeader(ORIGIN);
