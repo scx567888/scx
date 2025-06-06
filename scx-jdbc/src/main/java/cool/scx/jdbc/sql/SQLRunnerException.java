@@ -16,5 +16,5 @@ public class SQLRunnerException extends RuntimeException {
     public SQLException getCause() {
         return (SQLException) super.getCause();
     }
-    
+
 }
