@@ -296,13 +296,13 @@ public final class SQLRunner {
                     handler.run();
                     con.commit();
                     promise.complete(null);
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     con.rollback();
                     throw e;
                 } finally {
                     CONNECTION_THREAD_LOCAL.remove();
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 promise.completeExceptionally(e);
             }
         });
