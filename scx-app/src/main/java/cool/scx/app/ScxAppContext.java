@@ -3,6 +3,7 @@ package cool.scx.app;
 import cool.scx.app.enumeration.ScxAppFeature;
 import cool.scx.app.eventbus.EventBus;
 import cool.scx.bean.BeanFactory;
+import cool.scx.common.functional.ScxCallable;
 import cool.scx.common.functional.ScxRunnable;
 import cool.scx.common.util.ScopedValue;
 import cool.scx.config.ScxConfig;
@@ -11,11 +12,11 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.sql.SQLRunner;
+import cool.scx.jdbc.sql.TransactionException;
 import cool.scx.web.ScxWeb;
 
 import javax.sql.DataSource;
 import java.nio.file.Path;
-import java.util.concurrent.Callable;
 
 /// 用来存储 整个项目的上下文
 ///
@@ -109,11 +110,11 @@ public final class ScxAppContext {
         return scx().sqlRunner();
     }
 
-    public static void autoTransaction(ScxRunnable<?> handler) {
+    public static <E extends Throwable> void autoTransaction(ScxRunnable<E> handler) throws E, TransactionException {
         sqlRunner().autoTransaction(handler);
     }
 
-    public static <T> T autoTransaction(Callable<T> handler) {
+    public static <T, E extends Throwable> T autoTransaction(ScxCallable<T, E> handler) throws E, TransactionException {
         return sqlRunner().autoTransaction(handler);
     }
 
