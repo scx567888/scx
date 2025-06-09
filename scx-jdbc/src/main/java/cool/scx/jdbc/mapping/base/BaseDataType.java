@@ -1,5 +1,6 @@
 package cool.scx.jdbc.mapping.base;
 
+import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.mapping.DataType;
 
 /// 用于手动编写 DataType
@@ -8,6 +9,7 @@ import cool.scx.jdbc.mapping.DataType;
 /// @version 0.0.1
 public class BaseDataType implements DataType {
 
+    private JDBCType jdbcType;
     private String name;
     private Integer length;
 
@@ -15,6 +17,7 @@ public class BaseDataType implements DataType {
     }
 
     public BaseDataType(DataType oldDataType) {
+        setJDBCType(oldDataType.jdbcType());
         setName(oldDataType.name());
         setLength(oldDataType.length());
     }
@@ -29,6 +32,11 @@ public class BaseDataType implements DataType {
     }
 
     @Override
+    public JDBCType jdbcType() {
+        return jdbcType;
+    }
+
+    @Override
     public String name() {
         return name;
     }
@@ -36,6 +44,11 @@ public class BaseDataType implements DataType {
     @Override
     public Integer length() {
         return length;
+    }
+
+    public BaseDataType setJDBCType(JDBCType jdbcType) {
+        this.jdbcType = jdbcType;
+        return this;
     }
 
     public BaseDataType setName(String name) {
