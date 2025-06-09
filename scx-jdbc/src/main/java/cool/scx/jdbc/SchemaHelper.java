@@ -24,7 +24,7 @@ public final class SchemaHelper {
     /// @param dialect  方言
     /// @return sql 不需要迁移语句则返回 null
     public static String getMigrateSQL(Table oldTable, Table newTable, Dialect dialect) {
-        var verifyResult = verifyTable(oldTable, newTable, dialect);
+        var verifyResult = verifyTable(oldTable, newTable);
         // 获取不存在的字段
         var needAdd = verifyResult.needAdd();
         if (needAdd.length > 0) {
@@ -33,7 +33,15 @@ public final class SchemaHelper {
         return null;
     }
 
-    public static TableVerifyResult verifyTable(Table oldTable, Table newTable, Dialect dialect) {
+    public static boolean verifyTableColumn(Column oldColumn, Column newColumn) {
+        //1, 类型不相同
+        if (oldColumn.dataType().jdbcType() != newColumn.dataType().jdbcType()) {
+            return true;
+        }
+        return false;
+    }
+
+    public static TableVerifyResult verifyTable(Table oldTable, Table newTable) {
         var needAdd = new ArrayList<Column>();
         var needRemove = new ArrayList<Column>();
         var needChange = new ArrayList<Column>();
@@ -41,7 +49,7 @@ public final class SchemaHelper {
             var newColumn = newTable.getColumn(oldColumn.name());
             if (newColumn == null) {
                 needRemove.add(oldColumn);
-            } else if (dialect.isColumnCompatible(oldColumn, newColumn)) {
+            } else if (verifyTableColumn(oldColumn, newColumn)) {
                 needChange.add(newColumn);
             }
         }
@@ -75,7 +83,7 @@ public final class SchemaHelper {
             }
 
             // 有表 获取迁移 SQL
-            var migrateSQL = getMigrateSQL(tableMetaData.refreshColumns(con), tableInfo, jdbcContext.dialect());
+            var migrateSQL = getMigrateSQL(tableMetaData.refreshColumns(con, jdbcContext.dialect()), tableInfo, jdbcContext.dialect());
 
             if (migrateSQL != null) {
                 jdbcContext.sqlRunner().execute(con, sql(migrateSQL));
@@ -98,7 +106,7 @@ public final class SchemaHelper {
                 return true;
             }
             // 验证所需字段不为空
-            var tableVerifyResult = verifyTable(tableMetaData.refreshColumns(con), tableInfo, jdbcContext.dialect());
+            var tableVerifyResult = verifyTable(tableMetaData.refreshColumns(con, jdbcContext.dialect()), tableInfo);
             return !tableVerifyResult.isEmpty();
         }
     }
