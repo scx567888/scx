@@ -44,16 +44,16 @@ public interface ScxHttpBody {
         return as(new StringReader(charset));
     }
 
+    default Path asPath(Path path, OpenOption... options) throws BodyReadException, BodyAlreadyConsumedException {
+        return as(new PathReader(path, options));
+    }
+
     default FormParams asFormParams() throws BodyReadException, BodyAlreadyConsumedException {
         return as(FORM_PARAMS_READER);
     }
 
     default MultiPart asMultiPart() throws BodyReadException, BodyAlreadyConsumedException {
         return as(MULTI_PART_READER);
-    }
-
-    default Path asPath(Path path, OpenOption... options) throws BodyReadException, BodyAlreadyConsumedException {
-        return as(new PathReader(path, options));
     }
 
     default JsonNode asTree() throws BodyReadException, BodyAlreadyConsumedException {
