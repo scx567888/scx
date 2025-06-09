@@ -4,7 +4,6 @@ import cool.scx.data.exception.DataAccessException;
 import cool.scx.data.field_policy.AssignField;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.field_policy.VirtualField;
-import cool.scx.data.jdbc.mapping.AnnotationConfigColumn;
 import cool.scx.data.jdbc.mapping.EntityColumn;
 import cool.scx.data.jdbc.mapping.EntityTable;
 import cool.scx.jdbc.dialect.Dialect;
@@ -12,7 +11,6 @@ import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
 import cool.scx.reflect.FieldInfo;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Map;
 

@@ -33,7 +33,7 @@ public class AnnotationConfigTable<Entity> implements EntityTable<Entity> {
     private final Class<Entity> entityClass;
 
     public AnnotationConfigTable(Class<Entity> entityClass) {
-        this.entityClass=entityClass;
+        this.entityClass = entityClass;
         this.name = initTableName(entityClass);
         this.columns = initAllColumns(entityClass);
         this.columnMap = initAllColumnMap(columns);

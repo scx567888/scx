@@ -6,5 +6,5 @@ import cool.scx.reflect.FieldInfo;
 public interface EntityColumn extends TypeColumn {
 
     FieldInfo javaField();
-    
+
 }

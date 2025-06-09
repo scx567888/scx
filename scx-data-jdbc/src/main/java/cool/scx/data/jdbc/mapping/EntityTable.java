@@ -11,5 +11,5 @@ public interface EntityTable<Entity> extends Table {
 
     @Override
     EntityColumn getColumn(String name);
-    
+
 }

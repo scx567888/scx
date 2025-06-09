@@ -1,7 +1,6 @@
 package cool.scx.data.jdbc.mapping;
 
 import cool.scx.jdbc.JDBCType;
-import cool.scx.jdbc.mapping.DataType;
 import cool.scx.jdbc.mapping.type.TypeDataType;
 
 import java.lang.reflect.Type;
