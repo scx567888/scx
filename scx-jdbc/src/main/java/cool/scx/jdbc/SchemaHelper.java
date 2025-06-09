@@ -50,7 +50,7 @@ public final class SchemaHelper {
                 return true;
             }
         }
-        
+
         return false;
     }
 
