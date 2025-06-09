@@ -38,6 +38,19 @@ public final class SchemaHelper {
         if (oldColumn.dataType().jdbcType() != newColumn.dataType().jdbcType()) {
             return true;
         }
+        //2, 只处理原来没有索引但是 现在有索引的情况
+        if (!oldColumn.index() && newColumn.index()) {
+            return true;
+        }
+        //3, 处理默认值 只处理 原来没有默认值的 后加的 
+        // 原有默认值是 null
+        if (oldColumn.defaultValue() == null) {
+            // 新的必须也是 null
+            if (newColumn.defaultValue() != null) {
+                return true;
+            }
+        }
+        
         return false;
     }
 
