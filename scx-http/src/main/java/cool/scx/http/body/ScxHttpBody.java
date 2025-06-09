@@ -18,11 +18,9 @@ import java.nio.file.Path;
 import static cool.scx.http.media.byte_array.ByteArrayReader.BYTE_ARRAY_READER;
 import static cool.scx.http.media.event_stream.ClientEventStreamReader.CLIENT_EVENT_STREAM_READER;
 import static cool.scx.http.media.form_params.FormParamsReader.FORM_PARAMS_READER;
-import static cool.scx.http.media.json.JsonReader.JSON_READER;
 import static cool.scx.http.media.multi_part.MultiPartStreamReader.MULTI_PART_READER;
 import static cool.scx.http.media.string.StringReader.STRING_READER;
 import static cool.scx.http.media.tree.TreeReader.TREE_READER;
-import static cool.scx.http.media.xml.XmlReader.XML_READER;
 
 /// ScxHttpBody
 ///
@@ -56,14 +54,6 @@ public interface ScxHttpBody {
 
     default Path asPath(Path path, OpenOption... options) throws BodyReadException, BodyAlreadyConsumedException {
         return as(new PathReader(path, options));
-    }
-
-    default JsonNode asJson() throws BodyReadException, BodyAlreadyConsumedException {
-        return as(JSON_READER);
-    }
-
-    default JsonNode asXml() throws BodyReadException, BodyAlreadyConsumedException {
-        return as(XML_READER);
     }
 
     default JsonNode asTree() throws BodyReadException, BodyAlreadyConsumedException {
