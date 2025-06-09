@@ -1,6 +1,5 @@
 package cool.scx.data.query;
 
-import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.query.ConditionType.BETWEEN;
 import static cool.scx.data.query.ConditionType.NOT_BETWEEN;
 
@@ -21,7 +20,7 @@ public final class Condition extends QueryLike<Condition> implements Where {
 
     public Condition(String selector, ConditionType conditionType, Object value1, Object value2, boolean useExpression, boolean useExpressionValue, SkipIfInfo skipIfInfo) {
         //名称不能为空
-        if (isBlank(selector)) {
+        if (selector == null) {
             throw new IllegalArgumentException("Condition 参数错误 : selector 不能为空 !!!");
         }
         //类型也不能为空
