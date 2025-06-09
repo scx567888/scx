@@ -1,6 +1,7 @@
 package cool.scx.jdbc.dialect;
 
 import cool.scx.jdbc.JDBCType;
+import cool.scx.jdbc.SchemaHelper;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
 import cool.scx.jdbc.type_handler.TypeHandler;
@@ -197,12 +198,12 @@ public interface Dialect {
         return new ArrayList<>();
     }
 
-    /// todo 暂时只支持添加新字段 需要同时支持 删除或修改
     /// 获取 AlertTableDDL
     ///
-    /// @param needAdds  a
-    /// @param tableInfo a
-    default String getAlterTableDDL(Column[] needAdds, Table tableInfo) {
+    /// @param needAdds    a
+    /// @param needChanges a
+    /// @param tableInfo   a
+    default String getAlterTableDDL(Column[] needAdds, Column[] needRemoves, SchemaHelper.NeedChangeColumn[] needChanges, Table tableInfo) {
         var s = new StringBuilder();
         s.append("ALTER TABLE ");
         if (notEmpty(tableInfo.schema())) {
@@ -210,11 +211,34 @@ public interface Dialect {
         }
         s.append(quoteIdentifier(tableInfo.name())).append("\n");
 
-        var columnDefinitionStr = getColumnDefinitions(needAdds).stream()
-                .map(c -> "    ADD COLUMN " + c)
-                .collect(Collectors.joining(",\n"));
+        List<String> clauses = new ArrayList<>();
 
-        s.append(columnDefinitionStr);
+        //处理需要添加的列
+        for (var needAdd : needAdds) {
+            var columnDefinition = getColumnDefinition(needAdd);
+            var str = "    ADD COLUMN " + columnDefinition;
+            clauses.add(str);
+        }
+
+        //处理需要删除的列
+        for (var needRemove : needRemoves) {
+            var str = "    DROP COLUMN " + quoteIdentifier(needRemove.name());
+            clauses.add(str);
+        }
+
+        for (var needChange : needChanges) {
+            if (needChange.verifyResult().needChangeDataType()) {
+                var columnDefinition = getColumnDefinition(needChange.newColumn());
+                var str = "    MODIFY COLUMN " + columnDefinition;
+                clauses.add(str);
+            }
+        }
+
+        if (clauses.isEmpty()) {
+            return null;
+        }
+
+        s.append(String.join(",\n", clauses));
         s.append("\n;");
         return s.toString();
     }
