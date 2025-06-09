@@ -22,7 +22,6 @@ public final class TableMetaData implements Table {
     private ColumnMetaData[] columns;
     private KeyMetaData[] keys;
     private IndexMetaData[] indexes;
-    private Map<String, ColumnMetaData> columnMap = new HashMap<>();
 
     public TableMetaData(String catalog, String schema, String name, String remarks) {
         this.catalog = catalog;
@@ -65,16 +64,10 @@ public final class TableMetaData implements Table {
         return indexes;
     }
 
-    @Override
-    public ColumnMetaData getColumn(String column) {
-        return columnMap.get(column);
-    }
-
     public TableMetaData refreshColumns(Connection connection) throws SQLException {
         this.keys = MetaDataHelper.getKeys(connection, this.catalog, this.schema, this.name);
         this.indexes = MetaDataHelper.getIndexes(connection, this.catalog, this.schema, this.name, false, false);
         this.columns = MetaDataHelper.getColumns(connection, this.catalog, this.schema, this.name, null, this);
-        this.columnMap = Arrays.stream(this.columns).collect(Collectors.toMap(ColumnMetaData::name, c -> c));
         return this;
     }
 

@@ -65,7 +65,7 @@ public final class SchemaHelper {
     public static void fixTable(Table tableInfo, JDBCContext jdbcContext) throws SQLException {
         try (var con = jdbcContext.dataSource().getConnection()) {
             // 查找同名表
-            var tableMetaData = getCurrentSchema(con).refreshTables(con).getTable(tableInfo.name());
+            var tableMetaData = getCurrentSchema(con).getTable(con, tableInfo.name());
 
             // 没有这个表 创建表 , 有表 获取迁移 SQL
             var fixTableSQL = tableMetaData == null ? jdbcContext.dialect().getCreateTableDDL(tableInfo) : getMigrateSQL(tableMetaData.refreshColumns(con), tableInfo, jdbcContext.dialect());

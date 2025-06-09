@@ -18,7 +18,6 @@ public final class SchemaMetaData implements Schema {
     private final String catalog;
     private final String name;
     private TableMetaData[] tables;
-    private Map<String, TableMetaData> tableMap = new HashMap<>();
 
     public SchemaMetaData(String catalog, String name) {
         this.catalog = catalog;
@@ -40,11 +39,6 @@ public final class SchemaMetaData implements Schema {
         return tables;
     }
 
-    @Override
-    public TableMetaData getTable(String name) {
-        return tableMap.get(name);
-    }
-
     public SchemaMetaData refreshTables(Connection connection) throws SQLException {
         return refreshTables(connection, new String[]{"TABLE"}, false);
     }
@@ -59,7 +53,6 @@ public final class SchemaMetaData implements Schema {
 
     public SchemaMetaData refreshTables(Connection connection, String[] types, boolean deep) throws SQLException {
         this.tables = MetaDataHelper.getTables(connection, this.catalog, this.name, null, types);
-        this.tableMap = Arrays.stream(this.tables).collect(Collectors.toMap(TableMetaData::name, c -> c));
         if (deep) {
             for (var table : tables) {
                 table.refreshColumns(connection);
