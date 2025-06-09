@@ -16,7 +16,7 @@ public class MapFieldNameMapping implements Function<String, String> {
     @Override
     public String apply(String columnName) {
         var column = this.table.getColumn(columnName);
-        return column == null ? null : column.javaField().getName();
+        return column == null ? null : column.javaField().name();
     }
 
 }

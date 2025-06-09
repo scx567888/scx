@@ -1,7 +1,6 @@
 package cool.scx.data.jdbc.mapping;
 
 import cool.scx.data.jdbc.annotation.Column;
-import cool.scx.jdbc.mapping.type.TypeColumn;
 import cool.scx.reflect.FieldInfo;
 
 import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
@@ -10,7 +9,7 @@ import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class AnnotationConfigColumn implements TypeColumn {
+public class AnnotationConfigColumn implements EntityColumn {
 
     private final FieldInfo javaField;
     private final String columnName;
@@ -56,6 +55,7 @@ public class AnnotationConfigColumn implements TypeColumn {
         }
     }
 
+    @Override
     public FieldInfo javaField() {
         return javaField;
     }
@@ -103,15 +103,6 @@ public class AnnotationConfigColumn implements TypeColumn {
     @Override
     public boolean index() {
         return index;
-    }
-
-    public Object javaFieldValue(Object target) {
-        try {
-            return this.javaField.get(target);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
 }

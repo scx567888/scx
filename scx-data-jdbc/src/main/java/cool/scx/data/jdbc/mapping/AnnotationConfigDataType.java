@@ -1,7 +1,7 @@
 package cool.scx.data.jdbc.mapping;
 
-import cool.scx.data.jdbc.annotation.DataType;
 import cool.scx.jdbc.JDBCType;
+import cool.scx.jdbc.mapping.DataType;
 import cool.scx.jdbc.mapping.type.TypeDataType;
 
 import java.lang.reflect.Type;
@@ -21,7 +21,7 @@ public class AnnotationConfigDataType implements TypeDataType {
     private final String name;
     private final Integer length;
 
-    public AnnotationConfigDataType(DataType dataType) {
+    public AnnotationConfigDataType(cool.scx.data.jdbc.annotation.DataType dataType) {
         this.jdbcType = dataType.value();
         this.name = this.jdbcType.name();
         var _length = dataType.length() == -1 ? null : dataType.length();
