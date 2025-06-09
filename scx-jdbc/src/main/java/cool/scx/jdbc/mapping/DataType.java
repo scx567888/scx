@@ -9,7 +9,7 @@ import cool.scx.jdbc.JDBCType;
 public interface DataType {
 
     JDBCType jdbcType();
-    
+
     String name();
 
     Integer length();
