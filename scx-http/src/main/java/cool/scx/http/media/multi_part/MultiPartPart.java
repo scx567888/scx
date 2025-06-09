@@ -6,6 +6,7 @@ import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.media.MediaReader;
+import cool.scx.http.media_type.FileFormat;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.io.IOHelper;
 import cool.scx.io.io_stream.StreamClosedException;
@@ -15,7 +16,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
-import static cool.scx.http.routing.handler.StaticHelper.getMediaTypeByFile;
+import static cool.scx.http.media_type.MediaType.APPLICATION_OCTET_STREAM;
 
 /// MultiPartPart
 ///
@@ -37,7 +38,9 @@ public interface MultiPartPart extends ScxHttpBody {
 
     static MultiPartPartWritable of(String name, Path value) {
         var fileSize = IOHelper.getFileSize(value);
-        var contentType = getMediaTypeByFile(value);
+        var fileFormat = FileFormat.findByFileName(value.toString());
+        //没找到就使用 二进制流
+        var contentType = fileFormat == null ? APPLICATION_OCTET_STREAM : fileFormat.mediaType();
         var filename = value.getFileName().toString();
         return new MultiPartPartImpl().name(name).body(value).size(fileSize).filename(filename).contentType(contentType);
     }

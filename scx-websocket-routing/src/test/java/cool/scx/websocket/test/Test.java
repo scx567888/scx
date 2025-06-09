@@ -1,6 +1,6 @@
-package cool.scx.data.test;
+package cool.scx.websocket.test;
 
-public class DataTest {
+public class Test {
 
     public static void main(String[] args) {
 

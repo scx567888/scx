@@ -9,42 +9,30 @@
         <version>3.8.2</version>
     </parent>
 
-    <artifactId>scx-http-x</artifactId>
+    <artifactId>scx-websocket-routing</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX HTTP X</name>
+    <name>SCX WebSocket Routing</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX HTTP X
+        SCX WebSocket Routing
     </description>
 
     <dependencies>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-http</artifactId>
+            <artifactId>scx-websocket</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-reflect</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-tcp</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- ****************** 以下为测试依赖 ****************** -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>scx-http-routing</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
+
+        <!-- ****************** 以下为测试依赖 ****************** -->
 
         <dependency>
             <groupId>org.testng</groupId>
