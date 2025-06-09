@@ -202,7 +202,7 @@ public interface Dialect {
     ///
     /// @param needAdds  a
     /// @param tableInfo a
-    default String getAlterTableDDL(Column[] needAdds, Table tableInfo) {
+    default String getAlterTableDDL(Column[] needAdds, Column[] needRemoves, Table tableInfo) {
         var s = new StringBuilder();
         s.append("ALTER TABLE ");
         if (notEmpty(tableInfo.schema())) {
@@ -210,11 +210,22 @@ public interface Dialect {
         }
         s.append(quoteIdentifier(tableInfo.name())).append("\n");
 
-        var columnDefinitionStr = getColumnDefinitions(needAdds).stream()
-                .map(c -> "    ADD COLUMN " + c)
-                .collect(Collectors.joining(",\n"));
+        List<String> clauses = new ArrayList<>();
 
-        s.append(columnDefinitionStr);
+        //处理需要添加的列
+        for (var needAdd : needAdds) {
+            var columnDefinition = getColumnDefinition(needAdd);
+            var str = "    ADD COLUMN " + columnDefinition;
+            clauses.add(str);
+        }
+
+        //处理需要删除的列
+        for (var needRemove : needRemoves) {
+            var str = "    DROP COLUMN " + quoteIdentifier(needRemove.name());
+            clauses.add(str);
+        }
+
+        s.append(String.join(",\n", clauses));
         s.append("\n;");
         return s.toString();
     }

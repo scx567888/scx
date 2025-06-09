@@ -25,10 +25,8 @@ public final class SchemaHelper {
     /// @return sql 不需要迁移语句则返回 null
     public static String getMigrateSQL(Table oldTable, Table newTable, Dialect dialect) {
         var verifyResult = verifyTable(oldTable, newTable);
-        // 获取不存在的字段
-        var needAdd = verifyResult.needAdd();
-        if (needAdd.length > 0) {
-            return dialect.getAlterTableDDL(needAdd, newTable);
+        if (verifyResult.notEmpty()) {
+            return dialect.getAlterTableDDL(verifyResult.needAdd(), verifyResult.needRemove(), newTable);
         }
         return null;
     }
