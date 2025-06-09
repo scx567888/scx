@@ -84,13 +84,17 @@ public final class SchemaHelper {
     public static boolean checkNeedFixTable(Table tableInfo, DataSource dataSource) throws SQLException {
         try (var con = dataSource.getConnection()) {
             // 查找同名表
-            var tableMetaData = getCurrentSchema(con).refreshTables(con).getTable(tableInfo.name());
-            // 没有这个表 或者 验证所需字段 大于 0
-            return tableMetaData == null || verifyTable(tableMetaData.refreshColumns(con), tableInfo).needAdd().length > 0;
+            var tableMetaData = getCurrentSchema(con).getTable(con, tableInfo.name());
+            // 没有这个表 或者 验证所需字段不为空
+            return tableMetaData == null || !verifyTable(tableMetaData.refreshColumns(con), tableInfo).isEmpty();
         }
     }
 
     public record TableVerifyResult(Column[] needAdd, Column[] needRemove, Column[] needChange) {
+
+        public boolean isEmpty() {
+            return needAdd.length == 0 && needRemove.length == 0 && needChange.length == 0;
+        }
 
     }
 

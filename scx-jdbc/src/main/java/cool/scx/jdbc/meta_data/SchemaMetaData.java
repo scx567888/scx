@@ -68,4 +68,12 @@ public final class SchemaMetaData implements Schema {
         return this;
     }
 
+    public TableMetaData getTable(Connection con, String name) throws SQLException {
+        var tables = MetaDataHelper.getTables(con, this.catalog, this.name, name, new String[]{"TABLE"});
+        if (tables.length == 1) {
+            return tables[0];
+        }
+        return null;
+    }
+
 }

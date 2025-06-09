@@ -261,7 +261,7 @@ public final class ScxApp {
         var noNeedToFix = 0;
         for (var v : getAllScxBaseModelClassList()) {
             //根据 class 获取 tableInfo
-            var tableInfo = new AnnotationConfigTable(v);
+            var tableInfo = new AnnotationConfigTable<>(v);
             try {
                 if (SchemaHelper.checkNeedFixTable(tableInfo, dataSource())) {
                     SchemaHelper.fixTable(tableInfo, jdbcContext);
