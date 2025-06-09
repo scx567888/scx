@@ -1,4 +1,4 @@
-package cool.scx.http.media.json_node;
+package cool.scx.http.media.tree;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,7 +11,7 @@ import java.io.OutputStream;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
-import static cool.scx.http.media.json_node.JsonNodeHelper.trySetContentType;
+import static cool.scx.http.media.tree.TreeHelper.trySetContentType;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -20,12 +20,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class JsonNodeWriter implements MediaWriter {
+public class TreeWriter implements MediaWriter {
 
     private final JsonNode jsonNode;
     private byte[] data;
 
-    public JsonNodeWriter(JsonNode jsonNode) {
+    public TreeWriter(JsonNode jsonNode) {
         this.jsonNode = jsonNode;
         this.data = null;
     }

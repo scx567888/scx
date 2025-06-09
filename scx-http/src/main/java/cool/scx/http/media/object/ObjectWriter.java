@@ -4,18 +4,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.http.media.tree.TreeWriter;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 import static cool.scx.common.util.ObjectUtils.toJson;
 import static cool.scx.common.util.ObjectUtils.toXml;
-import static cool.scx.http.media.json_node.JsonNodeHelper.trySetContentType;
+import static cool.scx.http.media.tree.TreeHelper.trySetContentType;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/// ObjectWriter  逻辑参考 {@link cool.scx.http.media.json_node.JsonNodeWriter}
+/// ObjectWriter  逻辑参考 {@link TreeWriter}
 ///
 /// @author scx567888
 /// @version 0.0.1
