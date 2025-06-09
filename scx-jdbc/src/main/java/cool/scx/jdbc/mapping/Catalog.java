@@ -1,6 +1,6 @@
 package cool.scx.jdbc.mapping;
 
-/// 目录
+/// Catalog
 ///
 /// @author scx567888
 /// @version 0.0.1

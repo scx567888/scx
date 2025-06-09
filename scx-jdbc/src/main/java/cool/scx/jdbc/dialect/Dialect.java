@@ -3,7 +3,6 @@ package cool.scx.jdbc.dialect;
 import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
-import cool.scx.jdbc.mapping.type.TypeDataType;
 import cool.scx.jdbc.type_handler.TypeHandler;
 
 import javax.sql.DataSource;
@@ -167,9 +166,9 @@ public interface Dialect {
         }
         var _dataType = column.dataType();
         var _name = _dataType.name();
-        // TypeDataType 做特殊处理
-        if (_dataType instanceof TypeDataType m && m.jdbcType() != null) {
-            _name = getDataTypeNameByJDBCType(m.jdbcType());
+        // 优先使用 jdbcType 
+        if (_dataType.jdbcType() != null) {
+            _name = getDataTypeNameByJDBCType(_dataType.jdbcType());
         }
         return getDataTypeDefinitionByName(_name, _dataType.length());
     }
