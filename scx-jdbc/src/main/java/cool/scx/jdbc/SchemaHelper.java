@@ -4,11 +4,9 @@ import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
 
-import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import static cool.scx.common.util.StringUtils.notBlank;
 import static cool.scx.jdbc.meta_data.MetaDataHelper.getCurrentSchema;
 import static cool.scx.jdbc.sql.SQL.sql;
 
@@ -26,7 +24,7 @@ public final class SchemaHelper {
     /// @param dialect  方言
     /// @return sql 不需要迁移语句则返回 null
     public static String getMigrateSQL(Table oldTable, Table newTable, Dialect dialect) {
-        var verifyResult = verifyTable(oldTable, newTable);
+        var verifyResult = verifyTable(oldTable, newTable, dialect);
         // 获取不存在的字段
         var needAdd = verifyResult.needAdd();
         if (needAdd.length > 0) {
@@ -35,19 +33,21 @@ public final class SchemaHelper {
         return null;
     }
 
-    public static TableVerifyResult verifyTable(Table oldTable, Table newTable) {
+    public static TableVerifyResult verifyTable(Table oldTable, Table newTable, Dialect dialect) {
         var needAdd = new ArrayList<Column>();
         var needRemove = new ArrayList<Column>();
         var needChange = new ArrayList<Column>();
         for (var oldColumn : oldTable.columns()) {
-            var column = newTable.getColumn(oldColumn.name());
-            if (column == null) {
+            var newColumn = newTable.getColumn(oldColumn.name());
+            if (newColumn == null) {
                 needRemove.add(oldColumn);
+            } else if (dialect.isColumnCompatible(oldColumn, newColumn)) {
+                needChange.add(newColumn);
             }
         }
         for (var newColumn : newTable.columns()) {
-            var column = oldTable.getColumn(newColumn.name());
-            if (column == null) {
+            var oldColumn = oldTable.getColumn(newColumn.name());
+            if (oldColumn == null) {
                 needAdd.add(newColumn);
             }
         }
@@ -67,12 +67,20 @@ public final class SchemaHelper {
             // 查找同名表
             var tableMetaData = getCurrentSchema(con).getTable(con, tableInfo.name());
 
-            // 没有这个表 创建表 , 有表 获取迁移 SQL
-            var fixTableSQL = tableMetaData == null ? jdbcContext.dialect().getCreateTableDDL(tableInfo) : getMigrateSQL(tableMetaData.refreshColumns(con), tableInfo, jdbcContext.dialect());
-
-            if (notBlank(fixTableSQL)) {
-                jdbcContext.sqlRunner().execute(con, sql(fixTableSQL));
+            // 没有这个表 创建表
+            if (tableMetaData == null) {
+                var createTableDDL = jdbcContext.dialect().getCreateTableDDL(tableInfo);
+                jdbcContext.sqlRunner().execute(con, sql(createTableDDL));
+                return;
             }
+
+            // 有表 获取迁移 SQL
+            var migrateSQL = getMigrateSQL(tableMetaData.refreshColumns(con), tableInfo, jdbcContext.dialect());
+
+            if (migrateSQL != null) {
+                jdbcContext.sqlRunner().execute(con, sql(migrateSQL));
+            }
+
         }
     }
 
@@ -81,12 +89,17 @@ public final class SchemaHelper {
     /// @param tableInfo a
     /// @return true 需要 false 不需要
     /// @throws java.sql.SQLException e
-    public static boolean checkNeedFixTable(Table tableInfo, DataSource dataSource) throws SQLException {
-        try (var con = dataSource.getConnection()) {
+    public static boolean checkNeedFixTable(Table tableInfo, JDBCContext jdbcContext) throws SQLException {
+        try (var con = jdbcContext.dataSource().getConnection()) {
             // 查找同名表
             var tableMetaData = getCurrentSchema(con).getTable(con, tableInfo.name());
-            // 没有这个表 或者 验证所需字段不为空
-            return tableMetaData == null || !verifyTable(tableMetaData.refreshColumns(con), tableInfo).isEmpty();
+            // 没有这个表 
+            if (tableMetaData == null) {
+                return true;
+            }
+            // 验证所需字段不为空
+            var tableVerifyResult = verifyTable(tableMetaData.refreshColumns(con), tableInfo, jdbcContext.dialect());
+            return !tableVerifyResult.isEmpty();
         }
     }
 

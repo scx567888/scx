@@ -220,4 +220,9 @@ public interface Dialect {
         return s.toString();
     }
 
+    /// 比较两个列是否兼容
+    default boolean isColumnCompatible(Column oldColumn, Column newColumn) {
+        return true;
+    }
+
 }
