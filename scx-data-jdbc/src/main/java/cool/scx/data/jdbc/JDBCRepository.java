@@ -36,7 +36,7 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
     // *********** 基本字段 ***************
     final Class<Entity> entityClass;
     final JDBCContext jdbcContext;
-    final AnnotationConfigTable table;
+    final EntityTable<Entity> table;
     final SQLRunner sqlRunner;
 
     // *********** 结果解析器 ***************
@@ -57,10 +57,14 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
     final AggregateSQLBuilder aggregateSQLBuilder;
 
     public JDBCRepository(Class<Entity> entityClass, JDBCContext jdbcContext) {
+        this(new AnnotationConfigTable<>(entityClass), jdbcContext);
+    }
+
+    public JDBCRepository(EntityTable<Entity> table, JDBCContext jdbcContext) {
         //1, 初始化基本字段
-        this.entityClass = entityClass;
+        this.entityClass = table.entityClass();
         this.jdbcContext = jdbcContext;
-        this.table = new AnnotationConfigTable(entityClass);
+        this.table = table;
         this.sqlRunner = jdbcContext.sqlRunner();
 
         //2, 创建返回值解析器
@@ -151,7 +155,7 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         return entityClass;
     }
 
-    public final AnnotationConfigTable table() {
+    public final EntityTable<Entity> table() {
         return table;
     }
 
