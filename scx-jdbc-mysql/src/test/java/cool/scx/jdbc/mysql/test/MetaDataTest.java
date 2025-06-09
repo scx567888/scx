@@ -22,9 +22,9 @@ public class MetaDataTest {
 
     public static void test1_1(DataSource dataSource) throws SQLException, JsonProcessingException {
         System.out.println("完全内省 !!!");
-        MySQLDialect  dialect = new MySQLDialect();
+        var dialect = new MySQLDialect();
         try (var con = dataSource.getConnection()) {
-            var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con, true,dialect);
+            var dataSourceMetaData = new DataSourceMetaData().refreshCatalogsDeep(con, dialect);
             for (var catalog : dataSourceMetaData.catalogs()) {
                 System.out.println(catalog.name() + " : ");
                 System.out.println("{");
@@ -53,9 +53,9 @@ public class MetaDataTest {
 
     public static void test1_2(DataSource dataSource) throws SQLException, JsonProcessingException {
         System.out.println("按需内省 !!!");
-        MySQLDialect  dialect = new MySQLDialect();
+        var dialect = new MySQLDialect();
         try (var con = dataSource.getConnection()) {
-            var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con,dialect);
+            var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con);
             for (var catalog : dataSourceMetaData.catalogs()) {
                 System.out.println(catalog.name() + " : ");
                 System.out.println("{");
@@ -65,7 +65,7 @@ public class MetaDataTest {
                     for (var table : schema.refreshTables(con).tables()) {
                         System.out.println("        " + table.name() + " : ");
                         System.out.println("        {");
-                        for (var column : table.refreshColumns(con).columns()) {
+                        for (var column : table.refreshColumns(con, dialect).columns()) {
                             System.out.println("            " + column.name() + " " + column.dataType().name() + "(" + column.dataType().length() + ")" + (column.notNull() ? " NOT NULL" : " NULL") + (column.autoIncrement() ? " AUTOINCREMENT" : "") + " DEFAULT : " + column.defaultValue() + ", REMARKS : " + column.comment());
                         }
                         for (var primaryKey : table.keys()) {
