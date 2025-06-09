@@ -1,13 +1,10 @@
 package cool.scx.jdbc.meta_data;
 
+import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Schema;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /// SchemaMetaData
 ///
@@ -40,23 +37,27 @@ public final class SchemaMetaData implements Schema {
     }
 
     public SchemaMetaData refreshTables(Connection connection) throws SQLException {
-        return refreshTables(connection, new String[]{"TABLE"}, false);
+        this.tables = MetaDataHelper.getTables(connection, this.catalog, this.name, null, new String[]{"TABLE"});
+        return this;
     }
 
-    public SchemaMetaData refreshTables(Connection connection, boolean deep) throws SQLException {
-        return refreshTables(connection, new String[]{"TABLE"}, deep);
+    public SchemaMetaData refreshTablesDeep(Connection connection, Dialect dialect) throws SQLException {
+        refreshTables(connection);
+        for (var table : tables) {
+            table.refreshColumns(connection, dialect);
+        }
+        return this;
     }
 
     public SchemaMetaData refreshTables(Connection connection, String[] types) throws SQLException {
-        return refreshTables(connection, types, false);
+        this.tables = MetaDataHelper.getTables(connection, this.catalog, this.name, null, types);
+        return this;
     }
 
-    public SchemaMetaData refreshTables(Connection connection, String[] types, boolean deep) throws SQLException {
+    public SchemaMetaData refreshTablesDeep(Connection connection, String[] types, Dialect dialect) throws SQLException {
         this.tables = MetaDataHelper.getTables(connection, this.catalog, this.name, null, types);
-        if (deep) {
-            for (var table : tables) {
-                table.refreshColumns(connection);
-            }
+        for (var table : tables) {
+            table.refreshColumns(connection, dialect);
         }
         return this;
     }
