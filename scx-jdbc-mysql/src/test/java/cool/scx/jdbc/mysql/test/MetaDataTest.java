@@ -2,6 +2,7 @@ package cool.scx.jdbc.mysql.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.jdbc.meta_data.DataSourceMetaData;
+import cool.scx.jdbc.mysql.MySQLDialect;
 import org.testng.annotations.Test;
 
 import javax.sql.DataSource;
@@ -21,8 +22,9 @@ public class MetaDataTest {
 
     public static void test1_1(DataSource dataSource) throws SQLException, JsonProcessingException {
         System.out.println("完全内省 !!!");
+        MySQLDialect  dialect = new MySQLDialect();
         try (var con = dataSource.getConnection()) {
-            var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con, true);
+            var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con, true,dialect);
             for (var catalog : dataSourceMetaData.catalogs()) {
                 System.out.println(catalog.name() + " : ");
                 System.out.println("{");
@@ -51,8 +53,9 @@ public class MetaDataTest {
 
     public static void test1_2(DataSource dataSource) throws SQLException, JsonProcessingException {
         System.out.println("按需内省 !!!");
+        MySQLDialect  dialect = new MySQLDialect();
         try (var con = dataSource.getConnection()) {
-            var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con);
+            var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con,dialect);
             for (var catalog : dataSourceMetaData.catalogs()) {
                 System.out.println(catalog.name() + " : ");
                 System.out.println("{");
