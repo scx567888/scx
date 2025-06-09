@@ -52,6 +52,7 @@
         <module>scx-data-jdbc</module>
         <module>scx-ffm</module>
         <module>scx-http</module>
+        <module>scx-http-routing</module>
         <module>scx-http-x</module>
         <module>scx-io</module>
         <module>scx-jdbc</module>
