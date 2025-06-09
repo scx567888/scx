@@ -3,7 +3,6 @@ package cool.scx.data.jdbc.mapping;
 import cool.scx.common.multi_map.MultiMap;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.data.jdbc.annotation.NoColumn;
-import cool.scx.jdbc.mapping.Table;
 import cool.scx.reflect.ClassInfoFactory;
 import cool.scx.reflect.FieldInfo;
 
@@ -20,7 +19,7 @@ import static cool.scx.reflect.ClassType.RECORD;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class AnnotationConfigTable implements Table {
+public class AnnotationConfigTable<Entity> implements EntityTable<Entity> {
 
     /// 实体类型不含 @NoColumn 注解的field
     private final AnnotationConfigColumn[] columns;
@@ -31,9 +30,12 @@ public class AnnotationConfigTable implements Table {
     /// 因为 循环查找速度太慢了 所以这里 使用 map (key:javaFieldName,value:ColumnInfo)
     private final Map<String, AnnotationConfigColumn> columnMap;
 
-    public AnnotationConfigTable(Class<?> clazz) {
-        this.name = initTableName(clazz);
-        this.columns = initAllColumns(clazz);
+    private final Class<Entity> entityClass;
+
+    public AnnotationConfigTable(Class<Entity> entityClass) {
+        this.entityClass = entityClass;
+        this.name = initTableName(entityClass);
+        this.columns = initAllColumns(entityClass);
         this.columnMap = initAllColumnMap(columns);
     }
 
@@ -99,6 +101,11 @@ public class AnnotationConfigTable implements Table {
     @Override
     public String name() {
         return this.name;
+    }
+
+    @Override
+    public Class<Entity> entityClass() {
+        return entityClass;
     }
 
     @Override

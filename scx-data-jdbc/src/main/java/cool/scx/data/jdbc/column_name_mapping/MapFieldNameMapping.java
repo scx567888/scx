@@ -1,15 +1,15 @@
 package cool.scx.data.jdbc.column_name_mapping;
 
-import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
+import cool.scx.data.jdbc.mapping.EntityTable;
 
 import java.util.function.Function;
 
 /// 这个映射表示 列名 -> 字段
 public class MapFieldNameMapping implements Function<String, String> {
 
-    private final AnnotationConfigTable table;
+    private final EntityTable<?> table;
 
-    public MapFieldNameMapping(AnnotationConfigTable table) {
+    public MapFieldNameMapping(EntityTable<?> table) {
         this.table = table;
     }
 

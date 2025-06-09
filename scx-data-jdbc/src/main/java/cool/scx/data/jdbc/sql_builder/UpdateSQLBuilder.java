@@ -1,7 +1,7 @@
 package cool.scx.data.jdbc.sql_builder;
 
 import cool.scx.data.field_policy.FieldPolicy;
-import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
+import cool.scx.data.jdbc.mapping.EntityTable;
 import cool.scx.data.jdbc.parser.JDBCColumnNameParser;
 import cool.scx.data.jdbc.parser.JDBCOrderByParser;
 import cool.scx.data.jdbc.parser.JDBCWhereParser;
@@ -18,13 +18,13 @@ import static cool.scx.jdbc.sql.SQL.sql;
 
 public class UpdateSQLBuilder {
 
-    private final AnnotationConfigTable table;
+    private final EntityTable<?> table;
     private final Dialect dialect;
     private final JDBCColumnNameParser columnNameParser;
     private final JDBCWhereParser whereParser;
     private final JDBCOrderByParser orderByParser;
 
-    public UpdateSQLBuilder(AnnotationConfigTable table, Dialect dialect, JDBCColumnNameParser columnNameParser, JDBCWhereParser whereParser, JDBCOrderByParser orderByParser) {
+    public UpdateSQLBuilder(EntityTable<?> table, Dialect dialect, JDBCColumnNameParser columnNameParser, JDBCWhereParser whereParser, JDBCOrderByParser orderByParser) {
         this.table = table;
         this.dialect = dialect;
         this.columnNameParser = columnNameParser;

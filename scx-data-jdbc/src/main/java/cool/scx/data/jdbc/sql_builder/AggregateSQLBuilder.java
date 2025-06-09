@@ -3,7 +3,7 @@ package cool.scx.data.jdbc.sql_builder;
 import cool.scx.data.aggregation.Aggregation;
 import cool.scx.data.aggregation.ExpressionGroupBy;
 import cool.scx.data.aggregation.FieldGroupBy;
-import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
+import cool.scx.data.jdbc.mapping.EntityTable;
 import cool.scx.data.jdbc.parser.JDBCGroupByParser;
 import cool.scx.data.jdbc.parser.JDBCOrderByParser;
 import cool.scx.data.jdbc.parser.JDBCWhereParser;
@@ -18,13 +18,13 @@ import static cool.scx.common.util.StringUtils.notEmpty;
 
 public class AggregateSQLBuilder {
 
-    private final AnnotationConfigTable table;
+    private final EntityTable<?> table;
     private final Dialect dialect;
     private final JDBCWhereParser whereParser;
     private final JDBCGroupByParser groupByParser;
     private final JDBCOrderByParser orderByParser;
 
-    public AggregateSQLBuilder(AnnotationConfigTable table, Dialect dialect, JDBCWhereParser whereParser, JDBCGroupByParser groupByParser, JDBCOrderByParser orderByParser) {
+    public AggregateSQLBuilder(EntityTable<?> table, Dialect dialect, JDBCWhereParser whereParser, JDBCGroupByParser groupByParser, JDBCOrderByParser orderByParser) {
         this.table = table;
         this.dialect = dialect;
         this.whereParser = whereParser;
