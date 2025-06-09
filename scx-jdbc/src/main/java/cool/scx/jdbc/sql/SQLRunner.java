@@ -297,10 +297,10 @@ public final class SQLRunner {
 
                 try (con) {
                     CONNECTION_THREAD_LOCAL.set(con);
-
+                    T result;
                     try {
                         //尝试执行业务逻辑
-                        handler.call();
+                        result = handler.call();
                     } catch (Throwable handlerE) {
                         // 业务异常发生，尝试回滚事务
                         try {
@@ -329,7 +329,7 @@ public final class SQLRunner {
                     }
 
                     //通知线程完成
-                    promise.complete(null);
+                    promise.complete(result);
                 } finally {
                     CONNECTION_THREAD_LOCAL.remove();
                 }
