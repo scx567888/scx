@@ -9,13 +9,13 @@
         <version>3.8.2</version>
     </parent>
 
-    <artifactId>scx-jdbc-mysql</artifactId>
+    <artifactId>scx-jdbc-spy</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX JDBC MySQL</name>
+    <name>SCX JDBC Spy</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX JDBC MySQL
+        SCX JDBC Spy
     </description>
 
     <dependencies>
@@ -26,26 +26,7 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-        </dependency>
-
         <!-- ****************** 以下为测试依赖 ****************** -->
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-logging</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-jdbc-spy</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.testng</groupId>
