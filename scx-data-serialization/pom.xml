@@ -9,22 +9,28 @@
         <version>3.8.2</version>
     </parent>
 
-    <artifactId>scx-data</artifactId>
+    <artifactId>scx-data-serialization</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX Data</name>
+    <name>SCX Data Serialization</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX Data
+        SCX Data Serialization
     </description>
 
     <dependencies>
 
-<!--        <dependency>-->
-<!--            <groupId>${project.groupId}</groupId>-->
-<!--            <artifactId>scx-common</artifactId>-->
-<!--            <version>${project.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-data</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.testng</groupId>

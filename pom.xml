@@ -48,6 +48,7 @@
         <module>scx-common</module>
         <module>scx-config</module>
         <module>scx-data</module>
+        <module>scx-data-serialization</module>
         <module>scx-data-jdbc</module>
         <module>scx-ffm</module>
         <module>scx-http</module>

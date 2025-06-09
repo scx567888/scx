@@ -1,7 +1,5 @@
 package cool.scx.data.query;
 
-import static cool.scx.common.util.StringUtils.isBlank;
-
 /// OrderBy
 ///
 /// @author scx567888
@@ -14,7 +12,7 @@ public final class OrderBy extends QueryLike<OrderBy> {
     private final boolean useExpression;
 
     public OrderBy(String selector, OrderByType orderByType, boolean useExpression) {
-        if (isBlank(selector)) {
+        if (selector == null) {
             throw new IllegalArgumentException("OrderBy 参数错误 : selector 不能为空 !!!");
         }
         if (orderByType == null) {
