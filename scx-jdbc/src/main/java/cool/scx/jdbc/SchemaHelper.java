@@ -26,7 +26,8 @@ public final class SchemaHelper {
     public static String getMigrateSQL(Table oldTable, Table newTable, Dialect dialect) {
         var verifyResult = verifyTable(oldTable, newTable);
         if (verifyResult.notEmpty()) {
-            return dialect.getAlterTableDDL(verifyResult.needAdd(), verifyResult.needRemove(), newTable);
+            //默认不去 drop 任何字段 太危险了
+            return dialect.getAlterTableDDL(verifyResult.needAdd(), new Column[]{}, verifyResult.needChange(), newTable);
         }
         return null;
     }
