@@ -20,12 +20,6 @@
 
     <dependencies>
 
-<!--        <dependency>-->
-<!--            <groupId>${project.groupId}</groupId>-->
-<!--            <artifactId>scx-common</artifactId>-->
-<!--            <version>${project.version}</version>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
