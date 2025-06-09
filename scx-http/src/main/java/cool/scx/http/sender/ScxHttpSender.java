@@ -8,7 +8,7 @@ import cool.scx.http.media.event_stream.ServerEventStreamWriter;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.form_params.FormParamsWriter;
 import cool.scx.http.media.input_stream.InputStreamWriter;
-import cool.scx.http.media.json_node.JsonNodeWriter;
+import cool.scx.http.media.tree.TreeWriter;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.media.multi_part.MultiPartWriter;
 import cool.scx.http.media.object.ObjectWriter;
@@ -31,6 +31,10 @@ public interface ScxHttpSender<T> {
         return send(EMPTY_WRITER);
     }
 
+    default T send(InputStream inputStream) throws BodyAlreadySentException, HttpSendException {
+        return send(new InputStreamWriter(inputStream));
+    }
+
     default T send(byte[] bytes) throws BodyAlreadySentException, HttpSendException {
         return send(new ByteArrayWriter(bytes));
     }
@@ -51,10 +55,6 @@ public interface ScxHttpSender<T> {
         return send(new PathWriter(path, offset, length));
     }
 
-    default T send(InputStream inputStream) throws BodyAlreadySentException, HttpSendException {
-        return send(new InputStreamWriter(inputStream));
-    }
-
     default T send(FormParams formParams) throws BodyAlreadySentException, HttpSendException {
         return send(new FormParamsWriter(formParams));
     }
@@ -64,7 +64,7 @@ public interface ScxHttpSender<T> {
     }
 
     default T send(JsonNode jsonNode) throws BodyAlreadySentException, HttpSendException {
-        return send(new JsonNodeWriter(jsonNode));
+        return send(new TreeWriter(jsonNode));
     }
 
     default T send(Object object) throws BodyAlreadySentException, HttpSendException {
