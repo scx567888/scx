@@ -1,5 +1,6 @@
 package cool.scx.jdbc.meta_data;
 
+import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Catalog;
 
 import java.sql.Connection;
@@ -30,15 +31,14 @@ public final class CatalogMetaData implements Catalog {
     }
 
     public CatalogMetaData refreshSchemas(Connection connection) throws SQLException {
-        return refreshSchemas(connection, false);
+        schemas = MetaDataHelper.getSchemas(connection, this.name, null);
+        return this;
     }
 
-    public CatalogMetaData refreshSchemas(Connection connection, boolean deep) throws SQLException {
-        schemas = MetaDataHelper.getSchemas(connection, this.name, null);
-        if (deep) {
-            for (var schema : schemas) {
-                schema.refreshTables(connection, deep);
-            }
+    public CatalogMetaData refreshSchemasDeep(Connection connection, Dialect dialect) throws SQLException {
+        refreshSchemas(connection);
+        for (var schema : schemas) {
+            schema.refreshTablesDeep(connection, dialect);
         }
         return this;
     }

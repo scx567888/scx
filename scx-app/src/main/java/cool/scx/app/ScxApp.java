@@ -261,10 +261,10 @@ public final class ScxApp {
         var noNeedToFix = 0;
         for (var v : getAllScxBaseModelClassList()) {
             //根据 class 获取 tableInfo
-            var tableInfo = new AnnotationConfigTable(v);
+            var tableInfo = new AnnotationConfigTable<>(v);
             try {
-                if (SchemaHelper.checkNeedFixTable(tableInfo, dataSource())) {
-                    SchemaHelper.fixTable(tableInfo, jdbcContext);
+                if (SchemaHelper.checkNeedFixTable(tableInfo, jdbcContext())) {
+                    SchemaHelper.fixTable(tableInfo, jdbcContext());
                     fixSuccess = fixSuccess + 1;
                 } else {
                     noNeedToFix = noNeedToFix + 1;
@@ -304,10 +304,10 @@ public final class ScxApp {
         logger.log(DEBUG, "检查数据表结构中...");
         for (var v : getAllScxBaseModelClassList()) {
             //根据 class 获取 tableInfo
-            var tableInfo = new AnnotationConfigTable(v);
+            var tableInfo = new AnnotationConfigTable<>(v);
             try {
                 //有任何需要修复的直接 返回 true
-                if (SchemaHelper.checkNeedFixTable(tableInfo, dataSource())) {
+                if (SchemaHelper.checkNeedFixTable(tableInfo, jdbcContext())) {
                     return true;
                 }
             } catch (Exception e) {

@@ -1,13 +1,10 @@
 package cool.scx.jdbc.meta_data;
 
+import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Schema;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /// SchemaMetaData
 ///
@@ -18,7 +15,6 @@ public final class SchemaMetaData implements Schema {
     private final String catalog;
     private final String name;
     private TableMetaData[] tables;
-    private Map<String, TableMetaData> tableMap = new HashMap<>();
 
     public SchemaMetaData(String catalog, String name) {
         this.catalog = catalog;
@@ -40,32 +36,38 @@ public final class SchemaMetaData implements Schema {
         return tables;
     }
 
-    @Override
-    public TableMetaData getTable(String name) {
-        return tableMap.get(name);
-    }
-
     public SchemaMetaData refreshTables(Connection connection) throws SQLException {
-        return refreshTables(connection, new String[]{"TABLE"}, false);
+        this.tables = MetaDataHelper.getTables(connection, this.catalog, this.name, null, new String[]{"TABLE"});
+        return this;
     }
 
-    public SchemaMetaData refreshTables(Connection connection, boolean deep) throws SQLException {
-        return refreshTables(connection, new String[]{"TABLE"}, deep);
+    public SchemaMetaData refreshTablesDeep(Connection connection, Dialect dialect) throws SQLException {
+        refreshTables(connection);
+        for (var table : tables) {
+            table.refreshColumns(connection, dialect);
+        }
+        return this;
     }
 
     public SchemaMetaData refreshTables(Connection connection, String[] types) throws SQLException {
-        return refreshTables(connection, types, false);
+        this.tables = MetaDataHelper.getTables(connection, this.catalog, this.name, null, types);
+        return this;
     }
 
-    public SchemaMetaData refreshTables(Connection connection, String[] types, boolean deep) throws SQLException {
+    public SchemaMetaData refreshTablesDeep(Connection connection, String[] types, Dialect dialect) throws SQLException {
         this.tables = MetaDataHelper.getTables(connection, this.catalog, this.name, null, types);
-        this.tableMap = Arrays.stream(this.tables).collect(Collectors.toMap(TableMetaData::name, c -> c));
-        if (deep) {
-            for (var table : tables) {
-                table.refreshColumns(connection);
-            }
+        for (var table : tables) {
+            table.refreshColumns(connection, dialect);
         }
         return this;
+    }
+
+    public TableMetaData getTable(Connection con, String name) throws SQLException {
+        var tables = MetaDataHelper.getTables(con, this.catalog, this.name, name, new String[]{"TABLE"});
+        if (tables.length == 1) {
+            return tables[0];
+        }
+        return null;
     }
 
 }

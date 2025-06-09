@@ -1,7 +1,7 @@
 package cool.scx.data.jdbc.mapping;
 
 import cool.scx.jdbc.JDBCType;
-import cool.scx.jdbc.mapping.type.TypeDataType;
+import cool.scx.jdbc.mapping.DataType;
 
 import java.lang.reflect.Type;
 
@@ -12,7 +12,7 @@ import static cool.scx.jdbc.JDBCType.VARCHAR;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class AnnotationConfigDataType implements TypeDataType {
+public class AnnotationConfigDataType implements DataType {
 
     private static final int DEFAULT_VARCHAR_LENGTH = 128;
 

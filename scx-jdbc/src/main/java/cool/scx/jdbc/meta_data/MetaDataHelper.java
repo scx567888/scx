@@ -1,5 +1,6 @@
 package cool.scx.jdbc.meta_data;
 
+import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.result_handler.ResultHandler;
 
 import java.sql.Connection;
@@ -54,8 +55,8 @@ public final class MetaDataHelper {
         return TABLE_LIST_HANDLER.apply(connection.getMetaData().getTables(catalog, schemaPattern, tableNamePattern, types)).stream().map(_Table::toTableMetaData).toArray(TableMetaData[]::new);
     }
 
-    public static ColumnMetaData[] getColumns(Connection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern, TableMetaData tableMetaData) throws SQLException {
-        return COLUMN_LIST_HANDLER.apply(connection.getMetaData().getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)).stream().map(column -> column.toColumnMetaData(tableMetaData)).toArray(ColumnMetaData[]::new);
+    public static ColumnMetaData[] getColumns(Connection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern, TableMetaData tableMetaData, Dialect dialect) throws SQLException {
+        return COLUMN_LIST_HANDLER.apply(connection.getMetaData().getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)).stream().map(column -> column.toColumnMetaData(tableMetaData, dialect)).toArray(ColumnMetaData[]::new);
     }
 
     public static KeyMetaData[] getKeys(Connection connection, String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
@@ -152,8 +153,8 @@ public final class MetaDataHelper {
             return null;
         }
 
-        public ColumnMetaData toColumnMetaData(TableMetaData tableMetaData) {
-            var dataType = new DataTypeMetaData(TYPE_NAME, COLUMN_SIZE);
+        public ColumnMetaData toColumnMetaData(TableMetaData tableMetaData, Dialect dialect) {
+            var dataType = new DataTypeMetaData(dialect.dialectDataTypeToJDBCType(TYPE_NAME), TYPE_NAME, COLUMN_SIZE);
             var notNull = Objects.equals("NO", IS_NULLABLE);
             var autoincrement = Objects.equals("YES", IS_AUTOINCREMENT);
             var primary = checkPrimaryKey(tableMetaData, COLUMN_NAME);

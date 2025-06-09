@@ -1,5 +1,6 @@
 package cool.scx.jdbc.meta_data;
 
+import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.DataSource;
 
 import java.sql.Connection;
@@ -19,15 +20,14 @@ public final class DataSourceMetaData implements DataSource {
     }
 
     public DataSourceMetaData refreshCatalogs(Connection connection) throws SQLException {
-        return refreshCatalogs(connection, false);
+        catalogs = MetaDataHelper.getCatalogs(connection);
+        return this;
     }
 
-    public DataSourceMetaData refreshCatalogs(Connection connection, boolean deep) throws SQLException {
-        catalogs = MetaDataHelper.getCatalogs(connection);
-        if (deep) {
-            for (var catalog : catalogs) {
-                catalog.refreshSchemas(connection, deep);
-            }
+    public DataSourceMetaData refreshCatalogsDeep(Connection connection, Dialect dialect) throws SQLException {
+        refreshCatalogs(connection);
+        for (var catalog : catalogs) {
+            catalog.refreshSchemasDeep(connection, dialect);
         }
         return this;
     }
