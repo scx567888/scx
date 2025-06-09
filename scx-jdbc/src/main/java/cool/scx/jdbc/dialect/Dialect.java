@@ -227,13 +227,13 @@ public interface Dialect {
         }
 
         for (var needChange : needChanges) {
-            if (needChange.verifyResult().needChangeDataType()){
+            if (needChange.verifyResult().needChangeDataType()) {
                 var columnDefinition = getColumnDefinition(needChange.newColumn());
                 var str = "    MODIFY COLUMN " + columnDefinition;
                 clauses.add(str);
             }
         }
-        
+
         if (clauses.isEmpty()) {
             return null;
         }
