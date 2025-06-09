@@ -54,6 +54,7 @@
         <module>scx-http-x</module>
         <module>scx-io</module>
         <module>scx-jdbc</module>
+        <module>scx-jdbc-spy</module>
         <module>scx-jdbc-mysql</module>
         <module>scx-logging</module>
         <module>scx-reflect</module>
