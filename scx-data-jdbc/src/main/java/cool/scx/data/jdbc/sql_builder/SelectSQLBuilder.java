@@ -2,7 +2,7 @@ package cool.scx.data.jdbc.sql_builder;
 
 import cool.scx.data.LockMode;
 import cool.scx.data.field_policy.FieldPolicy;
-import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
+import cool.scx.data.jdbc.mapping.EntityTable;
 import cool.scx.data.jdbc.parser.JDBCOrderByParser;
 import cool.scx.data.jdbc.parser.JDBCWhereParser;
 import cool.scx.data.query.Query;
@@ -20,12 +20,12 @@ import static cool.scx.jdbc.sql.SQL.sql;
 
 public class SelectSQLBuilder {
 
-    private final AnnotationConfigTable table;
+    private final EntityTable<?> table;
     private final Dialect dialect;
     private final JDBCWhereParser whereParser;
     private final JDBCOrderByParser orderByParser;
 
-    public SelectSQLBuilder(AnnotationConfigTable table, Dialect dialect, JDBCWhereParser whereParser, JDBCOrderByParser orderByParser) {
+    public SelectSQLBuilder(EntityTable<?> table, Dialect dialect, JDBCWhereParser whereParser, JDBCOrderByParser orderByParser) {
         this.table = table;
         this.dialect = dialect;
         this.whereParser = whereParser;

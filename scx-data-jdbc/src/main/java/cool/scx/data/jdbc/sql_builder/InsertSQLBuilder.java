@@ -1,7 +1,7 @@
 package cool.scx.data.jdbc.sql_builder;
 
 import cool.scx.data.field_policy.FieldPolicy;
-import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
+import cool.scx.data.jdbc.mapping.EntityTable;
 import cool.scx.data.jdbc.parser.JDBCColumnNameParser;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Column;
@@ -17,11 +17,11 @@ import static cool.scx.jdbc.sql.SQL.sql;
 
 public class InsertSQLBuilder {
 
-    private final AnnotationConfigTable table;
+    private final EntityTable<?> table;
     private final Dialect dialect;
     private final JDBCColumnNameParser columnNameParser;
 
-    public InsertSQLBuilder(AnnotationConfigTable table, Dialect dialect, JDBCColumnNameParser columnNameParser) {
+    public InsertSQLBuilder(EntityTable<?> table, Dialect dialect, JDBCColumnNameParser columnNameParser) {
         this.table = table;
         this.dialect = dialect;
         this.columnNameParser = columnNameParser;

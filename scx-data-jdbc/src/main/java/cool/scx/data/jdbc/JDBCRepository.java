@@ -7,6 +7,7 @@ import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.column_name_mapping.BeanColumnNameMapping;
 import cool.scx.data.jdbc.column_name_mapping.MapFieldNameMapping;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
+import cool.scx.data.jdbc.mapping.EntityTable;
 import cool.scx.data.jdbc.parser.JDBCColumnNameParser;
 import cool.scx.data.jdbc.parser.JDBCGroupByParser;
 import cool.scx.data.jdbc.parser.JDBCOrderByParser;
