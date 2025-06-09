@@ -6,7 +6,6 @@ import cool.scx.http.media.MediaReader;
 import cool.scx.http.media.event_stream.ClientEventStream;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.multi_part.MultiPart;
-import cool.scx.http.media.multi_part.MultiPartStreamCachedReader;
 import cool.scx.http.media.object.ObjectReader;
 import cool.scx.http.media.path.PathReader;
 import cool.scx.http.media.string.StringReader;
@@ -19,10 +18,11 @@ import java.nio.file.Path;
 import static cool.scx.http.media.byte_array.ByteArrayReader.BYTE_ARRAY_READER;
 import static cool.scx.http.media.event_stream.ClientEventStreamReader.CLIENT_EVENT_STREAM_READER;
 import static cool.scx.http.media.form_params.FormParamsReader.FORM_PARAMS_READER;
-import static cool.scx.http.media.json_node.JsonNodeReader.JSON_NODE_READER;
-import static cool.scx.http.media.multi_part.MultiPartStreamCachedReader.MULTI_PART_READER_CACHED;
+import static cool.scx.http.media.json.JsonReader.JSON_READER;
 import static cool.scx.http.media.multi_part.MultiPartStreamReader.MULTI_PART_READER;
 import static cool.scx.http.media.string.StringReader.STRING_READER;
+import static cool.scx.http.media.tree.TreeReader.TREE_READER;
+import static cool.scx.http.media.xml.XmlReader.XML_READER;
 
 /// ScxHttpBody
 ///
@@ -54,20 +54,20 @@ public interface ScxHttpBody {
         return as(MULTI_PART_READER);
     }
 
-    default MultiPart asMultiPartCached() throws BodyReadException, BodyAlreadyConsumedException {
-        return as(MULTI_PART_READER_CACHED);
-    }
-
-    default MultiPart asMultiPartCached(Path cachePath) throws BodyReadException, BodyAlreadyConsumedException {
-        return as(new MultiPartStreamCachedReader(cachePath));
-    }
-
     default Path asPath(Path path, OpenOption... options) throws BodyReadException, BodyAlreadyConsumedException {
         return as(new PathReader(path, options));
     }
 
-    default JsonNode asJsonNode() throws BodyReadException, BodyAlreadyConsumedException {
-        return as(JSON_NODE_READER);
+    default JsonNode asJson() throws BodyReadException, BodyAlreadyConsumedException {
+        return as(JSON_READER);
+    }
+
+    default JsonNode asXml() throws BodyReadException, BodyAlreadyConsumedException {
+        return as(XML_READER);
+    }
+
+    default JsonNode asTree() throws BodyReadException, BodyAlreadyConsumedException {
+        return as(TREE_READER);
     }
 
     default <T> T asObject(Class<T> c) throws BodyReadException, BodyAlreadyConsumedException {

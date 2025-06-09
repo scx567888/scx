@@ -1,4 +1,4 @@
-package cool.scx.http.media.json_node;
+package cool.scx.http.media.tree;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,15 +15,16 @@ import static cool.scx.http.media.string.StringReader.STRING_READER;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 
-/// JsonNodeReader
+/// TreeReader
+/// 此处之所以 先将请求体读取为字符串，然后解析为 JsonNode。 参考 JsonReader 和 XmlReader
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class JsonNodeReader implements MediaReader<JsonNode> {
+public class TreeReader implements MediaReader<JsonNode> {
 
-    public static final JsonNodeReader JSON_NODE_READER = new JsonNodeReader();
+    public static final TreeReader TREE_READER = new TreeReader();
 
-    private JsonNodeReader() {
+    private TreeReader() {
 
     }
 
@@ -48,7 +49,8 @@ public class JsonNodeReader implements MediaReader<JsonNode> {
             try {
                 return xmlMapper().readTree(str);
             } catch (JsonProcessingException e) {
-                // 同上
+                // 这里既然客户端已经 指定了 contentType 为 XML 我们却无法转换 说明 客户端发送的 内容格式可能有误 
+                // 所以这里 抛出 客户端错误 BadRequestException
                 throw new BadRequestException("XML 格式不正确 !!!", e);
             }
         }
