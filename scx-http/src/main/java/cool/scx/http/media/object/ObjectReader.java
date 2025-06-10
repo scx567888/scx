@@ -7,6 +7,7 @@ import cool.scx.common.util.ObjectUtils;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
+import cool.scx.http.media.tree.TreeReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +18,7 @@ import static cool.scx.http.media.string.StringReader.STRING_READER;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 
-/// ObjectReader 逻辑参考 {@link cool.scx.http.media.json_node.JsonNodeReader}
+/// ObjectReader 逻辑参考 {@link TreeReader}
 ///
 /// @author scx567888
 /// @version 0.0.1

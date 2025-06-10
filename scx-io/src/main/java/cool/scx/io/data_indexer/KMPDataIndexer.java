@@ -66,6 +66,10 @@ public class KMPDataIndexer implements DataIndexer {
         patternIndex = 0;
     }
 
+    public int patternIndex() {
+        return patternIndex;
+    }
+
     public byte[] pattern() {
         return pattern;
     }

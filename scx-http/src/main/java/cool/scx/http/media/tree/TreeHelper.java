@@ -1,4 +1,4 @@
-package cool.scx.http.media.json_node;
+package cool.scx.http.media.tree;
 
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
@@ -8,7 +8,7 @@ import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public final class JsonNodeHelper {
+public final class TreeHelper {
 
     /// 根据客户端的 Accept 值尝试推断我们应该使用什么类型的 Content-Type
     public static ScxMediaType trySetContentType(ScxHttpHeadersWritable headersWritable, ScxHttpHeaders headers) {

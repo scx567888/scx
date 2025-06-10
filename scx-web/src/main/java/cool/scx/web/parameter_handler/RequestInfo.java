@@ -61,7 +61,7 @@ public final class RequestInfo {
         bodyInit = true;
         // 除了 MULTIPART_FORM_DATA 其余全部转为 JsonNode 的形式方便后续使用
         if (APPLICATION_JSON.equalsIgnoreParams(contentType) || APPLICATION_XML.equalsIgnoreParams(contentType)) {
-            this.body = ctx.request().body().asJsonNode();
+            this.body = ctx.request().body().asTree();
             return;
         }
         if (APPLICATION_X_WWW_FORM_URLENCODED.equalsIgnoreParams(contentType)) {
@@ -74,7 +74,7 @@ public final class RequestInfo {
             var m = new MultiMap<String, String>();
             var f = new MultiMap<String, MultiPartPart>();
             //文件和非文件
-            var multiPart = cachedMultiPart ? ctx.request().body().asMultiPartCached() : ctx.request().body().asMultiPart();
+            var multiPart = ctx.request().body().asMultiPart();
             for (var multiPartPart : multiPart) {
                 //没有文件名我们就当成 空文件
                 if (multiPartPart.filename() == null) {
