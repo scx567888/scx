@@ -6,7 +6,6 @@ import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.data_reader.LinkedDataReader;
 import cool.scx.io.data_supplier.BoundaryDataSupplier;
 import cool.scx.io.io_stream.DataReaderInputStream;
-import cool.scx.io.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,10 +22,10 @@ import static cool.scx.io.IOHelper.inputStreamToDataReader;
 public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, AutoCloseable {
 
     private static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
+    private final String boundary; // xxx
+    private final byte[] boundaryBytes; // --xxx
+    private final byte[] boundaryStartBytes; // \r\b--xxx
     private final DataReader linkedDataReader;
-    private final byte[] boundaryBytes;
-    private final byte[] boundaryStartBytes;
-    private final String boundary;
     private MultiPartPart lastPart;
 
     public MultiPartStream(InputStream inputStream, String boundary) {
@@ -37,7 +36,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         this.lastPart = null;
     }
 
-    public ScxHttpHeadersWritable readToHeaders() {
+    public ScxHttpHeadersWritable readHeaders() {
         // head 的终结点是 连续两个换行符 具体格式 如下
         // head /r/n
         // /r/n
@@ -48,8 +47,8 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
     }
 
     public InputStream readContent() {
-        // 内容 的终结符是 \r\n + --xxxxxx
-        // 所以我们创建一个以 \r\n + --xxxxxx 结尾的分割符 输入流
+        // 内容 的终结符是 \r\n--boundary
+        // 所以我们创建一个以 \r\n--boundary 结尾的分割符 输入流
         return new DataReaderInputStream(new LinkedDataReader(new BoundaryDataSupplier(linkedDataReader, boundaryStartBytes)));
     }
 
@@ -71,7 +70,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
             consumeInputStream(lastPart.inputStream());
             // inputStream 中并不会消耗 最后的 \r\n, 但是接下来的判断我们也不需要 所以这里 跳过最后的 \r\n
             linkedDataReader.skip(2);
-            //置空 防止重复判断
+            //置空 防止重复消费
             lastPart = null;
         }
 
@@ -92,8 +91,8 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         }
 
         // 2. boundary 后两个字节判断
-        byte a = peek[boundaryBytes.length];
-        byte b = peek[boundaryBytes.length + 1];
+        byte a = peek[peek.length - 2];
+        byte b = peek[peek.length - 1];
 
         if (a == '-' && b == '-') {
             // 遇到 --boundary-- ，整个 multipart 结束
@@ -105,6 +104,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
             //其他字符那就只能抛异常了
             throw new RuntimeException("Malformed multipart: invalid boundary ending");
         }
+
     }
 
     @Override
@@ -113,16 +113,16 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
             throw new NoSuchElementException("No more parts available.");
         }
 
-        //跳过起始的 ----xxxxxxx + \r\n
+        // 跳过起始的 --boundary\r\n
         linkedDataReader.skip(boundaryBytes.length + 2);
 
         var part = new MultiPartPartImpl();
 
         // 读取当前部分的头部信息
-        var headers = readToHeaders();
+        var headers = readHeaders();
         part.headers(headers);
 
-        //读取内容
+        // 读取内容
         var content = readContent();
         part.body(content);
 
@@ -135,7 +135,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
     public static void consumeInputStream(InputStream inputStream) {
         try (inputStream) {
             inputStream.transferTo(OutputStream.nullOutputStream());
-        } catch (StreamClosedException | IOException e) {
+        } catch (IOException e) {
             // 忽略
         }
     }
