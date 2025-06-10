@@ -1,10 +1,13 @@
 package cool.scx.data.aggregation;
 
 /// 聚合定义
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface Aggregation {
 
     /// 设置 分组
-    Aggregation groupBys(GroupBy... groupBy);
+    Aggregation groupBys(GroupBy... groupBys);
 
     /// 设置 聚合列
     Aggregation aggs(Agg... aggs);

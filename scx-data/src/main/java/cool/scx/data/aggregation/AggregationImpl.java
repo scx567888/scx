@@ -3,7 +3,11 @@ package cool.scx.data.aggregation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AggregationImpl implements Aggregation {
+/// AggregationImpl
+///
+/// @author scx567888
+/// @version 0.0.1
+public final class AggregationImpl implements Aggregation {
 
     private List<GroupBy> groupBys;
     private List<Agg> aggs;
