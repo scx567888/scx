@@ -61,8 +61,11 @@ public class FieldPolicyDeserializer {
         for (var fn : fieldNamesNode) {
             fieldNames.add(fn.asText());
         }
-        policy.addFieldNames(fieldNames.toArray(String[]::new));
-
+        if (filterMode == FilterMode.INCLUDED) {
+            policy.include(fieldNames.toArray(String[]::new));
+        } else if (filterMode == FilterMode.EXCLUDED) {
+            policy.exclude(fieldNames.toArray(String[]::new));
+        }
 
         var virtualFieldsNode = v.get("virtualFields");
         if (virtualFieldsNode == null || !virtualFieldsNode.isArray()) {
