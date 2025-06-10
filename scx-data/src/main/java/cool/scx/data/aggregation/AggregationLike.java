@@ -2,7 +2,7 @@ package cool.scx.data.aggregation;
 
 ///  AggregationLike
 ///
-/// @param <AL>
+/// @param <AL> AL
 /// @author scx567888
 /// @version 0.0.1
 @SuppressWarnings("unchecked")
