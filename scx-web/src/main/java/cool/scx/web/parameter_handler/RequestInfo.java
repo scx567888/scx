@@ -5,8 +5,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import cool.scx.common.multi_map.MultiMap;
 import cool.scx.http.media.multi_part.MultiPartPart;
+import cool.scx.http.media.multi_part.MultiPartPartImpl;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
+
+import java.io.IOException;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
@@ -80,7 +83,13 @@ public final class RequestInfo {
                 if (multiPartPart.filename() == null) {
                     m.add(multiPartPart.name(), multiPartPart.asString());
                 }
-                f.add(multiPartPart.name(), multiPartPart);
+                try {
+                    //这里我们需要将流式的读取到内存中
+                    var bytes = multiPartPart.inputStream().readAllBytes();
+                    f.add(multiPartPart.name(), new MultiPartPartImpl().headers(multiPartPart.headers()).body(bytes));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
             this.body = jsonMapper().convertValue(m.toMultiValueMap(), JsonNode.class);
             this.uploadFiles = f;
