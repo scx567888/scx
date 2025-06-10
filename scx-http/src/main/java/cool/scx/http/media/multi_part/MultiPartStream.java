@@ -6,6 +6,7 @@ import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.data_reader.LinkedDataReader;
 import cool.scx.io.data_supplier.BoundaryDataSupplier;
 import cool.scx.io.io_stream.DataReaderInputStream;
+import cool.scx.io.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +40,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
     public static void consumeInputStream(InputStream inputStream) {
         try (inputStream) {
             inputStream.transferTo(OutputStream.nullOutputStream());
-        } catch (IOException e) {
+        } catch (StreamClosedException | IOException e) {
             // 忽略
         }
     }
