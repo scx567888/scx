@@ -31,6 +31,22 @@ public abstract sealed class Junction extends QueryLike<Junction> implements Whe
         return this;
     }
 
+    public final Junction and(Where... clauses) {
+        return add(new And().add(clauses));
+    }
+
+    public final Junction or(Where... clauses) {
+        return add(new Or().add(clauses));
+    }
+
+    public final Junction not(Where clause) {
+        return add(new Not(clause));
+    }
+
+    public final Junction whereClause(String expression, Object... params) {
+        return add(new WhereClause(expression, params));
+    }
+
     public final Junction eq(String selector, Object value, BuildControl... controls) {
         return add(QueryBuilder.eq(selector, value, controls));
     }
@@ -85,22 +101,6 @@ public abstract sealed class Junction extends QueryLike<Junction> implements Whe
 
     public final Junction notBetween(String selector, Object value1, Object value2, BuildControl... controls) {
         return add(QueryBuilder.notBetween(selector, value1, value2, controls));
-    }
-
-    public final Junction and(Where... clauses) {
-        return add(new And().add(clauses));
-    }
-
-    public final Junction or(Where... clauses) {
-        return add(new Or().add(clauses));
-    }
-
-    public final Junction not(Where clause) {
-        return add(new Not(clause));
-    }
-
-    public final Junction whereClause(String expression, Object... params) {
-        return add(new WhereClause(expression, params));
     }
 
     @Override

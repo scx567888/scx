@@ -6,7 +6,7 @@ import static cool.scx.data.field_policy.FilterMode.EXCLUDED;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class AssignField extends FieldPolicyLike<AssignField> {
+public final class AssignField extends FieldPolicyLike<AssignField> {
 
     private final String fieldName;
     private final String expression;

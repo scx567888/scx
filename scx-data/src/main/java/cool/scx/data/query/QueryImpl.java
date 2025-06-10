@@ -9,7 +9,7 @@ import static java.util.Collections.addAll;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class QueryImpl implements Query {
+public final class QueryImpl implements Query {
 
     private Where where;
     private List<OrderBy> orderBys;

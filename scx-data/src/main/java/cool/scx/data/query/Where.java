@@ -1,6 +1,9 @@
 package cool.scx.data.query;
 
-/// 标记接口
+/// Where (标记接口)
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface Where {
 
     boolean isEmpty();

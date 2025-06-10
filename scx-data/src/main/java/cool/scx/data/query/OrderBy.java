@@ -13,10 +13,10 @@ public final class OrderBy extends QueryLike<OrderBy> {
 
     public OrderBy(String selector, OrderByType orderByType, boolean useExpression) {
         if (selector == null) {
-            throw new IllegalArgumentException("OrderBy 参数错误 : selector 不能为空 !!!");
+            throw new NullPointerException("selector cannot be null");
         }
         if (orderByType == null) {
-            throw new IllegalArgumentException("OrderBy 参数错误 : orderByType 不能为空 !!!");
+            throw new NullPointerException("orderByType cannot be null");
         }
         this.selector = selector;
         this.orderByType = orderByType;
