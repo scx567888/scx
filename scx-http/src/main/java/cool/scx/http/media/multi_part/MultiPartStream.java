@@ -36,6 +36,14 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         this.lastPart = null;
     }
 
+    public static void consumeInputStream(InputStream inputStream) {
+        try (inputStream) {
+            inputStream.transferTo(OutputStream.nullOutputStream());
+        } catch (IOException e) {
+            // 忽略
+        }
+    }
+
     public ScxHttpHeadersWritable readHeaders() {
         // head 的终结点是 连续两个换行符 具体格式 如下
         // head /r/n
@@ -130,14 +138,6 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
 
         return part;
 
-    }
-
-    public static void consumeInputStream(InputStream inputStream) {
-        try (inputStream) {
-            inputStream.transferTo(OutputStream.nullOutputStream());
-        } catch (IOException e) {
-            // 忽略
-        }
     }
 
     @Override
