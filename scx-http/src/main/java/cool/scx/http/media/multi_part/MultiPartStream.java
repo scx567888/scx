@@ -20,13 +20,13 @@ import static cool.scx.io.IOHelper.inputStreamToDataReader;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>,AutoCloseable {
+public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, AutoCloseable {
 
     private static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
     private final DataReader linkedDataReader;
     private final byte[] boundaryBytes;
     private final byte[] boundaryStartBytes;
-    private String boundary;
+    private final String boundary;
     private MultiPartPart lastPart;
 
     public MultiPartStream(InputStream inputStream, String boundary) {
@@ -78,7 +78,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>,AutoC
         // 下面的操作不会移动指针 所以我们可以 重复调用 hasNext 
         // 向后查看
         var peek = linkedDataReader.peek(boundaryBytes.length + 2);
-        
+
         // 这种情况只可能发生在流已经提前结束了
         if (peek.length != boundaryBytes.length + 2) {
             throw new RuntimeException("Malformed multipart: boundary peek too short");
