@@ -11,10 +11,10 @@ public final class ExpressionGroupBy extends GroupBy {
 
     public ExpressionGroupBy(String alias, String expression) {
         if (alias == null) {
-            throw new NullPointerException("alias can not be null");
+            throw new NullPointerException("alias cannot be null");
         }
         if (expression == null) {
-            throw new NullPointerException("expression can not be null");
+            throw new NullPointerException("expression cannot be null");
         }
         this.alias = alias;
         this.expression = expression;

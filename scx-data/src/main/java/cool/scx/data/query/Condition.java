@@ -20,10 +20,10 @@ public final class Condition extends QueryLike<Condition> implements Where {
 
     public Condition(String selector, ConditionType conditionType, Object value1, Object value2, boolean useExpression, boolean useExpressionValue, SkipIfInfo skipIfInfo) {
         if (selector == null) {
-            throw new NullPointerException("selector can not be null");
+            throw new NullPointerException("selector cannot be null");
         }
         if (conditionType == null) {
-            throw new NullPointerException("conditionType can not be null");
+            throw new NullPointerException("conditionType cannot be null");
         }
         this.selector = selector;
         this.conditionType = conditionType;

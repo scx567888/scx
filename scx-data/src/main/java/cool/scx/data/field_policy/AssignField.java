@@ -13,10 +13,10 @@ public final class AssignField extends FieldPolicyLike<AssignField> {
 
     public AssignField(String fieldName, String expression) {
         if (fieldName == null) {
-            throw new NullPointerException("fieldName can not be null");
+            throw new NullPointerException("fieldName cannot be null");
         }
         if (expression == null) {
-            throw new NullPointerException("expression can not be null");
+            throw new NullPointerException("expression cannot be null");
         }
         this.fieldName = fieldName;
         this.expression = expression;

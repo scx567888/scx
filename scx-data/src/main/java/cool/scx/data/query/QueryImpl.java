@@ -50,7 +50,7 @@ public final class QueryImpl implements Query {
     @Override
     public QueryImpl offset(long offset) {
         if (offset < 0) {
-            throw new IllegalArgumentException("Limit 参数错误 : offset (偏移量) 不能小于 0 !!!");
+            throw new IllegalArgumentException("offset must be >= 0");
         }
         this.offset = offset;
         return this;
@@ -59,7 +59,7 @@ public final class QueryImpl implements Query {
     @Override
     public QueryImpl limit(long limit) {
         if (limit < 0) {
-            throw new IllegalArgumentException("Limit 参数错误 : limit (行长度) 不能小于 0 !!!");
+            throw new IllegalArgumentException("limit must be >= 0");
         }
         this.limit = limit;
         return this;

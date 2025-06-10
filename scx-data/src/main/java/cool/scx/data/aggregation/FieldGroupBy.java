@@ -10,7 +10,7 @@ public final class FieldGroupBy extends GroupBy {
 
     public FieldGroupBy(String fieldName) {
         if (fieldName == null) {
-            throw new NullPointerException("expression can not be null");
+            throw new NullPointerException("fieldName cannot be null");
         }
         this.fieldName = fieldName;
     }
