@@ -2,6 +2,11 @@ package cool.scx.data.field_policy;
 
 import java.util.Map;
 
+/// FieldPolicyLike
+///
+/// @param <FL>
+/// @author scx567888
+/// @version 0.0.1
 @SuppressWarnings("unchecked")
 public abstract class FieldPolicyLike<FL extends FieldPolicyLike<FL>> implements FieldPolicy {
 

@@ -7,7 +7,7 @@ import static cool.scx.data.field_policy.FilterMode.INCLUDED;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class FieldPolicyBuilder {
+public final class FieldPolicyBuilder {
 
     public static FieldPolicy includeAll() {
         return new FieldPolicyImpl(EXCLUDED);
@@ -40,6 +40,7 @@ public class FieldPolicyBuilder {
         return new AssignField(fieldName, expression);
     }
 
+    /// 默认包含所有
     public static VirtualField virtualField(String virtualFieldName, String expression) {
         return new VirtualField(virtualFieldName, expression);
     }

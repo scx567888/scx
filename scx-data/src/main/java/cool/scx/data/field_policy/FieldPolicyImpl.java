@@ -4,11 +4,11 @@ import java.util.*;
 
 import static java.util.Collections.addAll;
 
-/// 字段过滤器
+/// FieldPolicyImpl
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class FieldPolicyImpl implements FieldPolicy {
+public final class FieldPolicyImpl implements FieldPolicy {
 
     private final FilterMode filterMode;
     private final Set<String> fieldNames;
@@ -55,18 +55,6 @@ public class FieldPolicyImpl implements FieldPolicy {
     @Override
     public FieldPolicyImpl clearFieldNames() {
         fieldNames.clear();
-        return this;
-    }
-
-    public FieldPolicyImpl addFieldNames(String... fieldNames) {
-        addAll(this.fieldNames, fieldNames);
-        return this;
-    }
-
-    public FieldPolicyImpl removeFieldNames(String... fieldNames) {
-        for (var fieldName : fieldNames) {
-            this.fieldNames.remove(fieldName);
-        }
         return this;
     }
 
@@ -147,6 +135,18 @@ public class FieldPolicyImpl implements FieldPolicy {
     @Override
     public FieldPolicyImpl assignField(String fieldName, String expression) {
         this.assignFields.add(new AssignField(fieldName, expression));
+        return this;
+    }
+
+    private FieldPolicyImpl addFieldNames(String... fieldNames) {
+        addAll(this.fieldNames, fieldNames);
+        return this;
+    }
+
+    private FieldPolicyImpl removeFieldNames(String... fieldNames) {
+        for (var fieldName : fieldNames) {
+            this.fieldNames.remove(fieldName);
+        }
         return this;
     }
 
