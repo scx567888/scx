@@ -3,6 +3,10 @@ package cool.scx.data.query;
 import java.lang.reflect.Array;
 import java.util.Collection;
 
+/// SkipIfInfo
+///
+/// @author scx567888
+/// @version 0.0.1
 public record SkipIfInfo(boolean skipIfNull,
                          boolean skipIfEmptyList,
                          boolean skipIfEmptyString,

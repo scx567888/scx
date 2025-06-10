@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 /// 查询执行器
 ///
-/// @param <Entity>
+/// @param <Entity> Entity
 /// @author scx567888
 /// @version 0.0.1
 public interface Finder<Entity> {

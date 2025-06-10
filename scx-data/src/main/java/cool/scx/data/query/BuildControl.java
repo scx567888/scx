@@ -1,5 +1,9 @@
 package cool.scx.data.query;
 
+/// BuildControl
+///
+/// @author scx567888
+/// @version 0.0.1
 public enum BuildControl {
 
     //**************** DSL 控制 *********************

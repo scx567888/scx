@@ -3,7 +3,7 @@ package cool.scx.data.query;
 import static cool.scx.data.query.ConditionType.BETWEEN;
 import static cool.scx.data.query.ConditionType.NOT_BETWEEN;
 
-/// Where
+/// Condition
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -19,13 +19,11 @@ public final class Condition extends QueryLike<Condition> implements Where {
     private final SkipIfInfo skipIfInfo;
 
     public Condition(String selector, ConditionType conditionType, Object value1, Object value2, boolean useExpression, boolean useExpressionValue, SkipIfInfo skipIfInfo) {
-        //名称不能为空
         if (selector == null) {
-            throw new IllegalArgumentException("Condition 参数错误 : selector 不能为空 !!!");
+            throw new NullPointerException("selector cannot be null");
         }
-        //类型也不能为空
         if (conditionType == null) {
-            throw new IllegalArgumentException("Condition 参数错误 : conditionType 不能为空 !!!");
+            throw new NullPointerException("conditionType cannot be null");
         }
         this.selector = selector;
         this.conditionType = conditionType;

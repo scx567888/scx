@@ -49,6 +49,10 @@ public final class QueryBuilder {
         return new Not(clause);
     }
 
+    public static WhereClause whereClause(String expression, Object... params) {
+        return new WhereClause(expression, params);
+    }
+
     public static Condition condition(String fieldName, ConditionType conditionType, Object value, BuildControl... controls) {
         var useExpression = checkUseExpression(controls);
         var useExpressionValue = checkUseExpressionValue(controls);
@@ -66,10 +70,6 @@ public final class QueryBuilder {
     public static OrderBy orderBy(String selector, OrderByType orderByType, BuildControl... controls) {
         var useExpression = checkUseExpression(controls);
         return new OrderBy(selector, orderByType, useExpression);
-    }
-
-    public static WhereClause whereClause(String expression, Object... params) {
-        return new WhereClause(expression, params);
     }
 
     /// 正序 : 也就是从小到大 (1,2,3,4,5,6)

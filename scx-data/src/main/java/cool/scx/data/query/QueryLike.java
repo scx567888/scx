@@ -2,6 +2,7 @@ package cool.scx.data.query;
 
 /// QueryLike
 ///
+/// @param <QL> QL
 /// @author scx567888
 /// @version 0.0.1
 @SuppressWarnings("unchecked")

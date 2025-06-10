@@ -1,7 +1,10 @@
 package cool.scx.data.aggregation;
 
 /// AggregationBuilder
-public class AggregationBuilder {
+///
+/// @author scx567888
+/// @version 0.0.1
+public final class AggregationBuilder {
 
     public static AggregationImpl aggregation() {
         return new AggregationImpl();
