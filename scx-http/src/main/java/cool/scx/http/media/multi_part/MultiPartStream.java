@@ -5,7 +5,6 @@ import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.data_reader.LinkedDataReader;
 import cool.scx.io.data_supplier.BoundaryDataSupplier;
-import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.io_stream.DataReaderInputStream;
 import cool.scx.io.io_stream.StreamClosedException;
 
@@ -18,24 +17,24 @@ import java.util.NoSuchElementException;
 import static cool.scx.io.IOHelper.inputStreamToDataReader;
 
 /// MultiPartStream
-/// todo 这里没有关闭流 可能出现问题
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
+public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>,AutoCloseable {
 
-    protected static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
-    protected final DataReader linkedDataReader;
-    protected final byte[] boundaryBytes;
-    protected boolean hasNextPart;
-    protected String boundary;
-    protected MultiPartPart lastPart;
+    private static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
+    private final DataReader linkedDataReader;
+    private final byte[] boundaryBytes;
+    private final byte[] boundaryStartBytes;
+    private String boundary;
+    private MultiPartPart lastPart;
 
     public MultiPartStream(InputStream inputStream, String boundary) {
         this.boundary = boundary;
         this.boundaryBytes = ("--" + boundary).getBytes();
+        this.boundaryStartBytes = ("\r\n--" + boundary).getBytes();
         this.linkedDataReader = inputStreamToDataReader(inputStream);
-//        this.hasNextPart = readNext();
+        this.lastPart = null;
     }
 
     public ScxHttpHeadersWritable readToHeaders() {
@@ -48,43 +47,10 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         return ScxHttpHeaders.ofStrict(headersStr);// 使用严格模式解析
     }
 
-    public InputStream readContentToByte() throws IOException {
-        //因为正常的表单一定是 --xxxxxx 结尾的 所以我们只需要找 下一个分块的起始位置作为结束位置即可 
-        try {
-            var s=("\r\n--"+boundary).getBytes();
-            //todo 这里不对
-            var c=new LinkedDataReader(new BoundaryDataSupplier(linkedDataReader, s));
-//            var i = linkedDataReader.indexOf(boundaryBytes);
-            // i - 2 因为我们不需要读取内容结尾的 \r\n  
-//            var bytes = linkedDataReader.read((int) (i - 2));
-            //跳过 \r\n 方便后续读取
-//            linkedDataReader.skip(2);
-            return new DataReaderInputStream(c);
-        } catch (NoMatchFoundException e) {
-            // 理论上一个正常的 MultiPart 不会有这种情况
-            throw new RuntimeException("异常状态 !!!");
-        }
-    }
-
-    public boolean readNext() {
-        //查找 --xxxxxxxxx
-        try {
-            var i = linkedDataReader.indexOf(boundaryBytes);
-            linkedDataReader.skip(i + boundaryBytes.length);
-            //向后读取两个字节 
-            var a = linkedDataReader.read();
-            var b = linkedDataReader.read();
-            // 判断 是 \r\n or -- 
-            if (a == '\r' && b == '\n') { //还有数据
-                return true;
-            } else if (a == '-' && b == '-') { // 读取到了终结符
-                return false;
-            } else { // 理论上一个正常的 MultiPart 不会有这种情况
-                throw new RuntimeException("未知字符 !!! ");
-            }
-        } catch (NoMatchFoundException e) {
-            return false;
-        }
+    public InputStream readContent() {
+        // 内容 的终结符是 \r\n + --xxxxxx
+        // 所以我们创建一个以 \r\n + --xxxxxx 结尾的分割符 输入流
+        return new DataReaderInputStream(new LinkedDataReader(new BoundaryDataSupplier(linkedDataReader, boundaryStartBytes)));
     }
 
     @Override
@@ -99,14 +65,25 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
 
     @Override
     public boolean hasNext() {
-        if(lastPart != null) {
-            // 只有完全消费了上一个流我们才知道有没有下一个流
-            consumeInputStream(lastPart.inputStream());    
+        // 用户可能并没有消耗掉上一个分块就调用了 hasNext 这里我们替他消费 
+        if (lastPart != null) {
+            //消费掉上一个分块的内容
+            consumeInputStream(lastPart.inputStream());
+            // inputStream 中并不会消耗 最后的 \r\n, 但是接下来的判断我们也不需要 所以这里 跳过最后的 \r\n
+            linkedDataReader.skip(2);
+            //置空 防止重复判断
+            lastPart = null;
         }
+
+        // 下面的操作不会移动指针 所以我们可以 重复调用 hasNext 
         // 向后查看
-        byte[] peek = linkedDataReader.peek(boundaryBytes.length + 2);
-        var s=new String(peek);
-        System.out.println();
+        var peek = linkedDataReader.peek(boundaryBytes.length + 2);
+        
+        // 这种情况只可能发生在流已经提前结束了
+        if (peek.length != boundaryBytes.length + 2) {
+            throw new RuntimeException("Malformed multipart: boundary peek too short");
+        }
+
         // 1. 先判断 peek 开头是否和 boundaryBytes 匹配
         for (int i = 0; i < boundaryBytes.length; i++) {
             if (peek[i] != boundaryBytes[i]) {
@@ -125,10 +102,9 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
             // 遇到 --boundary\r\n ，还有下一个 part
             return true;
         } else {
+            //其他字符那就只能抛异常了
             throw new RuntimeException("Malformed multipart: invalid boundary ending");
         }
-        //1, 判断是否相同
-        //2, 检查末尾字符 \r\n 表示接下来有内容 -- 表示结束 其他表示 异常分块
     }
 
     @Override
@@ -136,34 +112,24 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         if (!hasNext()) {
             throw new NoSuchElementException("No more parts available.");
         }
-        try {
-            if (lastPart != null) {
-                consumeInputStream(lastPart.inputStream());
-                //移除
-                linkedDataReader.skip(2);
-            }
 
-            linkedDataReader.skip(boundaryBytes.length+2);
+        //跳过起始的 ----xxxxxxx + \r\n
+        linkedDataReader.skip(boundaryBytes.length + 2);
 
-            var part = new MultiPartPartImpl();
+        var part = new MultiPartPartImpl();
 
-            // 读取当前部分的头部信息
-            var headers = readToHeaders();
-            part.headers(headers);
+        // 读取当前部分的头部信息
+        var headers = readToHeaders();
+        part.headers(headers);
 
-            //读取内容
-            var content = readContentToByte();
-            part.body(content);
-            
-            lastPart = part;
+        //读取内容
+        var content = readContent();
+        part.body(content);
 
-            // 检查是否有下一个部分
-//            hasNextPart = readNext();
+        lastPart = part;
 
-            return part;
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading next part", e);
-        }
+        return part;
+
     }
 
     public static void consumeInputStream(InputStream inputStream) {
@@ -172,6 +138,11 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         } catch (StreamClosedException | IOException e) {
             // 忽略
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+        // todo 这里没有关闭流 可能出现问题
     }
 
 }
