@@ -12,8 +12,8 @@ import static cool.scx.data.query.QueryBuilder.query;
 
 /// 用于定义数据访问层的规范
 ///
-/// @param <Entity>
-/// @param <ID>
+/// @param <Entity> Entity
+/// @param <ID> ID
 /// @author scx567888
 /// @version 0.0.1
 public interface Repository<Entity, ID> {
