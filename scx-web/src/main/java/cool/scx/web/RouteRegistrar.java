@@ -1,6 +1,6 @@
 package cool.scx.web;
 
-import cool.scx.common.multi_map.MultiMap;
+import cool.scx.collections.multi_map.MultiMap;
 import cool.scx.common.util.ClassUtils;
 import cool.scx.http.routing.PathMatcherImpl;
 import cool.scx.http.routing.Router;

@@ -1,6 +1,6 @@
 package cool.scx.http.parameters;
 
-import cool.scx.common.multi_map.MultiMap;
+import cool.scx.collections.multi_map.MultiMap;
 
 import java.util.*;
 

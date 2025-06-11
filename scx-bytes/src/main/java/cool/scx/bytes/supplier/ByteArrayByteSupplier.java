@@ -1,8 +1,8 @@
 package cool.scx.bytes.supplier;
 
 import cool.scx.bytes.ByteChunk;
-import cool.scx.common.iterator.ArrayIterator;
-import cool.scx.common.iterator.SingleIterator;
+import cool.scx.collections.iterator.ArrayIterator;
+import cool.scx.collections.iterator.SingleIterator;
 
 import java.util.Collection;
 import java.util.Iterator;

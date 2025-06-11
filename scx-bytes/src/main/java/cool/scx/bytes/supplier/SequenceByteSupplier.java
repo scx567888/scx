@@ -2,7 +2,7 @@ package cool.scx.bytes.supplier;
 
 import cool.scx.bytes.ByteChunk;
 import cool.scx.bytes.exception.ByteSupplierException;
-import cool.scx.common.iterator.ArrayIterator;
+import cool.scx.collections.iterator.ArrayIterator;
 
 import java.util.Iterator;
 import java.util.List;
