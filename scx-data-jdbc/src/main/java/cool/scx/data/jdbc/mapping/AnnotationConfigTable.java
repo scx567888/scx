@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.mapping;
 
-import cool.scx.common.multi_map.MultiMap;
+import cool.scx.collections.multi_map.MultiMap;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.data.jdbc.annotation.NoColumn;
 import cool.scx.reflect.ClassInfoFactory;

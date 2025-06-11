@@ -1,6 +1,6 @@
 package cool.scx.http.headers.cookie;
 
-import cool.scx.common.multi_map.MultiMap;
+import cool.scx.collections.multi_map.MultiMap;
 
 import java.util.Iterator;
 
