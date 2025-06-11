@@ -35,6 +35,11 @@ public final class ByteChunk {
     }
 
     /// 相对 索引 0 起始
+    public byte[] getBytes(int start) {
+        return getBytes(start, length);
+    }
+
+    /// 相对 索引 0 起始
     public byte[] getBytes() {
         return getBytes(0, length);
     }

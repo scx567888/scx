@@ -19,15 +19,6 @@ public class ByteArrayByteConsumer implements ByteConsumer {
         this.total = 0;
     }
 
-    public static byte[] compressBytes(byte[] bytes, int offset, int length) {
-        if (offset == 0 && length == bytes.length) {
-            return bytes;
-        }
-        var data = new byte[length];
-        System.arraycopy(bytes, offset, data, 0, length);
-        return data;
-    }
-
     @Override
     public boolean accept(ByteChunk byteChunk) {
         total += byteChunk.length;
@@ -52,7 +43,7 @@ public class ByteArrayByteConsumer implements ByteConsumer {
 
         //只调用了一次 accept, 我们直接返回当前数据
         if (node.next == null) {
-            return compressBytes(node.chunk.bytes, node.position, node.available());
+            return node.chunk.getBytes(node.position);
         }
 
         //多个数据我们合并
@@ -61,7 +52,8 @@ public class ByteArrayByteConsumer implements ByteConsumer {
 
         do {
             int length = node.available();
-            System.arraycopy(node.chunk.bytes, node.position, bytes, offset, length);
+            int chunkOffset = node.chunk.startPosition + node.position;
+            System.arraycopy(node.chunk.bytes, chunkOffset, bytes, offset, length);
             offset += length;
             node = node.next;
         } while (node != null);
