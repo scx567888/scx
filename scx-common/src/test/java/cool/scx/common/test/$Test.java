@@ -1,7 +1,7 @@
 package cool.scx.common.test;
 
-import cool.scx.common.count_map.CountMap;
-import cool.scx.common.multi_map.MultiMap;
+import cool.scx.collections.count_map.CountMap;
+import cool.scx.collections.multi_map.MultiMap;
 import cool.scx.common.util.$;
 import org.testng.Assert;
 import org.testng.annotations.Test;

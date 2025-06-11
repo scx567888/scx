@@ -1,6 +1,6 @@
 package cool.scx.common.test;
 
-import cool.scx.common.bit_array.IBitArray;
+import cool.scx.collections.bit_array.IBitArray;
 import cool.scx.common.huffman.HuffmanCodec;
 import org.testng.annotations.Test;
 

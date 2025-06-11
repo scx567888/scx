@@ -1,9 +1,9 @@
 package cool.scx.common.huffman;
 
-import cool.scx.common.bit_array.BitArray;
-import cool.scx.common.bit_array.IBitArray;
-import cool.scx.common.count_map.CountMap;
-import cool.scx.common.count_map.ICountMap;
+import cool.scx.collections.bit_array.BitArray;
+import cool.scx.collections.bit_array.IBitArray;
+import cool.scx.collections.count_map.CountMap;
+import cool.scx.collections.count_map.ICountMap;
 import cool.scx.common.util.$;
 
 import java.util.HashMap;
