@@ -1,6 +1,5 @@
 package cool.scx.byte_reader.consumer;
 
-import cool.scx.io.IOHelper;
 import cool.scx.byte_reader.ByteNode;
 
 /// ByteArrayDataConsumer
@@ -43,7 +42,7 @@ public class ByteArrayByteConsumer implements ByteConsumer {
 
         //只调用了一次 accept, 我们直接返回当前数据
         if (node.next == null) {
-            return IOHelper.compressBytes(node.bytes, node.position, node.available());
+            return compressBytes(node.bytes, node.position, node.available());
         }
 
         //多个数据我们合并
@@ -58,6 +57,15 @@ public class ByteArrayByteConsumer implements ByteConsumer {
         } while (node != null);
 
         return bytes;
+    }
+
+    public static byte[] compressBytes(byte[] bytes, int offset, int length) {
+        if (offset == 0 && length == bytes.length) {
+            return bytes;
+        }
+        var data = new byte[length];
+        System.arraycopy(bytes, offset, data, 0, length);
+        return data;
     }
 
 }
