@@ -7,11 +7,11 @@ import cool.scx.common.util.ArrayUtils;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class BaseByteIndexer implements ByteIndexer {
+public class SimpleByteIndexer implements ByteIndexer {
 
     private final byte b;
 
-    public BaseByteIndexer(byte b) {
+    public SimpleByteIndexer(byte b) {
         this.b = b;
     }
 

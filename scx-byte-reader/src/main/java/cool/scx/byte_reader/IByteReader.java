@@ -5,7 +5,7 @@ import cool.scx.byte_reader.consumer.ByteConsumer;
 import cool.scx.byte_reader.exception.ByteSupplierException;
 import cool.scx.byte_reader.exception.NoMatchFoundException;
 import cool.scx.byte_reader.exception.NoMoreDataException;
-import cool.scx.byte_reader.indexer.BaseByteIndexer;
+import cool.scx.byte_reader.indexer.SimpleByteIndexer;
 import cool.scx.byte_reader.indexer.ByteIndexer;
 import cool.scx.byte_reader.indexer.KMPByteIndexer;
 
@@ -119,7 +119,7 @@ public interface IByteReader {
     }
 
     default long indexOf(byte b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, ByteSupplierException {
-        return indexOf(new BaseByteIndexer(b), maxLength, maxPullCount);
+        return indexOf(new SimpleByteIndexer(b), maxLength, maxPullCount);
     }
 
     default long indexOf(byte[] b) throws NoMatchFoundException, NoMoreDataException, ByteSupplierException {
