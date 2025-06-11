@@ -15,7 +15,7 @@ import java.io.OutputStream;
 
 import static java.lang.Math.min;
 
-/// LinkedDataReader
+/// ByteReader
 ///
 /// @author scx567888
 /// @version 0.0.1

@@ -1,11 +1,10 @@
 package cool.scx.http.media.multi_part;
 
+import cool.scx.byte_reader.ByteReader;
+import cool.scx.byte_reader.supplier.BoundaryByteSupplier;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.io.data_reader.DataReader;
-import cool.scx.io.data_reader.LinkedDataReader;
-import cool.scx.io.data_supplier.BoundaryDataSupplier;
-import cool.scx.io.io_stream.DataReaderInputStream;
+import cool.scx.io.io_stream.ByteReaderInputStream;
 import cool.scx.io.io_stream.StreamClosedException;
 
 import java.io.IOException;
@@ -14,7 +13,7 @@ import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static cool.scx.io.IOHelper.inputStreamToDataReader;
+import static cool.scx.io.IOHelper.inputStreamToByteReader;
 
 /// MultiPartStream
 ///
@@ -26,14 +25,14 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
     private final String boundary; // xxx
     private final byte[] boundaryBytes; // --xxx
     private final byte[] boundaryStartBytes; // \r\b--xxx
-    private final DataReader linkedDataReader;
+    private final ByteReader linkedByteReader;
     private MultiPartPart lastPart;
 
     public MultiPartStream(InputStream inputStream, String boundary) {
         this.boundary = boundary;
         this.boundaryBytes = ("--" + boundary).getBytes();
         this.boundaryStartBytes = ("\r\n--" + boundary).getBytes();
-        this.linkedDataReader = inputStreamToDataReader(inputStream);
+        this.linkedByteReader = inputStreamToByteReader(inputStream);
         this.lastPart = null;
     }
 
@@ -50,7 +49,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         // head /r/n
         // /r/n
         // content
-        var headersBytes = linkedDataReader.readUntil(CRLF_CRLF_BYTES);
+        var headersBytes = linkedByteReader.readUntil(CRLF_CRLF_BYTES);
         var headersStr = new String(headersBytes);
         return ScxHttpHeaders.ofStrict(headersStr);// 使用严格模式解析
     }
@@ -58,7 +57,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
     public InputStream readContent() {
         // 内容 的终结符是 \r\n--boundary
         // 所以我们创建一个以 \r\n--boundary 结尾的分割符 输入流
-        return new DataReaderInputStream(new LinkedDataReader(new BoundaryDataSupplier(linkedDataReader, boundaryStartBytes)));
+        return new ByteReaderInputStream(new ByteReader(new BoundaryByteSupplier(linkedByteReader, boundaryStartBytes)));
     }
 
     @Override
@@ -78,14 +77,14 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
             //消费掉上一个分块的内容
             consumeInputStream(lastPart.inputStream());
             // inputStream 中并不会消耗 最后的 \r\n, 但是接下来的判断我们也不需要 所以这里 跳过最后的 \r\n
-            linkedDataReader.skip(2);
+            linkedByteReader.skip(2);
             //置空 防止重复消费
             lastPart = null;
         }
 
         // 下面的操作不会移动指针 所以我们可以 重复调用 hasNext 
         // 向后查看
-        var peek = linkedDataReader.peek(boundaryBytes.length + 2);
+        var peek = linkedByteReader.peek(boundaryBytes.length + 2);
 
         // 这种情况只可能发生在流已经提前结束了
         if (peek.length != boundaryBytes.length + 2) {
@@ -123,7 +122,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         }
 
         // 跳过起始的 --boundary\r\n
-        linkedDataReader.skip(boundaryBytes.length + 2);
+        linkedByteReader.skip(boundaryBytes.length + 2);
 
         var part = new MultiPartPartImpl();
 

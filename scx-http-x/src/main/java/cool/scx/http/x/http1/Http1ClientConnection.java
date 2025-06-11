@@ -1,5 +1,6 @@
 package cool.scx.http.x.http1;
 
+import cool.scx.byte_reader.supplier.InputStreamByteSupplier;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;
@@ -7,9 +8,7 @@ import cool.scx.http.x.HttpClientOptions;
 import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.io.data_reader.DataReader;
-import cool.scx.io.data_reader.LinkedDataReader;
-import cool.scx.io.data_supplier.InputStreamDataSupplier;
+import cool.scx.byte_reader.ByteReader;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
@@ -24,13 +23,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class Http1ClientConnection {
 
     public final ScxTCPSocket tcpSocket;
-    public final DataReader dataReader;
+    public final ByteReader dataReader;
     public final OutputStream dataWriter;
     public final Http1ClientConnectionOptions options;
 
     public Http1ClientConnection(ScxTCPSocket tcpSocket, HttpClientOptions options) {
         this.tcpSocket = tcpSocket;
-        this.dataReader = new LinkedDataReader(new InputStreamDataSupplier(tcpSocket.inputStream()));
+        this.dataReader = new ByteReader(new InputStreamByteSupplier(tcpSocket.inputStream()));
         this.dataWriter = new NoCloseOutputStream(tcpSocket.outputStream());
         this.options = options.http1ConnectionOptions();
     }

@@ -1,26 +1,25 @@
 package cool.scx.io.io_stream;
 
-import cool.scx.io.data_reader.DataReader;
-import cool.scx.io.data_reader.LinkedDataReader;
-import cool.scx.io.data_supplier.DataSupplier;
+import cool.scx.byte_reader.ByteReader;
+import cool.scx.byte_reader.supplier.ByteSupplier;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-/// 包装 DataReader 的输入流
+/// 包装 ByteReader 的输入流
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class DataReaderInputStream extends CheckedInputStream {
+public class ByteReaderInputStream extends CheckedInputStream {
 
-    private final DataReader dataReader;
+    private final ByteReader dataReader;
 
-    public DataReaderInputStream(DataReader dataReader) {
+    public ByteReaderInputStream(ByteReader dataReader) {
         this.dataReader = dataReader;
     }
 
-    public DataReaderInputStream(DataSupplier dataSupplier) {
-        this.dataReader = new LinkedDataReader(dataSupplier);
+    public ByteReaderInputStream(ByteSupplier dataSupplier) {
+        this.dataReader = new ByteReader(dataSupplier);
     }
 
     @Override
@@ -41,7 +40,7 @@ public class DataReaderInputStream extends CheckedInputStream {
         return dataReader.inputStreamTransferTo(out);
     }
 
-    public DataReader dataReader() {
+    public ByteReader dataReader() {
         return dataReader;
     }
 

@@ -62,7 +62,7 @@ public class BoundaryByteSupplier implements ByteSupplier {
                 }
             }
         } catch (NoMoreDataException e) {
-            // 如果底层 DataReader 没数据了，也返回 null
+            // 如果底层 ByteReader 没数据了，也返回 null
             return null;
         }
     }

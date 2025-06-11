@@ -1,7 +1,7 @@
 package cool.scx.tcp.test;
 
-import cool.scx.io.data_reader.LinkedDataReader;
-import cool.scx.io.data_supplier.InputStreamDataSupplier;
+import cool.scx.byte_reader.ByteReader;
+import cool.scx.byte_reader.supplier.InputStreamByteSupplier;
 import cool.scx.tcp.TCPServer;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class TCPServerTest {
         tcpServer.onConnect(c -> {
             System.out.println("客户端连接了 !!!");
 
-            var dataReader = new LinkedDataReader(new InputStreamDataSupplier(c.inputStream()));
+            var dataReader = new ByteReader(new InputStreamByteSupplier(c.inputStream()));
             while (true) {
                 try {
                     var s = dataReader.readUntil("\r\n".getBytes());

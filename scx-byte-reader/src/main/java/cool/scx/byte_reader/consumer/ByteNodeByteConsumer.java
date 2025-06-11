@@ -6,7 +6,7 @@ import cool.scx.byte_reader.ByteNode;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class DataNodeByteConsumer implements ByteConsumer {
+public class ByteNodeByteConsumer implements ByteConsumer {
 
     private ByteNode dataNode;
 

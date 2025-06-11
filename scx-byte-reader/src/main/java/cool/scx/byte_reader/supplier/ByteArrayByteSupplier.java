@@ -7,7 +7,7 @@ import cool.scx.common.iterator.SingleIterator;
 import java.util.Collection;
 import java.util.Iterator;
 
-/// ByteArrayDataSupplier
+/// ByteArrayByteSupplier
 ///
 /// @author scx567888
 /// @version 0.0.1

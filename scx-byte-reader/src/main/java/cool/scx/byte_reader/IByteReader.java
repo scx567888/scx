@@ -15,7 +15,7 @@ import java.io.OutputStream;
 import static cool.scx.byte_reader.consumer.SkipDataConsumer.SKIP_DATA_CONSUMER;
 import static java.lang.Math.toIntExact;
 
-/// DataReader
+/// ByteReader
 ///
 /// @author scx567888
 /// @version 0.0.1

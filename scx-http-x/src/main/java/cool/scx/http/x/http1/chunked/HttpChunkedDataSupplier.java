@@ -1,29 +1,29 @@
 package cool.scx.http.x.http1.chunked;
 
+import cool.scx.byte_reader.ByteNode;
+import cool.scx.byte_reader.exception.ByteSupplierException;
+import cool.scx.byte_reader.exception.NoMatchFoundException;
+import cool.scx.byte_reader.supplier.ByteSupplier;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.ContentTooLargeException;
-import cool.scx.io.data_node.DataNode;
-import cool.scx.io.data_reader.DataReader;
-import cool.scx.io.data_supplier.DataSupplier;
-import cool.scx.io.exception.DataSupplierException;
-import cool.scx.io.exception.NoMatchFoundException;
+import cool.scx.byte_reader.ByteReader;
 
 /// 用来解析 HttpChunked 分块传输数据
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class HttpChunkedDataSupplier implements DataSupplier {
+public class HttpChunkedDataSupplier implements ByteSupplier {
 
-    private final DataReader dataReader;
+    private final ByteReader dataReader;
     private final long maxLength;
     private long position;
     private boolean isFinished;
 
-    public HttpChunkedDataSupplier(DataReader dataReader) {
+    public HttpChunkedDataSupplier(ByteReader dataReader) {
         this(dataReader, Long.MAX_VALUE);
     }
 
-    public HttpChunkedDataSupplier(DataReader dataReader, long maxLength) {
+    public HttpChunkedDataSupplier(ByteReader dataReader, long maxLength) {
         this.dataReader = dataReader;
         this.maxLength = maxLength;
         this.position = 0;
@@ -31,7 +31,7 @@ public class HttpChunkedDataSupplier implements DataSupplier {
     }
 
     @Override
-    public DataNode get() throws DataSupplierException {
+    public ByteNode get() throws ByteSupplierException {
         if (isFinished) {
             return null;
         }
@@ -65,7 +65,7 @@ public class HttpChunkedDataSupplier implements DataSupplier {
         }
         var nextChunkData = dataReader.read(chunkLength);
         dataReader.skip(2); // skip \r\n after the chunk
-        return new DataNode(nextChunkData);
+        return new ByteNode(nextChunkData);
     }
 
     public void checkMaxPayload(int chunkLength) {

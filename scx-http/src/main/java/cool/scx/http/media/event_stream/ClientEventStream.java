@@ -1,23 +1,23 @@
 package cool.scx.http.media.event_stream;
 
-import cool.scx.io.data_reader.DataReader;
+import cool.scx.byte_reader.ByteReader;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import static cool.scx.http.media.event_stream.EventStreamHelper.LF_BYTES;
-import static cool.scx.io.IOHelper.inputStreamToDataReader;
+import static cool.scx.io.IOHelper.inputStreamToByteReader;
 
 // todo 整体待重构
 // todo 这里和 MultiPartStream 一样 没有正确处理 inputStream 的关闭
 public class ClientEventStream {
 
-    private final DataReader dataReader;
+    private final ByteReader dataReader;
     private final Charset charset;
 
     public ClientEventStream(InputStream in, Charset charset) {
-        this.dataReader = inputStreamToDataReader(in);
+        this.dataReader = inputStreamToByteReader(in);
         this.charset = charset;
     }
 
