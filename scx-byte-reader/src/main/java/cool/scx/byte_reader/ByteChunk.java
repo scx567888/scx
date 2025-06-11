@@ -20,6 +20,14 @@ public final class ByteChunk {
     }
 
     /// 相对 索引 0 起始
+    public ByteChunk splice(int start, int end) {
+        if (start == 0 && end == length) {
+            return this;
+        }
+        return new ByteChunk(bytes, startPosition + start, startPosition + end);
+    }
+
+    /// 相对 索引 0 起始
     public byte getByte(int index) {
         return bytes[startPosition + index];
     }
@@ -45,21 +53,18 @@ public final class ByteChunk {
     }
 
     /// 相对 索引 0 起始
-    public ByteChunk splice(int start, int end) {
-        if (start == 0 && end == length) {
-            return this;
-        }
-        return new ByteChunk(bytes, startPosition + start, startPosition + end);
-    }
-
-    /// 相对 索引 0 起始
     public String toString(int start, int end) {
         return new String(bytes, startPosition + start, end - start);
     }
 
+    /// 相对 索引 0 起始
+    public String toString(int start) {
+        return toString(start, length);
+    }
+
     @Override
     public String toString() {
-        return new String(bytes, startPosition, length);
+        return toString(0, length);
     }
 
 }
