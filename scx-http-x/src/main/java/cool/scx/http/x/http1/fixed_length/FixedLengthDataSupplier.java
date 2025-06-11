@@ -1,10 +1,10 @@
 package cool.scx.http.x.http1.fixed_length;
 
-import cool.scx.byte_reader.ByteChunk;
-import cool.scx.byte_reader.ByteReader;
-import cool.scx.byte_reader.consumer.ByteChunkByteConsumer;
-import cool.scx.byte_reader.exception.NoMoreDataException;
-import cool.scx.byte_reader.supplier.ByteSupplier;
+import cool.scx.bytes.ByteChunk;
+import cool.scx.bytes.ByteReader;
+import cool.scx.bytes.consumer.ByteChunkByteConsumer;
+import cool.scx.bytes.exception.NoMoreDataException;
+import cool.scx.bytes.supplier.ByteSupplier;
 
 public class FixedLengthDataSupplier implements ByteSupplier {
 

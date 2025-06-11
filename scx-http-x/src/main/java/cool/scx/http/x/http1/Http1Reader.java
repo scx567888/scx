@@ -1,9 +1,9 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.byte_reader.ByteReader;
-import cool.scx.byte_reader.exception.ByteSupplierException;
-import cool.scx.byte_reader.exception.NoMatchFoundException;
-import cool.scx.byte_reader.exception.NoMoreDataException;
+import cool.scx.bytes.ByteReader;
+import cool.scx.bytes.exception.ByteSupplierException;
+import cool.scx.bytes.exception.NoMatchFoundException;
+import cool.scx.bytes.exception.NoMoreDataException;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.ContentTooLargeException;
 import cool.scx.http.exception.URITooLongException;

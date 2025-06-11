@@ -1,7 +1,7 @@
 package cool.scx.tcp.test;
 
-import cool.scx.byte_reader.ByteReader;
-import cool.scx.byte_reader.supplier.InputStreamByteSupplier;
+import cool.scx.bytes.ByteReader;
+import cool.scx.bytes.supplier.InputStreamByteSupplier;
 import cool.scx.tcp.TCPServer;
 
 import java.io.IOException;

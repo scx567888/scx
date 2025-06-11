@@ -1,7 +1,7 @@
 package cool.scx.http.media.multi_part;
 
-import cool.scx.byte_reader.ByteReader;
-import cool.scx.byte_reader.supplier.BoundaryByteSupplier;
+import cool.scx.bytes.ByteReader;
+import cool.scx.bytes.supplier.BoundaryByteSupplier;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.io.io_stream.ByteReaderInputStream;

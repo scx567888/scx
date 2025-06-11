@@ -45,7 +45,7 @@
         <module>scx-ansi</module>
         <module>scx-app</module>
         <module>scx-bean</module>
-        <module>scx-byte-reader</module>
+        <module>scx-bytes</module>
         <module>scx-common</module>
         <module>scx-config</module>
         <module>scx-data</module>

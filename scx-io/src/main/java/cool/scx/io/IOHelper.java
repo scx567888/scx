@@ -1,7 +1,7 @@
 package cool.scx.io;
 
-import cool.scx.byte_reader.ByteReader;
-import cool.scx.byte_reader.supplier.InputStreamByteSupplier;
+import cool.scx.bytes.ByteReader;
+import cool.scx.bytes.supplier.InputStreamByteSupplier;
 import cool.scx.io.io_stream.ByteReaderInputStream;
 
 import java.io.*;

@@ -1,6 +1,6 @@
 package cool.scx.io.test;
 
-import cool.scx.byte_reader.supplier.ByteArrayByteSupplier;
+import cool.scx.bytes.supplier.ByteArrayByteSupplier;
 import cool.scx.io.io_stream.ByteReaderInputStream;
 import org.testng.Assert;
 import org.testng.annotations.Test;
