@@ -19,9 +19,52 @@ public final class ByteChunk {
         this.length = endPosition - startPosition;
     }
 
+    /// 相对 索引 0 起始
+    public byte getByte(int index) {
+        return bytes[startPosition + index];
+    }
+
+    /// 相对 索引 0 起始
+    public byte[] getBytes(int start, int end) {
+        if (start == 0 && end == length && startPosition == 0 && length == bytes.length) {
+            return bytes;
+        }
+        var data = new byte[end - start];
+        System.arraycopy(bytes, startPosition + start, data, 0, data.length);
+        return data;
+    }
+
+    /// 相对 索引 0 起始
+    public byte[] getBytes(int start) {
+        return getBytes(start, length);
+    }
+
+    /// 相对 索引 0 起始
+    public byte[] getBytes() {
+        return getBytes(0, length);
+    }
+
+    /// 相对 索引 0 起始
+    public String toString(int start, int end) {
+        return new String(bytes, startPosition + start, end - start);
+    }
+
+    /// 相对 索引 0 起始
+    public String toString(int start) {
+        return toString(start, length);
+    }
+
     @Override
     public String toString() {
-        return new String(bytes, startPosition, length);
+        return toString(0, length);
+    }
+
+    /// 相对 索引 0 起始
+    public ByteChunk splice(int start, int end) {
+        if (start == 0 && end == length) {
+            return this;
+        }
+        return new ByteChunk(bytes, startPosition + start, startPosition + end);
     }
 
 }

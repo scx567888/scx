@@ -9,29 +9,29 @@ import cool.scx.byte_reader.ByteChunk;
 public class FillByteArrayByteConsumer implements ByteConsumer {
 
     private final byte[] data;
-    private final int dataPosition;
-    private final int dataLength;
-    private int i;
+    private final int position;
+    private final int length;
+    private int filledLength;//写入的数量
 
     public FillByteArrayByteConsumer(byte[] data, int position, int length) {
         this.data = data;
-        this.dataPosition = position;
-        this.dataLength = length;
-        this.i = this.dataPosition;
+        this.position = position;
+        this.length = length;
+        this.filledLength = 0;
     }
 
     @Override
     public boolean accept(ByteChunk byteChunk) {
-        if (i + byteChunk.length > dataLength) {
+        if (filledLength + byteChunk.length > length) {
             throw new IllegalStateException("Buffer overflow: not enough space to accept more data");
         }
-        System.arraycopy(byteChunk.bytes, byteChunk.startPosition, data, i, byteChunk.length);
-        i += byteChunk.length;
+        System.arraycopy(byteChunk.bytes, byteChunk.startPosition, data, position + filledLength, byteChunk.length);
+        filledLength += byteChunk.length;
         return true;
     }
 
     public int getFilledLength() {
-        return i - dataPosition;
+        return filledLength;
     }
 
 }
