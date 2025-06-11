@@ -1,6 +1,6 @@
 package cool.scx.tcp;
 
-import cool.scx.common.functional.ScxConsumer;
+import cool.scx.functional.ScxConsumer;
 
 import java.io.IOException;
 import java.lang.System.Logger;

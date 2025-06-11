@@ -1,6 +1,6 @@
 package cool.scx.http.routing.handler;
 
-import cool.scx.common.functional.ScxConsumer;
+import cool.scx.functional.ScxConsumer;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.routing.RoutingContext;
 

@@ -1,6 +1,6 @@
 package cool.scx.web.vo;
 
-import cool.scx.common.functional.ScxConsumer;
+import cool.scx.functional.ScxConsumer;
 import cool.scx.http.routing.RoutingContext;
 
 /// BaseVo 接口

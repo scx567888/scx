@@ -1,6 +1,6 @@
 package cool.scx.common.exception;
 
-import cool.scx.common.functional.ScxRunnable;
+import cool.scx.functional.ScxRunnable;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

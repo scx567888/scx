@@ -1,4 +1,4 @@
-package cool.scx.common.functional;
+package cool.scx.functional;
 
 /// 支持显式抛出异常的 BiConsumer.
 ///
