@@ -1,12 +1,12 @@
 package cool.scx.byte_reader;
 
 import cool.scx.byte_reader.consumer.ByteArrayDataConsumer;
-import cool.scx.byte_reader.consumer.DataConsumer;
+import cool.scx.byte_reader.consumer.ByteConsumer;
 import cool.scx.byte_reader.consumer.FillByteArrayDataConsumer;
 import cool.scx.byte_reader.consumer.OutputStreamDataConsumer;
 import cool.scx.byte_reader.indexer.ByteIndexer;
-import cool.scx.byte_reader.supplier.DataSupplier;
-import cool.scx.byte_reader.exception.DataSupplierException;
+import cool.scx.byte_reader.supplier.ByteSupplier;
+import cool.scx.byte_reader.exception.ByteSupplierException;
 import cool.scx.byte_reader.exception.NoMatchFoundException;
 import cool.scx.byte_reader.exception.NoMoreDataException;
 
@@ -21,14 +21,14 @@ import static java.lang.Math.min;
 /// @version 0.0.1
 public class ByteReader implements IByteReader {
 
-    public final DataSupplier dataSupplier;
+    public final ByteSupplier dataSupplier;
     public ByteNode head;
     public ByteNode tail;
     //标记
     public ByteNode markNode;
     public int markNodePosition;
 
-    public ByteReader(DataSupplier dataSupplier) {
+    public ByteReader(ByteSupplier dataSupplier) {
         this.dataSupplier = dataSupplier;
         this.head = new ByteNode(new byte[]{});
         this.tail = this.head;
@@ -45,7 +45,7 @@ public class ByteReader implements IByteReader {
         tail = tail.next;
     }
 
-    public boolean pullData() throws DataSupplierException {
+    public boolean pullData() throws ByteSupplierException {
         var data = dataSupplier.get();
         if (data == null) {
             return false;
@@ -54,7 +54,7 @@ public class ByteReader implements IByteReader {
         return true;
     }
 
-    public long ensureAvailable(long maxPullCount) throws DataSupplierException {
+    public long ensureAvailable(long maxPullCount) throws ByteSupplierException {
         var pullCount = 0L;
         while (!head.hasAvailable()) {
             if (head.next == null) {
@@ -73,7 +73,7 @@ public class ByteReader implements IByteReader {
         return pullCount;
     }
 
-    public long ensureAvailableOrThrow(long maxPullCount) throws NoMoreDataException, DataSupplierException {
+    public long ensureAvailableOrThrow(long maxPullCount) throws NoMoreDataException, ByteSupplierException {
         var b = ensureAvailable(maxPullCount);
         if (b == -1) {
             throw new NoMoreDataException();
@@ -82,7 +82,7 @@ public class ByteReader implements IByteReader {
         }
     }
 
-    public void walk(DataConsumer consumer, long maxLength, boolean movePointer, long maxPullCount) throws DataSupplierException {
+    public void walk(ByteConsumer consumer, long maxLength, boolean movePointer, long maxPullCount) throws ByteSupplierException {
 
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
@@ -142,7 +142,7 @@ public class ByteReader implements IByteReader {
 
     }
 
-    public long findIndex(ByteIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, DataSupplierException {
+    public long findIndex(ByteIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, ByteSupplierException {
 
         var index = 0L; // 主串索引
 
@@ -184,7 +184,7 @@ public class ByteReader implements IByteReader {
     }
 
     @Override
-    public byte read() throws NoMoreDataException, DataSupplierException {
+    public byte read() throws NoMoreDataException, ByteSupplierException {
         ensureAvailableOrThrow(Long.MAX_VALUE);
         var b = head.bytes[head.position];
         head.position = head.position + 1;
@@ -192,7 +192,7 @@ public class ByteReader implements IByteReader {
     }
 
     @Override
-    public void read(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, DataSupplierException {
+    public void read(ByteConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
@@ -201,13 +201,13 @@ public class ByteReader implements IByteReader {
     }
 
     @Override
-    public byte peek() throws NoMoreDataException, DataSupplierException {
+    public byte peek() throws NoMoreDataException, ByteSupplierException {
         ensureAvailableOrThrow(Long.MAX_VALUE);
         return head.bytes[head.position];
     }
 
     @Override
-    public void peek(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, DataSupplierException {
+    public void peek(ByteConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
@@ -216,7 +216,7 @@ public class ByteReader implements IByteReader {
     }
 
     @Override
-    public long indexOf(ByteIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, DataSupplierException {
+    public long indexOf(ByteIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, ByteSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
@@ -256,7 +256,7 @@ public class ByteReader implements IByteReader {
             var b = head.bytes[head.position];
             head.position = head.position + 1;
             return b & 0xFF;
-        } catch (DataSupplierException e) {
+        } catch (ByteSupplierException e) {
             if (e.getCause() instanceof IOException i) {
                 throw i;
             }
@@ -279,7 +279,7 @@ public class ByteReader implements IByteReader {
             var consumer = new FillByteArrayDataConsumer(b, off, len);
             walk(consumer, len, true, maxPullCount);
             return consumer.getFilledLength();
-        } catch (DataSupplierException e) {
+        } catch (ByteSupplierException e) {
             if (e.getCause() instanceof IOException i) {
                 throw i;
             }
@@ -299,7 +299,7 @@ public class ByteReader implements IByteReader {
             var consumer = new OutputStreamDataConsumer(out);
             walk(consumer, maxLength, true, Long.MAX_VALUE);
             return consumer.byteCount();
-        } catch (DataSupplierException e) {
+        } catch (ByteSupplierException e) {
             if (e.getCause() instanceof IOException i) {
                 throw i;
             }
@@ -319,7 +319,7 @@ public class ByteReader implements IByteReader {
             var consumer = new ByteArrayDataConsumer();
             walk(consumer, len, true, Long.MAX_VALUE);
             return consumer.getBytes();
-        } catch (DataSupplierException e) {
+        } catch (ByteSupplierException e) {
             if (e.getCause() instanceof IOException i) {
                 throw i;
             }
