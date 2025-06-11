@@ -1,4 +1,4 @@
-package cool.scx.data_reader.test;
+package cool.scx.byte_reader.test;
 
 import cool.scx.byte_reader.ByteReader;
 import cool.scx.byte_reader.supplier.BoundaryByteSupplier;
@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
-public class BoundaryDataSupplierTest {
+public class BoundaryByteSupplierTest {
 
     public static void main(String[] args) {
         test1();

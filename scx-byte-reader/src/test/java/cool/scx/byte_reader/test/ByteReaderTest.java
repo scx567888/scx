@@ -1,4 +1,4 @@
-package cool.scx.data_reader.test;
+package cool.scx.byte_reader.test;
 
 import cool.scx.byte_reader.ByteNode;
 import cool.scx.byte_reader.ByteReader;
@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 import java.nio.charset.StandardCharsets;
 
-public class DataReaderTest {
+public class ByteReaderTest {
 
     public static void main(String[] args) {
         test1();

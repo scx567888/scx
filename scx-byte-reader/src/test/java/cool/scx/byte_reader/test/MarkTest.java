@@ -1,4 +1,4 @@
-package cool.scx.data_reader.test;
+package cool.scx.byte_reader.test;
 
 import cool.scx.byte_reader.ByteReader;
 import cool.scx.byte_reader.supplier.ByteArrayByteSupplier;
