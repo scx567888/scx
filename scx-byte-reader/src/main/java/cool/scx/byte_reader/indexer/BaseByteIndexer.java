@@ -1,5 +1,6 @@
 package cool.scx.byte_reader.indexer;
 
+import cool.scx.byte_reader.ByteChunk;
 import cool.scx.common.util.ArrayUtils;
 
 /// 单字节查找器
@@ -15,8 +16,8 @@ public class BaseByteIndexer implements ByteIndexer {
     }
 
     @Override
-    public int indexOf(byte[] bytes, int position, int length) {
-        int i = ArrayUtils.indexOf(bytes, position, length, b);
+    public int indexOf(ByteChunk chunk) {
+        int i = ArrayUtils.indexOf(chunk.bytes, chunk.startPosition, chunk.length, b);
         return i == -1 ? Integer.MIN_VALUE : i;
     }
 

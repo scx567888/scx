@@ -1,5 +1,7 @@
 package cool.scx.byte_reader.indexer;
 
+import cool.scx.byte_reader.ByteChunk;
+
 /// KMPDataIndexer
 ///
 /// @author scx567888
@@ -39,10 +41,13 @@ public class KMPByteIndexer implements ByteIndexer {
         return lps;
     }
 
-    public int indexOf(byte[] bytes, int position, int length) {
-        var end = position + length;
+    @Override
+    public int indexOf(ByteChunk chunk) {
+        var bytes = chunk.bytes;
+        var start = chunk.startPosition;
+        var end = chunk.endPosition;
         //KMP 查找
-        for (int i = position; i < end; i = i + 1) {
+        for (int i = start; i < end; i = i + 1) {
             while (patternIndex > 0 && bytes[i] != pattern[patternIndex]) {
                 patternIndex = lps[patternIndex - 1];
             }
@@ -53,7 +58,7 @@ public class KMPByteIndexer implements ByteIndexer {
 
             if (patternIndex == pattern.length) {
                 // i - n.position 的意义在于我们不需要包含当前 节点的偏移量 所以减去
-                var result = i - position - patternIndex + 1;
+                var result = i - start - patternIndex + 1;
                 // 重置 patternIndex 为 0, 保证下次匹配 
                 patternIndex = 0;
                 return result;
