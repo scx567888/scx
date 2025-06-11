@@ -1,10 +1,10 @@
 package cool.scx.http.x.test;
 
+import cool.scx.byte_reader.ByteReader;
 import cool.scx.byte_reader.exception.ByteSupplierException;
 import cool.scx.byte_reader.supplier.ByteArrayByteSupplier;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.x.http1.chunked.HttpChunkedDataSupplier;
-import cool.scx.byte_reader.ByteReader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

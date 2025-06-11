@@ -1,5 +1,6 @@
 package cool.scx.http.x.http1;
 
+import cool.scx.byte_reader.ByteReader;
 import cool.scx.byte_reader.supplier.InputStreamByteSupplier;
 import cool.scx.common.functional.ScxConsumer;
 import cool.scx.http.ScxHttpServerRequest;
@@ -10,7 +11,6 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.HttpServerOptions;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.byte_reader.ByteReader;
 import cool.scx.io.io_stream.NullCheckedInputStream;
 import cool.scx.tcp.ScxTCPSocket;
 

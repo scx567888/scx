@@ -1,5 +1,6 @@
 package cool.scx.http.x.http1;
 
+import cool.scx.byte_reader.ByteReader;
 import cool.scx.byte_reader.supplier.InputStreamByteSupplier;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
@@ -8,7 +9,6 @@ import cool.scx.http.x.HttpClientOptions;
 import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.byte_reader.ByteReader;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;

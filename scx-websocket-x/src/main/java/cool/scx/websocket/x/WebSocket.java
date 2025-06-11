@@ -1,8 +1,8 @@
 package cool.scx.websocket.x;
 
+import cool.scx.byte_reader.ByteReader;
 import cool.scx.byte_reader.exception.NoMoreDataException;
 import cool.scx.common.util.RandomUtils;
-import cool.scx.byte_reader.ByteReader;
 import cool.scx.tcp.ScxTCPSocket;
 import cool.scx.websocket.ScxWebSocket;
 import cool.scx.websocket.WebSocketFrame;

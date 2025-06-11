@@ -1,12 +1,12 @@
 package cool.scx.http.x.http1.chunked;
 
 import cool.scx.byte_reader.ByteNode;
+import cool.scx.byte_reader.ByteReader;
 import cool.scx.byte_reader.exception.ByteSupplierException;
 import cool.scx.byte_reader.exception.NoMatchFoundException;
 import cool.scx.byte_reader.supplier.ByteSupplier;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.ContentTooLargeException;
-import cool.scx.byte_reader.ByteReader;
 
 /// 用来解析 HttpChunked 分块传输数据
 ///

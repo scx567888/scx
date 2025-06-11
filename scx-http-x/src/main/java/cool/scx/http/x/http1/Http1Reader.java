@@ -1,5 +1,9 @@
 package cool.scx.http.x.http1;
 
+import cool.scx.byte_reader.ByteReader;
+import cool.scx.byte_reader.exception.ByteSupplierException;
+import cool.scx.byte_reader.exception.NoMatchFoundException;
+import cool.scx.byte_reader.exception.NoMoreDataException;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.ContentTooLargeException;
 import cool.scx.http.exception.URITooLongException;
@@ -14,10 +18,6 @@ import cool.scx.http.x.http1.request_line.InvalidHttpVersion;
 import cool.scx.http.x.http1.status_line.Http1StatusLine;
 import cool.scx.http.x.http1.status_line.InvalidHttpStatusException;
 import cool.scx.http.x.http1.status_line.InvalidHttpStatusLineException;
-import cool.scx.byte_reader.ByteReader;
-import cool.scx.byte_reader.exception.ByteSupplierException;
-import cool.scx.byte_reader.exception.NoMatchFoundException;
-import cool.scx.byte_reader.exception.NoMoreDataException;
 import cool.scx.io.io_stream.ByteReaderInputStream;
 import cool.scx.io.io_stream.NullCheckedInputStream;
 
