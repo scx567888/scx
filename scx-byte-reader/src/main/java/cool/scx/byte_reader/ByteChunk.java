@@ -8,6 +8,10 @@ public final class ByteChunk {
     public final int endPosition;
     public final int length;
 
+    public ByteChunk(byte[] bytes) {
+        this(bytes, 0, bytes.length);
+    }
+
     public ByteChunk(byte[] bytes, int startPosition, int endPosition) {
         this.bytes = bytes;
         this.startPosition = startPosition;
