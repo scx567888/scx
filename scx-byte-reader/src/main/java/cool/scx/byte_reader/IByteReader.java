@@ -5,9 +5,9 @@ import cool.scx.byte_reader.consumer.ByteConsumer;
 import cool.scx.byte_reader.exception.ByteSupplierException;
 import cool.scx.byte_reader.exception.NoMatchFoundException;
 import cool.scx.byte_reader.exception.NoMoreDataException;
-import cool.scx.byte_reader.indexer.SimpleByteIndexer;
 import cool.scx.byte_reader.indexer.ByteIndexer;
 import cool.scx.byte_reader.indexer.KMPByteIndexer;
+import cool.scx.byte_reader.indexer.SimpleByteIndexer;
 
 import java.io.IOException;
 import java.io.OutputStream;
