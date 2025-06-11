@@ -40,17 +40,17 @@ public class ByteReader implements IByteReader {
         this(() -> null);
     }
 
-    public void appendNode(ByteNode byteNode) {
-        tail.next = byteNode;
+    public void appendByteChunk(ByteChunk byteChunk) {
+        tail.next = new ByteNode(byteChunk);
         tail = tail.next;
     }
 
-    public boolean pullNode() throws ByteSupplierException {
+    public boolean pullByteChunk() throws ByteSupplierException {
         var byteChunk = byteSupplier.get();
         if (byteChunk == null) {
             return false;
         }
-        appendNode(new ByteNode(byteChunk));
+        appendByteChunk(byteChunk);
         return true;
     }
 
@@ -61,7 +61,7 @@ public class ByteReader implements IByteReader {
                 if (pullCount >= maxPullCount) {
                     break;
                 }
-                var result = this.pullNode();
+                var result = this.pullByteChunk();
                 if (!result) {
                     return -1;
                 } else {
@@ -125,7 +125,7 @@ public class ByteReader implements IByteReader {
                     break;
                 }
                 // 如果 当前节点没有下一个节点 并且拉取失败 则退出循环
-                var result = this.pullNode();
+                var result = this.pullByteChunk();
                 if (!result) {
                     break;
                 }
@@ -170,7 +170,7 @@ public class ByteReader implements IByteReader {
                 if (pullCount >= maxPullCount) {
                     break;
                 }
-                var result = this.pullNode();
+                var result = this.pullByteChunk();
                 if (!result) {
                     break;
                 }
