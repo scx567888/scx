@@ -2,9 +2,9 @@ package cool.scx.byte_reader;
 
 import cool.scx.byte_reader.consumer.ByteArrayDataConsumer;
 import cool.scx.byte_reader.consumer.DataConsumer;
+import cool.scx.byte_reader.indexer.BaseByteIndexer;
 import cool.scx.byte_reader.indexer.ByteIndexer;
-import cool.scx.byte_reader.indexer.DataIndexer;
-import cool.scx.byte_reader.indexer.KMPDataIndexer;
+import cool.scx.byte_reader.indexer.KMPByteIndexer;
 import cool.scx.byte_reader.exception.DataSupplierException;
 import cool.scx.byte_reader.exception.NoMatchFoundException;
 import cool.scx.byte_reader.exception.NoMoreDataException;
@@ -54,7 +54,7 @@ public interface IByteReader {
     void peek(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, DataSupplierException;
 
     /// 查找索引
-    long indexOf(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, DataSupplierException;
+    long indexOf(ByteIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, DataSupplierException;
 
     /// 标记
     void mark();
@@ -119,7 +119,7 @@ public interface IByteReader {
     }
 
     default long indexOf(byte b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, DataSupplierException {
-        return indexOf(new ByteIndexer(b), maxLength, maxPullCount);
+        return indexOf(new BaseByteIndexer(b), maxLength, maxPullCount);
     }
 
     default long indexOf(byte[] b) throws NoMatchFoundException, NoMoreDataException, DataSupplierException {
@@ -131,7 +131,7 @@ public interface IByteReader {
     }
 
     default long indexOf(byte[] b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, DataSupplierException {
-        return indexOf(new KMPDataIndexer(b), maxLength, maxPullCount);
+        return indexOf(new KMPByteIndexer(b), maxLength, maxPullCount);
     }
 
     default byte[] readUntil(byte b) throws NoMatchFoundException, NoMoreDataException, DataSupplierException {

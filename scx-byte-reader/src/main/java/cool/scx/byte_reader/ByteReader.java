@@ -4,7 +4,7 @@ import cool.scx.byte_reader.consumer.ByteArrayDataConsumer;
 import cool.scx.byte_reader.consumer.DataConsumer;
 import cool.scx.byte_reader.consumer.FillByteArrayDataConsumer;
 import cool.scx.byte_reader.consumer.OutputStreamDataConsumer;
-import cool.scx.byte_reader.indexer.DataIndexer;
+import cool.scx.byte_reader.indexer.ByteIndexer;
 import cool.scx.byte_reader.supplier.DataSupplier;
 import cool.scx.byte_reader.exception.DataSupplierException;
 import cool.scx.byte_reader.exception.NoMatchFoundException;
@@ -142,7 +142,7 @@ public class ByteReader implements IByteReader {
 
     }
 
-    public long findIndex(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, DataSupplierException {
+    public long findIndex(ByteIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, DataSupplierException {
 
         var index = 0L; // 主串索引
 
@@ -216,7 +216,7 @@ public class ByteReader implements IByteReader {
     }
 
     @Override
-    public long indexOf(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, DataSupplierException {
+    public long indexOf(ByteIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, DataSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
