@@ -1,6 +1,6 @@
 package cool.scx.byte_reader;
 
-/// DataNode
+/// ByteNode
 ///
 /// @author scx567888
 /// @version 0.0.1

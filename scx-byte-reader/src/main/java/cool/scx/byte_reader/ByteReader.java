@@ -21,15 +21,15 @@ import static java.lang.Math.min;
 /// @version 0.0.1
 public class ByteReader implements IByteReader {
 
-    public final ByteSupplier dataSupplier;
+    public final ByteSupplier byteSupplier;
     public ByteNode head;
     public ByteNode tail;
     //标记
     public ByteNode markNode;
     public int markNodePosition;
 
-    public ByteReader(ByteSupplier dataSupplier) {
-        this.dataSupplier = dataSupplier;
+    public ByteReader(ByteSupplier byteSupplier) {
+        this.byteSupplier = byteSupplier;
         this.head = new ByteNode(new byte[]{});
         this.tail = this.head;
         this.markNode = null;
@@ -40,17 +40,17 @@ public class ByteReader implements IByteReader {
         this(() -> null);
     }
 
-    public void appendData(ByteNode data) {
-        tail.next = data;
+    public void appendNode(ByteNode byteNode) {
+        tail.next = byteNode;
         tail = tail.next;
     }
 
-    public boolean pullData() throws ByteSupplierException {
-        var data = dataSupplier.get();
-        if (data == null) {
+    public boolean pullNode() throws ByteSupplierException {
+        var byteNode = byteSupplier.get();
+        if (byteNode == null) {
             return false;
         }
-        appendData(data);
+        appendNode(byteNode);
         return true;
     }
 
@@ -61,7 +61,7 @@ public class ByteReader implements IByteReader {
                 if (pullCount >= maxPullCount) {
                     break;
                 }
-                var result = this.pullData();
+                var result = this.pullNode();
                 if (!result) {
                     return -1;
                 } else {
@@ -125,7 +125,7 @@ public class ByteReader implements IByteReader {
                     break;
                 }
                 // 如果 当前节点没有下一个节点 并且拉取失败 则退出循环
-                var result = this.pullData();
+                var result = this.pullNode();
                 if (!result) {
                     break;
                 }
@@ -170,7 +170,7 @@ public class ByteReader implements IByteReader {
                 if (pullCount >= maxPullCount) {
                     break;
                 }
-                var result = this.pullData();
+                var result = this.pullNode();
                 if (!result) {
                     break;
                 }
@@ -192,12 +192,12 @@ public class ByteReader implements IByteReader {
     }
 
     @Override
-    public void read(ByteConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
+    public void read(ByteConsumer byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
         }
-        walk(dataConsumer, maxLength, true, maxPullCount);
+        walk(byteConsumer, maxLength, true, maxPullCount);
     }
 
     @Override
@@ -207,12 +207,12 @@ public class ByteReader implements IByteReader {
     }
 
     @Override
-    public void peek(ByteConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
+    public void peek(ByteConsumer byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
         }
-        walk(dataConsumer, maxLength, false, maxPullCount);
+        walk(byteConsumer, maxLength, false, maxPullCount);
     }
 
     @Override
