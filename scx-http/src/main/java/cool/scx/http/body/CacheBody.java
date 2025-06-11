@@ -1,31 +1,31 @@
 package cool.scx.http.body;
 
+import cool.scx.byte_reader.ByteReader;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
-import cool.scx.io.data_reader.DataReader;
-import cool.scx.io.io_stream.DataReaderInputStream;
+import cool.scx.io.io_stream.ByteReaderInputStream;
 import cool.scx.io.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import static cool.scx.io.IOHelper.inputStreamToDataReader;
+import static cool.scx.io.IOHelper.inputStreamToByteReader;
 
 public class CacheBody implements ScxHttpBody {
 
     private final ScxHttpHeaders headers;
-    private final DataReader dataReader;
+    private final ByteReader dataReader;
 
     public CacheBody(InputStream inputStream, ScxHttpHeaders requestHeaders) {
         this.headers = requestHeaders;
-        this.dataReader = inputStreamToDataReader(inputStream);
+        this.dataReader = inputStreamToByteReader(inputStream);
         this.dataReader.mark();
     }
 
     @Override
     public InputStream inputStream() {
         this.dataReader.reset();
-        return new DataReaderInputStream(this.dataReader);
+        return new ByteReaderInputStream(this.dataReader);
     }
 
     @Override

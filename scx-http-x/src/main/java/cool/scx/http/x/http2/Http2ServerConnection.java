@@ -1,12 +1,12 @@
 package cool.scx.http.x.http2;
 
+import cool.scx.byte_reader.ByteReader;
+import cool.scx.byte_reader.supplier.BufferedInputStreamByteSupplier;
 import cool.scx.common.functional.ScxConsumer;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
 import cool.scx.http.x.HttpServerOptions;
 import cool.scx.http.x.http2.hpack.HPACKDecoder;
-import cool.scx.io.data_reader.LinkedDataReader;
-import cool.scx.io.data_supplier.BufferedInputStreamDataSupplier;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class Http2ServerConnection {
     private final HttpServerOptions options;
     private final ScxConsumer<ScxHttpServerRequest, ?> requestHandler;
     private final ScxHttpServerErrorHandler errorHandler;
-    private final LinkedDataReader dataReader;
+    private final ByteReader dataReader;
     private final OutputStream dataWriter;
     private final HPACKDecoder hpackDecoder;
     private State state;
@@ -36,7 +36,7 @@ public class Http2ServerConnection {
         this.options = options;
         this.requestHandler = requestHandler;
         this.errorHandler = errorHandler;
-        this.dataReader = new LinkedDataReader(new BufferedInputStreamDataSupplier(this.tcpSocket.inputStream()));
+        this.dataReader = new ByteReader(new BufferedInputStreamByteSupplier(this.tcpSocket.inputStream()));
         this.dataWriter = this.tcpSocket.outputStream();
         this.hpackDecoder = new HPACKDecoder();
     }

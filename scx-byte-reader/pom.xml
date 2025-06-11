@@ -9,13 +9,13 @@
         <version>3.8.2</version>
     </parent>
 
-    <artifactId>scx-io</artifactId>
+    <artifactId>scx-byte-reader</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX IO</name>
+    <name>SCX Byte Reader</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX IO
+        SCX Byte Reader
     </description>
 
     <dependencies>
@@ -23,12 +23,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>scx-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-byte-reader</artifactId>
             <version>${project.version}</version>
         </dependency>
 
