@@ -4,11 +4,11 @@ import cool.scx.byte_reader.consumer.ByteArrayByteConsumer;
 import cool.scx.byte_reader.consumer.ByteConsumer;
 import cool.scx.byte_reader.consumer.FillByteArrayByteConsumer;
 import cool.scx.byte_reader.consumer.OutputStreamByteConsumer;
-import cool.scx.byte_reader.indexer.ByteIndexer;
-import cool.scx.byte_reader.supplier.ByteSupplier;
 import cool.scx.byte_reader.exception.ByteSupplierException;
 import cool.scx.byte_reader.exception.NoMatchFoundException;
 import cool.scx.byte_reader.exception.NoMoreDataException;
+import cool.scx.byte_reader.indexer.ByteIndexer;
+import cool.scx.byte_reader.supplier.ByteSupplier;
 
 import java.io.IOException;
 import java.io.OutputStream;

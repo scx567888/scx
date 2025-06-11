@@ -1,8 +1,8 @@
 package cool.scx.byte_reader.supplier;
 
+import cool.scx.byte_reader.ByteNode;
 import cool.scx.common.iterator.ArrayIterator;
 import cool.scx.common.iterator.SingleIterator;
-import cool.scx.byte_reader.ByteNode;
 
 import java.util.Collection;
 import java.util.Iterator;

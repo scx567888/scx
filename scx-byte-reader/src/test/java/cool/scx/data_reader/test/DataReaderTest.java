@@ -2,9 +2,9 @@ package cool.scx.data_reader.test;
 
 import cool.scx.byte_reader.ByteNode;
 import cool.scx.byte_reader.ByteReader;
+import cool.scx.byte_reader.exception.NoMatchFoundException;
 import cool.scx.byte_reader.supplier.ByteArrayByteSupplier;
 import cool.scx.byte_reader.supplier.SequenceByteSupplier;
-import cool.scx.byte_reader.exception.NoMatchFoundException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -1,8 +1,8 @@
 package cool.scx.byte_reader.supplier;
 
-import cool.scx.common.iterator.ArrayIterator;
 import cool.scx.byte_reader.ByteNode;
 import cool.scx.byte_reader.exception.ByteSupplierException;
+import cool.scx.common.iterator.ArrayIterator;
 
 import java.util.Iterator;
 import java.util.List;

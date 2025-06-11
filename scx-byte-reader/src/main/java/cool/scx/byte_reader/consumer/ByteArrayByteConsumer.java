@@ -18,6 +18,15 @@ public class ByteArrayByteConsumer implements ByteConsumer {
         this.total = 0;
     }
 
+    public static byte[] compressBytes(byte[] bytes, int offset, int length) {
+        if (offset == 0 && length == bytes.length) {
+            return bytes;
+        }
+        var data = new byte[length];
+        System.arraycopy(bytes, offset, data, 0, length);
+        return data;
+    }
+
     @Override
     public boolean accept(byte[] bytes, int position, int length) {
         total += length;
@@ -57,15 +66,6 @@ public class ByteArrayByteConsumer implements ByteConsumer {
         } while (node != null);
 
         return bytes;
-    }
-
-    public static byte[] compressBytes(byte[] bytes, int offset, int length) {
-        if (offset == 0 && length == bytes.length) {
-            return bytes;
-        }
-        var data = new byte[length];
-        System.arraycopy(bytes, offset, data, 0, length);
-        return data;
     }
 
 }

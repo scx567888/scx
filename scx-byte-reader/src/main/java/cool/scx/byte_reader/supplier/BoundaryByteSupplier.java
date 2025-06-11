@@ -1,11 +1,11 @@
 package cool.scx.byte_reader.supplier;
 
-import cool.scx.byte_reader.indexer.KMPByteIndexer;
 import cool.scx.byte_reader.ByteNode;
 import cool.scx.byte_reader.IByteReader;
 import cool.scx.byte_reader.exception.ByteSupplierException;
 import cool.scx.byte_reader.exception.NoMatchFoundException;
 import cool.scx.byte_reader.exception.NoMoreDataException;
+import cool.scx.byte_reader.indexer.KMPByteIndexer;
 
 import java.util.Arrays;
 

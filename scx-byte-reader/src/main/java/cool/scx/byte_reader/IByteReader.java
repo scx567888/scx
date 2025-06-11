@@ -2,12 +2,12 @@ package cool.scx.byte_reader;
 
 import cool.scx.byte_reader.consumer.ByteArrayByteConsumer;
 import cool.scx.byte_reader.consumer.ByteConsumer;
-import cool.scx.byte_reader.indexer.BaseByteIndexer;
-import cool.scx.byte_reader.indexer.ByteIndexer;
-import cool.scx.byte_reader.indexer.KMPByteIndexer;
 import cool.scx.byte_reader.exception.ByteSupplierException;
 import cool.scx.byte_reader.exception.NoMatchFoundException;
 import cool.scx.byte_reader.exception.NoMoreDataException;
+import cool.scx.byte_reader.indexer.BaseByteIndexer;
+import cool.scx.byte_reader.indexer.ByteIndexer;
+import cool.scx.byte_reader.indexer.KMPByteIndexer;
 
 import java.io.IOException;
 import java.io.OutputStream;
