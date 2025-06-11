@@ -47,6 +47,11 @@ public final class ByteChunk {
         return new ByteChunk(bytes, startPosition + start, startPosition + end);
     }
 
+    /// 相对 索引 0 起始
+    public String toString(int start, int end) {
+        return new String(bytes, startPosition + start, end - start);
+    }
+
     @Override
     public String toString() {
         return new String(bytes, startPosition, length);
