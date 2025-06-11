@@ -1,7 +1,6 @@
 package cool.scx.http.x.http1.chunked;
 
 import cool.scx.byte_reader.ByteChunk;
-import cool.scx.byte_reader.ByteNode;
 import cool.scx.byte_reader.ByteReader;
 import cool.scx.byte_reader.exception.ByteSupplierException;
 import cool.scx.byte_reader.exception.NoMatchFoundException;

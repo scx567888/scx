@@ -1,7 +1,6 @@
 package cool.scx.http.x.http1.fixed_length;
 
 import cool.scx.byte_reader.ByteChunk;
-import cool.scx.byte_reader.ByteNode;
 import cool.scx.byte_reader.ByteReader;
 import cool.scx.byte_reader.consumer.ByteChunkByteConsumer;
 import cool.scx.byte_reader.exception.NoMoreDataException;
