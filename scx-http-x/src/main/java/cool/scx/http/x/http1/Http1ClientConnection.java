@@ -1,7 +1,7 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.byte_reader.ByteReader;
-import cool.scx.byte_reader.supplier.InputStreamByteSupplier;
+import cool.scx.bytes.ByteReader;
+import cool.scx.bytes.supplier.InputStreamByteSupplier;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;

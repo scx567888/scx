@@ -1,6 +1,6 @@
 package cool.scx.http.body;
 
-import cool.scx.byte_reader.ByteReader;
+import cool.scx.bytes.ByteReader;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.io.io_stream.ByteReaderInputStream;

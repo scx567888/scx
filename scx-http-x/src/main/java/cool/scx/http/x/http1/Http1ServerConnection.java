@@ -1,7 +1,7 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.byte_reader.ByteReader;
-import cool.scx.byte_reader.supplier.InputStreamByteSupplier;
+import cool.scx.bytes.ByteReader;
+import cool.scx.bytes.supplier.InputStreamByteSupplier;
 import cool.scx.common.functional.ScxConsumer;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.error_handler.ErrorPhase;

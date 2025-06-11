@@ -1,6 +1,6 @@
 package cool.scx.websocket.x;
 
-import cool.scx.byte_reader.ByteReader;
+import cool.scx.bytes.ByteReader;
 import cool.scx.websocket.WebSocketOpCode;
 import cool.scx.websocket.exception.WebSocketException;
 

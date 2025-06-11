@@ -1,10 +1,10 @@
 package cool.scx.http.x.http1.chunked;
 
-import cool.scx.byte_reader.ByteChunk;
-import cool.scx.byte_reader.ByteReader;
-import cool.scx.byte_reader.exception.ByteSupplierException;
-import cool.scx.byte_reader.exception.NoMatchFoundException;
-import cool.scx.byte_reader.supplier.ByteSupplier;
+import cool.scx.bytes.ByteChunk;
+import cool.scx.bytes.ByteReader;
+import cool.scx.bytes.exception.ByteSupplierException;
+import cool.scx.bytes.exception.NoMatchFoundException;
+import cool.scx.bytes.supplier.ByteSupplier;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.ContentTooLargeException;
 

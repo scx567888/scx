@@ -1,6 +1,6 @@
 package cool.scx.http.media.event_stream;
 
-import cool.scx.byte_reader.ByteReader;
+import cool.scx.bytes.ByteReader;
 
 import java.io.IOException;
 import java.io.InputStream;
