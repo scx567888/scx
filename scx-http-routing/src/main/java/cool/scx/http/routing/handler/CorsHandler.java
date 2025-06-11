@@ -1,6 +1,6 @@
 package cool.scx.http.routing.handler;
 
-import cool.scx.common.functional.ScxConsumer;
+import cool.scx.functional.ScxConsumer;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.exception.ForbiddenException;
 import cool.scx.http.headers.ScxHttpHeaderName;

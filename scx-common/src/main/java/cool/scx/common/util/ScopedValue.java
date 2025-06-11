@@ -1,8 +1,8 @@
 package cool.scx.common.util;
 
-import cool.scx.common.functional.ScxCallable;
-import cool.scx.common.functional.ScxRunnable;
-import cool.scx.common.functional.ScxSupplier;
+import cool.scx.functional.ScxCallable;
+import cool.scx.functional.ScxRunnable;
+import cool.scx.functional.ScxSupplier;
 
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;

@@ -1,7 +1,7 @@
 package cool.scx.web;
 
 import cool.scx.common.exception.ScxExceptionHelper;
-import cool.scx.common.functional.ScxConsumer;
+import cool.scx.functional.ScxConsumer;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.URIUtils;
 import cool.scx.http.method.HttpMethod;

@@ -1,9 +1,9 @@
 package cool.scx.jdbc.sql;
 
-import cool.scx.common.functional.ScxCallable;
-import cool.scx.common.functional.ScxConsumer;
-import cool.scx.common.functional.ScxFunction;
-import cool.scx.common.functional.ScxRunnable;
+import cool.scx.functional.ScxCallable;
+import cool.scx.functional.ScxConsumer;
+import cool.scx.functional.ScxFunction;
+import cool.scx.functional.ScxRunnable;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.result_handler.ResultHandler;

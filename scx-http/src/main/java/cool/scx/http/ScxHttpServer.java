@@ -1,6 +1,6 @@
 package cool.scx.http;
 
-import cool.scx.common.functional.ScxConsumer;
+import cool.scx.functional.ScxConsumer;
 import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
 
 import java.io.IOException;

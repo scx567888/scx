@@ -1,6 +1,6 @@
 package cool.scx.http.routing;
 
-import cool.scx.common.functional.ScxConsumer;
+import cool.scx.functional.ScxConsumer;
 import cool.scx.http.method.HttpMethod;
 
 /// RouteWritable
