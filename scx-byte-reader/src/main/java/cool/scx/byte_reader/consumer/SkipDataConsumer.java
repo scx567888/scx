@@ -1,5 +1,7 @@
 package cool.scx.byte_reader.consumer;
 
+import cool.scx.byte_reader.ByteChunk;
+
 /// 直接跳过
 ///
 /// @author scx567888
@@ -14,7 +16,7 @@ public class SkipDataConsumer implements ByteConsumer {
     }
 
     @Override
-    public boolean accept(byte[] bytes, int position, int length) {
+    public boolean accept(ByteChunk chunk) {
         //什么都不做
         return true;
     }
