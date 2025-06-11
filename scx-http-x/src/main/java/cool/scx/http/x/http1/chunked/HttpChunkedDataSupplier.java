@@ -1,5 +1,6 @@
 package cool.scx.http.x.http1.chunked;
 
+import cool.scx.byte_reader.ByteChunk;
 import cool.scx.byte_reader.ByteNode;
 import cool.scx.byte_reader.ByteReader;
 import cool.scx.byte_reader.exception.ByteSupplierException;
@@ -31,7 +32,7 @@ public class HttpChunkedDataSupplier implements ByteSupplier {
     }
 
     @Override
-    public ByteNode get() throws ByteSupplierException {
+    public ByteChunk get() throws ByteSupplierException {
         if (isFinished) {
             return null;
         }
@@ -65,7 +66,7 @@ public class HttpChunkedDataSupplier implements ByteSupplier {
         }
         var nextChunkData = dataReader.read(chunkLength);
         dataReader.skip(2); // skip \r\n after the chunk
-        return new ByteNode(nextChunkData);
+        return new ByteChunk(nextChunkData);
     }
 
     public void checkMaxPayload(int chunkLength) {
