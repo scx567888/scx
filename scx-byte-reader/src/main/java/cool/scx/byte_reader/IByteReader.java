@@ -1,6 +1,6 @@
 package cool.scx.byte_reader;
 
-import cool.scx.byte_reader.consumer.ByteArrayDataConsumer;
+import cool.scx.byte_reader.consumer.ByteArrayByteConsumer;
 import cool.scx.byte_reader.consumer.ByteConsumer;
 import cool.scx.byte_reader.indexer.BaseByteIndexer;
 import cool.scx.byte_reader.indexer.ByteIndexer;
@@ -79,7 +79,7 @@ public interface IByteReader {
     }
 
     default byte[] read(int maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
-        var consumer = new ByteArrayDataConsumer();
+        var consumer = new ByteArrayByteConsumer();
         read(consumer, maxLength, maxPullCount);
         return consumer.getBytes();
     }
@@ -93,7 +93,7 @@ public interface IByteReader {
     }
 
     default byte[] peek(int maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
-        var consumer = new ByteArrayDataConsumer();
+        var consumer = new ByteArrayByteConsumer();
         peek(consumer, maxLength, maxPullCount);
         return consumer.getBytes();
     }

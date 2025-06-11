@@ -1,9 +1,9 @@
 package cool.scx.byte_reader;
 
-import cool.scx.byte_reader.consumer.ByteArrayDataConsumer;
+import cool.scx.byte_reader.consumer.ByteArrayByteConsumer;
 import cool.scx.byte_reader.consumer.ByteConsumer;
-import cool.scx.byte_reader.consumer.FillByteArrayDataConsumer;
-import cool.scx.byte_reader.consumer.OutputStreamDataConsumer;
+import cool.scx.byte_reader.consumer.FillByteArrayByteConsumer;
+import cool.scx.byte_reader.consumer.OutputStreamByteConsumer;
 import cool.scx.byte_reader.indexer.ByteIndexer;
 import cool.scx.byte_reader.supplier.ByteSupplier;
 import cool.scx.byte_reader.exception.ByteSupplierException;
@@ -276,7 +276,7 @@ public class ByteReader implements IByteReader {
                     maxPullCount = maxPullCount - pullCount;
                 }
             }
-            var consumer = new FillByteArrayDataConsumer(b, off, len);
+            var consumer = new FillByteArrayByteConsumer(b, off, len);
             walk(consumer, len, true, maxPullCount);
             return consumer.getFilledLength();
         } catch (ByteSupplierException e) {
@@ -296,7 +296,7 @@ public class ByteReader implements IByteReader {
                     return 0;
                 }
             }
-            var consumer = new OutputStreamDataConsumer(out);
+            var consumer = new OutputStreamByteConsumer(out);
             walk(consumer, maxLength, true, Long.MAX_VALUE);
             return consumer.byteCount();
         } catch (ByteSupplierException e) {
@@ -316,7 +316,7 @@ public class ByteReader implements IByteReader {
                     return new byte[0];
                 }
             }
-            var consumer = new ByteArrayDataConsumer();
+            var consumer = new ByteArrayByteConsumer();
             walk(consumer, len, true, Long.MAX_VALUE);
             return consumer.getBytes();
         } catch (ByteSupplierException e) {
