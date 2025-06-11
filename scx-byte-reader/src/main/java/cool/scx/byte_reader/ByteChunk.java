@@ -25,6 +25,21 @@ public final class ByteChunk {
     }
 
     /// 相对 索引 0 起始
+    public byte[] getBytes(int start, int end) {
+        if (start == 0 && end == length && startPosition == 0 && length == bytes.length) {
+            return bytes;
+        }
+        var data = new byte[end - start];
+        System.arraycopy(bytes, startPosition + start, data, 0, data.length);
+        return data;
+    }
+
+    /// 相对 索引 0 起始
+    public byte[] getBytes() {
+        return getBytes(0, length);
+    }
+
+    /// 相对 索引 0 起始
     public ByteChunk splice(int start, int end) {
         if (start == 0 && end == length) {
             return this;
