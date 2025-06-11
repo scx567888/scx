@@ -6,12 +6,12 @@ import cool.scx.byte_reader.ByteChunk;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class SkipDataConsumer implements ByteConsumer {
+public class SkipByteConsumer implements ByteConsumer {
 
-    public static final SkipDataConsumer SKIP_DATA_CONSUMER = new SkipDataConsumer();
+    public static final SkipByteConsumer SKIP_DATA_CONSUMER = new SkipByteConsumer();
 
     //这个类不应该被用户实例化
-    private SkipDataConsumer() {
+    private SkipByteConsumer() {
 
     }
 

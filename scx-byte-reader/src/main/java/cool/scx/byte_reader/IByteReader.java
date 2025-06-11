@@ -12,7 +12,7 @@ import cool.scx.byte_reader.indexer.KMPByteIndexer;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static cool.scx.byte_reader.consumer.SkipDataConsumer.SKIP_DATA_CONSUMER;
+import static cool.scx.byte_reader.consumer.SkipByteConsumer.SKIP_DATA_CONSUMER;
 import static java.lang.Math.toIntExact;
 
 /// IByteReader

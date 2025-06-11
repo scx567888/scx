@@ -1,6 +1,6 @@
 package cool.scx.byte_reader.test;
 
-import cool.scx.byte_reader.ByteNode;
+import cool.scx.byte_reader.ByteChunk;
 import cool.scx.byte_reader.ByteReader;
 import cool.scx.byte_reader.exception.NoMatchFoundException;
 import cool.scx.byte_reader.supplier.ByteArrayByteSupplier;
@@ -74,7 +74,7 @@ public class ByteReaderTest {
     @Test
     public static void test3() {
         //测试资源耗尽攻击
-        var dataReader = new ByteReader(() -> new ByteNode("aaaaaa".getBytes()));
+        var dataReader = new ByteReader(() -> new ByteChunk("aaaaaa".getBytes()));
         //最大只搜索 100 字节
         Assert.assertThrows(NoMatchFoundException.class, () -> {
             byte[] bytes = dataReader.readUntil("\r\n".getBytes(), 100);
