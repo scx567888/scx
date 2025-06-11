@@ -1,15 +1,14 @@
 package cool.scx.byte_reader;
 
-import cool.scx.io.data_consumer.ByteArrayDataConsumer;
-import cool.scx.io.data_consumer.DataConsumer;
-import cool.scx.io.data_consumer.FillByteArrayDataConsumer;
-import cool.scx.io.data_consumer.OutputStreamDataConsumer;
-import cool.scx.io.data_indexer.DataIndexer;
-import cool.scx.io.data_node.DataNode;
-import cool.scx.io.data_supplier.DataSupplier;
-import cool.scx.io.exception.DataSupplierException;
-import cool.scx.io.exception.NoMatchFoundException;
-import cool.scx.io.exception.NoMoreDataException;
+import cool.scx.byte_reader.consumer.ByteArrayDataConsumer;
+import cool.scx.byte_reader.consumer.DataConsumer;
+import cool.scx.byte_reader.consumer.FillByteArrayDataConsumer;
+import cool.scx.byte_reader.consumer.OutputStreamDataConsumer;
+import cool.scx.byte_reader.indexer.DataIndexer;
+import cool.scx.byte_reader.supplier.DataSupplier;
+import cool.scx.byte_reader.exception.DataSupplierException;
+import cool.scx.byte_reader.exception.NoMatchFoundException;
+import cool.scx.byte_reader.exception.NoMoreDataException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -23,15 +22,15 @@ import static java.lang.Math.min;
 public class ByteReader implements IByteReader {
 
     public final DataSupplier dataSupplier;
-    public DataNode head;
-    public DataNode tail;
+    public ByteNode head;
+    public ByteNode tail;
     //标记
-    public DataNode markNode;
+    public ByteNode markNode;
     public int markNodePosition;
 
     public ByteReader(DataSupplier dataSupplier) {
         this.dataSupplier = dataSupplier;
-        this.head = new DataNode(new byte[]{});
+        this.head = new ByteNode(new byte[]{});
         this.tail = this.head;
         this.markNode = null;
         this.markNodePosition = 0;
@@ -41,7 +40,7 @@ public class ByteReader implements IByteReader {
         this(() -> null);
     }
 
-    public void appendData(DataNode data) {
+    public void appendData(ByteNode data) {
         tail.next = data;
         tail = tail.next;
     }

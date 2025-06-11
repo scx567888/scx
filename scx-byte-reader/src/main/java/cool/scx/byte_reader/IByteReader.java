@@ -1,18 +1,18 @@
 package cool.scx.byte_reader;
 
-import cool.scx.io.data_consumer.ByteArrayDataConsumer;
-import cool.scx.io.data_consumer.DataConsumer;
-import cool.scx.io.data_indexer.ByteIndexer;
-import cool.scx.io.data_indexer.DataIndexer;
-import cool.scx.io.data_indexer.KMPDataIndexer;
-import cool.scx.io.exception.DataSupplierException;
-import cool.scx.io.exception.NoMatchFoundException;
-import cool.scx.io.exception.NoMoreDataException;
+import cool.scx.byte_reader.consumer.ByteArrayDataConsumer;
+import cool.scx.byte_reader.consumer.DataConsumer;
+import cool.scx.byte_reader.indexer.ByteIndexer;
+import cool.scx.byte_reader.indexer.DataIndexer;
+import cool.scx.byte_reader.indexer.KMPDataIndexer;
+import cool.scx.byte_reader.exception.DataSupplierException;
+import cool.scx.byte_reader.exception.NoMatchFoundException;
+import cool.scx.byte_reader.exception.NoMoreDataException;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static cool.scx.io.data_consumer.SkipDataConsumer.SKIP_DATA_CONSUMER;
+import static cool.scx.byte_reader.consumer.SkipDataConsumer.SKIP_DATA_CONSUMER;
 import static java.lang.Math.toIntExact;
 
 /// DataReader
