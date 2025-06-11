@@ -19,6 +19,12 @@ public final class ByteChunk {
         this.length = endPosition - startPosition;
     }
 
+    /// 相对 索引 0 起始
+    public byte getByte(int index) {
+        return bytes[startPosition + index];
+    }
+
+    /// 相对 索引 0 起始
     public ByteChunk splice(int start, int end) {
         if (start == 0 && end == length) {
             return this;
