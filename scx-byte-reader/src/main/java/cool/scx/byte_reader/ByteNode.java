@@ -30,7 +30,7 @@ public class ByteNode {
 
     @Override
     public String toString() {
-        return new String(chunk.bytes, chunk.startPosition + position, available());
+        return chunk.toString(position, chunk.length);
     }
 
 }
