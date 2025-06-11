@@ -7,29 +7,30 @@ package cool.scx.byte_reader;
 public class ByteNode {
 
     public final ByteChunk chunk;
+    /// 相对 索引 0 起始
     public int position;
     public ByteNode next;
 
     public ByteNode(ByteChunk chunk) {
         this.chunk = chunk;
-        this.position = chunk.startPosition;
+        this.position = 0;
     }
 
     public int available() {
-        return chunk.endPosition - position;
+        return chunk.length - position;
     }
 
     public boolean hasAvailable() {
-        return position < chunk.endPosition;
+        return position < chunk.length;
     }
 
     public void reset() {
-        position = chunk.startPosition;
+        position = 0;
     }
 
     @Override
     public String toString() {
-        return new String(chunk.bytes, position, chunk.endPosition - position);
+        return new String(chunk.bytes, chunk.startPosition + position, available());
     }
 
 }
