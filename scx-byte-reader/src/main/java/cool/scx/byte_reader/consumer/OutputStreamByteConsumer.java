@@ -1,5 +1,7 @@
 package cool.scx.byte_reader.consumer;
 
+import cool.scx.byte_reader.ByteChunk;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
@@ -21,10 +23,10 @@ public class OutputStreamByteConsumer implements ByteConsumer {
     }
 
     @Override
-    public boolean accept(byte[] bytes, int position, int length) {
+    public boolean accept(ByteChunk chunk) {
         try {
-            out.write(bytes, position, length);
-            byteCount += length;
+            out.write(chunk.bytes, chunk.startPosition, chunk.length);
+            byteCount += chunk.length;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
