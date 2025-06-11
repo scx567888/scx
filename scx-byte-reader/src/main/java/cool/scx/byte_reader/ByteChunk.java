@@ -19,6 +19,13 @@ public final class ByteChunk {
         this.length = endPosition - startPosition;
     }
 
+    public ByteChunk splice(int start, int end) {
+        if (start == 0 && end == length) {
+            return this;
+        }
+        return new ByteChunk(bytes, startPosition + start, startPosition + end);
+    }
+
     @Override
     public String toString() {
         return new String(bytes, startPosition, length);
