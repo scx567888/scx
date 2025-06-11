@@ -1,6 +1,6 @@
 package cool.scx.byte_reader.supplier;
 
-import cool.scx.byte_reader.ByteNode;
+import cool.scx.byte_reader.ByteChunk;
 import cool.scx.common.iterator.ArrayIterator;
 import cool.scx.common.iterator.SingleIterator;
 
@@ -28,10 +28,10 @@ public class ByteArrayByteSupplier implements ByteSupplier {
     }
 
     @Override
-    public ByteNode get() {
+    public ByteChunk get() {
         if (byteArrayIterator.hasNext()) {
             byte[] nextArray = byteArrayIterator.next();
-            return new ByteNode(nextArray);
+            return new ByteChunk(nextArray);
         }
         return null; // 没有更多字节数组时返回 null
     }
