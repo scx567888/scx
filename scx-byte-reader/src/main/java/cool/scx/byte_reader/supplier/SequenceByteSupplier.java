@@ -1,6 +1,6 @@
 package cool.scx.byte_reader.supplier;
 
-import cool.scx.byte_reader.ByteNode;
+import cool.scx.byte_reader.ByteChunk;
 import cool.scx.byte_reader.exception.ByteSupplierException;
 import cool.scx.common.iterator.ArrayIterator;
 
@@ -31,7 +31,7 @@ public class SequenceByteSupplier implements ByteSupplier {
     }
 
     @Override
-    public ByteNode get() throws ByteSupplierException {
+    public ByteChunk get() throws ByteSupplierException {
         while (currentSupplier != null) {
             var dataNode = currentSupplier.get();
             if (dataNode != null) {

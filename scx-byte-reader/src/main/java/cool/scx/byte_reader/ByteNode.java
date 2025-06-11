@@ -1,43 +1,35 @@
 package cool.scx.byte_reader;
 
-/// DataNode
+/// ByteNode
 ///
 /// @author scx567888
 /// @version 0.0.1
 public class ByteNode {
 
-    public final byte[] bytes;
-    public final int startPosition;
-    public final int endPositon;
+    public final ByteChunk chunk;
     public int position;
     public ByteNode next;
 
-    public ByteNode(byte[] bytes) {
-        this(bytes, 0, bytes.length);
-    }
-
-    public ByteNode(byte[] bytes, int startPosition, int endPositon) {
-        this.bytes = bytes;
-        this.startPosition = startPosition;
-        this.endPositon = endPositon;
-        this.position = startPosition;
+    public ByteNode(ByteChunk chunk) {
+        this.chunk = chunk;
+        this.position = chunk.startPosition;
     }
 
     public int available() {
-        return endPositon - position;
+        return chunk.endPosition - position;
     }
 
     public boolean hasAvailable() {
-        return position < endPositon;
+        return position < chunk.endPosition;
     }
 
     public void reset() {
-        position = startPosition;
+        position = chunk.startPosition;
     }
 
     @Override
     public String toString() {
-        return new String(bytes, position, endPositon - position);
+        return new String(chunk.bytes, position, chunk.endPosition - position);
     }
 
 }

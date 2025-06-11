@@ -1,5 +1,6 @@
 package cool.scx.byte_reader.consumer;
 
+import cool.scx.byte_reader.ByteChunk;
 import cool.scx.byte_reader.ByteNode;
 
 /// ByteArrayDataConsumer
@@ -28,9 +29,9 @@ public class ByteArrayByteConsumer implements ByteConsumer {
     }
 
     @Override
-    public boolean accept(byte[] bytes, int position, int length) {
-        total += length;
-        var dataNode = new ByteNode(bytes, position, position + length);
+    public boolean accept(ByteChunk byteChunk) {
+        total += byteChunk.length;
+        var dataNode = new ByteNode(byteChunk);
         if (head == null) {
             head = dataNode;
             tail = head;
@@ -51,7 +52,7 @@ public class ByteArrayByteConsumer implements ByteConsumer {
 
         //只调用了一次 accept, 我们直接返回当前数据
         if (node.next == null) {
-            return compressBytes(node.bytes, node.position, node.available());
+            return compressBytes(node.chunk.bytes, node.position, node.available());
         }
 
         //多个数据我们合并
@@ -60,7 +61,7 @@ public class ByteArrayByteConsumer implements ByteConsumer {
 
         do {
             int length = node.available();
-            System.arraycopy(node.bytes, node.position, bytes, offset, length);
+            System.arraycopy(node.chunk.bytes, node.position, bytes, offset, length);
             offset += length;
             node = node.next;
         } while (node != null);

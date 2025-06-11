@@ -1,6 +1,6 @@
 package cool.scx.byte_reader.supplier;
 
-import cool.scx.byte_reader.ByteNode;
+import cool.scx.byte_reader.ByteChunk;
 import cool.scx.byte_reader.exception.ByteSupplierException;
 
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class InputStreamByteSupplier implements ByteSupplier {
     }
 
     @Override
-    public ByteNode get() throws ByteSupplierException {
+    public ByteChunk get() throws ByteSupplierException {
         try {
             // 这里每次都创建一个 byte 数组是因为我们后续需要直接使用 这个数组
             // 即使使用成员变量 来作为缓冲 buffer
@@ -53,13 +53,13 @@ public class InputStreamByteSupplier implements ByteSupplier {
             }
             // 如果读取的数据量与缓冲区大小一致，直接返回内部数组
             if (i == bufferLength) {
-                return new ByteNode(bytes);
+                return new ByteChunk(bytes);
             } else if (compress) {// 否则判断是否开启压缩
                 var data = new byte[i];
                 System.arraycopy(bytes, 0, data, 0, i);
-                return new ByteNode(data);
+                return new ByteChunk(data);
             } else {// 不压缩 直接返回
-                return new ByteNode(bytes, 0, i);
+                return new ByteChunk(bytes, 0, i);
             }
         } catch (IOException e) {
             throw new ByteSupplierException(e);

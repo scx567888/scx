@@ -1,5 +1,7 @@
 package cool.scx.byte_reader.consumer;
 
+import cool.scx.byte_reader.ByteChunk;
+
 import java.nio.ByteBuffer;
 
 /// 填充方式
@@ -17,11 +19,11 @@ public class FillByteBufferByteConsumer implements ByteConsumer {
     }
 
     @Override
-    public boolean accept(byte[] bytes, int position, int length) {
-        if (data.remaining() < length) {
+    public boolean accept(ByteChunk byteChunk) {
+        if (data.remaining() < byteChunk.length) {
             throw new IllegalStateException("Buffer overflow: not enough space to accept more data");
         }
-        data.put(bytes, position, length);
+        data.put(byteChunk.bytes, byteChunk.startPosition, byteChunk.length);
         return true;
     }
 

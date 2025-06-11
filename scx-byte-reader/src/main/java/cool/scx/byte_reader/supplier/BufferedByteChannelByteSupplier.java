@@ -1,6 +1,6 @@
 package cool.scx.byte_reader.supplier;
 
-import cool.scx.byte_reader.ByteNode;
+import cool.scx.byte_reader.ByteChunk;
 import cool.scx.byte_reader.exception.ByteSupplierException;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class BufferedByteChannelByteSupplier implements ByteSupplier {
     }
 
     @Override
-    public ByteNode get() throws ByteSupplierException {
+    public ByteChunk get() throws ByteSupplierException {
         try {
             buffer.clear(); // 重置缓冲区以进行新的读取操作
             int i = dataChannel.read(buffer);
@@ -35,7 +35,7 @@ public class BufferedByteChannelByteSupplier implements ByteSupplier {
             }
             var data = new byte[i];
             buffer.flip().get(data); // 复制数据到新的数组
-            return new ByteNode(data);
+            return new ByteChunk(data);
         } catch (IOException e) {
             throw new ByteSupplierException(e);
         }

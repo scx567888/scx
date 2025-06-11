@@ -1,6 +1,6 @@
 package cool.scx.byte_reader.supplier;
 
-import cool.scx.byte_reader.ByteNode;
+import cool.scx.byte_reader.ByteChunk;
 import cool.scx.byte_reader.IByteReader;
 import cool.scx.byte_reader.exception.ByteSupplierException;
 import cool.scx.byte_reader.exception.NoMatchFoundException;
@@ -27,7 +27,7 @@ public class BoundaryByteSupplier implements ByteSupplier {
     }
 
     @Override
-    public ByteNode get() throws ByteSupplierException {
+    public ByteChunk get() throws ByteSupplierException {
         //完成了就永远返回 null
         if (isFinish) {
             return null;
@@ -39,14 +39,14 @@ public class BoundaryByteSupplier implements ByteSupplier {
             var read = dataReader.read((int) index);
             // 找到了就要标识为完成
             isFinish = true;
-            return new ByteNode(read);
+            return new ByteChunk(read);
         } catch (NoMatchFoundException e) {
             // 没找到 说明可能还有 继续读取
             // 为了防止误读这里检查 patternIndex
             // 没有匹配任何 可以安全读
             if (dataIndexer.patternIndex() == 0) {
                 var read = dataReader.read(bufferLength);
-                return new ByteNode(read);
+                return new ByteChunk(read);
             } else {
                 // 已经匹配到了一部分 检查是否是 真正的匹配
                 var peek = dataReader.peek(dataIndexer.pattern().length);
@@ -58,7 +58,7 @@ public class BoundaryByteSupplier implements ByteSupplier {
                 } else {
                     // 不匹配 继续读 这里注意 skip 索引
                     dataReader.skip(dataIndexer.pattern().length);
-                    return new ByteNode(peek);
+                    return new ByteChunk(peek);
                 }
             }
         } catch (NoMoreDataException e) {

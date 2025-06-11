@@ -21,16 +21,16 @@ import static java.lang.Math.min;
 /// @version 0.0.1
 public class ByteReader implements IByteReader {
 
-    public final ByteSupplier dataSupplier;
+    public final ByteSupplier byteSupplier;
     public ByteNode head;
     public ByteNode tail;
     //标记
     public ByteNode markNode;
     public int markNodePosition;
 
-    public ByteReader(ByteSupplier dataSupplier) {
-        this.dataSupplier = dataSupplier;
-        this.head = new ByteNode(new byte[]{});
+    public ByteReader(ByteSupplier byteSupplier) {
+        this.byteSupplier = byteSupplier;
+        this.head = new ByteNode(new ByteChunk(new byte[]{}));
         this.tail = this.head;
         this.markNode = null;
         this.markNodePosition = 0;
@@ -40,17 +40,17 @@ public class ByteReader implements IByteReader {
         this(() -> null);
     }
 
-    public void appendData(ByteNode data) {
-        tail.next = data;
+    public void appendByteChunk(ByteChunk byteChunk) {
+        tail.next = new ByteNode(byteChunk);
         tail = tail.next;
     }
 
-    public boolean pullData() throws ByteSupplierException {
-        var data = dataSupplier.get();
-        if (data == null) {
+    public boolean pullByteChunk() throws ByteSupplierException {
+        var byteChunk = byteSupplier.get();
+        if (byteChunk == null) {
             return false;
         }
-        appendData(data);
+        appendByteChunk(byteChunk);
         return true;
     }
 
@@ -61,7 +61,7 @@ public class ByteReader implements IByteReader {
                 if (pullCount >= maxPullCount) {
                     break;
                 }
-                var result = this.pullData();
+                var result = this.pullByteChunk();
                 if (!result) {
                     return -1;
                 } else {
@@ -101,7 +101,7 @@ public class ByteReader implements IByteReader {
             // 计算当前节点可以读取的长度 (这里因为是将 int 和 long 值进行最小值比较 所以返回值一定是 int 所以类型转换不会丢失精度) 
             var length = (int) min(remaining, n.available());
             // 调用消费者 写入数据
-            needMore = consumer.accept(n.bytes, n.position, length);
+            needMore = consumer.accept(new ByteChunk(n.chunk.bytes, n.position, n.position + length));
             // 计算剩余字节数
             remaining -= length;
 
@@ -125,7 +125,7 @@ public class ByteReader implements IByteReader {
                     break;
                 }
                 // 如果 当前节点没有下一个节点 并且拉取失败 则退出循环
-                var result = this.pullData();
+                var result = this.pullByteChunk();
                 if (!result) {
                     break;
                 }
@@ -152,7 +152,7 @@ public class ByteReader implements IByteReader {
         while (true) {
             // 计算当前节点中可读取的最大长度，确保不超过 max (这里因为是将 int 和 long 值进行最小值比较 所以返回值一定是 int 所以类型转换不会丢失精度)
             var length = (int) min(n.available(), maxLength - index);
-            var i = indexer.indexOf(n.bytes, n.position, length);
+            var i = indexer.indexOf(new ByteChunk(n.chunk.bytes, n.position, n.position + length));
             //此处因为支持回溯匹配 所以可能是负数 Integer.MIN_VALUE 表示真正未找到
             if (i != Integer.MIN_VALUE) {
                 return index + i;
@@ -170,7 +170,7 @@ public class ByteReader implements IByteReader {
                 if (pullCount >= maxPullCount) {
                     break;
                 }
-                var result = this.pullData();
+                var result = this.pullByteChunk();
                 if (!result) {
                     break;
                 }
@@ -186,33 +186,33 @@ public class ByteReader implements IByteReader {
     @Override
     public byte read() throws NoMoreDataException, ByteSupplierException {
         ensureAvailableOrThrow(Long.MAX_VALUE);
-        var b = head.bytes[head.position];
+        var b = head.chunk.bytes[head.position];
         head.position = head.position + 1;
         return b;
     }
 
     @Override
-    public void read(ByteConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
+    public void read(ByteConsumer byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
         }
-        walk(dataConsumer, maxLength, true, maxPullCount);
+        walk(byteConsumer, maxLength, true, maxPullCount);
     }
 
     @Override
     public byte peek() throws NoMoreDataException, ByteSupplierException {
         ensureAvailableOrThrow(Long.MAX_VALUE);
-        return head.bytes[head.position];
+        return head.chunk.bytes[head.position];
     }
 
     @Override
-    public void peek(ByteConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
+    public void peek(ByteConsumer byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
         }
-        walk(dataConsumer, maxLength, false, maxPullCount);
+        walk(byteConsumer, maxLength, false, maxPullCount);
     }
 
     @Override
@@ -253,7 +253,7 @@ public class ByteReader implements IByteReader {
             if (pullCount == -1) {
                 return -1;
             }
-            var b = head.bytes[head.position];
+            var b = head.chunk.bytes[head.position];
             head.position = head.position + 1;
             return b & 0xFF;
         } catch (ByteSupplierException e) {
