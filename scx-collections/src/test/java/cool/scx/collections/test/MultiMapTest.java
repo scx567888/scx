@@ -1,4 +1,4 @@
-package cool.scx.common.test;
+package cool.scx.collections.test;
 
 import cool.scx.collections.multi_map.MultiMap;
 
