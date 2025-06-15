@@ -1,7 +1,6 @@
 package cool.scx.bytes.indexer;
 
 import cool.scx.bytes.ByteChunk;
-import cool.scx.common.util.ArrayUtils;
 
 /// 单字节查找器
 ///
@@ -17,8 +16,13 @@ public class SimpleByteIndexer implements ByteIndexer {
 
     @Override
     public int indexOf(ByteChunk chunk) {
-        int i = ArrayUtils.indexOf(chunk.bytes, chunk.startPosition, chunk.length, b);
-        return i == -1 ? Integer.MIN_VALUE : i;
+        //普通 查找
+        for (var i = 0; i < chunk.length; i = i + 1) {
+            if (chunk.getByte(i) == b) {
+                return i;
+            }
+        }
+        return Integer.MIN_VALUE;
     }
 
 }
