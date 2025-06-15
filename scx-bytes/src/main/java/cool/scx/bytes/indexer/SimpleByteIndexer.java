@@ -16,13 +16,10 @@ public class SimpleByteIndexer implements ByteIndexer {
 
     @Override
     public int indexOf(ByteChunk chunk) {
-        var bytes = chunk.bytes;
-        var start = chunk.startPosition;
-        var end = chunk.endPosition;
         //普通 查找
-        for (var i = start; i < end; i = i + 1) {
-            if (bytes[i] == b) {
-                return i - start;
+        for (var i = 0; i < chunk.length; i = i + 1) {
+            if (chunk.getByte(i) == b) {
+                return i;
             }
         }
         return Integer.MIN_VALUE;
