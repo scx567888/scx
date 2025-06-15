@@ -29,7 +29,7 @@ public interface IMultiMap<K, V> extends Iterable<Map.Entry<K, List<V>>> {
 
 
     //********** 覆盖 **************
-    List<V> set(K key, V values);
+    List<V> set(K key, V value);
 
     List<V> set(K key, V... values);
 
