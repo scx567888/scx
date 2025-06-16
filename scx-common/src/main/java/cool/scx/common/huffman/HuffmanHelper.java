@@ -23,7 +23,7 @@ public class HuffmanHelper {
     public static <T> PriorityQueue<HuffmanNode<T>> buildPriorityQueue(ICountMap<T> map) {
         var queue = new PriorityQueue<HuffmanNode<T>>(comparingInt(a -> a.frequency));
         for (var entry : map) {
-            queue.offer(new HuffmanNode<>(entry.getKey(), entry.getValue().intValue()));
+            queue.offer(new HuffmanNode<>(entry.key(), (int) entry.count()));
         }
         return queue;
     }
