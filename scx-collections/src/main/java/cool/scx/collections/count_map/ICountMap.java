@@ -1,6 +1,6 @@
 package cool.scx.collections.count_map;
 
-import cool.scx.functional.ScxBiConsumer;
+import cool.scx.functional.ScxObjLongConsumer;
 
 import java.util.Map;
 import java.util.Set;
@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 /// @param <K> Key
 /// @author scx567888
 /// @version 0.0.1
-public interface ICountMap<K> extends Iterable<Map.Entry<K, Long>> {
+public interface ICountMap<K> extends Iterable<ICountMapEntry<K>> {
 
     /// 添加
     ///
@@ -54,6 +54,6 @@ public interface ICountMap<K> extends Iterable<Map.Entry<K, Long>> {
 
     Map<K, Long> toMap(Supplier<Map<K, Long>> mapSupplier);
 
-    <E extends Throwable> void forEach(ScxBiConsumer<? super K, Long, E> action) throws E;
+    <E extends Throwable> void forEach(ScxObjLongConsumer<? super K, E> action) throws E;
 
 }
