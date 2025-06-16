@@ -1,6 +1,5 @@
 package cool.scx.collections.count_map;
 
-import java.util.AbstractMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -9,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 ///
 /// @author scx567888
 /// @version 0.0.1
-class CountMapIterator<K> implements Iterator<Map.Entry<K, Long>> {
+class CountMapIterator<K> implements Iterator<ICountMapEntry<K>> {
 
     private final Iterator<Map.Entry<K, AtomicLong>> iterator;
 
@@ -23,9 +22,9 @@ class CountMapIterator<K> implements Iterator<Map.Entry<K, Long>> {
     }
 
     @Override
-    public Map.Entry<K, Long> next() {
+    public ICountMapEntry<K> next() {
         var next = iterator.next();
-        return new AbstractMap.SimpleEntry<>(next.getKey(), next.getValue().get());
+        return new CountMapEntry<>(next.getKey(), next.getValue().get());
     }
 
 }
