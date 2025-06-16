@@ -1,6 +1,6 @@
 package cool.scx.collections.count_map;
 
-import cool.scx.functional.ScxBiConsumer;
+import cool.scx.functional.ScxObjLongConsumer;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -45,7 +45,7 @@ public class CountMap<K> implements ICountMap<K> {
 
     @Override
     public boolean containsKey(K key) {
-        return false;
+        return map.containsKey(key);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class CountMap<K> implements ICountMap<K> {
     }
 
     @Override
-    public <E extends Throwable> void forEach(ScxBiConsumer<? super K, Long, E> action) throws E {
+    public <E extends Throwable> void forEach(ScxObjLongConsumer<? super K, E> action) throws E {
         for (var entry : map.entrySet()) {
             var key = entry.getKey();
             var values = entry.getValue().get();
@@ -98,7 +98,7 @@ public class CountMap<K> implements ICountMap<K> {
     }
 
     @Override
-    public Iterator<Map.Entry<K, Long>> iterator() {
+    public Iterator<ICountMapEntry<K>> iterator() {
         return new CountMapIterator<>(map.entrySet().iterator());
     }
 
