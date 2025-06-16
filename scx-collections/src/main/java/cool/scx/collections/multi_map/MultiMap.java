@@ -17,6 +17,11 @@ public class MultiMap<K, V> implements IMultiMap<K, V> {
     private final Map<K, List<V>> map;
     private final Supplier<List<V>> listSupplier;
 
+    /// 默认内部 map 使用 HashMap, key 使用 ArrayList
+    public MultiMap() {
+        this(HashMap::new, ArrayList::new);
+    }
+
     /// 指定内部的 map 实现和内部的 key 实现
     ///
     /// @param mapSupplier  mapSupplier
@@ -24,11 +29,6 @@ public class MultiMap<K, V> implements IMultiMap<K, V> {
     public MultiMap(Supplier<Map<K, List<V>>> mapSupplier, Supplier<List<V>> listSupplier) {
         this.map = mapSupplier.get();
         this.listSupplier = listSupplier;
-    }
-
-    /// 默认内部 map 使用 HashMap, key 使用 ArrayList
-    public MultiMap() {
-        this(HashMap::new, ArrayList::new);
     }
 
     @Override

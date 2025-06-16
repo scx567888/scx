@@ -1,5 +1,7 @@
 package cool.scx.collections.count_map;
 
+import cool.scx.functional.ScxBiConsumer;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -16,12 +18,12 @@ public class CountMap<K> implements ICountMap<K> {
 
     private final Map<K, AtomicLong> map;
 
-    public CountMap(Supplier<Map<K, AtomicLong>> mapSupplier) {
-        this.map = mapSupplier.get();
-    }
-
     public CountMap() {
         this(HashMap::new);
+    }
+
+    public CountMap(Supplier<Map<K, AtomicLong>> mapSupplier) {
+        this.map = mapSupplier.get();
     }
 
     @Override
@@ -42,9 +44,19 @@ public class CountMap<K> implements ICountMap<K> {
     }
 
     @Override
+    public boolean containsKey(K key) {
+        return false;
+    }
+
+    @Override
     public Long remove(K key) {
         var v = map.remove(key);
         return v == null ? null : v.get();
+    }
+
+    @Override
+    public Set<K> keys() {
+        return map.keySet();
     }
 
     @Override
@@ -63,8 +75,8 @@ public class CountMap<K> implements ICountMap<K> {
     }
 
     @Override
-    public Set<K> keys() {
-        return map.keySet();
+    public Map<K, Long> toMap() {
+        return toMap(HashMap::new);
     }
 
     @Override
@@ -77,8 +89,12 @@ public class CountMap<K> implements ICountMap<K> {
     }
 
     @Override
-    public Map<K, Long> toMap() {
-        return toMap(HashMap::new);
+    public <E extends Throwable> void forEach(ScxBiConsumer<? super K, Long, E> action) throws E {
+        for (var entry : map.entrySet()) {
+            var key = entry.getKey();
+            var values = entry.getValue().get();
+            action.accept(key, values);
+        }
     }
 
     @Override
