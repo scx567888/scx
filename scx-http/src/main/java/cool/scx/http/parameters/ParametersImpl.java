@@ -4,7 +4,6 @@ import cool.scx.collections.multi_map.MultiMap;
 import cool.scx.functional.ScxBiConsumer;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 /// ParametersImpl
 ///

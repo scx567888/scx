@@ -5,7 +5,6 @@ import cool.scx.functional.ScxBiConsumer;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
 
 /// Parameters 表示一组 HTTP 参数项, 类似 MultiMap (实际上默认实现 就是基于 MultiMap 的), 一个 name 可以对应多个值.
 ///
