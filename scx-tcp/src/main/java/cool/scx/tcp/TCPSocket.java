@@ -62,7 +62,7 @@ public class TCPSocket implements ScxTCPSocket {
         if (socket instanceof SSLSocket sslSocket) {
             sslSocket.startHandshake();
         } else {
-            throw new IllegalStateException("非 TLS 连接，无法执行 TLS 握手");
+            throw new IllegalStateException("非 TLS 连接, 无法执行 TLS 握手");
         }
         return this;
     }

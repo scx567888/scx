@@ -80,8 +80,8 @@ public final class TLSHelper {
         //根据不同的 marker 处理
         switch (keyPemObject.marker()) {
             case "PRIVATE KEY" -> encodedKey = keyPemObject.content();
-            case "RSA PRIVATE KEY" -> encodedKey = convertPKCS1ToPKCS8(keyPemObject.content()); // 未加密的 PKCS#1 私钥，需要转换
-            default -> throw new IllegalArgumentException("不支持的私钥格式：" + keyPemObject.marker());
+            case "RSA PRIVATE KEY" -> encodedKey = convertPKCS1ToPKCS8(keyPemObject.content()); // 未加密的 PKCS#1 私钥, 需要转换
+            default -> throw new IllegalArgumentException("不支持的私钥格式: " + keyPemObject.marker());
         }
 
         var keySpec = new PKCS8EncodedKeySpec(encodedKey);
@@ -182,7 +182,7 @@ public final class TLSHelper {
     }
 
     public static SSLContext createTrustAnySSLContext() {
-        // 创建自定义 TrustManager，忽略证书验证（仅用于测试环境）
+        // 创建自定义 TrustManager, 忽略证书验证（仅用于测试环境）
         var trustAllCerts = new TrustManager[]{new X509TrustManager() {
 
             public X509Certificate[] getAcceptedIssuers() {

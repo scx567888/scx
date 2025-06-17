@@ -97,7 +97,7 @@ public abstract class Result implements BaseVo {
             this.body = new Body<>(message, new LinkedHashMap<>());
         }
 
-        /// 设置操作返回的数据，数据使用自定义的key存储
+        /// 设置操作返回的数据, 数据使用自定义的key存储
         ///
         /// @param dataKey 自定义的key
         /// @param dataVal 值
