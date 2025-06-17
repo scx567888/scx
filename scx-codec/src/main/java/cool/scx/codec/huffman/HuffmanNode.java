@@ -1,4 +1,4 @@
-package cool.scx.common.huffman;
+package cool.scx.codec.huffman;
 
 /// 霍夫曼树节点类, 实现 Comparable 接口以便在优先队列中按照频率排序.
 public class HuffmanNode<T> {
