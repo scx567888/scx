@@ -46,7 +46,6 @@ public interface ICountMap<K> extends Iterable<ICountMapEntry<K>> {
     Set<K> keys();
 
     //*********** 基本功能 ************
-
     long size();
 
     boolean isEmpty();
