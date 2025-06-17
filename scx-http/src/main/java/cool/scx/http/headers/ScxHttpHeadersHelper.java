@@ -83,8 +83,8 @@ public final class ScxHttpHeadersHelper {
     public static String encodeHeaders(ScxHttpHeaders headers) {
         var sb = new StringBuilder();
         for (var header : headers) {
-            var key = header.getKey();
-            var values = header.getValue();
+            var key = header.name();
+            var values = header.values();
             for (var value : values) {
                 sb.append(key.value()).append(": ").append(value).append("\r\n");
             }

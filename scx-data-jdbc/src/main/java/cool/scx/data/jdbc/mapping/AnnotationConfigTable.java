@@ -91,7 +91,7 @@ public class AnnotationConfigTable<Entity> implements EntityTable<Entity> {
             multiMap.add(info.name(), info);
         }
         for (var entry : multiMap) {
-            var v = entry.getValue();
+            var v = entry.all();
             if (v.size() > 1) { //具有多个相同的 columnName 值
                 throw new IllegalArgumentException("重复的 columnName !!! Class -> " + clazz.getName() + ", Field -> " + v.stream().map(c -> c.javaField().name()).toList());
             }

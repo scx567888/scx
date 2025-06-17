@@ -28,8 +28,8 @@ public final class FormParamsHelper {
     public static String encodeFormParams(FormParams formParams) {
         var l = new ArrayList<String>();
         for (var formParam : formParams) {
-            var key = formParam.getKey();
-            var values = formParam.getValue();
+            var key = formParam.name();
+            var values = formParam.values();
             for (var value : values) {
                 var k = encode(key, UTF_8);
                 var v = encode(value, UTF_8);

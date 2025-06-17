@@ -32,8 +32,8 @@ public class ScxURIHelper {
     public static String encodeQuery(Parameters<String, String> query, boolean uriEncoding) {
         var l = new ArrayList<String>();
         for (var v : query) {
-            var key = v.getKey();
-            var value = v.getValue();
+            var key = v.name();
+            var value = v.values();
             for (var s : value) {
                 if (uriEncoding) {
                     var kk = encodeURIComponent(key);
