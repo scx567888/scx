@@ -57,8 +57,8 @@ public class ScxMediaTypeHelper {
 
     public static void encodeParams(StringBuilder result, Parameters<String, String> params) {
         for (var v : params) {
-            var key = v.getKey();
-            var values = v.getValue();
+            var key = v.name();
+            var values = v.values();
             for (var value : values) {
                 result.append("; ").append(key).append("=").append(value);
             }
