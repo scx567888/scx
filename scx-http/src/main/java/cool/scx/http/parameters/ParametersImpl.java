@@ -15,7 +15,7 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
     public ParametersImpl(Parameters<K, V> p) {
         this();
         for (var e : p) {
-            this.map.set(e.getKey(), e.getValue());
+            this.map.set(e.name(), e.values());
         }
     }
 
@@ -61,7 +61,7 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
 
     @Override
     public V get(K name) {
-        return map.get(name);
+        return map.getFirst(name);
     }
 
     @Override
@@ -70,8 +70,18 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
     }
 
     @Override
-    public Iterator<Map.Entry<K, List<V>>> iterator() {
-        return map.iterator();
+    public boolean contains(K name) {
+        return map.containsKey(name);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return map.isEmpty();
+    }
+
+    @Override
+    public Iterator<ParameterEntry<K, V>> iterator() {
+        return new ParametersIterator<>(map.iterator());
     }
 
     @Override
