@@ -34,7 +34,7 @@ public class HuffmanHelper {
             var left = queue.poll();
             var right = queue.poll();
 
-            // 创建新的内部节点（没有字符，频率是左右节点频率之和）
+            // 创建新的内部节点（没有字符, 频率是左右节点频率之和）
             var parent = new HuffmanNode<>(left.frequency + right.frequency, left, right);
 
             // 将新节点加入优先队列
@@ -62,7 +62,7 @@ public class HuffmanHelper {
     // 辅助递归方法
     private static <T> void buildHuffmanCodeTable0(HuffmanNode<T> node, IBitArray path, Map<T, IBitArray> huffmanCode) {
         if (node.isLeaf()) {
-            // 如果是叶子节点，直接保存路径
+            // 如果是叶子节点, 直接保存路径
             huffmanCode.put(node.value, path);
         } else {
             // 处理左子节点
@@ -94,20 +94,20 @@ public class HuffmanHelper {
 
             for (int i = 0; i < codePath.length(); i = i + 1) {
                 if (codePath.get(i)) {
-                    // 如果当前位是 '1'，进入或创建右子节点
+                    // 如果当前位是 '1', 进入或创建右子节点
                     if (current.right == null) {
                         current.right = new HuffmanNode<>(null, 0);
                     }
                     current = current.right;
                 } else {
-                    // 如果当前位是 '0'，进入或创建左子节点
+                    // 如果当前位是 '0', 进入或创建左子节点
                     if (current.left == null) {
                         current.left = new HuffmanNode<>(null, 0);
                     }
                     current = current.left;
                 }
             }
-            // 到达路径末尾，设置叶子节点的值
+            // 到达路径末尾, 设置叶子节点的值
             current.value = symbol;
         }
 

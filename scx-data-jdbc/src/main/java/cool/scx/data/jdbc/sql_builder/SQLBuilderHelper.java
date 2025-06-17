@@ -129,7 +129,7 @@ class SQLBuilderHelper {
             var ignoreNull = ignoreNulls.getOrDefault(fieldName, globalIgnoreNull);
             var value = entity != null ? getJavaFieldValue(column.javaField(), entity) : null;
 
-            // 若字段不忽略 null，或者字段值本身不为 null，则保留
+            // 若字段不忽略 null, 或者字段值本身不为 null, 则保留
             if (!ignoreNull || value != null) {
                 result.add(column);
             }

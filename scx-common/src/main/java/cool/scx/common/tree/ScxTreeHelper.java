@@ -53,7 +53,7 @@ public final class ScxTreeHelper {
             idMap.put(t.id(), t);
             parentIDMap.add(t.parentID(), t);
         }
-        // 循环所有项，并添加 children 属性
+        // 循环所有项, 并添加 children 属性
         return list.stream().filter(my -> {
             var myID = my.id(); //我自己的 id
             var parentID = my.parentID(); //我父亲的 id

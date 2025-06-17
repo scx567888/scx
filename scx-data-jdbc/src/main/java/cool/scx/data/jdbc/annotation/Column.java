@@ -24,7 +24,7 @@ public @interface Column {
     ///
     /// 这种设计经过明确考量, 旨在保持命名一致性, 减少认知负担, 并避免因自动转换导致的歧义或错误.
     ///
-    /// @return 数据库列名，默认为字段名
+    /// @return 数据库列名, 默认为字段名
     String columnName() default NULL;
 
     /// 数据库字段类型 仅用于 创建或修复表时

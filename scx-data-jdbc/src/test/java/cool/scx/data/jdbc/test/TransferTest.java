@@ -68,9 +68,9 @@ public class TransferTest {
         user2.money = 0L;
         user2.id = userRepository.add(user2);
 
-        System.out.println("转账前：");
-        System.out.println("Alice 钱：" + user1.money);
-        System.out.println("Bob 钱：" + user2.money);
+        System.out.println("转账前: ");
+        System.out.println("Alice 钱: " + user1.money);
+        System.out.println("Bob 钱: " + user2.money);
 
         int threadCount = 50;
         long transferAmount = 200L;
@@ -94,17 +94,17 @@ public class TransferTest {
         var updatedUser1 = userRepository.findFirst(eq("id", user1.id));
         var updatedUser2 = userRepository.findFirst(eq("id", user2.id));
 
-        System.out.println("转账后：");
-        System.out.println("Alice 钱：" + updatedUser1.money);
-        System.out.println("Bob 钱：" + updatedUser2.money);
+        System.out.println("转账后: ");
+        System.out.println("Alice 钱: " + updatedUser1.money);
+        System.out.println("Bob 钱: " + updatedUser2.money);
 
         long expectedUser1Money = user1.money - threadCount * transferAmount;
         long expectedUser2Money = user2.money + threadCount * transferAmount;
 
         if (updatedUser1.money != expectedUser1Money || updatedUser2.money != expectedUser2Money) {
-            throw new AssertionError("余额不正确，出现了并发异常");
+            throw new AssertionError("余额不正确, 出现了并发异常");
         } else {
-            System.out.println("测试通过，余额正确无误");
+            System.out.println("测试通过, 余额正确无误");
         }
     }
 
