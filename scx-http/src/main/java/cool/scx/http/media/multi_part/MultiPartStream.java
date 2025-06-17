@@ -92,7 +92,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         }
 
         // 1. 先判断 peek 开头是否和 boundaryBytes 匹配
-        for (int i = 0; i < boundaryBytes.length; i++) {
+        for (int i = 0; i < boundaryBytes.length; i = i + 1) {
             if (peek[i] != boundaryBytes[i]) {
                 throw new RuntimeException("Malformed multipart: boundary not matched");
             }
