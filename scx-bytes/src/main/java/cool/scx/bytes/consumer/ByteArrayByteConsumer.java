@@ -52,7 +52,7 @@ public class ByteArrayByteConsumer implements ByteConsumer {
 
         do {
             int length = node.available();
-            int chunkOffset = node.chunk.startPosition + node.position;
+            int chunkOffset = node.chunk.start + node.position;
             System.arraycopy(node.chunk.bytes, chunkOffset, bytes, offset, length);
             offset += length;
             node = node.next;

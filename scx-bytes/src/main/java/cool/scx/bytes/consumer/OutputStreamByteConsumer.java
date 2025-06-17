@@ -25,7 +25,7 @@ public class OutputStreamByteConsumer implements ByteConsumer {
     @Override
     public boolean accept(ByteChunk chunk) {
         try {
-            out.write(chunk.bytes, chunk.startPosition, chunk.length);
+            out.write(chunk.bytes, chunk.start, chunk.length);
             byteCount += chunk.length;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
