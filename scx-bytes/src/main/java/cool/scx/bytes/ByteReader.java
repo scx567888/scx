@@ -150,7 +150,7 @@ public class ByteReader implements IByteReader {
         var pullCount = 0L; // 拉取次数计数器
 
         while (true) {
-            // 计算当前节点中可读取的最大长度，确保不超过 max (这里因为是将 int 和 long 值进行最小值比较 所以返回值一定是 int 所以类型转换不会丢失精度)
+            // 计算当前节点中可读取的最大长度, 确保不超过 max (这里因为是将 int 和 long 值进行最小值比较 所以返回值一定是 int 所以类型转换不会丢失精度)
             var length = (int) min(n.available(), maxLength - index);
             var i = indexer.indexOf(n.chunk.splice(n.position, n.position + length));
             //此处因为支持回溯匹配 所以可能是负数 Integer.MIN_VALUE 表示真正未找到
@@ -165,7 +165,7 @@ public class ByteReader implements IByteReader {
                 break;
             }
 
-            // 如果 currentNode 没有下一个节点并且尝试拉取数据失败，直接退出循环
+            // 如果 currentNode 没有下一个节点并且尝试拉取数据失败, 直接退出循环
             if (n.next == null) {
                 if (pullCount >= maxPullCount) {
                     break;

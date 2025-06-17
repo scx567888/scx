@@ -43,7 +43,7 @@ public class SequenceByteSupplier implements ByteSupplier {
                 currentSupplier = null;
             }
         }
-        return null; // 所有 DataSupplier 都返回 null，表示结束
+        return null; // 所有 DataSupplier 都返回 null, 表示结束
     }
 
 }
