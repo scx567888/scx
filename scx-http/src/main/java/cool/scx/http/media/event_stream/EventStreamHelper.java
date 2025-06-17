@@ -25,7 +25,7 @@ public class EventStreamHelper {
             sb.append(": ").append(comment).append("\n");
         }
 
-        // 事件类型（如果没有提供，则使用 "message" 作为默认值）
+        // 事件类型（如果没有提供, 则使用 "message" 作为默认值）
         if (event != null) {
             sb.append("event: ").append(event).append("\n");
         } else {
@@ -47,7 +47,7 @@ public class EventStreamHelper {
             sb.append("retry: ").append(retry).append("\n");
         }
 
-        // 事件结束，追加空行（用于分隔事件）
+        // 事件结束, 追加空行（用于分隔事件）
         sb.append("\n");
 
         // 写入输出流

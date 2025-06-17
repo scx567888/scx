@@ -33,7 +33,7 @@ public class ScxMediaTypeHelper {
                 var key = s[0];
                 var value = s[1];
 
-                // 如果值有引号，去掉引号
+                // 如果值有引号, 去掉引号
                 if (value.startsWith("\"") && value.endsWith("\"")) {
                     value = value.substring(1, value.length() - 1);
                 }

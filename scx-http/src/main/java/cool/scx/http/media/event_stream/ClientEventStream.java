@@ -34,7 +34,7 @@ public class ClientEventStream {
             var line = new String(bytes, charset);
 
             if (line.isEmpty()) {
-                // 事件结束，返回 SseEvent
+                // 事件结束, 返回 SseEvent
                 return event;
             }
 
@@ -48,7 +48,7 @@ public class ClientEventStream {
                 try {
                     event.retry(Long.parseLong(line.substring(7).trim()));
                 } catch (NumberFormatException e) {
-                    // 如果格式错误，可以忽略
+                    // 如果格式错误, 可以忽略
                 }
             } else if (line.startsWith(": ")) {
                 event.comment(line.substring(2).trim());

@@ -5,7 +5,7 @@ import cool.scx.collections.multi_map.IMultiMapEntry;
 import java.util.List;
 
 /// ParameterEntry 表示 HTTP 请求中的参数项, 包含参数名与多个值.
-/// 注意：此接口虽然在结构上与 {@link IMultiMapEntry} 完全一致 (即一个 key 对应多个值),
+/// 注意: 此接口虽然在结构上与 {@link IMultiMapEntry} 完全一致 (即一个 key 对应多个值),
 /// 但本质上是一个独立的概念, 语义层面完全不同, 因此未直接复用.
 /// 主要区别在于:
 /// 1. 命名不同: 使用 name(), value(), values() 而非 key(), first(), all(), 贴合 HTTP 参数领域的术语.

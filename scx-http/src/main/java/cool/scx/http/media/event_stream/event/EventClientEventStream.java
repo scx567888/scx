@@ -36,7 +36,7 @@ public class EventClientEventStream {
                 var event = eventStream.readEvent();
                 _callEventHandler(event);
             } catch (Exception e) {
-                // 处理 IO 异常，可能是连接关闭
+                // 处理 IO 异常, 可能是连接关闭
                 break;
             }
         }
