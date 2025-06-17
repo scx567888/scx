@@ -1,5 +1,6 @@
 package cool.scx.http.x.http1.headers;
 
+import cool.scx.functional.ScxBiConsumer;
 import cool.scx.http.headers.ScxHttpHeaderName;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
@@ -84,8 +85,23 @@ public class Http1Headers implements ScxHttpHeadersWritable {
     }
 
     @Override
-    public Map<ScxHttpHeaderName, List<String>> toMap() {
+    public Map<ScxHttpHeaderName, List<String>> toMultiValueMap() {
+        return h.toMultiValueMap();
+    }
+
+    @Override
+    public Map<ScxHttpHeaderName, String> toMap() {
         return h.toMap();
+    }
+
+    @Override
+    public <E extends Throwable> void forEach(ScxBiConsumer<? super ScxHttpHeaderName, String, E> action) throws E {
+        h.forEach(action);
+    }
+
+    @Override
+    public <E extends Throwable> void forEachParameter(ScxBiConsumer<? super ScxHttpHeaderName, List<String>, E> action) throws E {
+        h.forEachParameter(action);
     }
 
     @Override
