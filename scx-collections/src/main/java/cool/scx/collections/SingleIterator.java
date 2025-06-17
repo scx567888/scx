@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 /// 迭代器
 public class SingleIterator<T> implements Iterator<T> {
 
-    private T next;
+    private final T next;
     private boolean hasNext;
 
     public SingleIterator(T t) {
@@ -21,13 +21,11 @@ public class SingleIterator<T> implements Iterator<T> {
 
     @Override
     public T next() {
-        if (!hasNext) {
+        if (!hasNext()) {
             throw new NoSuchElementException("No more elements.");
         }
-        var n = next;
-        next = null; // 可能有助于垃圾回收
         hasNext = false;
-        return n;
+        return next;
     }
 
 }

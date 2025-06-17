@@ -5,7 +5,7 @@ import java.util.Iterator;
 /// 迭代器
 public class SingleIterable<T> implements Iterable<T> {
 
-    private T t;
+    private final T t;
 
     public SingleIterable(T t) {
         this.t = t;
