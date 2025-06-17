@@ -68,6 +68,7 @@ public interface IMultiMap<K, V> extends Iterable<IMultiMapEntry<K, V>> {
     List<V> values();
 
     //*********** 基本功能 ************
+
     /// 返回 MultiMap 中所有键对应的所有值的总数量 (即所有 values 的扁平总和)
     long size();
 

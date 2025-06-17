@@ -33,16 +33,19 @@ public interface ICountMap<K> extends Iterable<ICountMapEntry<K>> {
     /// @return 数量 (可为空)
     Long get(K key);
 
-    /// 包含
+    //********** 包含 ****************
     boolean containsKey(K key);
 
-    /// set
+    /// 移除
     ///
     /// @param key key
     /// @return 之前的数量 (可为空)
     Long remove(K key);
 
+    //********** 基本值 **********
     Set<K> keys();
+
+    //*********** 基本功能 ************
 
     long size();
 
@@ -50,6 +53,7 @@ public interface ICountMap<K> extends Iterable<ICountMapEntry<K>> {
 
     void clear();
 
+    //*********** 转换方法 ************
     Map<K, Long> toMap();
 
     Map<K, Long> toMap(Supplier<Map<K, Long>> mapSupplier);
