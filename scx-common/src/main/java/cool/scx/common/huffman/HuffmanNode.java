@@ -1,6 +1,6 @@
 package cool.scx.common.huffman;
 
-/// 霍夫曼树节点类, 实现 Comparable 接口以便在优先队列中按照频率排序. 
+/// 霍夫曼树节点类, 实现 Comparable 接口以便在优先队列中按照频率排序.
 public class HuffmanNode<T> {
 
     public T value;         // 如果为叶子节点, 保存对应字节

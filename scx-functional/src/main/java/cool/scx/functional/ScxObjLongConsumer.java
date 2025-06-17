@@ -8,12 +8,12 @@ package cool.scx.functional;
 /// @version 0.0.1
 /// @see java.util.function.ObjLongConsumer
 @FunctionalInterface
-public interface ScxObjLongConsumer<T,E extends Throwable> {
+public interface ScxObjLongConsumer<T, E extends Throwable> {
 
     /// Performs this operation on the given arguments.
     ///
-    /// @param t the first input argument
+    /// @param t     the first input argument
     /// @param value the second input argument
-    void accept(T t, long value)  throws E;
+    void accept(T t, long value) throws E;
 
 }

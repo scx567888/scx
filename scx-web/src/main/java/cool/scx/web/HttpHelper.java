@@ -16,7 +16,7 @@ public class HttpHelper {
 
     /// 获取访问者IP
     ///
-    /// 先从Header中获取X-Real-IP, 如果不存在再从X-Forwarded-For获得第一个IP(用,分割), 
+    /// 先从Header中获取X-Real-IP, 如果不存在再从X-Forwarded-For获得第一个IP(用,分割),
     /// 如果还不存在则调用 HttpServerRequest.remoteAddress()
     ///
     /// @param request a

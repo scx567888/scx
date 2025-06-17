@@ -7,7 +7,7 @@ import java.net.URI;
 import static cool.scx.http.uri.ScxURIHelper.decodeAuthority;
 import static cool.scx.http.uri.URIEncoder.encodeURI;
 
-/// ScxURI 是对 URI 的抽象 , 提供了更直观、灵活的操作方式. 
+/// ScxURI 是对 URI 的抽象 , 提供了更直观、灵活的操作方式.
 ///
 /// 该接口强调 "原始未编码" 值的使用, 所有 URI 组成部分（如 scheme、host、path、query 等）在内部均以 **未编码的原始字符串** 形式存储
 ///
@@ -20,13 +20,13 @@ public interface ScxURI {
         return new ScxURIImpl();
     }
 
-    /// 从一个原始的 URI 字符串创建 URI 实例. 
+    /// 从一个原始的 URI 字符串创建 URI 实例.
     ///
-    /// 此方法适用于传入的是未经 URI 编码的原始字符串（如直接从用户输入中获取）, 
-    /// 内部会自动对其进行 URI 编码后再构造 ScxURI 实例. 
+    /// 此方法适用于传入的是未经 URI 编码的原始字符串（如直接从用户输入中获取）,
+    /// 内部会自动对其进行 URI 编码后再构造 ScxURI 实例.
     ///
     ///
-    /// 示例: 
+    /// 示例:
     /// ```java
     /// ScxURI.of("http://xxxx.com/路径?a=空 格");
     /// // 内部会先编码为 http://xxxx.com/%E8%B7%AF%E5%BE%84?a=%E7%A9%BA+%E6%A0%BC
@@ -38,12 +38,12 @@ public interface ScxURI {
         return ofEncoded(encodeURI(rawStr));
     }
 
-    /// 从一个已编码的标准 URI 字符串创建 URI 实例. 
+    /// 从一个已编码的标准 URI 字符串创建 URI 实例.
     ///
     /// 此方法假设传入的字符串已经是合法的 URI 编码格式, 内部不会再次进行编码, 直接解析为 ScxURI
     ///
     ///
-    /// 示例: 
+    /// 示例:
     /// ```java
     /// ScxURI.ofEncoded("https://xxxx.com/%E8%B7%AF%E5%BE%84?a=%E7%A9%BA+%E6%A0%BC");
     ///```
@@ -54,7 +54,7 @@ public interface ScxURI {
         return of(URI.create(encodedStr));
     }
 
-    /// 从一个标准 URI 对象创建 URI 实例. 
+    /// 从一个标准 URI 对象创建 URI 实例.
     ///
     /// @param u 标准 URI 对象
     /// @return 构造得到的 ScxURI
