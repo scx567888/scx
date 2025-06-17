@@ -25,20 +25,20 @@ public class BeanFactoryTest {
 
         registerBeans(beanFactory);
 
-        // 测试 1：单例正常依赖
+        // 测试 1: 单例正常依赖
         A a = beanFactory.getBean(A.class);
         Assert.assertNotNull(a);
         Assert.assertNotNull(a.b);
         Assert.assertNotNull(a.b.c);
 
-        // 测试 2：字段循环依赖
+        // 测试 2: 字段循环依赖
         D d = beanFactory.getBean(D.class);
         Assert.assertNotNull(d);
         Assert.assertNotNull(d.e);
         Assert.assertNotNull(d.e.f);
         Assert.assertNotNull(d.e.f.d);
 
-        // 测试 3：构造器循环依赖，应该抛异常
+        // 测试 3: 构造器循环依赖, 应该抛异常
         boolean exceptionThrown = false;
         try {
             beanFactory.getBean(G.class);
@@ -47,14 +47,14 @@ public class BeanFactoryTest {
         }
         Assert.assertTrue(exceptionThrown);
 
-        // 测试 4：多例正常依赖
+        // 测试 4: 多例正常依赖
         J j1 = beanFactory.getBean(J.class);
         J j2 = beanFactory.getBean(J.class);
         Assert.assertNotSame(j1, j2);
         Assert.assertNotNull(j1.k);
         Assert.assertNotNull(j2.k);
 
-        // 测试 5：多例循环依赖，应该抛异常
+        // 测试 5: 多例循环依赖, 应该抛异常
         exceptionThrown = false;
         try {
             beanFactory.getBean(M.class);
@@ -63,29 +63,29 @@ public class BeanFactoryTest {
         }
         Assert.assertTrue(exceptionThrown);
 
-        // 测试 6：单例依赖多例
+        // 测试 6: 单例依赖多例
         P p = beanFactory.getBean(P.class);
         Assert.assertNotNull(p);
         Assert.assertNotNull(p.q);
 
-        // 测试 7：多例依赖单例
+        // 测试 7: 多例依赖单例
         R r1 = beanFactory.getBean(R.class);
         R r2 = beanFactory.getBean(R.class);
         Assert.assertNotSame(r1, r2);
         Assert.assertSame(r1.s, r2.s);
 
-        // 测试 8：混合注入
+        // 测试 8: 混合注入
         T t = beanFactory.getBean(T.class);
         Assert.assertNotNull(t);
         Assert.assertNotNull(t.u);
 
-        // 测试 9：无依赖 Bean
+        // 测试 9: 无依赖 Bean
         W w = beanFactory.getBean(W.class);
         X x = beanFactory.getBean(X.class);
         Assert.assertNotNull(w);
         Assert.assertNotNull(x);
 
-        // 测试 10：@Value 注入
+        // 测试 10: @Value 注入
         Y y = beanFactory.getBean(Y.class);
         Z z = beanFactory.getBean(Z.class);
         Assert.assertEquals(y.key1, "Hello");

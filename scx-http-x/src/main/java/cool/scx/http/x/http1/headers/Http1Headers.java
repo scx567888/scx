@@ -3,6 +3,7 @@ package cool.scx.http.x.http1.headers;
 import cool.scx.http.headers.ScxHttpHeaderName;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.parameters.ParameterEntry;
 import cool.scx.http.x.http1.headers.connection.Connection;
 import cool.scx.http.x.http1.headers.connection.ScxConnection;
 import cool.scx.http.x.http1.headers.expect.ScxExpect;
@@ -35,19 +36,19 @@ public class Http1Headers implements ScxHttpHeadersWritable {
     }
 
     @Override
-    public ScxHttpHeadersWritable add(ScxHttpHeaderName name, String... value) {
+    public Http1Headers add(ScxHttpHeaderName name, String... value) {
         h.add(name, value);
         return this;
     }
 
     @Override
-    public ScxHttpHeadersWritable remove(ScxHttpHeaderName name) {
+    public Http1Headers remove(ScxHttpHeaderName name) {
         h.remove(name);
         return this;
     }
 
     @Override
-    public ScxHttpHeadersWritable clear() {
+    public Http1Headers clear() {
         h.clear();
         return this;
     }
@@ -73,8 +74,28 @@ public class Http1Headers implements ScxHttpHeadersWritable {
     }
 
     @Override
-    public Iterator<Map.Entry<ScxHttpHeaderName, List<String>>> iterator() {
+    public boolean contains(ScxHttpHeaderName name) {
+        return h.contains(name);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return h.isEmpty();
+    }
+
+    @Override
+    public Map<ScxHttpHeaderName, List<String>> toMap() {
+        return h.toMap();
+    }
+
+    @Override
+    public Iterator<ParameterEntry<ScxHttpHeaderName, String>> iterator() {
         return h.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return h.toString();
     }
 
     public ScxConnection connection() {

@@ -51,7 +51,7 @@ public class InputStreamByteSupplier implements ByteSupplier {
             if (i == -1) {
                 return null; // end of data
             }
-            // 如果读取的数据量与缓冲区大小一致，直接返回内部数组
+            // 如果读取的数据量与缓冲区大小一致, 直接返回内部数组
             if (i == bufferLength) {
                 return new ByteChunk(bytes);
             } else if (compress) {// 否则判断是否开启压缩

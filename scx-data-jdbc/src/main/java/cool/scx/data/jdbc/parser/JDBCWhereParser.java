@@ -199,7 +199,7 @@ public class JDBCWhereParser {
 
         var columnName = columnNameParser.parseColumnName(w);
 
-        // 使用表达式值，不解析为数组或 SQL，仅拼接表达式
+        // 使用表达式值, 不解析为数组或 SQL, 仅拼接表达式
         if (w.useExpressionValue()) {
             return new WhereClause(columnName + " " + getWhereKeyWord(w) + " (" + w.value1() + ")");
         }
@@ -226,7 +226,7 @@ public class JDBCWhereParser {
             };
         }
 
-        // 去重非 null 元素，检测是否含 null
+        // 去重非 null 元素, 检测是否含 null
         var nonNullValues = Arrays.stream(v).filter(Objects::nonNull).distinct().toArray();
         var containsNull = Arrays.stream(v).anyMatch(Objects::isNull);
 
@@ -277,7 +277,7 @@ public class JDBCWhereParser {
         String v2;
         var whereParams = new ArrayList<>();
 
-        // 表达式值：直接拼接 SQL，不加参数
+        // 表达式值: 直接拼接 SQL, 不加参数
         if (w.useExpressionValue()) {
             v1 = "(" + w.value1() + ")";
             v2 = "(" + w.value2() + ")";

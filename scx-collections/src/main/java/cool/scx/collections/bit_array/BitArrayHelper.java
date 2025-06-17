@@ -17,7 +17,7 @@ public class BitArrayHelper {
     }
 
     public static int byteLength(int bitLength) {
-        return (bitLength + 7) >> 3; // 向上取整，计算最小字节数
+        return (bitLength + 7) >> 3; // 向上取整, 计算最小字节数
     }
 
     public static int byteCapacity(byte[] bytes) {

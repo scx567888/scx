@@ -25,7 +25,7 @@ public class BeanFactoryTest7 {
         beanFactory.registerBeanClass("x", X.class);
         beanFactory.registerBeanClass("y", Y.class);
 
-        // 构造器注入循环，应该直接抛出异常
+        // 构造器注入循环, 应该直接抛出异常
         Assert.assertThrows(BeanCreationException.class, () -> {
             beanFactory.getBean(X.class);
         });
@@ -39,7 +39,7 @@ public class BeanFactoryTest7 {
         beanFactory.registerBeanClass("m", M.class);
         beanFactory.registerBeanClass("n", N.class);
 
-        // 混合构造器注入 + 字段注入，形成死循环，应报错
+        // 混合构造器注入 + 字段注入, 形成死循环, 应报错
         Assert.assertThrows(BeanCreationException.class, () -> {
             beanFactory.getBean(M.class);
         });
@@ -55,7 +55,7 @@ public class BeanFactoryTest7 {
         beanFactory.registerBeanClass("r", R.class);
         beanFactory.registerBeanClass("s", S.class);
 
-        // 四个Bean，字段注入+构造器注入混合循环
+        // 四个Bean, 字段注入+构造器注入混合循环
         Assert.assertThrows(BeanCreationException.class, () -> {
             P bean = beanFactory.getBean(P.class);
             System.out.println(bean);
@@ -70,7 +70,7 @@ public class BeanFactoryTest7 {
         beanFactory.registerBeanClass("lazyA", LazyA.class);
         beanFactory.registerBeanClass("lazyB", LazyB.class);
 
-        // LazyB 延迟注入，不应引起循环问题
+        // LazyB 延迟注入, 不应引起循环问题
         var lazyA = beanFactory.getBean(LazyA.class);
         Assert.assertNotNull(lazyA.lazyB);
     }

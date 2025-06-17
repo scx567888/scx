@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 /// @author scx567888
 /// @version 0.0.1
 @SuppressWarnings("unchecked")
-public interface IMultiMap<K, V> extends Iterable<Map.Entry<K, List<V>>> {
+public interface IMultiMap<K, V> extends Iterable<IMultiMapEntry<K, V>> {
 
     //*********** 添加 ************
     boolean add(K key, V value);
@@ -42,7 +42,7 @@ public interface IMultiMap<K, V> extends Iterable<Map.Entry<K, List<V>>> {
 
 
     //********** 获取 **************
-    V get(K key);
+    V getFirst(K key);
 
     List<V> getAll(K key);
 
@@ -64,9 +64,12 @@ public interface IMultiMap<K, V> extends Iterable<Map.Entry<K, List<V>>> {
     //********** 基本值 **********
     Set<K> keys();
 
+    /// 返回 MultiMap 中所有值的扁平集合 (所有键对应的 values 合并成一个列表)
     List<V> values();
 
     //*********** 基本功能 ************
+
+    /// 返回 MultiMap 中所有键对应的所有值的总数量 (即所有 values 的扁平总和)
     long size();
 
     boolean isEmpty();
@@ -81,5 +84,7 @@ public interface IMultiMap<K, V> extends Iterable<Map.Entry<K, List<V>>> {
     Map<K, V> toSingleValueMap(Supplier<Map<K, V>> mapSupplier);
 
     <E extends Throwable> void forEach(ScxBiConsumer<? super K, V, E> action) throws E;
+
+    <E extends Throwable> void forEachEntry(ScxBiConsumer<? super K, List<V>, E> action) throws E;
 
 }

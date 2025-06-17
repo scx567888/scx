@@ -25,7 +25,7 @@ public class User32Test {
         int radius = 200;
         int steps = 2000;
 
-        // 计算圆心位置（假设当前点为圆右侧的点，圆心在其左侧半径距离处）
+        // 计算圆心位置（假设当前点为圆右侧的点, 圆心在其左侧半径距离处）
         int centerX = currentPos.x - radius;
         int centerY = currentPos.y;
 
@@ -38,7 +38,7 @@ public class User32Test {
             $.sleep(1);  // 等待1毫秒
         }
 
-        // 最后确保回到起始点（由于浮点运算可能存在的误差，这里显式设置）
+        // 最后确保回到起始点（由于浮点运算可能存在的误差, 这里显式设置）
         USER32.SetCursorPos(currentPos.x, currentPos.y);
 
     }

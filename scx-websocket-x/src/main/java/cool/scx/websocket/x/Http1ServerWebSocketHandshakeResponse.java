@@ -72,7 +72,7 @@ public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocket
     }
 
     private ScxWebSocket acceptHandshake() {
-        // 实现握手接受逻辑，返回适当的响应头
+        // 实现握手接受逻辑, 返回适当的响应头
         if (webSocket == null) {
             _response.headers().upgrade(WEB_SOCKET);
             _response.headers().connection(UPGRADE);

@@ -13,7 +13,7 @@ import java.util.Map;
 
 /// Freemarker 标签父类
 ///
-/// 让子类实现后，利用模版设计模式，委派给子类
+/// 让子类实现后, 利用模版设计模式, 委派给子类
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -58,8 +58,8 @@ public interface BaseTemplateDirective extends TemplateDirectiveModel {
     /// @return a
     String variableName();
 
-    /// 委派下去让子类实现，并且返回加工后的返回值
-    /// 可返回业务对象，或者集合
+    /// 委派下去让子类实现, 并且返回加工后的返回值
+    /// 可返回业务对象, 或者集合
     ///
     /// @param params r
     /// @return r

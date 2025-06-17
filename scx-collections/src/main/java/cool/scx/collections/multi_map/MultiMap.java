@@ -57,7 +57,7 @@ public class MultiMap<K, V> implements IMultiMap<K, V> {
     @Override
     public void add(IMultiMap<? extends K, ? extends V> map) {
         for (var entry : map) {
-            add(entry.getKey(), entry.getValue());
+            add(entry.key(), entry.all());
         }
     }
 
@@ -90,12 +90,12 @@ public class MultiMap<K, V> implements IMultiMap<K, V> {
     @Override
     public void set(IMultiMap<? extends K, ? extends V> map) {
         for (var entry : map) {
-            set(entry.getKey(), entry.getValue());
+            set(entry.key(), entry.all());
         }
     }
 
     @Override
-    public V get(K key) {
+    public V getFirst(K key) {
         var values = map.get(key);
         return values == null || values.size() == 0 ? null : values.get(0);
     }
@@ -237,8 +237,17 @@ public class MultiMap<K, V> implements IMultiMap<K, V> {
     }
 
     @Override
-    public Iterator<Map.Entry<K, List<V>>> iterator() {
-        return map.entrySet().iterator();
+    public <E extends Throwable> void forEachEntry(ScxBiConsumer<? super K, List<V>, E> action) throws E {
+        for (var entry : map.entrySet()) {
+            var key = entry.getKey();
+            var values = entry.getValue();
+            action.accept(key, values);
+        }
+    }
+
+    @Override
+    public Iterator<IMultiMapEntry<K, V>> iterator() {
+        return new MultiMapIterator<>(map.entrySet().iterator());
     }
 
     @Override

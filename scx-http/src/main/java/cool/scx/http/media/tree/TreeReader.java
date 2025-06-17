@@ -16,7 +16,7 @@ import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 
 /// TreeReader
-/// 此处之所以 先将请求体读取为字符串，然后解析为 JsonNode。 参考 JsonReader 和 XmlReader
+/// 此处之所以 先将请求体读取为字符串, 然后解析为 JsonNode.  参考 JsonReader 和 XmlReader
 ///
 /// @author scx567888
 /// @version 0.0.1

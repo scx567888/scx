@@ -87,10 +87,10 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
         }
         if (preferredConstructors.isEmpty()) {
             throw new NoUniqueConstructorException(
-                    "在类 " + beanClass.getName() + " 中检测到多个 public 构造方法，且都未标注 @PreferredConstructor 注解," +
-                            "无法确定应使用哪个构造方法。\n" +
-                            "可用的 public 构造方法列表：\n" + formatConstructors(publicConstructors) +
-                            "\n请在期望使用的构造方法上添加 @PreferredConstructor 注解。"
+                    "在类 " + beanClass.getName() + " 中检测到多个 public 构造方法, 且都未标注 @PreferredConstructor 注解," +
+                            "无法确定应使用哪个构造方法. \n" +
+                            "可用的 public 构造方法列表: \n" + formatConstructors(publicConstructors) +
+                            "\n请在期望使用的构造方法上添加 @PreferredConstructor 注解. "
             );
         }
         if (preferredConstructors.size() == 1) {
@@ -99,9 +99,9 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
 
         throw new NoUniqueConstructorException(
                 "在类 " + beanClass.getName() + " 中检测到多个标注了 @PreferredConstructor 注解的 public 构造方法, " +
-                        "无法唯一确定使用哪个构造方法。\n" +
-                        "冲突的构造方法列表：\n" + formatConstructors(preferredConstructors) +
-                        "\n同一个类中只能有一个构造方法标注 @PreferredConstructor，请检查修正."
+                        "无法唯一确定使用哪个构造方法. \n" +
+                        "冲突的构造方法列表: \n" + formatConstructors(preferredConstructors) +
+                        "\n同一个类中只能有一个构造方法标注 @PreferredConstructor, 请检查修正."
         );
 
     }

@@ -103,10 +103,10 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         byte b = peek[peek.length - 1];
 
         if (a == '-' && b == '-') {
-            // 遇到 --boundary-- ，整个 multipart 结束
+            // 遇到 --boundary-- , 整个 multipart 结束
             return false;
         } else if (a == '\r' && b == '\n') {
-            // 遇到 --boundary\r\n ，还有下一个 part
+            // 遇到 --boundary\r\n , 还有下一个 part
             return true;
         } else {
             //其他字符那就只能抛异常了

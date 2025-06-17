@@ -22,9 +22,9 @@ public class BitArrayTest {
 
             System.out.println("所有测试用例都已通过！");
         } catch (AssertionError e) {
-            System.err.println("测试失败：" + e.getMessage());
+            System.err.println("测试失败: " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("发生异常：" + e.getMessage());
+            System.err.println("发生异常: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -35,8 +35,8 @@ public class BitArrayTest {
 
         bitArray1.append(bitArrayEmpty);
 
-        assert "10101010".equals(bitArray1.toBinaryString()) : "testAppendEmptyToNonEmpty：拼接后内容不匹配";
-        assert bitArray1.length() == 8 : "testAppendEmptyToNonEmpty：长度不匹配";
+        assert "10101010".equals(bitArray1.toBinaryString()) : "testAppendEmptyToNonEmpty: 拼接后内容不匹配";
+        assert bitArray1.length() == 8 : "testAppendEmptyToNonEmpty: 长度不匹配";
     }
 
     public static void testAppendToEmpty() {
@@ -45,8 +45,8 @@ public class BitArrayTest {
 
         bitArrayEmpty.append(bitArray2);
 
-        assert "1100".equals(bitArrayEmpty.toBinaryString()) : "testAppendToEmpty：拼接后内容不匹配";
-        assert bitArrayEmpty.length() == 4 : "testAppendToEmpty：长度不匹配";
+        assert "1100".equals(bitArrayEmpty.toBinaryString()) : "testAppendToEmpty: 拼接后内容不匹配";
+        assert bitArrayEmpty.length() == 4 : "testAppendToEmpty: 长度不匹配";
     }
 
     public static void testAppendByteAligned() {
@@ -55,8 +55,8 @@ public class BitArrayTest {
 
         bitArray1.append(bitArray2);
 
-        assert "1111000000111100".equals(bitArray1.toBinaryString()) : "testAppendByteAligned：拼接后内容不匹配";
-        assert bitArray1.length() == 16 : "testAppendByteAligned：长度不匹配";
+        assert "1111000000111100".equals(bitArray1.toBinaryString()) : "testAppendByteAligned: 拼接后内容不匹配";
+        assert bitArray1.length() == 16 : "testAppendByteAligned: 长度不匹配";
     }
 
     public static void testAppendNonByteAligned() {
@@ -67,8 +67,8 @@ public class BitArrayTest {
         bitArray1.append(bitArray2); // After first append
         bitArray1.append(bitArray3); // After second append
 
-        assert "101011101001101".equals(bitArray1.toBinaryString()) : "testAppendNonByteAligned：拼接后内容不匹配";
-        assert bitArray1.length() == 15 : "testAppendNonByteAligned：长度不匹配";
+        assert "101011101001101".equals(bitArray1.toBinaryString()) : "testAppendNonByteAligned: 拼接后内容不匹配";
+        assert bitArray1.length() == 15 : "testAppendNonByteAligned: 长度不匹配";
     }
 
     public static void testAppendLargeBitArrays() {
@@ -88,9 +88,9 @@ public class BitArrayTest {
 
         bitArray1.append(bitArray2);
 
-        assert bitArray1.length() == size1 + size2 : "testAppendLargeBitArrays：长度不匹配";
-        assert bitArray1.get(0) : "testAppendLargeBitArrays：位0应为true";
-        assert !bitArray1.get(size1) : "testAppendLargeBitArrays：位" + size1 + "应为false";
+        assert bitArray1.length() == size1 + size2 : "testAppendLargeBitArrays: 长度不匹配";
+        assert bitArray1.get(0) : "testAppendLargeBitArrays: 位0应为true";
+        assert !bitArray1.get(size1) : "testAppendLargeBitArrays: 位" + size1 + "应为false";
     }
 
     public static void testAppendToZeroLengthArray() {
@@ -99,8 +99,8 @@ public class BitArrayTest {
 
         bitArray1.append(bitArray2);
 
-        assert "1010101".equals(bitArray1.toBinaryString()) : "testAppendToZeroLengthArray：拼接后内容不匹配";
-        assert bitArray1.length() == 7 : "testAppendToZeroLengthArray：长度不匹配";
+        assert "1010101".equals(bitArray1.toBinaryString()) : "testAppendToZeroLengthArray: 拼接后内容不匹配";
+        assert bitArray1.length() == 7 : "testAppendToZeroLengthArray: 长度不匹配";
     }
 
     public static void testAppendAllOnesAndZeros() {
@@ -109,8 +109,8 @@ public class BitArrayTest {
 
         allOnes.append(allZeros);
 
-        assert "1111111100000000".equals(allOnes.toBinaryString()) : "testAppendAllOnesAndZeros：拼接后内容不匹配";
-        assert allOnes.length() == 16 : "testAppendAllOnesAndZeros：长度不匹配";
+        assert "1111111100000000".equals(allOnes.toBinaryString()) : "testAppendAllOnesAndZeros: 拼接后内容不匹配";
+        assert allOnes.length() == 16 : "testAppendAllOnesAndZeros: 长度不匹配";
     }
 
     public static void testAppendCrossByteBoundary() {
@@ -119,8 +119,8 @@ public class BitArrayTest {
 
         bitArray1.append(bitArray2);
 
-        assert "11111111".equals(bitArray1.toBinaryString()) : "testAppendCrossByteBoundary：拼接后内容不匹配";
-        assert bitArray1.length() == 8 : "testAppendCrossByteBoundary：长度不匹配";
+        assert "11111111".equals(bitArray1.toBinaryString()) : "testAppendCrossByteBoundary: 拼接后内容不匹配";
+        assert bitArray1.length() == 8 : "testAppendCrossByteBoundary: 长度不匹配";
     }
 
     public static void testAppendCrossByteBoundary2() {
@@ -132,8 +132,8 @@ public class BitArrayTest {
         String expected = "111111110000000"; // 前15位
         String actual = bitArray1.toBinaryString().substring(0, 15);
 
-        assert expected.equals(actual) : "testAppendCrossByteBoundary2：拼接后内容不匹配";
-        assert bitArray1.length() == 15 : "testAppendCrossByteBoundary2：长度不匹配";
+        assert expected.equals(actual) : "testAppendCrossByteBoundary2: 拼接后内容不匹配";
+        assert bitArray1.length() == 15 : "testAppendCrossByteBoundary2: 长度不匹配";
     }
 
     public static void testAppendSelf() {
@@ -141,13 +141,13 @@ public class BitArrayTest {
 
         bitArray.append(bitArray);
 
-        assert "10101010".equals(bitArray.toBinaryString()) : "testAppendSelf：拼接后内容不匹配";
-        assert bitArray.length() == 8 : "testAppendSelf：长度不匹配";
+        assert "10101010".equals(bitArray.toBinaryString()) : "testAppendSelf: 拼接后内容不匹配";
+        assert bitArray.length() == 8 : "testAppendSelf: 长度不匹配";
     }
 
     public static void testAppendNearMaxCapacity() {
-        // 注意：这个测试可能会消耗大量内存，运行时请确保有足够的堆内存可用
-        int nearMaxLength = Integer.MAX_VALUE / 8; // 防止内存溢出，使用较小的值
+        // 注意: 这个测试可能会消耗大量内存, 运行时请确保有足够的堆内存可用
+        int nearMaxLength = Integer.MAX_VALUE / 8; // 防止内存溢出, 使用较小的值
 
         BitArray bitArray1 = new BitArray(nearMaxLength);
         BitArray bitArray2 = new BitArray(8);
@@ -158,9 +158,9 @@ public class BitArrayTest {
 
         bitArray1.append(bitArray2);
 
-        assert bitArray1.length() == nearMaxLength + 8 : "testAppendNearMaxCapacity：长度不匹配";
-        assert bitArray1.get(nearMaxLength) : "testAppendNearMaxCapacity：位" + nearMaxLength + "应为true";
-        assert bitArray1.get(nearMaxLength + 7) : "testAppendNearMaxCapacity：位" + (nearMaxLength + 7) + "应为true";
+        assert bitArray1.length() == nearMaxLength + 8 : "testAppendNearMaxCapacity: 长度不匹配";
+        assert bitArray1.get(nearMaxLength) : "testAppendNearMaxCapacity: 位" + nearMaxLength + "应为true";
+        assert bitArray1.get(nearMaxLength + 7) : "testAppendNearMaxCapacity: 位" + (nearMaxLength + 7) + "应为true";
     }
 
     public static void testBitArrayView() {
@@ -174,8 +174,8 @@ public class BitArrayTest {
             binaryString.append(String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0'));
         }
 
-        assert "1100110000110011".contentEquals(binaryString) : "testToBytes：拼接后内容不匹配";
-        assert bitArrayView.length() == 16 : "testToBytes：长度不匹配";
+        assert "1100110000110011".contentEquals(binaryString) : "testToBytes: 拼接后内容不匹配";
+        assert bitArrayView.length() == 16 : "testToBytes: 长度不匹配";
     }
 
 }

@@ -30,7 +30,7 @@ public class AcceptImpl implements AcceptWritable {
 
     @Override
     public boolean isAcceptable(ScxMediaType mediaType) {
-        // 遍历所有 MediaRange，判断是否有任意一个匹配该 MediaType
+        // 遍历所有 MediaRange, 判断是否有任意一个匹配该 MediaType
         for (var range : mediaRanges) {
             if (range.matches(mediaType)) {
                 return true;
@@ -42,7 +42,7 @@ public class AcceptImpl implements AcceptWritable {
     @SafeVarargs
     @Override
     public final <T extends ScxMediaType> T negotiate(T... serverSupportedTypes) {
-        // 遍历已排序的 MediaRange，找到第一个匹配的服务端支持的类型
+        // 遍历已排序的 MediaRange, 找到第一个匹配的服务端支持的类型
         for (MediaRange range : mediaRanges) {
             for (var supportedType : serverSupportedTypes) {
                 if (range.matches(supportedType)) {
@@ -55,7 +55,7 @@ public class AcceptImpl implements AcceptWritable {
 
     @Override
     public boolean contains(ScxMediaType mediaType) {
-        // 遍历所有 MediaRange，判断是否有任意一个精确匹配该 MediaType
+        // 遍历所有 MediaRange, 判断是否有任意一个精确匹配该 MediaType
         for (var range : mediaRanges) {
             if (range.exactMatch(mediaType)) {
                 return true;

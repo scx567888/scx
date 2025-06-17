@@ -54,7 +54,7 @@ public class HttpChunkedDataSupplier implements ByteSupplier {
             try {
                 endBytes = dataReader.readUntil("\r\n".getBytes());
             } catch (NoMatchFoundException e) {
-                throw new BadRequestException("错误的终结分块, 终结块不完整：缺少 \\r\\n !!!");
+                throw new BadRequestException("错误的终结分块, 终结块不完整: 缺少 \\r\\n !!!");
             }
 
             if (endBytes.length != 0) {

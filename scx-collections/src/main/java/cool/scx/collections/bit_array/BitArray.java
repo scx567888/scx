@@ -127,13 +127,13 @@ public class BitArray implements IBitArray {
 
     private void _checkIndex(int index) {
         if (index < 0 || index >= length) {
-            throw new IndexOutOfBoundsException("索引 " + index + " 超出范围，长度为 " + length);
+            throw new IndexOutOfBoundsException("索引 " + index + " 超出范围, 长度为 " + length);
         }
     }
 
     private void _checkIndex(int fromIndex, int toIndex) {
         if (fromIndex < 0 || toIndex > length || fromIndex > toIndex) {
-            throw new IndexOutOfBoundsException("索引范围 (" + fromIndex + ", " + toIndex + ") 超出范围，长度为 " + length);
+            throw new IndexOutOfBoundsException("索引范围 (" + fromIndex + ", " + toIndex + ") 超出范围, 长度为 " + length);
         }
     }
 

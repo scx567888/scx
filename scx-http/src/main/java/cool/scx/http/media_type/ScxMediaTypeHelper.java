@@ -33,7 +33,7 @@ public class ScxMediaTypeHelper {
                 var key = s[0];
                 var value = s[1];
 
-                // 如果值有引号，去掉引号
+                // 如果值有引号, 去掉引号
                 if (value.startsWith("\"") && value.endsWith("\"")) {
                     value = value.substring(1, value.length() - 1);
                 }
@@ -57,8 +57,8 @@ public class ScxMediaTypeHelper {
 
     public static void encodeParams(StringBuilder result, Parameters<String, String> params) {
         for (var v : params) {
-            var key = v.getKey();
-            var values = v.getValue();
+            var key = v.name();
+            var values = v.values();
             for (var value : values) {
                 result.append("; ").append(key).append("=").append(value);
             }
