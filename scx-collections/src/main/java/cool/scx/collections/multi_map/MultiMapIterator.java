@@ -4,7 +4,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class MultiMapIterator<K, V> implements Iterator<MultiMapEntry<K, V>> {
+/// MultiMapIterator
+///
+/// @param <K> K
+/// @param <V> V
+/// @author scx567888
+/// @version 0.0.1
+class MultiMapIterator<K, V> implements Iterator<IMultiMapEntry<K, V>> {
 
     private final Iterator<Map.Entry<K, List<V>>> iterator;
 
