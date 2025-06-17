@@ -1,7 +1,7 @@
 package cool.scx.http.x.http2.hpack;
 
+import cool.scx.codec.huffman.HuffmanCodec;
 import cool.scx.collections.bit_array.BitArray;
-import cool.scx.common.huffman.HuffmanCodec;
 import cool.scx.common.util.ArrayUtils;
 
 //todo 实现不正确

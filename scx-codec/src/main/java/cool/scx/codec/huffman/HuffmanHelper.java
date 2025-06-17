@@ -1,4 +1,4 @@
-package cool.scx.common.huffman;
+package cool.scx.codec.huffman;
 
 import cool.scx.collections.bit_array.BitArray;
 import cool.scx.collections.bit_array.IBitArray;

@@ -1,4 +1,4 @@
-package cool.scx.common.huffman;
+package cool.scx.codec.huffman;
 
 import cool.scx.collections.bit_array.BitArrayView;
 import cool.scx.collections.bit_array.IBitArray;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static cool.scx.common.huffman.HuffmanHelper.*;
+import static cool.scx.codec.huffman.HuffmanHelper.*;
 
 public class HuffmanCodec<T> {
 

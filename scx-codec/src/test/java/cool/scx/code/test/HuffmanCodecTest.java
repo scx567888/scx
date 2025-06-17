@@ -1,7 +1,7 @@
-package cool.scx.common.test;
+package cool.scx.code.test;
 
+import cool.scx.codec.huffman.HuffmanCodec;
 import cool.scx.collections.bit_array.IBitArray;
-import cool.scx.common.huffman.HuffmanCodec;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
