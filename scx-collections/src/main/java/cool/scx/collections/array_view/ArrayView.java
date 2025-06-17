@@ -26,16 +26,15 @@ public class ArrayView<E> implements Collection<E> {
 
     @Override
     public boolean contains(Object o) {
-        Object[] es = elements;
         if (o == null) {
-            for (int i = 0; i < elements.length; i++) {
-                if (es[i] == null) {
+            for (E e : elements) {
+                if (e == null) {
                     return true;
                 }
             }
         } else {
-            for (int i = 0; i < elements.length; i++) {
-                if (o.equals(es[i])) {
+            for (E e : elements) {
+                if (o.equals(e)) {
                     return true;
                 }
             }
@@ -79,8 +78,8 @@ public class ArrayView<E> implements Collection<E> {
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        for (Object o : c) {
-            if (!contains(o)) {
+        for (Object e : c) {
+            if (!contains(e)) {
                 return false;
             }
         }
