@@ -93,13 +93,13 @@ public class BitArrayView implements IBitArray {
 
     private void _checkIndex(int index) {
         if (index < 0 || index >= length) {
-            throw new IndexOutOfBoundsException("索引 " + index + " 超出范围，长度为 " + length);
+            throw new IndexOutOfBoundsException("索引 " + index + " 超出范围, 长度为 " + length);
         }
     }
 
     private void _checkIndex(int fromIndex, int toIndex) {
         if (fromIndex < 0 || toIndex > length || fromIndex > toIndex) {
-            throw new IndexOutOfBoundsException("索引范围 (" + fromIndex + ", " + toIndex + ") 超出范围，长度为 " + length);
+            throw new IndexOutOfBoundsException("索引范围 (" + fromIndex + ", " + toIndex + ") 超出范围, 长度为 " + length);
         }
     }
 
@@ -115,7 +115,7 @@ public class BitArrayView implements IBitArray {
         return bitArrays[arrayIndex].get(relativeIndex); // 直接调用 BitArray 的 get 方法
     }
 
-    // 根据全局索引快速定位对应的 BitArray。
+    // 根据全局索引快速定位对应的 BitArray. 
     private int _findBitArrayIndex(int index) {
         int low = 0;
         int high = startIndices.length - 1;
