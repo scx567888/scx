@@ -101,7 +101,7 @@ public class ByteReader implements IByteReader {
             // 计算当前节点可以读取的长度 (这里因为是将 int 和 long 值进行最小值比较 所以返回值一定是 int 所以类型转换不会丢失精度) 
             var length = (int) min(remaining, n.available());
             // 调用消费者 写入数据
-            needMore = consumer.accept(n.chunk.splice(n.position, n.position + length));
+            needMore = consumer.accept(n.chunk.subChunk(n.position, n.position + length));
             // 计算剩余字节数
             remaining -= length;
 
@@ -152,7 +152,7 @@ public class ByteReader implements IByteReader {
         while (true) {
             // 计算当前节点中可读取的最大长度, 确保不超过 max (这里因为是将 int 和 long 值进行最小值比较 所以返回值一定是 int 所以类型转换不会丢失精度)
             var length = (int) min(n.available(), maxLength - index);
-            var i = indexer.indexOf(n.chunk.splice(n.position, n.position + length));
+            var i = indexer.indexOf(n.chunk.subChunk(n.position, n.position + length));
             //此处因为支持回溯匹配 所以可能是负数 Integer.MIN_VALUE 表示真正未找到
             if (i != Integer.MIN_VALUE) {
                 return index + i;

@@ -23,7 +23,7 @@ public class FillByteBufferByteConsumer implements ByteConsumer {
         if (data.remaining() < byteChunk.length) {
             throw new IllegalStateException("Buffer overflow: not enough space to accept more data");
         }
-        data.put(byteChunk.bytes, byteChunk.startPosition, byteChunk.length);
+        data.put(byteChunk.bytes, byteChunk.start, byteChunk.length);
         return true;
     }
 

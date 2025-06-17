@@ -76,7 +76,7 @@ public class TransferTest {
         long transferAmount = 200L;
         List<Thread> threads = new ArrayList<>();
 
-        for (int i = 0; i < threadCount; i++) {
+        for (int i = 0; i < threadCount; i = i + 1) {
             var t = Thread.ofVirtual().start(() -> {
                 try {
                     transfer(user1.id, user2.id, transferAmount);
