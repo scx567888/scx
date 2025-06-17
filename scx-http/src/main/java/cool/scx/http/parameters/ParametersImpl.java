@@ -86,7 +86,7 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
     }
 
     @Override
-    public Map<K, V> toSingleValueMap() {
+    public Map<K, V> toMap() {
         return map.toSingleValueMap();
     }
 

@@ -90,8 +90,8 @@ public class Http1Headers implements ScxHttpHeadersWritable {
     }
 
     @Override
-    public Map<ScxHttpHeaderName, String> toSingleValueMap() {
-        return h.toSingleValueMap();
+    public Map<ScxHttpHeaderName, String> toMap() {
+        return h.toMap();
     }
 
     @Override
