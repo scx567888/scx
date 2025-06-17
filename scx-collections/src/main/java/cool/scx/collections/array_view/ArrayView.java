@@ -1,12 +1,10 @@
 package cool.scx.collections.array_view;
 
-import cool.scx.collections.iterator.ArrayIterator;
+import cool.scx.collections.ArrayIterator;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
-public class ArrayView<E> implements Collection<E> {
+public class ArrayView<E> implements List<E> {
 
     private final E[] elements;
 
@@ -92,6 +90,11 @@ public class ArrayView<E> implements Collection<E> {
     }
 
     @Override
+    public boolean addAll(int index, Collection<? extends E> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean removeAll(Collection<?> c) {
         throw new UnsupportedOperationException();
     }
@@ -104,6 +107,77 @@ public class ArrayView<E> implements Collection<E> {
     @Override
     public void clear() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public E get(int index) {
+        return elements[index];
+    }
+
+    @Override
+    public E set(int index, E element) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void add(int index, E element) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public E remove(int index) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        if (o == null) {
+            for (int i = 0; i < elements.length; i = i + 1) {
+                if (elements[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+            for (int i = 0; i < elements.length; i = i + 1) {
+                if (o.equals(elements[i])) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        if (o == null) {
+            for (int i = elements.length - 1; i >= 0; i = i - 1) {
+                if (elements[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+            for (int i = elements.length - 1; i >= 0; i = i - 1) {
+                if (o.equals(elements[i])) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public ListIterator<E> listIterator() {
+        return new ArrayViewIterator<>(elements, 0);
+    }
+
+    @Override
+    public ListIterator<E> listIterator(int index) {
+        return new ArrayViewIterator<>(elements, index);
+    }
+
+    @Override
+    public List<E> subList(int fromIndex, int toIndex) {
+        return List.of();
     }
 
 }
