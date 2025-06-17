@@ -60,7 +60,7 @@ public final class ByteChunk {
     }
 
     /// 相对 索引 0 起始
-    public ByteChunk splice(int start, int end) {
+    public ByteChunk subChunk(int start, int end) {
         if (start == 0 && end == length) {
             return this;
         }
