@@ -84,4 +84,6 @@ public interface IMultiMap<K, V> extends Iterable<IMultiMapEntry<K, V>> {
 
     <E extends Throwable> void forEach(ScxBiConsumer<? super K, V, E> action) throws E;
 
+    <E extends Throwable> void forEachEntry(ScxBiConsumer<? super K, List<V>, E> action) throws E;
+
 }
