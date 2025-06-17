@@ -19,12 +19,12 @@ public class ParameterEntryImpl<K, V> implements ParameterEntry<K, V> {
 
     @Override
     public V value() {
-        return entry.first();
+        return entry.value();
     }
 
     @Override
     public List<V> values() {
-        return entry.all();
+        return entry.values();
     }
 
 }

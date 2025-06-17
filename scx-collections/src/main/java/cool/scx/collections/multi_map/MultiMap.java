@@ -57,7 +57,7 @@ public class MultiMap<K, V> implements IMultiMap<K, V> {
     @Override
     public void add(IMultiMap<? extends K, ? extends V> map) {
         for (var entry : map) {
-            add(entry.key(), entry.all());
+            add(entry.key(), entry.values());
         }
     }
 
@@ -90,7 +90,7 @@ public class MultiMap<K, V> implements IMultiMap<K, V> {
     @Override
     public void set(IMultiMap<? extends K, ? extends V> map) {
         for (var entry : map) {
-            set(entry.key(), entry.all());
+            set(entry.key(), entry.values());
         }
     }
 

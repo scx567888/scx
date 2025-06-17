@@ -5,16 +5,16 @@ import java.util.List;
 /// MultiMapEntry
 ///
 /// @param key key
-/// @param all all
+/// @param values all
 /// @param <K> K
 /// @param <V> V
 /// @author scx567888
 /// @version 0.0.1
-record MultiMapEntry<K, V>(K key, List<V> all) implements IMultiMapEntry<K, V> {
+record MultiMapEntry<K, V>(K key, List<V> values) implements IMultiMapEntry<K, V> {
 
     @Override
-    public V first() {
-        return all.isEmpty() ? null : all.get(0);
+    public V value() {
+        return values.isEmpty() ? null : values.get(0);
     }
 
 }

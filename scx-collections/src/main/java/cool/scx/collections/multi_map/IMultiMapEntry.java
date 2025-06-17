@@ -12,8 +12,8 @@ public interface IMultiMapEntry<K, V> {
 
     K key();
 
-    V first();
+    V value();
 
-    List<V> all();
+    List<V> values();
 
 }
