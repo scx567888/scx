@@ -95,7 +95,7 @@ public class MultiMap<K, V> implements IMultiMap<K, V> {
     }
 
     @Override
-    public V getFirst(K key) {
+    public V get(K key) {
         var values = map.get(key);
         return values == null || values.size() == 0 ? null : values.get(0);
     }

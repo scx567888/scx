@@ -61,7 +61,7 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
 
     @Override
     public V get(K name) {
-        return map.getFirst(name);
+        return map.get(name);
     }
 
     @Override
