@@ -92,11 +92,6 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
     }
 
     @Override
-    public Map<K, V> toSingleValueMap(Supplier<Map<K, V>> mapSupplier) {
-        return map.toSingleValueMap(mapSupplier);
-    }
-
-    @Override
     public <E extends Throwable> void forEach(ScxBiConsumer<? super K, V, E> action) throws E {
         map.forEach(action);
     }

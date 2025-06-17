@@ -34,8 +34,8 @@ public final class RequestInfo {
         this.routingContext = ctx;
         this.cachedMultiPart = cachedMultiPart;
         this.contentType = ctx.request().contentType();
-        this.pathParams = jsonMapper().convertValue(ctx.pathParams().toMap(), JsonNode.class);
-        this.query = jsonMapper().convertValue(ctx.request().query().toMap(), JsonNode.class);
+        this.pathParams = jsonMapper().convertValue(ctx.pathParams().toMultiValueMap(), JsonNode.class);
+        this.query = jsonMapper().convertValue(ctx.request().query().toMultiValueMap(), JsonNode.class);
         this.bodyInit = false;
     }
 
@@ -69,7 +69,7 @@ public final class RequestInfo {
         }
         if (APPLICATION_X_WWW_FORM_URLENCODED.equalsIgnoreParams(contentType)) {
             var formParams = ctx.request().body().asFormParams();
-            this.body = jsonMapper().convertValue(formParams.toMap(), JsonNode.class);
+            this.body = jsonMapper().convertValue(formParams.toMultiValueMap(), JsonNode.class);
             return;
         }
         if (MULTIPART_FORM_DATA.equalsIgnoreParams(contentType)) {

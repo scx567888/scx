@@ -44,8 +44,6 @@ public interface Parameters<K, V> extends Iterable<ParameterEntry<K, V>> {
 
     Map<K, V> toSingleValueMap();
 
-    Map<K, V> toSingleValueMap(Supplier<Map<K, V>> mapSupplier);
-
     <E extends Throwable> void forEach(ScxBiConsumer<? super K, V, E> action) throws E;
 
     <E extends Throwable> void forEachParameter(ScxBiConsumer<? super K, List<V>, E> action) throws E;
