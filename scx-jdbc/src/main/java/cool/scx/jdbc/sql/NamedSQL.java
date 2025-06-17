@@ -7,29 +7,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-/// 代表带有具名参数的 SQL 查询。通过此类，用户可以方便地构造 SQL 查询，使用命名参数代替传统的 `?` 占位符。
+/// 代表带有具名参数的 SQL 查询. 通过此类, 用户可以方便地构造 SQL 查询, 使用命名参数代替传统的 `?` 占位符. 
 ///
-/// 具名参数通过 `:` 后跟参数名（如 `:paramName`）表示。在执行 SQL 查询时，具名参数会被其实际值替换，
-/// 提供了更具可读性的 SQL 语句。
+/// 具名参数通过 `:` 后跟参数名（如 `:paramName`）表示. 在执行 SQL 查询时, 具名参数会被其实际值替换, 
+/// 提供了更具可读性的 SQL 语句. 
 ///
-/// 特别地，`NamedSQL` 类支持两种使用方式：
-/// 1. **单个 SQL 查询**：构造一个带有具名参数的 SQL 查询，支持替换具名参数为相应的值。
-/// 2. **批量查询**：在批量操作（如批量插入、更新）时，支持将不同的参数集合对应到 SQL 查询中的具名参数。
-///
-///
-/// **特殊情况：处理 NamedSQLListParameter**
-/// 当 SQL 查询中包含类型为 `NamedSQLListParameter` 的具名参数时（例如 `IN` 子句），
-/// 该类会自动展开这个参数，生成多个 `?` 占位符并将其值作为多个参数传入查询中。
+/// 特别地, `NamedSQL` 类支持两种使用方式: 
+/// 1. **单个 SQL 查询**: 构造一个带有具名参数的 SQL 查询, 支持替换具名参数为相应的值. 
+/// 2. **批量查询**: 在批量操作（如批量插入、更新）时, 支持将不同的参数集合对应到 SQL 查询中的具名参数. 
 ///
 ///
-/// 示例：
+/// **特殊情况: 处理 NamedSQLListParameter**
+/// 当 SQL 查询中包含类型为 `NamedSQLListParameter` 的具名参数时（例如 `IN` 子句）, 
+/// 该类会自动展开这个参数, 生成多个 `?` 占位符并将其值作为多个参数传入查询中. 
+///
+///
+/// 示例: 
 /// ```java
 /// var = Map.of(
 ///   "inList", new NamedSQLListParameter(1, 2, 3)
 ///);
 /// var namedSQL = new NamedSQL("SELECT * FROM table WHERE field IN (:inList)", params);
 ///```
-/// 对应 SQL 查询：`SELECT * FROM table WHERE field IN (?, ?, ?)`
+/// 对应 SQL 查询: `SELECT * FROM table WHERE field IN (?, ?, ?)`
 ///
 ///
 /// @author scx567888

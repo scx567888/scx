@@ -216,7 +216,7 @@ public class Http2ServerConnection {
         System.out.println("Headers: " + headers);
 
         if (!endHeaders) {
-            // 如果END_HEADERS标志位未设置，需要继续读取CONTINUATION帧
+            // 如果END_HEADERS标志位未设置, 需要继续读取CONTINUATION帧
             readContinuationHeaders(frameHeader.streamId(), headers);
         }
     }

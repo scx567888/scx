@@ -302,15 +302,15 @@ public final class SQLRunner {
                         //尝试执行业务逻辑
                         result = handler.call();
                     } catch (Throwable handlerE) {
-                        // 业务异常发生，尝试回滚事务
+                        // 业务异常发生, 尝试回滚事务
                         try {
                             con.rollback();
                         } catch (SQLException rollbackE) {
-                            // 回滚失败，将业务异常作为附加异常抛出
+                            // 回滚失败, 将业务异常作为附加异常抛出
                             rollbackE.addSuppressed(handlerE);
                             throw new SQLRunnerException("Rollback failed after business exception", rollbackE);
                         }
-                        // 回滚成功，抛出业务异常
+                        // 回滚成功, 抛出业务异常
                         throw handlerE;
                     }
 
@@ -321,7 +321,7 @@ public final class SQLRunner {
                         try {
                             con.rollback();
                         } catch (SQLException rollbackE) {
-                            // 回滚失败，优先抛出回滚异常，同时附加提交异常
+                            // 回滚失败, 优先抛出回滚异常, 同时附加提交异常
                             rollbackE.addSuppressed(commitE);
                             throw new SQLRunnerException("Rollback failed after commit failure", rollbackE);
                         }
