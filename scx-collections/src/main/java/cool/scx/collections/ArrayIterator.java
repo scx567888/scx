@@ -27,7 +27,7 @@ public class ArrayIterator<T> implements Iterator<T> {
 
     @Override
     public T next() {
-        if (index >= end) {
+        if (!hasNext()) {
             throw new NoSuchElementException("No more elements.");
         }
         var n = array[index];
