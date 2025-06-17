@@ -1,8 +1,11 @@
 package cool.scx.http.parameters;
 
+import cool.scx.functional.ScxBiConsumer;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /// Parameters 表示一组 HTTP 参数项, 类似 MultiMap (实际上默认实现 就是基于 MultiMap 的), 一个 name 可以对应多个值.
 ///
@@ -37,6 +40,14 @@ public interface Parameters<K, V> extends Iterable<ParameterEntry<K, V>> {
 
     boolean isEmpty();
 
-    Map<K, List<V>> toMap();
+    Map<K, List<V>> toMultiValueMap();
+
+    Map<K, V> toSingleValueMap();
+
+    Map<K, V> toSingleValueMap(Supplier<Map<K, V>> mapSupplier);
+
+    <E extends Throwable> void forEach(ScxBiConsumer<? super K, V, E> action) throws E;
+
+    <E extends Throwable> void forEachParameter(ScxBiConsumer<? super K, List<V>, E> action) throws E;
 
 }

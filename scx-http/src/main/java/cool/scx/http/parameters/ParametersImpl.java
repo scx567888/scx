@@ -1,8 +1,10 @@
 package cool.scx.http.parameters;
 
 import cool.scx.collections.multi_map.MultiMap;
+import cool.scx.functional.ScxBiConsumer;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 /// ParametersImpl
 ///
@@ -80,13 +82,33 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
     }
 
     @Override
-    public Iterator<ParameterEntry<K, V>> iterator() {
-        return new ParametersIterator<>(map.iterator());
+    public Map<K, List<V>> toMultiValueMap() {
+        return map.toMultiValueMap();
     }
 
     @Override
-    public Map<K, List<V>> toMap() {
-        return map.toMultiValueMap();
+    public Map<K, V> toSingleValueMap() {
+        return map.toSingleValueMap();
+    }
+
+    @Override
+    public Map<K, V> toSingleValueMap(Supplier<Map<K, V>> mapSupplier) {
+        return map.toSingleValueMap(mapSupplier);
+    }
+
+    @Override
+    public <E extends Throwable> void forEach(ScxBiConsumer<? super K, V, E> action) throws E {
+        map.forEach(action);
+    }
+
+    @Override
+    public <E extends Throwable> void forEachParameter(ScxBiConsumer<? super K, List<V>, E> action) throws E {
+        map.forEachEntry(action);
+    }
+
+    @Override
+    public Iterator<ParameterEntry<K, V>> iterator() {
+        return new ParametersIterator<>(map.iterator());
     }
 
     @Override
