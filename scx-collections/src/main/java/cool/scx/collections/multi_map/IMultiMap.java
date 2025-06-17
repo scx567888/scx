@@ -42,7 +42,7 @@ public interface IMultiMap<K, V> extends Iterable<IMultiMapEntry<K, V>> {
 
 
     //********** 获取 **************
-    V getFirst(K key);
+    V get(K key);
 
     List<V> getAll(K key);
 

@@ -23,7 +23,7 @@ public class CookiesImpl implements CookiesWritable {
 
     @Override
     public Cookie get(String name) {
-        return cookies.getFirst(name);
+        return cookies.get(name);
     }
 
     @Override

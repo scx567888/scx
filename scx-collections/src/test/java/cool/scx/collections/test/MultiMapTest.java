@@ -29,7 +29,7 @@ public class MultiMapTest {
 
         // 测试获取方法
         System.out.println("---- 获取方法测试 ----");
-        System.out.println("get(key1): " + multiMap.getFirst("key1"));
+        System.out.println("get(key1): " + multiMap.get("key1"));
         System.out.println("getAll(key2): " + multiMap.getAll("key2"));
         // 预期: get(key1): newValue1
         // 预期: getAll(key2): [newValue2, newValue3]
