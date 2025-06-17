@@ -12,6 +12,9 @@ import java.util.List;
 /// 2. 语义不同: {@link IMultiMapEntry} 是通用数据结构条目; ParameterEntry 是 HTTP 参数视图，强调请求上下文.
 /// 3. 类型抽象目的不同: 本接口更关注 "参数" 的角色语义, 而不是映射关系本身.
 /// 设计上遵循 "语义清晰优先" 与 "最小惊讶原则", 避免语义漂移, 即使在功能上可复用.
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ParameterEntry<K, V> {
 
     K name();
