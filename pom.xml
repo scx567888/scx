@@ -46,6 +46,7 @@
         <module>scx-app</module>
         <module>scx-bean</module>
         <module>scx-bytes</module>
+        <module>scx-codec</module>
         <module>scx-collections</module>
         <module>scx-common</module>
         <module>scx-config</module>
