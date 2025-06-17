@@ -20,12 +20,6 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-collections</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- TestNG 测试包 -->
         <dependency>
             <groupId>org.testng</groupId>

@@ -1,11 +1,10 @@
 package cool.scx.bytes.supplier;
 
 import cool.scx.bytes.ByteChunk;
-import cool.scx.collections.ArrayIterator;
-import cool.scx.collections.SingleIterator;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 /// ByteArrayByteSupplier
 ///
@@ -20,11 +19,11 @@ public class ByteArrayByteSupplier implements ByteSupplier {
     }
 
     public ByteArrayByteSupplier(byte[]... byteArrays) {
-        this.byteArrayIterator = new ArrayIterator<>(byteArrays);
+        this.byteArrayIterator = List.of(byteArrays).iterator();
     }
 
     public ByteArrayByteSupplier(byte[] byteArray) {
-        this.byteArrayIterator = new SingleIterator<>(byteArray);
+        this.byteArrayIterator = List.of(byteArray).iterator();
     }
 
     @Override

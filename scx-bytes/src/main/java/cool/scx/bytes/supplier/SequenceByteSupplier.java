@@ -2,7 +2,6 @@ package cool.scx.bytes.supplier;
 
 import cool.scx.bytes.ByteChunk;
 import cool.scx.bytes.exception.ByteSupplierException;
-import cool.scx.collections.ArrayIterator;
 
 import java.util.Iterator;
 import java.util.List;
@@ -24,7 +23,7 @@ public class SequenceByteSupplier implements ByteSupplier {
     }
 
     public SequenceByteSupplier(ByteSupplier... dataSupplierList) {
-        this.iterator = new ArrayIterator<>(dataSupplierList);
+        this.iterator = List.of(dataSupplierList).iterator();
         if (this.iterator.hasNext()) {
             this.currentSupplier = this.iterator.next();
         }
