@@ -1,6 +1,5 @@
 package cool.scx.http.parameters;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,7 +8,7 @@ import java.util.Set;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface Parameters<K, V> extends Iterable<Map.Entry<K, List<V>>> {
+public interface Parameters<K, V> extends Iterable<ParameterEntry<K, V>> {
 
     static <K, V> ParametersWritable<K, V> of() {
         return new ParametersImpl<>();
@@ -27,20 +26,10 @@ public interface Parameters<K, V> extends Iterable<Map.Entry<K, List<V>>> {
 
     List<V> getAll(K name);
 
-    default boolean contains(K name) {
-        return get(name) != null;
-    }
+    boolean contains(K name);
 
-    default boolean isEmpty() {
-        return this.size() == 0;
-    }
+    boolean isEmpty();
 
-    default Map<K, List<V>> toMap() {
-        var map = new HashMap<K, List<V>>();
-        for (var stringListEntry : this) {
-            map.put(stringListEntry.getKey(), stringListEntry.getValue());
-        }
-        return map;
-    }
+    Map<K, List<V>> toMap();
 
 }
