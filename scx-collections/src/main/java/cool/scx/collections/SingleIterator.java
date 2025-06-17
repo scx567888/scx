@@ -1,10 +1,10 @@
-package cool.scx.collections.iterator;
+package cool.scx.collections;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /// 迭代器
-public class SingleIterator<T> implements Iterator<T>, Iterable<T> {
+public class SingleIterator<T> implements Iterator<T> {
 
     private T next;
     private boolean hasNext;
@@ -28,11 +28,6 @@ public class SingleIterator<T> implements Iterator<T>, Iterable<T> {
         next = null; // 可能有助于垃圾回收
         hasNext = false;
         return n;
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return this;
     }
 
 }
