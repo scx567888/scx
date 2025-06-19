@@ -4,11 +4,11 @@ import cool.scx.data.Aggregator;
 import cool.scx.data.aggregation.Aggregation;
 import cool.scx.data.exception.DataAccessException;
 import cool.scx.data.query.Query;
+import cool.scx.functional.ScxConsumer;
 import cool.scx.jdbc.sql.SQLRunnerException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static cool.scx.jdbc.result_handler.ResultHandler.*;
 
@@ -45,7 +45,7 @@ public class JDBCAggregator implements Aggregator {
     }
 
     @Override
-    public <T> void forEach(Consumer<T> resultConsumer, Class<T> resultType) throws DataAccessException {
+    public <T, E extends Throwable> void forEach(ScxConsumer<T, E> resultConsumer, Class<T> resultType) throws DataAccessException, E {
         try {
             repository.sqlRunner.query(repository.buildAggregateSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofBeanConsumer(resultType, repository.beanColumnNameMapping, resultConsumer));
         } catch (SQLRunnerException e) {
@@ -54,7 +54,7 @@ public class JDBCAggregator implements Aggregator {
     }
 
     @Override
-    public void forEach(Consumer<Map<String, Object>> resultConsumer) throws DataAccessException {
+    public <E extends Throwable> void forEach(ScxConsumer<Map<String, Object>, E> resultConsumer) throws DataAccessException, E {
         try {
             repository.sqlRunner.query(repository.buildAggregateSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofMapConsumer(repository.mapBuilder, resultConsumer));
         } catch (SQLRunnerException e) {

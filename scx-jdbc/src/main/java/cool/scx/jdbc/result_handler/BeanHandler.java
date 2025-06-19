@@ -10,7 +10,7 @@ import java.sql.SQLException;
 ///
 /// @author scx567888
 /// @version 0.0.1
-record BeanHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<T> {
+record BeanHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<T, RuntimeException> {
 
     @Override
     public T apply(ResultSet rs, Dialect dialect) throws SQLException {

@@ -1,20 +1,21 @@
 package cool.scx.jdbc.result_handler;
 
+import cool.scx.functional.ScxConsumer;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.result_handler.bean_builder.BeanBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.function.Consumer;
 
 /// BeanConsumerHandler
 ///
 /// @author scx567888
 /// @version 0.0.1
-record BeanConsumerHandler<T>(BeanBuilder<T> beanBuilder, Consumer<T> consumer) implements ResultHandler<Void> {
+record BeanConsumerHandler<T, E extends Throwable>(BeanBuilder<T> beanBuilder,
+                                                   ScxConsumer<T, E> consumer) implements ResultHandler<Void, E> {
 
     @Override
-    public Void apply(ResultSet rs, Dialect dialect) throws SQLException {
+    public Void apply(ResultSet rs, Dialect dialect) throws SQLException, E {
         beanBuilder.bindDialect(dialect);
         var indexInfo = beanBuilder.getIndexInfo(rs.getMetaData());
         while (rs.next()) {

@@ -11,7 +11,7 @@ import java.util.Map;
 ///
 /// @author scx567888
 /// @version 0.0.1
-record MapHandler(MapBuilder mapBuilder) implements ResultHandler<Map<String, Object>> {
+record MapHandler(MapBuilder mapBuilder) implements ResultHandler<Map<String, Object>, RuntimeException> {
 
     static final MapHandler INSTANCE = new MapHandler(MapBuilder.of());
 

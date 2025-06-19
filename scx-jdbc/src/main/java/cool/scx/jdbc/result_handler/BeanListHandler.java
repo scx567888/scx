@@ -12,7 +12,7 @@ import java.util.List;
 ///
 /// @author scx567888
 /// @version 0.0.1
-record BeanListHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<List<T>> {
+record BeanListHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<List<T>, RuntimeException> {
 
     @Override
     public List<T> apply(ResultSet rs, Dialect dialect) throws SQLException {
