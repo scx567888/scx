@@ -4,7 +4,7 @@ import cool.scx.data.exception.DataAccessException;
 import cool.scx.functional.ScxCallable;
 import cool.scx.functional.ScxRunnable;
 
-public interface DataManager {
+public interface ContextManager {
 
     <T, E extends Throwable> T withContext(ScxCallable<T, E> handler) throws DataAccessException, E;
 

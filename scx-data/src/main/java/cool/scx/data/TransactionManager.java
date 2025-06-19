@@ -6,7 +6,7 @@ import cool.scx.functional.ScxConsumer;
 import cool.scx.functional.ScxFunction;
 import cool.scx.functional.ScxRunnable;
 
-public interface TransactionManager<C extends TransactionContext> extends DataManager {
+public interface TransactionManager<C extends TransactionContext> extends ContextManager {
 
     /// 需手动处理事务
     <T, E extends Throwable> T withTransaction(ScxFunction<C, T, E> handler) throws DataAccessException, E;
