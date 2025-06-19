@@ -37,7 +37,6 @@ public class JDBCTransactionManager implements TransactionManager<JDBCTransactio
         } catch (SQLRunnerException e) {
             throw new DataAccessException(e.getCause());
         }
-
     }
 
     @Override
