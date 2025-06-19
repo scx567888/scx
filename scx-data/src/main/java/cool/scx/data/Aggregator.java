@@ -1,10 +1,10 @@
 package cool.scx.data;
 
 import cool.scx.data.exception.DataAccessException;
+import cool.scx.functional.ScxConsumer;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /// 聚合器
 ///
@@ -16,9 +16,9 @@ public interface Aggregator {
 
     List<Map<String, Object>> list() throws DataAccessException;
 
-    <T> void forEach(Consumer<T> resultConsumer, Class<T> resultType) throws DataAccessException;
+    <T, E extends Throwable> void forEach(ScxConsumer<T, E> resultConsumer, Class<T> resultType) throws DataAccessException, E;
 
-    void forEach(Consumer<Map<String, Object>> resultConsumer) throws DataAccessException;
+    <E extends Throwable> void forEach(ScxConsumer<Map<String, Object>, E> resultConsumer) throws DataAccessException, E;
 
     <T> T first(Class<T> resultType) throws DataAccessException;
 

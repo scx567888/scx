@@ -1,10 +1,10 @@
 package cool.scx.data;
 
 import cool.scx.data.exception.DataAccessException;
+import cool.scx.functional.ScxConsumer;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /// 查询执行器
 ///
@@ -19,11 +19,11 @@ public interface Finder<Entity> {
 
     List<Map<String, Object>> listMap() throws DataAccessException;
 
-    void forEach(Consumer<Entity> entityConsumer) throws DataAccessException;
+    <E extends Throwable> void forEach(ScxConsumer<Entity, E> entityConsumer) throws DataAccessException, E;
 
-    <T> void forEach(Consumer<T> entityConsumer, Class<T> resultType) throws DataAccessException;
+    <T, E extends Throwable> void forEach(ScxConsumer<T, E> entityConsumer, Class<T> resultType) throws DataAccessException, E;
 
-    void forEachMap(Consumer<Map<String, Object>> entityConsumer) throws DataAccessException;
+    <E extends Throwable> void forEachMap(ScxConsumer<Map<String, Object>, E> entityConsumer) throws DataAccessException, E;
 
     Entity first() throws DataAccessException;
 
