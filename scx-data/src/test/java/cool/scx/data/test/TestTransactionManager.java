@@ -8,10 +8,6 @@ import cool.scx.functional.ScxFunction;
 import cool.scx.functional.ScxRunnable;
 
 public class TestTransactionManager implements TransactionManager<TestTransactionContext> {
-    @Override
-    public TestTransactionContext createTransactionContext() {
-        return null;
-    }
 
     @Override
     public <T, E extends Throwable> T withTransaction(ScxFunction<TestTransactionContext, T, E> handler) throws DataAccessException, E {
@@ -34,21 +30,6 @@ public class TestTransactionManager implements TransactionManager<TestTransactio
     }
 
     @Override
-    public TestTransactionContext createDataContext() {
-        return null;
-    }
-
-    @Override
-    public <T, E extends Throwable> T withContext(ScxFunction<TestTransactionContext, T, E> handler) throws DataAccessException, E {
-        return null;
-    }
-
-    @Override
-    public <E extends Throwable> void withContext(ScxConsumer<TestTransactionContext, E> handler) throws DataAccessException, E {
-
-    }
-
-    @Override
     public <T, E extends Throwable> T autoContext(ScxCallable<T, E> handler) throws DataAccessException, E {
         return null;
     }
@@ -57,4 +38,5 @@ public class TestTransactionManager implements TransactionManager<TestTransactio
     public <E extends Throwable> void autoContext(ScxRunnable<E> handler) throws DataAccessException, E {
 
     }
+    
 }

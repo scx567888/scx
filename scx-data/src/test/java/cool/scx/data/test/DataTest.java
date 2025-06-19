@@ -14,22 +14,15 @@ public class DataTest {
     public static void test1() {
         var repo = new TestRepository<>();
 
-        //方式1 
-        var tc = new TestTransactionContext();
-
-        repo.find(eq("id", 1), tc);
-        repo.delete(eq("id", 1), tc);
-
-        tc.commit();
-
-        //方式2
+        //方式1
         var m = new TestTransactionManager();
         m.withTransaction(tc1 -> {
-            repo.find(eq("id", 1), tc1);
-            repo.delete(eq("id", 1), tc1);
+            repo.find(eq("id", 1));
+            repo.delete(eq("id", 1));
+            tc1.commit();
         });
 
-        //方式3
+        //方式2
         m.autoTransaction(() -> {
             repo.find(eq("id", 1));
             repo.delete(eq("id", 1));
