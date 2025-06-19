@@ -2,7 +2,7 @@ package cool.scx.data;
 
 import cool.scx.data.exception.DataAccessException;
 
-public interface TransactionContext extends DataContext {
+public interface TransactionContext {
 
     /// 提交事务
     void commit() throws DataAccessException;
