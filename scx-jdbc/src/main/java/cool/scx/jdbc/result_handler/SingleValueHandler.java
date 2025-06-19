@@ -10,7 +10,7 @@ import java.sql.SQLException;
 /// @param <T> t
 /// @author scx567888
 /// @version 0.0.1
-final class SingleValueHandler<T> implements ResultHandler<T> {
+final class SingleValueHandler<T> implements ResultHandler<T,RuntimeException> {
 
     /// 列索引
     private final int columnIndex;

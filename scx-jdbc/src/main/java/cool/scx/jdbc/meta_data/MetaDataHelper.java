@@ -18,12 +18,12 @@ import static cool.scx.jdbc.result_handler.ResultHandler.ofBeanList;
 /// @version 0.0.1
 public final class MetaDataHelper {
 
-    private static final ResultHandler<List<_Catalog>> CATALOG_LIST_HANDLER = ofBeanList(_Catalog.class);
-    private static final ResultHandler<List<_Schema>> SCHEMA_LIST_HANDLER = ofBeanList(_Schema.class);
-    private static final ResultHandler<List<_Table>> TABLE_LIST_HANDLER = ofBeanList(_Table.class);
-    private static final ResultHandler<List<_Column>> COLUMN_LIST_HANDLER = ofBeanList(_Column.class);
-    private static final ResultHandler<List<_Key>> KEY_LIST_HANDLER = ofBeanList(_Key.class);
-    private static final ResultHandler<List<_Index>> INDEX_INFO_LIST_HANDLER = ofBeanList(_Index.class);
+    private static final ResultHandler<List<_Catalog>, RuntimeException> CATALOG_LIST_HANDLER = ofBeanList(_Catalog.class);
+    private static final ResultHandler<List<_Schema>, RuntimeException> SCHEMA_LIST_HANDLER = ofBeanList(_Schema.class);
+    private static final ResultHandler<List<_Table>, RuntimeException> TABLE_LIST_HANDLER = ofBeanList(_Table.class);
+    private static final ResultHandler<List<_Column>, RuntimeException> COLUMN_LIST_HANDLER = ofBeanList(_Column.class);
+    private static final ResultHandler<List<_Key>, RuntimeException> KEY_LIST_HANDLER = ofBeanList(_Key.class);
+    private static final ResultHandler<List<_Index>, RuntimeException> INDEX_INFO_LIST_HANDLER = ofBeanList(_Index.class);
 
     public static CatalogMetaData[] getCatalogs(Connection con) throws SQLException {
         try {

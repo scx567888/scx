@@ -129,7 +129,7 @@ public final class SQLRunner {
     /// @param <T>           T
     /// @return result
     /// @throws SQLException e
-    public <T> T query(Connection con, SQL sql, ResultHandler<T> resultHandler) throws SQLException {
+    public <T, E extends Throwable> T query(Connection con, SQL sql, ResultHandler<T, E> resultHandler) throws SQLException, E {
         try (var preparedStatement = con.prepareStatement(sql.sql(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)) {
             fillParams(sql, preparedStatement, jdbcContext.dialect());
             jdbcContext.dialect().beforeExecuteQuery(preparedStatement);
@@ -144,7 +144,7 @@ public final class SQLRunner {
     /// @param resultHandler resultHandler
     /// @param <T>           T
     /// @return result
-    public <T> T query(SQL sql, ResultHandler<T> resultHandler) throws SQLRunnerException {
+    public <T, E extends Throwable> T query(SQL sql, ResultHandler<T, E> resultHandler) throws SQLRunnerException, E {
         try {
             //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
             var connection = CONNECTION_THREAD_LOCAL.get();
