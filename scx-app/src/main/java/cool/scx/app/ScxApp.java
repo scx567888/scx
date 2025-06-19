@@ -10,6 +10,7 @@ import cool.scx.common.util.StopWatch;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
+import cool.scx.data.jdbc.JDBCTransactionManager;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.error_handler.DefaultHttpServerErrorHandler;
@@ -81,6 +82,8 @@ public final class ScxApp {
     private ScxAppHttpRouter scxHttpRouter = null;
 
     private ScxHttpServer httpServer = null;
+
+    private JDBCTransactionManager jdbcTransactionManager = null;
 
     ScxApp(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxAppModule[] scxModules, Object defaultHttpServerOptions) {
         //0, 赋值到全局
@@ -374,6 +377,13 @@ public final class ScxApp {
             this.jdbcContext = new JDBCContext(dataSource);
         }
         return jdbcContext;
+    }
+
+    public JDBCTransactionManager jdbcTransactionManager() {
+        if (jdbcTransactionManager == null) {
+            this.jdbcTransactionManager = new JDBCTransactionManager(this.jdbcContext());
+        }
+        return jdbcTransactionManager;
     }
 
     public ScxHttpServer httpServer() {
