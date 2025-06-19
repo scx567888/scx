@@ -28,7 +28,7 @@ public class TestRepository<Entity> implements AggregatableRepository<Entity, Lo
 
     @Override
     public Finder<Entity> finder(Query query, FieldPolicy fieldPolicy, LockMode lockMode, TestTransactionContext dataContext) {
-        return new  TestFinder<>();
+        return new TestFinder<>();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class TestRepository<Entity> implements AggregatableRepository<Entity, Lo
     }
 
     @Override
-    public  long update(Entity entity, FieldPolicy fieldPolicy, Query query) throws DataAccessException {
+    public long update(Entity entity, FieldPolicy fieldPolicy, Query query) throws DataAccessException {
         return 0;
     }
 
@@ -67,7 +67,7 @@ public class TestRepository<Entity> implements AggregatableRepository<Entity, Lo
     }
 
     @Override
-    public  long delete(Query query, TestTransactionContext dataContext) throws DataAccessException {
+    public long delete(Query query, TestTransactionContext dataContext) throws DataAccessException {
         return 0;
     }
 
@@ -82,13 +82,13 @@ public class TestRepository<Entity> implements AggregatableRepository<Entity, Lo
     }
 
     @Override
-    public  List<Long> add(Collection<Entity> entityList, FieldPolicy fieldPolicy, TestTransactionContext dataContext) throws DataAccessException {
+    public List<Long> add(Collection<Entity> entityList, FieldPolicy fieldPolicy, TestTransactionContext dataContext) throws DataAccessException {
         return List.of();
     }
 
     @Override
-    public  Long add(Entity entity, FieldPolicy fieldPolicy, TestTransactionContext dataContext) throws DataAccessException {
+    public Long add(Entity entity, FieldPolicy fieldPolicy, TestTransactionContext dataContext) throws DataAccessException {
         return null;
     }
-    
+
 }
