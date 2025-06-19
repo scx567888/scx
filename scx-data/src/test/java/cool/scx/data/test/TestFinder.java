@@ -2,10 +2,10 @@ package cool.scx.data.test;
 
 import cool.scx.data.Finder;
 import cool.scx.data.exception.DataAccessException;
+import cool.scx.functional.ScxConsumer;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class TestFinder<T> implements Finder<T> {
 
@@ -25,17 +25,17 @@ public class TestFinder<T> implements Finder<T> {
     }
 
     @Override
-    public void forEach(Consumer<T> tConsumer) throws DataAccessException {
+    public <E extends Throwable> void forEach(ScxConsumer<T, E> entityConsumer) throws DataAccessException, E {
 
     }
 
     @Override
-    public <T1> void forEach(Consumer<T1> entityConsumer, Class<T1> resultType) throws DataAccessException {
+    public <T1, E extends Throwable> void forEach(ScxConsumer<T1, E> entityConsumer, Class<T1> resultType) throws DataAccessException, E {
 
     }
 
     @Override
-    public void forEachMap(Consumer<Map<String, Object>> entityConsumer) throws DataAccessException {
+    public <E extends Throwable> void forEachMap(ScxConsumer<Map<String, Object>, E> entityConsumer) throws DataAccessException, E {
 
     }
 
@@ -58,5 +58,5 @@ public class TestFinder<T> implements Finder<T> {
     public long count() throws DataAccessException {
         return 0;
     }
-    
+
 }

@@ -38,5 +38,5 @@ public class TestTransactionManager implements TransactionManager<TestTransactio
     public <E extends Throwable> void autoContext(ScxRunnable<E> handler) throws DataAccessException, E {
 
     }
-    
+
 }
