@@ -365,4 +365,126 @@ public final class SQLRunner {
         return con;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T, E extends Throwable> T withTransaction(ScxFunction<Connection, T, E> handler) throws SQLRunnerException, E {
+        var promise = new CompletableFuture<T>();
+        Thread.ofVirtual().name("scx-with-transaction-thread-", threadNumber.getAndIncrement()).start(() -> {
+
+            //这个 try 的功能是配合 CONNECTION_THREAD_LOCAL 和 promise 实现线程的等待和将异常穿透到 promise 
+            // 如果 ScopeValue 成熟可移除这种写法 
+            try {
+                //获取连接
+                Connection con;
+                try {
+                    con = getConnection(false);
+                } catch (SQLException e) {
+                    throw new SQLRunnerException("Failed to acquire connection", e);
+                }
+
+                try (con) {
+                    CONNECTION_THREAD_LOCAL.set(con);
+                    T result;
+                    try {
+                        //尝试执行业务逻辑
+                        result = handler.apply(con);
+                    } catch (Throwable handlerE) {
+                        // 抛出业务异常
+                        throw handlerE;
+                    }
+
+                    //通知线程完成
+                    promise.complete(result);
+                } finally {
+                    CONNECTION_THREAD_LOCAL.remove();
+                }
+            } catch (Throwable e) {
+                //通知线程失败
+                promise.completeExceptionally(e);
+            }
+        });
+
+        try {
+            return promise.get();
+        } catch (InterruptedException e) {
+            //这里实际上不应该存在 目前只是折中的方案
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Transaction thread was interrupted", e);
+        } catch (ExecutionException e) {
+            //这里理论只有两种可能 一种是 TransactionException 一种是 E 所以这种处理是安全的
+            var cause = e.getCause();
+            if (cause instanceof SQLRunnerException transactionException) {
+                throw transactionException;
+            }
+            throw (E) cause;
+        }
+    }
+
+    public <E extends Throwable> void withTransaction(ScxConsumer<Connection, E> handler) throws SQLRunnerException, E {
+        withTransaction((con) -> {
+            handler.accept(con);
+            return null;
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T, E extends Throwable> T autoContext(ScxCallable<T, E> handler) throws SQLRunnerException, E {
+        var promise = new CompletableFuture<T>();
+        Thread.ofVirtual().name("scx-auto-context-thread-", threadNumber.getAndIncrement()).start(() -> {
+
+            //这个 try 的功能是配合 CONNECTION_THREAD_LOCAL 和 promise 实现线程的等待和将异常穿透到 promise 
+            // 如果 ScopeValue 成熟可移除这种写法 
+            try {
+                //获取连接
+                Connection con;
+                try {
+                    con = getConnection(true);
+                } catch (SQLException e) {
+                    throw new SQLRunnerException("Failed to acquire connection", e);
+                }
+
+                try (con) {
+                    CONNECTION_THREAD_LOCAL.set(con);
+                    T result;
+                    try {
+                        //尝试执行业务逻辑
+                        result = handler.call();
+                    } catch (Throwable handlerE) {
+                        // 抛出业务异常
+                        throw handlerE;
+                    }
+
+                    //通知线程完成
+                    promise.complete(result);
+                } finally {
+                    CONNECTION_THREAD_LOCAL.remove();
+                }
+            } catch (Throwable e) {
+                //通知线程失败
+                promise.completeExceptionally(e);
+            }
+        });
+
+        try {
+            return promise.get();
+        } catch (InterruptedException e) {
+            //这里实际上不应该存在 目前只是折中的方案
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Transaction thread was interrupted", e);
+        } catch (ExecutionException e) {
+            //这里理论只有两种可能 一种是 TransactionException 一种是 E 所以这种处理是安全的
+            var cause = e.getCause();
+            if (cause instanceof SQLRunnerException transactionException) {
+                throw transactionException;
+            }
+            throw (E) cause;
+        }
+    }
+
+    public <E extends Throwable> void autoContext(ScxRunnable<E> handler) throws SQLRunnerException, E {
+        autoContext(() -> {
+            handler.run();
+            return null;
+        });
+    }
+
 }

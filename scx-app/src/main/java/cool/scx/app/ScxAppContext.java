@@ -7,12 +7,16 @@ import cool.scx.common.util.ScopedValue;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
+import cool.scx.data.exception.DataAccessException;
+import cool.scx.data.jdbc.JDBCTransactionContext;
+import cool.scx.data.jdbc.JDBCTransactionManager;
 import cool.scx.functional.ScxCallable;
+import cool.scx.functional.ScxConsumer;
+import cool.scx.functional.ScxFunction;
 import cool.scx.functional.ScxRunnable;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.sql.SQLRunner;
-import cool.scx.jdbc.sql.SQLRunnerException;
 import cool.scx.web.ScxWeb;
 
 import javax.sql.DataSource;
@@ -110,12 +114,20 @@ public final class ScxAppContext {
         return scx().sqlRunner();
     }
 
-    public static <E extends Throwable> void autoTransaction(ScxRunnable<E> handler) throws E, SQLRunnerException {
-        sqlRunner().autoTransaction(handler);
+    public static <E extends Throwable> void autoTransaction(ScxRunnable<E> handler) throws E, DataAccessException {
+        jdbcTransactionManager().autoTransaction(handler);
     }
 
-    public static <T, E extends Throwable> T autoTransaction(ScxCallable<T, E> handler) throws E, SQLRunnerException {
-        return sqlRunner().autoTransaction(handler);
+    public static <T, E extends Throwable> T autoTransaction(ScxCallable<T, E> handler) throws E, DataAccessException {
+        return jdbcTransactionManager().autoTransaction(handler);
+    }
+
+    public static <T, E extends Throwable> T withTransaction(ScxFunction<JDBCTransactionContext, T, E> handler) throws DataAccessException, E {
+        return jdbcTransactionManager().withTransaction(handler);
+    }
+
+    public static <E extends Throwable> void withTransaction(ScxConsumer<JDBCTransactionContext, E> handler) throws DataAccessException, E {
+        jdbcTransactionManager().withTransaction(handler);
     }
 
     public static <T> T getBean(Class<T> requiredType) {
@@ -140,6 +152,10 @@ public final class ScxAppContext {
 
     public static JDBCContext jdbcContext() {
         return scx().jdbcContext();
+    }
+
+    public static JDBCTransactionManager jdbcTransactionManager() {
+        return scx().jdbcTransactionManager();
     }
 
 }
