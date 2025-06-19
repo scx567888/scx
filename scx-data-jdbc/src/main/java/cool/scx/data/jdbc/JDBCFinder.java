@@ -5,11 +5,11 @@ import cool.scx.data.LockMode;
 import cool.scx.data.exception.DataAccessException;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.query.Query;
+import cool.scx.functional.ScxConsumer;
 import cool.scx.jdbc.sql.SQLRunnerException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static cool.scx.jdbc.result_handler.ResultHandler.*;
 
@@ -60,7 +60,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public void forEach(Consumer<Entity> entityConsumer) throws DataAccessException {
+    public <E extends Throwable> void forEach(ScxConsumer<Entity, E> entityConsumer) throws DataAccessException, E {
         try {
             repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanConsumer(repository.beanBuilder, entityConsumer));
         } catch (SQLRunnerException e) {
@@ -69,7 +69,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public <T> void forEach(Consumer<T> entityConsumer, Class<T> resultType) throws DataAccessException {
+    public <T, E extends Throwable> void forEach(ScxConsumer<T, E> entityConsumer, Class<T> resultType) throws DataAccessException, E {
         try {
             repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanConsumer(resultType, repository.beanColumnNameMapping, entityConsumer));
         } catch (SQLRunnerException e) {
@@ -78,7 +78,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public void forEachMap(Consumer<Map<String, Object>> entityConsumer) throws DataAccessException {
+    public <E extends Throwable> void forEachMap(ScxConsumer<Map<String, Object>, E> entityConsumer) throws DataAccessException, E {
         try {
             repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofMapConsumer(repository.mapBuilder, entityConsumer));
         } catch (SQLRunnerException e) {

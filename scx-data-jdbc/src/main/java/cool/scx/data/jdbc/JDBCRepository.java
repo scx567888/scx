@@ -45,9 +45,9 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
     final MapFieldNameMapping mapFieldNameMapping;
     final BeanBuilder<Entity> beanBuilder;
     final MapBuilder mapBuilder;
-    final ResultHandler<List<Entity>> entityBeanListHandler;
-    final ResultHandler<Entity> entityBeanHandler;
-    final ResultHandler<Long> countResultHandler;
+    final ResultHandler<List<Entity>, RuntimeException> entityBeanListHandler;
+    final ResultHandler<Entity, RuntimeException> entityBeanHandler;
+    final ResultHandler<Long, RuntimeException> countResultHandler;
 
     // *********** SQL 语句构造器 ***************
     final InsertSQLBuilder insertSQLBuilder;
@@ -168,11 +168,11 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         return beanBuilder;
     }
 
-    public ResultHandler<List<Entity>> entityBeanListHandler() {
+    public ResultHandler<List<Entity>, RuntimeException> entityBeanListHandler() {
         return entityBeanListHandler;
     }
 
-    public ResultHandler<Entity> entityBeanHandler() {
+    public ResultHandler<Entity, RuntimeException> entityBeanHandler() {
         return entityBeanHandler;
     }
 
