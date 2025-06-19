@@ -15,82 +15,44 @@ import static cool.scx.data.query.QueryBuilder.query;
 /// @param <ID>     ID
 /// @author scx567888
 /// @version 0.0.1
-public interface LockableRepository<Entity, ID, C extends DataContext> extends Repository<Entity, ID, C> {
+public interface LockableRepository<Entity, ID> extends Repository<Entity, ID> {
 
     Finder<Entity> finder(Query query, FieldPolicy fieldPolicy, LockMode lockMode);
 
-    Finder<Entity> finder(Query query, FieldPolicy fieldPolicy, LockMode lockMode, C dataContext);
-
     default Finder<Entity> finder(Query query, LockMode lockMode) {
         return finder(query, includeAll(), lockMode);
-    }
-
-    default Finder<Entity> finder(Query query, LockMode lockMode, C dataContext) {
-        return finder(query, includeAll(), lockMode, dataContext);
     }
 
     default Finder<Entity> finder(FieldPolicy fieldPolicy, LockMode lockMode) {
         return finder(query(), fieldPolicy, lockMode);
     }
 
-    default Finder<Entity> finder(FieldPolicy fieldPolicy, LockMode lockMode, C dataContext) {
-        return finder(query(), fieldPolicy, lockMode, dataContext);
-    }
-
     default Finder<Entity> finder(LockMode lockMode) {
         return finder(query(), includeAll(), lockMode);
-    }
-
-    default Finder<Entity> finder(LockMode lockMode, C dataContext) {
-        return finder(query(), includeAll(), lockMode, dataContext);
     }
 
     default List<Entity> find(Query query, FieldPolicy fieldPolicy, LockMode lockMode) throws DataAccessException {
         return finder(query, fieldPolicy, lockMode).list();
     }
 
-    default List<Entity> find(Query query, FieldPolicy fieldPolicy, LockMode lockMode, C dataContext) throws DataAccessException {
-        return finder(query, fieldPolicy, lockMode, dataContext).list();
-    }
-
     default List<Entity> find(Query query, LockMode lockMode) throws DataAccessException {
         return finder(query, lockMode).list();
-    }
-
-    default List<Entity> find(Query query, LockMode lockMode, C dataContext) throws DataAccessException {
-        return finder(query, lockMode, dataContext).list();
     }
 
     default List<Entity> find(FieldPolicy fieldPolicy, LockMode lockMode) throws DataAccessException {
         return finder(fieldPolicy, lockMode).list();
     }
 
-    default List<Entity> find(FieldPolicy fieldPolicy, LockMode lockMode, C dataContext) throws DataAccessException {
-        return finder(fieldPolicy, lockMode, dataContext).list();
-    }
-
     default List<Entity> find(LockMode lockMode) throws DataAccessException {
         return finder(lockMode).list();
-    }
-
-    default List<Entity> find(LockMode lockMode, C dataContext) throws DataAccessException {
-        return finder(lockMode, dataContext).list();
     }
 
     default Entity findFirst(Query query, FieldPolicy fieldPolicy, LockMode lockMode) throws DataAccessException {
         return finder(query, fieldPolicy, lockMode).first();
     }
 
-    default Entity findFirst(Query query, FieldPolicy fieldPolicy, LockMode lockMode, C dataContext) throws DataAccessException {
-        return finder(query, fieldPolicy, lockMode, dataContext).first();
-    }
-
     default Entity findFirst(Query query, LockMode lockMode) throws DataAccessException {
         return finder(query, lockMode).first();
-    }
-
-    default Entity findFirst(Query query, LockMode lockMode, C dataContext) throws DataAccessException {
-        return finder(query, lockMode, dataContext).first();
     }
 
 }
