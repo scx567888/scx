@@ -10,22 +10,12 @@ public interface DataManager<C extends DataContext> {
 
     C createDataContext();
 
-    default <T, E extends Throwable> T withContext(ScxFunction<C, T, E> handler) throws DataAccessException, E {
-        C dataContext = createDataContext();
-        return handler.apply(dataContext);
-    }
+    <T, E extends Throwable> T withContext(ScxFunction<C, T, E> handler) throws DataAccessException, E;
 
-    default <E extends Throwable> void withContext(ScxConsumer<C, E> handler) throws DataAccessException, E {
-        C dataContext = createDataContext();
-        handler.accept(dataContext);
-    }
+    <E extends Throwable> void withContext(ScxConsumer<C, E> handler) throws DataAccessException, E;
 
-    default <T, E extends Throwable> T autoContext(ScxCallable<T, E> handler) throws DataAccessException, E {
-        return handler.call();
-    }
+    <T, E extends Throwable> T autoContext(ScxCallable<T, E> handler) throws DataAccessException, E;
 
-    default <E extends Throwable> void autoContext(ScxRunnable<E> handler) throws DataAccessException, E {
-        handler.run();
-    }
+    <E extends Throwable> void autoContext(ScxRunnable<E> handler) throws DataAccessException, E;
 
 }
