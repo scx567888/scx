@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -82,27 +81,27 @@ public interface ResultHandler<T, E extends Throwable> {
         return new BeanConsumerHandler<>(BeanBuilder.of(clazz), consumer);
     }
 
-    static <C,E extends Throwable> ResultHandler<Void, E> ofBeanConsumer(Class<C> clazz, Function<Field, String> columnNameMapping, ScxConsumer<C,E> consumer) {
+    static <C, E extends Throwable> ResultHandler<Void, E> ofBeanConsumer(Class<C> clazz, Function<Field, String> columnNameMapping, ScxConsumer<C, E> consumer) {
         return new BeanConsumerHandler<>(BeanBuilder.of(clazz, columnNameMapping), consumer);
     }
 
-    static <C,E extends Throwable> ResultHandler<Void, E> ofBeanConsumer(BeanBuilder<C> beanBuilder, ScxConsumer<C,E> consumer) {
+    static <C, E extends Throwable> ResultHandler<Void, E> ofBeanConsumer(BeanBuilder<C> beanBuilder, ScxConsumer<C, E> consumer) {
         return new BeanConsumerHandler<>(beanBuilder, consumer);
     }
 
-    static <E extends Throwable> ResultHandler<Void, E> ofMapConsumer(ScxConsumer<Map<String, Object>,E> consumer) {
+    static <E extends Throwable> ResultHandler<Void, E> ofMapConsumer(ScxConsumer<Map<String, Object>, E> consumer) {
         return new MapConsumerHandler<>(MapBuilder.of(), consumer);
     }
 
-    static <E extends Throwable> ResultHandler<Void, E> ofMapConsumer(MapBuilder mapBuilder, ScxConsumer<Map<String, Object>,E> consumer) {
+    static <E extends Throwable> ResultHandler<Void, E> ofMapConsumer(MapBuilder mapBuilder, ScxConsumer<Map<String, Object>, E> consumer) {
         return new MapConsumerHandler<>(mapBuilder, consumer);
     }
 
-    static <E extends Throwable> ResultHandler<Void, E> ofMapConsumer(Supplier<Map<String, Object>> mapSupplier, ScxConsumer<Map<String, Object>,E> consumer) {
+    static <E extends Throwable> ResultHandler<Void, E> ofMapConsumer(Supplier<Map<String, Object>> mapSupplier, ScxConsumer<Map<String, Object>, E> consumer) {
         return new MapConsumerHandler<>(MapBuilder.of(mapSupplier), consumer);
     }
 
-    static <E extends Throwable> ResultHandler<Void, E> ofMapConsumer(Function<String, String> fieldNameMapping, ScxConsumer<Map<String, Object>,E> consumer) {
+    static <E extends Throwable> ResultHandler<Void, E> ofMapConsumer(Function<String, String> fieldNameMapping, ScxConsumer<Map<String, Object>, E> consumer) {
         return new MapConsumerHandler<>(MapBuilder.of(fieldNameMapping), consumer);
     }
 

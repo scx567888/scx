@@ -15,7 +15,7 @@ import static cool.scx.jdbc.result_handler.MapHandler.createColumnLabelIndex;
 ///
 /// @author scx567888
 /// @version 0.0.1
-record MapListHandler(MapBuilder mapBuilder) implements ResultHandler<List<Map<String, Object>>,RuntimeException> {
+record MapListHandler(MapBuilder mapBuilder) implements ResultHandler<List<Map<String, Object>>, RuntimeException> {
 
     static final MapListHandler INSTANCE = new MapListHandler(MapBuilder.of());
 
