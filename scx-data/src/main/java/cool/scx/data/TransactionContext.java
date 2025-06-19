@@ -2,6 +2,10 @@ package cool.scx.data;
 
 import cool.scx.data.exception.DataAccessException;
 
+/// TransactionContext
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface TransactionContext {
 
     /// 提交事务

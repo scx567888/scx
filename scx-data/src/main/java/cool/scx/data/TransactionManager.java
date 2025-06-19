@@ -6,6 +6,11 @@ import cool.scx.functional.ScxConsumer;
 import cool.scx.functional.ScxFunction;
 import cool.scx.functional.ScxRunnable;
 
+/// TransactionManager
+///
+/// @param <C>
+/// @author scx567888
+/// @version 0.0.1
 public interface TransactionManager<C extends TransactionContext> extends ContextManager {
 
     /// 需手动处理事务
