@@ -5,7 +5,7 @@ import cool.scx.app.eventbus.EventBus;
 import cool.scx.bean.BeanFactory;
 import cool.scx.common.util.$;
 import cool.scx.common.util.FileUtils;
-import cool.scx.common.util.ScopedValue;
+import cool.scx.common.scope_value.ScxScopedValue;
 import cool.scx.common.util.StopWatch;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
@@ -139,7 +139,7 @@ public final class ScxApp {
     }
 
     public ScxApp run() {
-        return ScopedValue.where(GLOBAL_SCX, this).get(this::run0);
+        return ScxScopedValue.where(GLOBAL_SCX, this).call(this::run0);
     }
 
     /// 运行项目

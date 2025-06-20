@@ -1,7 +1,7 @@
 package cool.scx.common.test;
 
-import cool.scx.common.util.$;
 import cool.scx.common.scope_value.ScxScopedValue;
+import cool.scx.common.util.$;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

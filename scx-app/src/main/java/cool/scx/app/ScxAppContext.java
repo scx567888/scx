@@ -3,7 +3,7 @@ package cool.scx.app;
 import cool.scx.app.enumeration.ScxAppFeature;
 import cool.scx.app.eventbus.EventBus;
 import cool.scx.bean.BeanFactory;
-import cool.scx.common.util.ScopedValue;
+import cool.scx.common.scope_value.ScxScopedValue;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
@@ -31,7 +31,7 @@ public final class ScxAppContext {
     /// 全局唯一的 SCX APP
     /// 为了保证方法使用的简易 我们建议使用静态的方法
     /// 但是其本质上是调用 GLOBAL_UNIQUE_SCX_APP 方法中的实例对象
-    final static ScopedValue<ScxApp> GLOBAL_SCX = ScopedValue.newInstance();
+    final static ScxScopedValue<ScxApp> GLOBAL_SCX = ScxScopedValue.newInstance();
 
     /// 兼容 旧版本 todo 待移除
     private static ScxApp GLOBAL_SCX_0 = null;
@@ -47,7 +47,7 @@ public final class ScxAppContext {
     ///
     /// @return scx
     public static ScxApp scx() {
-        if (GLOBAL_SCX.get() != null) {
+        if (GLOBAL_SCX.isBound()) {
             return GLOBAL_SCX.get();
         } else {
             // 兼容 旧版本 todo 待移除
