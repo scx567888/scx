@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.data.TransactionManager;
+import cool.scx.data.context.TransactionManager;
 import cool.scx.data.exception.DataAccessException;
 import cool.scx.functional.ScxCallable;
 import cool.scx.functional.ScxConsumer;
