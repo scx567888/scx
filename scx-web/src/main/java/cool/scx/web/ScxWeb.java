@@ -1,5 +1,6 @@
 package cool.scx.web;
 
+import cool.scx.common.scope_value.ScxScopedValue;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.routing.Router;
 import cool.scx.http.routing.RoutingContext;
@@ -31,7 +32,8 @@ import java.util.stream.Collectors;
 public final class ScxWeb {
 
     /// 路由上下文 THREAD_LOCAL
-    private static final InheritableThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new InheritableThreadLocal<>();
+    static final ScxScopedValue<RoutingContext> ROUTING_CONTEXT_SCOPED_VALUE = ScxScopedValue.newInstance();
+
     private final List<ReturnValueHandler> returnValueHandlers = new ArrayList<>();
     private final LastReturnValueHandler lastReturnValueHandler;
     private final List<ParameterHandlerBuilder> parameterHandlerBuilders = new ArrayList<>();
@@ -70,20 +72,7 @@ public final class ScxWeb {
     ///
     /// @return 当前线程的 RoutingContext
     public static RoutingContext routingContext() {
-        return ROUTING_CONTEXT_THREAD_LOCAL.get();
-    }
-
-    /// 设置当前线程的 routingContext
-    /// 此方法正常之给 scxMappingHandler 调用
-    /// 若无特殊需求 不必调用此方法
-    ///
-    /// @param routingContext 要设置的 routingContext
-    static void _routingContext(RoutingContext routingContext) {
-        ROUTING_CONTEXT_THREAD_LOCAL.set(routingContext);
-    }
-
-    static void _clearRoutingContext() {
-        ROUTING_CONTEXT_THREAD_LOCAL.remove();
+        return ROUTING_CONTEXT_SCOPED_VALUE.get();
     }
 
     public ScxWeb registerHttpRoutes(Router router, Object... objects) {

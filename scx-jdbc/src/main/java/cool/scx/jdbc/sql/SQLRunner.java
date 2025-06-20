@@ -1,5 +1,6 @@
 package cool.scx.jdbc.sql;
 
+import cool.scx.common.scope_value.ScxScopedValue;
 import cool.scx.functional.ScxCallable;
 import cool.scx.functional.ScxConsumer;
 import cool.scx.functional.ScxFunction;
@@ -14,8 +15,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.sql.ResultSet.CONCUR_READ_ONLY;
@@ -28,48 +27,24 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 /// @version 0.0.1
 public final class SQLRunner {
 
-    /// 此处采用线程的方式实现事务隔离 此字段用于存储 不同线程对应的 Connection 连接
-    private static final InheritableThreadLocal<Connection> CONNECTION_THREAD_LOCAL = new InheritableThreadLocal<>();
-    private final AtomicLong threadNumber = new AtomicLong(0);
+    private static final ScxScopedValue<Connection> CONNECTION_SCOPE_VALUE = ScxScopedValue.newInstance();
+
+    private static final ScxScopedValue<SQLRunner> SQL_RUNNER_SCOPE_VALUE = ScxScopedValue.newInstance();
+
     private final JDBCContext jdbcContext;
 
     public SQLRunner(JDBCContext jdbcContext) {
         this.jdbcContext = jdbcContext;
     }
 
-    /// 自动事务
-    ///
-    /// @param con     con
-    /// @param handler handler
-    /// @throws Exception e
-    public static void autoTransaction(Connection con, ScxConsumer<Connection, Exception> handler) throws Exception {
-        con.setAutoCommit(false);
-        try {
-            handler.accept(con);
-            con.commit();
-        } catch (Exception e) {
-            con.rollback();
-            throw e;
-        }
+    private Connection getConnection() throws SQLException {
+        return getConnection(true);
     }
 
-    /// 自动事务 (带返回值)
-    ///
-    /// @param con     con
-    /// @param handler handler
-    /// @param <T>     T
-    /// @return 返回值
-    /// @throws Exception e
-    public static <T> T autoTransaction(Connection con, ScxFunction<Connection, T, Exception> handler) throws Exception {
-        con.setAutoCommit(false);
-        try {
-            T result = handler.apply(con);
-            con.commit();
-            return result;
-        } catch (Exception e) {
-            con.rollback();
-            throw e;
-        }
+    private Connection getConnection(boolean autoCommit) throws SQLException {
+        var con = jdbcContext.dataSource().getConnection();
+        con.setAutoCommit(autoCommit);
+        return con;
     }
 
     private static List<Long> getGeneratedKeys(PreparedStatement preparedStatement) throws SQLException {
@@ -121,14 +96,6 @@ public final class SQLRunner {
         }
     }
 
-    /// query
-    ///
-    /// @param con           con
-    /// @param sql           sql
-    /// @param resultHandler resultHandler
-    /// @param <T>           T
-    /// @return result
-    /// @throws SQLException e
     public <T, E extends Throwable> T query(Connection con, SQL sql, ResultHandler<T, E> resultHandler) throws SQLException, E {
         try (var preparedStatement = con.prepareStatement(sql.sql(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)) {
             fillParams(sql, preparedStatement, jdbcContext.dialect());
@@ -138,34 +105,6 @@ public final class SQLRunner {
         }
     }
 
-    /// query (自动管理连接)
-    ///
-    /// @param sql           sql
-    /// @param resultHandler resultHandler
-    /// @param <T>           T
-    /// @return result
-    public <T, E extends Throwable> T query(SQL sql, ResultHandler<T, E> resultHandler) throws SQLRunnerException, E {
-        try {
-            //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
-            var connection = CONNECTION_THREAD_LOCAL.get();
-            if (connection != null) {
-                return query(connection, sql, resultHandler);
-            } else {
-                try (var con = getConnection()) {
-                    return query(con, sql, resultHandler);
-                }
-            }
-        } catch (SQLException sqlException) {
-            throw new SQLRunnerException(sqlException);
-        }
-    }
-
-    /// execute
-    ///
-    /// @param con con
-    /// @param sql sql
-    /// @return 受影响的行数
-    /// @throws SQLException e
     public long execute(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
             fillParams(sql, preparedStatement, jdbcContext.dialect());
@@ -174,32 +113,6 @@ public final class SQLRunner {
         }
     }
 
-    /// execute (自动管理连接)
-    ///
-    /// @param sql sql
-    /// @return 受影响的行数
-    public long execute(SQL sql) throws SQLRunnerException {
-        try {
-            //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
-            var connection = CONNECTION_THREAD_LOCAL.get();
-            if (connection != null) {
-                return execute(connection, sql);
-            } else {
-                try (var con = getConnection()) {
-                    return execute(con, sql);
-                }
-            }
-        } catch (SQLException sqlException) {
-            throw new SQLRunnerException(sqlException);
-        }
-    }
-
-    /// update
-    ///
-    /// @param con con
-    /// @param sql sql
-    /// @return UpdateResult
-    /// @throws SQLException e
     public UpdateResult update(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
             fillParams(sql, preparedStatement, jdbcContext.dialect());
@@ -209,32 +122,6 @@ public final class SQLRunner {
         }
     }
 
-    /// update (自动管理连接)
-    ///
-    /// @param sql sql
-    /// @return UpdateResult
-    public UpdateResult update(SQL sql) throws SQLRunnerException {
-        try {
-            //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
-            var connection = CONNECTION_THREAD_LOCAL.get();
-            if (connection != null) {
-                return update(connection, sql);
-            } else {
-                try (var con = getConnection()) {
-                    return update(con, sql);
-                }
-            }
-        } catch (SQLException sqlException) {
-            throw new SQLRunnerException(sqlException);
-        }
-    }
-
-    /// updateBatch
-    ///
-    /// @param con con
-    /// @param sql sql
-    /// @return UpdateResult
-    /// @throws SQLException e
     public UpdateResult updateBatch(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
             fillParams(sql, preparedStatement, jdbcContext.dialect());
@@ -248,18 +135,74 @@ public final class SQLRunner {
         }
     }
 
+    /// query (自动管理连接)
+    public <T, E extends Throwable> T query(SQL sql, ResultHandler<T, E> resultHandler) throws SQLRunnerException, E {
+        try {
+            // 我们根据 CONNECTION_SCOPE_VALUE 来判断是否处于 autoTransaction 中
+            if (CONNECTION_SCOPE_VALUE.isBound()) {
+                var connection = CONNECTION_SCOPE_VALUE.get();
+                return query(connection, sql, resultHandler);
+            } else {
+                // 我们根据 SQL_RUNNER_SCOPE_VALUE 来判断是否处于 另一个上下文 中
+                var sqlRunner = SQL_RUNNER_SCOPE_VALUE.isBound() ? SQL_RUNNER_SCOPE_VALUE.get() : this;
+                try (var con = sqlRunner.getConnection()) {
+                    return query(con, sql, resultHandler);
+                }
+            }
+        } catch (SQLException sqlException) {
+            throw new SQLRunnerException(sqlException);
+        }
+    }
+
+    /// execute (自动管理连接)
+    public long execute(SQL sql) throws SQLRunnerException {
+        try {
+            // 我们根据 CONNECTION_SCOPE_VALUE 来判断是否处于 autoTransaction 中
+            if (CONNECTION_SCOPE_VALUE.isBound()) {
+                var connection = CONNECTION_SCOPE_VALUE.get();
+                return execute(connection, sql);
+            } else {
+                // 我们根据 SQL_RUNNER_SCOPE_VALUE 来判断是否处于 另一个上下文 中
+                var sqlRunner = SQL_RUNNER_SCOPE_VALUE.isBound() ? SQL_RUNNER_SCOPE_VALUE.get() : this;
+                try (var con = sqlRunner.getConnection()) {
+                    return execute(con, sql);
+                }
+            }
+        } catch (SQLException sqlException) {
+            throw new SQLRunnerException(sqlException);
+        }
+    }
+
+    /// update (自动管理连接)
+    public UpdateResult update(SQL sql) throws SQLRunnerException {
+        try {
+            // 我们根据 CONNECTION_SCOPE_VALUE 来判断是否处于 autoTransaction 中
+            if (CONNECTION_SCOPE_VALUE.isBound()) {
+                var connection = CONNECTION_SCOPE_VALUE.get();
+                return update(connection, sql);
+            } else {
+                // 我们根据 SQL_RUNNER_SCOPE_VALUE 来判断是否处于 另一个上下文 中
+                var sqlRunner = SQL_RUNNER_SCOPE_VALUE.isBound() ? SQL_RUNNER_SCOPE_VALUE.get() : this;
+                try (var con = sqlRunner.getConnection()) {
+                    return update(con, sql);
+                }
+            }
+        } catch (SQLException sqlException) {
+            throw new SQLRunnerException(sqlException);
+        }
+    }
+
     /// updateBatch (自动管理连接)
-    ///
-    /// @param sql sql
-    /// @return UpdateResult
     public UpdateResult updateBatch(SQL sql) throws SQLRunnerException {
         try {
-            //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
-            var connection = CONNECTION_THREAD_LOCAL.get();
-            if (connection != null) {
+            // 我们根据 CONNECTION_SCOPE_VALUE 来判断是否处于 autoTransaction 中
+            if (CONNECTION_SCOPE_VALUE.isBound()) {
+                var connection = CONNECTION_SCOPE_VALUE.get();
                 return updateBatch(connection, sql);
             } else {
-                try (var con = getConnection()) {
+                // 我们根据 SQL_RUNNER_SCOPE_VALUE 来判断是否处于 另一个上下文 中
+                var sqlRunner = SQL_RUNNER_SCOPE_VALUE.isBound() ? SQL_RUNNER_SCOPE_VALUE.get() : this;
+                try (var con = sqlRunner.getConnection()) {
                     return updateBatch(con, sql);
                 }
             }
@@ -269,7 +212,49 @@ public final class SQLRunner {
     }
 
     /// 自动处理事务并在产生异常时进行自动回滚
-    /// 注意 其中的操作会在另一个线程中执行 所以需要注意线程的操作
+    public <T, E extends Throwable> T autoTransaction(ScxCallable<T, E> handler) throws E, SQLRunnerException {
+        try (var con = getConnection(false)) {
+            return ScxScopedValue.where(CONNECTION_SCOPE_VALUE, con).call(() -> {
+                T result;
+                try {
+                    //尝试执行业务逻辑
+                    result = handler.call();
+                } catch (Throwable handlerE) {
+                    // 业务异常发生, 尝试回滚事务
+                    try {
+                        con.rollback();
+                    } catch (SQLException rollbackE) {
+                        // 回滚失败, 将业务异常作为附加异常抛出
+                        rollbackE.addSuppressed(handlerE);
+                        throw new SQLRunnerException("Rollback failed after business exception", rollbackE);
+                    }
+                    // 回滚成功, 抛出业务异常
+                    throw handlerE;
+                }
+
+                try {
+                    //提交事务
+                    con.commit();
+                } catch (SQLException commitE) {
+                    try {
+                        con.rollback();
+                    } catch (SQLException rollbackE) {
+                        // 回滚失败, 优先抛出回滚异常, 同时附加提交异常
+                        rollbackE.addSuppressed(commitE);
+                        throw new SQLRunnerException("Rollback failed after commit failure", rollbackE);
+                    }
+                    throw new SQLRunnerException("Commit failed", commitE);
+                }
+
+                return result;
+
+            });
+        } catch (SQLException e) {
+            throw new SQLRunnerException(e);
+        }
+    }
+
+    /// 自动处理事务并在产生异常时进行自动回滚
     public <E extends Throwable> void autoTransaction(ScxRunnable<E> handler) throws E, SQLRunnerException {
         autoTransaction(() -> {
             handler.run();
@@ -277,145 +262,12 @@ public final class SQLRunner {
         });
     }
 
-    /// 自动处理事务并在产生异常时进行自动回滚
-    /// 注意 其中的操作会在另一个线程中执行 所以需要注意线程的操作
-    @SuppressWarnings("unchecked")
-    public <T, E extends Throwable> T autoTransaction(ScxCallable<T, E> handler) throws E, SQLRunnerException {
-        var promise = new CompletableFuture<T>();
-        Thread.ofVirtual().name("scx-auto-transaction-thread-", threadNumber.getAndIncrement()).start(() -> {
-
-            //这个 try 的功能是配合 CONNECTION_THREAD_LOCAL 和 promise 实现线程的等待和将异常穿透到 promise 
-            // 如果 ScopeValue 成熟可移除这种写法 
-            try {
-                //获取连接
-                Connection con;
-                try {
-                    con = getConnection(false);
-                } catch (SQLException e) {
-                    throw new SQLRunnerException("Failed to acquire connection", e);
-                }
-
-                try (con) {
-                    CONNECTION_THREAD_LOCAL.set(con);
-                    T result;
-                    try {
-                        //尝试执行业务逻辑
-                        result = handler.call();
-                    } catch (Throwable handlerE) {
-                        // 业务异常发生, 尝试回滚事务
-                        try {
-                            con.rollback();
-                        } catch (SQLException rollbackE) {
-                            // 回滚失败, 将业务异常作为附加异常抛出
-                            rollbackE.addSuppressed(handlerE);
-                            throw new SQLRunnerException("Rollback failed after business exception", rollbackE);
-                        }
-                        // 回滚成功, 抛出业务异常
-                        throw handlerE;
-                    }
-
-                    try {
-                        //提交事务
-                        con.commit();
-                    } catch (SQLException commitE) {
-                        try {
-                            con.rollback();
-                        } catch (SQLException rollbackE) {
-                            // 回滚失败, 优先抛出回滚异常, 同时附加提交异常
-                            rollbackE.addSuppressed(commitE);
-                            throw new SQLRunnerException("Rollback failed after commit failure", rollbackE);
-                        }
-                        throw new SQLRunnerException("Commit failed", commitE);
-                    }
-
-                    //通知线程完成
-                    promise.complete(result);
-                } finally {
-                    CONNECTION_THREAD_LOCAL.remove();
-                }
-            } catch (Throwable e) {
-                //通知线程失败
-                promise.completeExceptionally(e);
-            }
-        });
-
-        try {
-            return promise.get();
-        } catch (InterruptedException e) {
-            //这里实际上不应该存在 目前只是折中的方案
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException("Transaction thread was interrupted", e);
-        } catch (ExecutionException e) {
-            //这里理论只有两种可能 一种是 TransactionException 一种是 E 所以这种处理是安全的
-            var cause = e.getCause();
-            if (cause instanceof SQLRunnerException transactionException) {
-                throw transactionException;
-            }
-            throw (E) cause;
-        }
-    }
-
-    private Connection getConnection() throws SQLException {
-        return getConnection(true);
-    }
-
-    private Connection getConnection(boolean autoCommit) throws SQLException {
-        var con = jdbcContext.dataSource().getConnection();
-        con.setAutoCommit(autoCommit);
-        return con;
-    }
-
-    @SuppressWarnings("unchecked")
+    /// 需要用户手动提交事务
     public <T, E extends Throwable> T withTransaction(ScxFunction<Connection, T, E> handler) throws SQLRunnerException, E {
-        var promise = new CompletableFuture<T>();
-        Thread.ofVirtual().name("scx-with-transaction-thread-", threadNumber.getAndIncrement()).start(() -> {
-
-            //这个 try 的功能是配合 CONNECTION_THREAD_LOCAL 和 promise 实现线程的等待和将异常穿透到 promise 
-            // 如果 ScopeValue 成熟可移除这种写法 
-            try {
-                //获取连接
-                Connection con;
-                try {
-                    con = getConnection(false);
-                } catch (SQLException e) {
-                    throw new SQLRunnerException("Failed to acquire connection", e);
-                }
-
-                try (con) {
-                    CONNECTION_THREAD_LOCAL.set(con);
-                    T result;
-                    try {
-                        //尝试执行业务逻辑
-                        result = handler.apply(con);
-                    } catch (Throwable handlerE) {
-                        // 抛出业务异常
-                        throw handlerE;
-                    }
-
-                    //通知线程完成
-                    promise.complete(result);
-                } finally {
-                    CONNECTION_THREAD_LOCAL.remove();
-                }
-            } catch (Throwable e) {
-                //通知线程失败
-                promise.completeExceptionally(e);
-            }
-        });
-
-        try {
-            return promise.get();
-        } catch (InterruptedException e) {
-            //这里实际上不应该存在 目前只是折中的方案
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException("Transaction thread was interrupted", e);
-        } catch (ExecutionException e) {
-            //这里理论只有两种可能 一种是 TransactionException 一种是 E 所以这种处理是安全的
-            var cause = e.getCause();
-            if (cause instanceof SQLRunnerException transactionException) {
-                throw transactionException;
-            }
-            throw (E) cause;
+        try (var con = getConnection(false)) {
+            return ScxScopedValue.where(CONNECTION_SCOPE_VALUE, con).call(() -> handler.apply(con));
+        } catch (SQLException e) {
+            throw new SQLRunnerException(e);
         }
     }
 
@@ -426,58 +278,9 @@ public final class SQLRunner {
         });
     }
 
-    @SuppressWarnings("unchecked")
+    /// 更改上下文
     public <T, E extends Throwable> T autoContext(ScxCallable<T, E> handler) throws SQLRunnerException, E {
-        var promise = new CompletableFuture<T>();
-        Thread.ofVirtual().name("scx-auto-context-thread-", threadNumber.getAndIncrement()).start(() -> {
-
-            //这个 try 的功能是配合 CONNECTION_THREAD_LOCAL 和 promise 实现线程的等待和将异常穿透到 promise 
-            // 如果 ScopeValue 成熟可移除这种写法 
-            try {
-                //获取连接
-                Connection con;
-                try {
-                    con = getConnection(true);
-                } catch (SQLException e) {
-                    throw new SQLRunnerException("Failed to acquire connection", e);
-                }
-
-                try (con) {
-                    CONNECTION_THREAD_LOCAL.set(con);
-                    T result;
-                    try {
-                        //尝试执行业务逻辑
-                        result = handler.call();
-                    } catch (Throwable handlerE) {
-                        // 抛出业务异常
-                        throw handlerE;
-                    }
-
-                    //通知线程完成
-                    promise.complete(result);
-                } finally {
-                    CONNECTION_THREAD_LOCAL.remove();
-                }
-            } catch (Throwable e) {
-                //通知线程失败
-                promise.completeExceptionally(e);
-            }
-        });
-
-        try {
-            return promise.get();
-        } catch (InterruptedException e) {
-            //这里实际上不应该存在 目前只是折中的方案
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException("Transaction thread was interrupted", e);
-        } catch (ExecutionException e) {
-            //这里理论只有两种可能 一种是 TransactionException 一种是 E 所以这种处理是安全的
-            var cause = e.getCause();
-            if (cause instanceof SQLRunnerException transactionException) {
-                throw transactionException;
-            }
-            throw (E) cause;
-        }
+        return ScxScopedValue.where(SQL_RUNNER_SCOPE_VALUE, this).call(handler);
     }
 
     public <E extends Throwable> void autoContext(ScxRunnable<E> handler) throws SQLRunnerException, E {
