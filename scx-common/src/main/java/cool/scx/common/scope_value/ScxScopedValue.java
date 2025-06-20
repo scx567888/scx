@@ -3,8 +3,9 @@ package cool.scx.common.scope_value;
 import cool.scx.functional.ScxCallable;
 import cool.scx.functional.ScxRunnable;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /// 使用 threadLocal 模拟的 ScopedValue (不支持线程池线程复用和复杂异步线程切换)
 /// todo ScopedValue 正式版本发布时 移除此类
@@ -14,7 +15,14 @@ import java.util.Deque;
 /// @version 0.0.1
 public final class ScxScopedValue<T> {
 
-    private final InheritableThreadLocal<T> threadLocal = new InheritableThreadLocal<>();
+    private final static Object UNBOUND = new Object();
+
+    private final InheritableThreadLocal<Object> threadLocal = new InheritableThreadLocal<>() {
+        @Override
+        protected Object initialValue() {
+            return UNBOUND;
+        }
+    };
 
     public static <T> ScxScopedValue<T> newInstance() {
         return new ScxScopedValue<>();
@@ -25,12 +33,17 @@ public final class ScxScopedValue<T> {
     }
 
     @SuppressWarnings("unchecked")
-    void bind(Object value) {
-        threadLocal.set((T) value);
+    public T get() {
+        var value = threadLocal.get();
+        if (value == UNBOUND) {
+            throw new NoSuchElementException("ScopedValue not bound");
+        }
+        return (T) value;
     }
 
-    public T get() {
-        return threadLocal.get();
+    public boolean isBound() {
+        var value = threadLocal.get();
+        return value != UNBOUND;
     }
 
     public static final class Carrier {
@@ -45,17 +58,17 @@ public final class ScxScopedValue<T> {
             this.prev = prev;
         }
 
-        private void bindAll(Deque<Object> oldValues) {
+        private void bindAll(List<Object> oldValues) {
             if (prev != null) {
                 prev.bindAll(oldValues);
             }
-            oldValues.addLast(key.get());
-            key.bind(value);
+            oldValues.addLast(key.threadLocal.get());
+            key.threadLocal.set(value);
         }
 
-        private void restoreAll(Deque<Object> oldValues) {
-            var old = oldValues.pollLast();
-            key.bind(old);
+        private void restoreAll(List<Object> oldValues) {
+            var old = oldValues.removeLast();
+            key.threadLocal.set(old);
             if (prev != null) {
                 prev.restoreAll(oldValues);
             }
@@ -66,7 +79,7 @@ public final class ScxScopedValue<T> {
         }
 
         public <E extends Throwable> void run(ScxRunnable<E> op) throws E {
-            var oldValues = new ArrayDeque<>();
+            var oldValues = new ArrayList<>();
             bindAll(oldValues);
             try {
                 op.run();
@@ -76,7 +89,7 @@ public final class ScxScopedValue<T> {
         }
 
         public <R, E extends Throwable> R call(ScxCallable<? extends R, E> op) throws E {
-            var oldValues = new ArrayDeque<>();
+            var oldValues = new ArrayList<>();
             bindAll(oldValues);
             try {
                 return op.call();
