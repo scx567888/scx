@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static java.sql.ResultSet.CONCUR_READ_ONLY;
 import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
@@ -35,16 +34,6 @@ public final class SQLRunner {
 
     public SQLRunner(JDBCContext jdbcContext) {
         this.jdbcContext = jdbcContext;
-    }
-
-    private Connection getConnection() throws SQLException {
-        return getConnection(true);
-    }
-
-    private Connection getConnection(boolean autoCommit) throws SQLException {
-        var con = jdbcContext.dataSource().getConnection();
-        con.setAutoCommit(autoCommit);
-        return con;
     }
 
     private static List<Long> getGeneratedKeys(PreparedStatement preparedStatement) throws SQLException {
@@ -94,6 +83,16 @@ public final class SQLRunner {
             }
             index = index + 1;
         }
+    }
+
+    private Connection getConnection() throws SQLException {
+        return getConnection(true);
+    }
+
+    private Connection getConnection(boolean autoCommit) throws SQLException {
+        var con = jdbcContext.dataSource().getConnection();
+        con.setAutoCommit(autoCommit);
+        return con;
     }
 
     public <T, E extends Throwable> T query(Connection con, SQL sql, ResultHandler<T, E> resultHandler) throws SQLException, E {
