@@ -1,4 +1,4 @@
-package cool.scx.data;
+package cool.scx.data.context;
 
 import cool.scx.data.exception.DataAccessException;
 import cool.scx.functional.ScxCallable;
