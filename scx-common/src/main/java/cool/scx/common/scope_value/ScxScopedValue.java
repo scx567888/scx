@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicReference;
 /// @version 0.0.1
 public final class ScxScopedValue<T> {
 
-    private static final AtomicLong THREAD_NUMBER = new AtomicLong(0);
     private final InheritableThreadLocal<T> threadLocal = new InheritableThreadLocal<>();
 
     public static <T> ScxScopedValue<T> newInstance() {
@@ -44,49 +43,24 @@ public final class ScxScopedValue<T> {
             this.value = value;
         }
 
-        @SuppressWarnings("unchecked")
         public <E extends Throwable> void run(ScxRunnable<E> op) throws E {
-            var exception = new AtomicReference<E>();
-            var w = Thread.ofPlatform().name("scx-scoped-value-thread-", THREAD_NUMBER.getAndIncrement()).start(() -> {
-                key.bind(value);
-                try {
-                    op.run();
-                } catch (Throwable e) {
-                    exception.set((E) e);
-                }
-            });
+            var old = key.get();
+            key.bind(value);
             try {
-                w.join();
-            } catch (InterruptedException e) {
-                throw new IllegalStateException(e);
-            }
-            if (exception.get() != null) {
-                throw exception.get();
+                op.run();
+            } finally {
+                key.bind(old);
             }
         }
 
-        @SuppressWarnings("unchecked")
         public <R, E extends Throwable> R call(ScxCallable<? extends R, E> op) throws E {
-            var result = new AtomicReference<R>();
-            var exception = new AtomicReference<E>();
-            var w = Thread.ofPlatform().name("scx-scoped-value-thread-", THREAD_NUMBER.getAndIncrement()).start(() -> {
-                key.bind(value);
-                try {
-                    var r = op.call();
-                    result.set(r);
-                } catch (Throwable e) {
-                    exception.set((E) e);
-                }
-            });
+            var old = key.get();
+            key.bind(value);
             try {
-                w.join();
-            } catch (InterruptedException e) {
-                throw new IllegalStateException(e);
+                return op.call();
+            } finally {
+                key.bind(old);
             }
-            if (exception.get() != null) {
-                throw exception.get();
-            }
-            return result.get();
         }
 
     }
