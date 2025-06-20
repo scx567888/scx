@@ -47,41 +47,6 @@ public final class SQLRunner {
         return con;
     }
 
-    /// 自动事务
-    ///
-    /// @param con     con
-    /// @param handler handler
-    /// @throws Exception e
-    public static void autoTransaction(Connection con, ScxConsumer<Connection, Exception> handler) throws Exception {
-        con.setAutoCommit(false);
-        try {
-            handler.accept(con);
-            con.commit();
-        } catch (Exception e) {
-            con.rollback();
-            throw e;
-        }
-    }
-
-    /// 自动事务 (带返回值)
-    ///
-    /// @param con     con
-    /// @param handler handler
-    /// @param <T>     T
-    /// @return 返回值
-    /// @throws Exception e
-    public static <T> T autoTransaction(Connection con, ScxFunction<Connection, T, Exception> handler) throws Exception {
-        con.setAutoCommit(false);
-        try {
-            T result = handler.apply(con);
-            con.commit();
-            return result;
-        } catch (Exception e) {
-            con.rollback();
-            throw e;
-        }
-    }
-
     private static List<Long> getGeneratedKeys(PreparedStatement preparedStatement) throws SQLException {
         try (var resultSet = preparedStatement.getGeneratedKeys()) {
             var ids = new ArrayList<Long>();
@@ -247,7 +212,6 @@ public final class SQLRunner {
     }
 
     /// 自动处理事务并在产生异常时进行自动回滚
-    /// 注意 其中的操作会在另一个线程中执行 所以需要注意线程的操作
     public <T, E extends Throwable> T autoTransaction(ScxCallable<T, E> handler) throws E, SQLRunnerException {
         try (var con = getConnection(false)) {
             return ScxScopedValue.where(CONNECTION_SCOPE_VALUE, con).call(() -> {
@@ -291,7 +255,6 @@ public final class SQLRunner {
     }
 
     /// 自动处理事务并在产生异常时进行自动回滚
-    /// 注意 其中的操作会在另一个线程中执行 所以需要注意线程的操作
     public <E extends Throwable> void autoTransaction(ScxRunnable<E> handler) throws E, SQLRunnerException {
         autoTransaction(() -> {
             handler.run();
@@ -299,6 +262,7 @@ public final class SQLRunner {
         });
     }
 
+    /// 需要用户手动提交事务
     public <T, E extends Throwable> T withTransaction(ScxFunction<Connection, T, E> handler) throws SQLRunnerException, E {
         try (var con = getConnection(false)) {
             return ScxScopedValue.where(CONNECTION_SCOPE_VALUE, con).call(() -> handler.apply(con));
@@ -314,6 +278,7 @@ public final class SQLRunner {
         });
     }
 
+    /// 更改上下文
     public <T, E extends Throwable> T autoContext(ScxCallable<T, E> handler) throws SQLRunnerException, E {
         return ScxScopedValue.where(SQL_RUNNER_SCOPE_VALUE, this).call(handler);
     }
