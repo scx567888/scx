@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-/// 使用 threadLocal 模拟的 ScopedValue (不支持线程池线程复用和复杂异步线程切换)
-/// todo ScopedValue 正式版本发布时 移除此类
+/// 使用 threadLocal 模拟的 ScopedValue (不支持线程池线程复用和异步线程切换)
+/// todo jdk25 ScopedValue 正式版本发布时 移除此类
 ///
-/// @param <T> a
+/// @param <T> T
 /// @author scx567888
 /// @version 0.0.1
 public final class ScxScopedValue<T> {
