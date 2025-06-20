@@ -1,7 +1,7 @@
 package cool.scx.common.test;
 
 import cool.scx.common.util.$;
-import cool.scx.common.util.ScopedValue;
+import cool.scx.common.scope_value.ScxScopedValue;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -19,9 +19,9 @@ public class ScopedValueTest {
     public static void test1() throws Exception {
         var l = new ArrayList<>();
 
-        ScopedValue<Integer> i = ScopedValue.newInstance();
+        ScxScopedValue<Integer> i = ScxScopedValue.newInstance();
 
-        ScopedValue.where(i, 100).run(() -> {
+        ScxScopedValue.where(i, 100).run(() -> {
             $.sleep(100);
             var w = i.get();
             $.sleep(100);
@@ -29,7 +29,7 @@ public class ScopedValueTest {
             $.sleep(100);
         });
 
-        var h = ScopedValue.where(i, 200).get(() -> {
+        var h = ScxScopedValue.where(i, 200).call(() -> {
             var w = i.get();
             $.sleep(100);
             return w;
@@ -37,10 +37,10 @@ public class ScopedValueTest {
 
         l.add(h);
 
-        ScopedValue.where(i, 300).call(() -> {
+        ScxScopedValue.where(i, 300).call(() -> {
             var w = i.get();
             l.add(w);
-            ScopedValue.where(i, 666).run(() -> {
+            ScxScopedValue.where(i, 666).run(() -> {
                 l.add(i.get());
             });
             return w;
