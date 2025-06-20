@@ -1,8 +1,7 @@
-package cool.scx.common.util;
+package cool.scx.common.scope_value;
 
 import cool.scx.functional.ScxCallable;
 import cool.scx.functional.ScxRunnable;
-import cool.scx.functional.ScxSupplier;
 
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -13,33 +12,34 @@ import java.util.concurrent.atomic.AtomicReference;
 /// @param <T> a
 /// @author scx567888
 /// @version 0.0.1
-public final class ScopedValue<T> {
+public final class ScxScopedValue<T> {
 
     private static final AtomicLong THREAD_NUMBER = new AtomicLong(0);
     private final InheritableThreadLocal<T> threadLocal = new InheritableThreadLocal<>();
 
-    public static <T> ScopedValue<T> newInstance() {
-        return new ScopedValue<>();
+    public static <T> ScxScopedValue<T> newInstance() {
+        return new ScxScopedValue<>();
     }
 
-    public static <T> Carrier<T> where(ScopedValue<T> key, T value) {
-        return new Carrier<>(key, value);
+    public static <T> Carrier where(ScxScopedValue<T> key, T value) {
+        return new Carrier(key, value);
     }
 
-    void bind(T value) {
-        threadLocal.set(value);
+    @SuppressWarnings("unchecked")
+    void bind(Object value) {
+        threadLocal.set((T) value);
     }
 
     public T get() {
         return threadLocal.get();
     }
 
-    public static final class Carrier<T> {
+    public static final class Carrier {
 
-        private final T value;
-        private final ScopedValue<T> key;
+        private final ScxScopedValue<?> key;
+        private final Object value;
 
-        public Carrier(ScopedValue<T> key, T value) {
+        public Carrier(ScxScopedValue<?> key, Object value) {
             this.key = key;
             this.value = value;
         }
@@ -66,29 +66,6 @@ public final class ScopedValue<T> {
         }
 
         @SuppressWarnings("unchecked")
-        public <R, E extends Throwable> R get(ScxSupplier<? extends R, E> op) throws E {
-            var result = new AtomicReference<R>();
-            var exception = new AtomicReference<E>();
-            var w = Thread.ofPlatform().name("scx-scoped-value-thread-", THREAD_NUMBER.getAndIncrement()).start(() -> {
-                key.bind(value);
-                try {
-                    var r = op.get();
-                    result.set(r);
-                } catch (Throwable e) {
-                    exception.set((E) e);
-                }
-            });
-            try {
-                w.join();
-            } catch (InterruptedException e) {
-                throw new IllegalStateException(e);
-            }
-            if (exception.get() != null) {
-                throw exception.get();
-            }
-            return result.get();
-        }
-
         public <R, E extends Throwable> R call(ScxCallable<? extends R, E> op) throws E {
             var result = new AtomicReference<R>();
             var exception = new AtomicReference<E>();
