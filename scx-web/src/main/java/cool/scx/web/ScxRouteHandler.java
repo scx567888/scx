@@ -1,6 +1,7 @@
 package cool.scx.web;
 
 import cool.scx.common.exception.ScxExceptionHelper;
+import cool.scx.common.scope_value.ScxScopedValue;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.URIUtils;
 import cool.scx.functional.ScxConsumer;
@@ -16,6 +17,7 @@ import java.util.Set;
 
 import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.web.RouteRegistrar.findScxRouteOrThrow;
+import static cool.scx.web.ScxWeb.ROUTING_CONTEXT_SCOPED_VALUE;
 import static cool.scx.websocket.routing.WebSocketTypeMatcher.NOT_WEB_SOCKET_HANDSHAKE;
 
 /// ScxRouteHandler
@@ -78,8 +80,10 @@ public final class ScxRouteHandler implements Route, ScxConsumer<RoutingContext,
 
     @Override
     public void accept(RoutingContext context) throws Throwable {
-        //0, 将 routingContext 注入到 ThreadLocal 中去 以方便后续从静态方法调用
-        ScxWeb._routingContext(context);
+        ScxScopedValue.where(ROUTING_CONTEXT_SCOPED_VALUE, context).run(() -> accept0(context));
+    }
+
+    public void accept0(RoutingContext context) throws Throwable {
         try {
             //1, 执行前置处理器 (一般用于校验权限之类)
             this.scxWeb.interceptor().preHandle(context, this);
