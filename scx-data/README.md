@@ -9,7 +9,7 @@
 三类核心 `Repository` 接口满足不同数据操作需求：
 
 | 接口                       | 职责            |
-| ------------------------ | ------------- |
+|--------------------------|---------------|
 | `Repository`             | 基础数据操作（CRUD）  |
 | `LockableRepository`     | 支持查询锁定，实现并发控制 |
 | `AggregatableRepository` | 支持复杂聚合查询      |
@@ -24,19 +24,19 @@
 
 描述查询条件，支持树形条件构造、分页与排序。
 
-> 推荐使用 `QueryBuilder` 来方便构建 `Query` 对象。
+> 推荐使用 `QueryBuilder` 来快速构建 `Query` 对象。
 
 ### FieldPolicy
 
 定义字段访问策略，支持字段包含/排除、虚拟字段、表达式赋值等复杂场景。
 
-> 推荐使用 `FieldPolicyBuilder` 来快速创建策略对象。
+> 推荐使用 `FieldPolicyBuilder` 来快速创建 `FieldPolicy` 对象。
 
 ### Aggregation
 
 定义聚合操作，支持多字段分组、多种聚合函数及表达式分组。
 
-> 推荐使用 `AggregationBuilder` 来方便构造聚合。
+> 推荐使用 `AggregationBuilder` 来快速构建 `Aggregation` 对象。
 
 ---
 
@@ -46,8 +46,8 @@
 
 ```java
 Query query = eq("status", 1)
-                  .asc("createdAt")
-                  .limit(20);
+        .asc("createdAt")
+        .limit(20);
 ```
 
 *查询状态为1，按创建时间升序，取前20条数据。*
@@ -58,26 +58,26 @@ Query query = eq("status", 1)
 
 ```java
 Query query = query()
-    .where(or(
-        and(
-            eq("status", "active", BuildControl.SKIP_IF_NULL),
-            between("createdAt", "2023-01-01", "2023-12-31")
-        ),
-        and(
-            ne("status", "deleted"),
-            or(
-                in("type", List.of("premium", "vip")),
-                like("description", "%exclusive%", BuildControl.SKIP_IF_EMPTY_STRING)
-            ),
-            not(eq("region", "restricted"))
+        .where(or(
+                and(
+                        eq("status", "active", BuildControl.SKIP_IF_NULL),
+                        between("createdAt", "2023-01-01", "2023-12-31")
+                ),
+                and(
+                        ne("status", "deleted"),
+                        or(
+                                in("type", List.of("premium", "vip")),
+                                like("description", "%exclusive%", BuildControl.SKIP_IF_EMPTY_STRING)
+                        ),
+                        not(eq("region", "restricted"))
+                )
+        ))
+        .orderBys(
+                asc("priority"),
+                desc("lastUpdated", BuildControl.USE_EXPRESSION)
         )
-    ))
-    .orderBys(
-        asc("priority"),
-        desc("lastUpdated", BuildControl.USE_EXPRESSION)
-    )
-    .limit(50)
-    .offset(100);
+        .limit(50)
+        .offset(100);
 ```
 
 *说明：*
@@ -104,7 +104,7 @@ Query query = query()
 
 ```java
 FieldPolicy fieldPolicy = include("id", "name", "email")
-                              .ignoreNull(true);
+        .ignoreNull(true);
 ```
 
 *只包含 `id`、`name`、`email` 字段，插入/更新时忽略空值。*
@@ -115,10 +115,10 @@ FieldPolicy fieldPolicy = include("id", "name", "email")
 
 ```java
 FieldPolicy fieldPolicy = exclude("password", "secretToken")
-    .virtualField("fullName", "CONCAT(firstName, ' ', lastName)")
-    .assignField("updatedAt", "CURRENT_TIMESTAMP")
-    .ignoreNull("email", true)
-    .ignoreNull("phone", false);
+        .virtualField("fullName", "CONCAT(firstName, ' ', lastName)")
+        .assignField("updatedAt", "CURRENT_TIMESTAMP")
+        .ignoreNull("email", true)
+        .ignoreNull("phone", false);
 ```
 
 *虚拟字段简化客户端逻辑，表达式赋值实现自动字段填充，精细控制空值行为。*
@@ -131,7 +131,7 @@ FieldPolicy fieldPolicy = exclude("password", "secretToken")
 
 ```java
 Aggregation aggregation = groupBy("category")
-                          .agg("count", "COUNT(*)");
+        .agg("count", "COUNT(*)");
 ```
 
 ---
@@ -140,11 +140,11 @@ Aggregation aggregation = groupBy("category")
 
 ```java
 Aggregation aggregation = groupBy("region")
-    .groupBy("month", "DATE_FORMAT(orderDate, '%Y-%m')")
-    .agg("totalSales", "SUM(salesAmount)")
-    .agg("avgDiscount", "AVG(discount)")
-    .agg("maxOrder", "MAX(orderAmount)")
-    .agg("orderCount", "COUNT(*)");
+        .groupBy("month", "DATE_FORMAT(orderDate, '%Y-%m')")
+        .agg("totalSales", "SUM(salesAmount)")
+        .agg("avgDiscount", "AVG(discount)")
+        .agg("maxOrder", "MAX(orderAmount)")
+        .agg("orderCount", "COUNT(*)");
 ```
 
 ---
@@ -167,7 +167,7 @@ List<User> activeUsers = userRepository.find(query);
 
 ```java
 FieldPolicy fieldPolicy = include("id", "name", "email")
-                              .virtualField("fullName", "CONCAT(firstName, ' ', lastName)");
+        .virtualField("fullName", "CONCAT(firstName, ' ', lastName)");
 
 Query query = eq("role", "admin");
 
