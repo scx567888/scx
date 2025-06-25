@@ -1,6 +1,6 @@
 package cool.scx.data.exception;
 
-/// 数据访问异常
+/// DataAccessException
 ///
 /// @author scx567888
 /// @version 0.0.1

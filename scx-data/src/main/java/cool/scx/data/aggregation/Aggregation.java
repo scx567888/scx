@@ -1,6 +1,6 @@
 package cool.scx.data.aggregation;
 
-/// 聚合定义
+/// Aggregation
 ///
 /// @author scx567888
 /// @version 0.0.1
