@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static cool.scx.data.query.QueryBuilder.query;
 
-/// 拥有聚合能力的 Repository
+/// AggregatableRepository
 ///
 /// @param <Entity> Entity
 /// @param <ID>     ID
@@ -17,12 +17,6 @@ import static cool.scx.data.query.QueryBuilder.query;
 /// @version 0.0.1
 public interface AggregatableRepository<Entity, ID> extends Repository<Entity, ID> {
 
-    /// 创建一个数据聚合器
-    ///
-    /// @param beforeAggregateQuery 聚合前 Query
-    /// @param aggregation          聚合定义
-    /// @param afterAggregateQuery  聚合后 Query
-    /// @return 聚合器
     Aggregator aggregator(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery);
 
     default Aggregator aggregator(Aggregation aggregation, Query afterAggregateQuery) {
