@@ -6,7 +6,7 @@ import cool.scx.functional.ScxConsumer;
 import java.util.List;
 import java.util.Map;
 
-/// 查询执行器
+/// Finder
 ///
 /// @param <Entity> Entity
 /// @author scx567888

@@ -6,7 +6,6 @@ package cool.scx.data.query;
 /// @version 0.0.1
 public final class OrderBy extends QueryLike<OrderBy> {
 
-    // fieldName 或者 表达式
     private final String selector;
     private final OrderByType orderByType;
     private final boolean useExpression;

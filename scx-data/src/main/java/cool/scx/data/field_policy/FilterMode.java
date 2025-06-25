@@ -1,6 +1,6 @@
 package cool.scx.data.field_policy;
 
-/// 过滤模式
+/// FilterMode
 ///
 /// @author scx567888
 /// @version 0.0.1

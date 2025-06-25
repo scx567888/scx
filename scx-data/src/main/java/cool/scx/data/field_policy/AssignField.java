@@ -2,7 +2,7 @@ package cool.scx.data.field_policy;
 
 import static cool.scx.data.field_policy.FilterMode.EXCLUDED;
 
-/// 赋值字段
+/// AssignField
 ///
 /// @author scx567888
 /// @version 0.0.1

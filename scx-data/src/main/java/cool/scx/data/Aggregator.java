@@ -6,7 +6,7 @@ import cool.scx.functional.ScxConsumer;
 import java.util.List;
 import java.util.Map;
 
-/// 聚合器
+/// Aggregator
 ///
 /// @author scx567888
 /// @version 0.0.1
