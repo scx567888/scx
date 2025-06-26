@@ -26,7 +26,6 @@ public interface IMultiMap<K, V> extends Iterable<IMultiMapEntry<K, V>> {
 
     void add(IMultiMap<? extends K, ? extends V> map);
 
-
     //********** 覆盖 **************
     List<V> set(K key, V value);
 
@@ -38,17 +37,18 @@ public interface IMultiMap<K, V> extends Iterable<IMultiMapEntry<K, V>> {
 
     void set(IMultiMap<? extends K, ? extends V> map);
 
-
     //********** 获取 **************
+
+    /// 获取首个值
     V get(K key);
 
+    /// 获取所有值
     List<V> getAll(K key);
 
     //********** 包含 ****************
     boolean containsKey(K key);
 
     boolean containsValue(V value);
-
 
     //*********** 移除 ****************
     boolean remove(K key, V value);
