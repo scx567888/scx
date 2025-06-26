@@ -7,7 +7,7 @@ import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.SchemaHelper;
 import cool.scx.jdbc.spy.Spy;
 import cool.scx.jdbc.sql.SQL;
-import cool.scx.logging.ScxLoggerFactory;
+import cool.scx.logging.ScxLogging;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -32,7 +32,7 @@ public class JDBCDaoTest {
     public static JDBCRepository<Car> carRepository;
 
     static {
-        ScxLoggerFactory.getLogger("ScxSpy").config().setLevel(System.Logger.Level.DEBUG);
+        ScxLogging.getLogger("ScxSpy").config().setLevel(System.Logger.Level.DEBUG);
     }
 
     public static void main(String[] args) throws SQLException {

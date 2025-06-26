@@ -25,7 +25,7 @@ import cool.scx.data.jdbc.annotation.Table;
 import cool.scx.jdbc.dialect.DialectSelector;
 import cool.scx.jdbc.spy.Spy;
 import cool.scx.logging.ScxLoggerConfig;
-import cool.scx.logging.ScxLoggerFactory;
+import cool.scx.logging.ScxLogging;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
 import cool.scx.reflect.ClassInfoFactory;
@@ -303,7 +303,7 @@ public final class ScxAppHelper {
         var defaultStackTrace = scxConfig.get("scx.logging.default.stack-trace", DefaultValueHandler.of(false));
 
         //设置默认的 config 这里我们先清除所有的 Recorders
-        var defaultConfig = ScxLoggerFactory.rootConfig().clearRecorders();
+        var defaultConfig = ScxLogging.rootConfig().clearRecorders();
         defaultConfig.setLevel(defaultLevel);
         if (defaultType == LoggingType.CONSOLE || defaultType == LoggingType.BOTH) {
             defaultConfig.addRecorder(new ConsoleRecorder());
@@ -334,7 +334,7 @@ public final class ScxAppHelper {
                         config.addRecorder(new FileRecorder(storedDirectory != null ? storedDirectory : defaultStoredDirectory));
                     }
                     config.setStackTrace(stackTrace);
-                    ScxLoggerFactory.setConfig(name, config);
+                    ScxLogging.setConfig(name, config);
                 }
             }
         }
