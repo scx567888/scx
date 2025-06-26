@@ -1,6 +1,9 @@
 package cool.scx.bytes.exception;
 
-/// 数据拉取器异常
+/// ByteSupplierException
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ByteSupplierException extends RuntimeException {
 
     public ByteSupplierException(String message) {

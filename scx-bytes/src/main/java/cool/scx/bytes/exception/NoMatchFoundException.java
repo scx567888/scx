@@ -1,6 +1,6 @@
 package cool.scx.bytes.exception;
 
-/// 寻找匹配内容 查找失败的异常
+/// NoMatchFoundException
 ///
 /// @author scx567888
 /// @version 0.0.1
