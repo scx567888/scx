@@ -39,12 +39,12 @@ public class ByteReader implements IByteReader {
         this(() -> null);
     }
 
-    public void appendByteChunk(ByteChunk byteChunk) {
+    private void appendByteChunk(ByteChunk byteChunk) {
         tail.next = new ByteNode(byteChunk);
         tail = tail.next;
     }
 
-    public boolean pullByteChunk() throws ByteSupplierException {
+    private boolean pullByteChunk() throws ByteSupplierException {
         var byteChunk = byteSupplier.get();
         if (byteChunk == null) {
             return false;
@@ -53,7 +53,7 @@ public class ByteReader implements IByteReader {
         return true;
     }
 
-    public long ensureAvailable(long maxPullCount) throws ByteSupplierException {
+    private long ensureAvailable(long maxPullCount) throws ByteSupplierException {
         var pullCount = 0L;
         while (!head.hasAvailable()) {
             if (head.next == null) {
@@ -72,7 +72,7 @@ public class ByteReader implements IByteReader {
         return pullCount;
     }
 
-    public long ensureAvailableOrThrow(long maxPullCount) throws NoMoreDataException, ByteSupplierException {
+    private long ensureAvailableOrThrow(long maxPullCount) throws NoMoreDataException, ByteSupplierException {
         var b = ensureAvailable(maxPullCount);
         if (b == -1) {
             throw new NoMoreDataException();
@@ -81,7 +81,7 @@ public class ByteReader implements IByteReader {
         }
     }
 
-    public <E extends Throwable> void walk(ByteConsumer<E> consumer, long maxLength, boolean movePointer, long maxPullCount) throws ByteSupplierException, E {
+    private <E extends Throwable> void walk(ByteConsumer<E> consumer, long maxLength, boolean movePointer, long maxPullCount) throws ByteSupplierException, E {
 
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
@@ -141,7 +141,7 @@ public class ByteReader implements IByteReader {
 
     }
 
-    public long findIndex(ByteIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, ByteSupplierException {
+    private long findIndex(ByteIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, ByteSupplierException {
 
         var index = 0L; // 主串索引
 
