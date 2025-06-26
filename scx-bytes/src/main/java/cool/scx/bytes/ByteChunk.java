@@ -1,6 +1,9 @@
 package cool.scx.bytes;
 
 /// ByteChunk
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ByteChunk {
 
     public final byte[] bytes;
