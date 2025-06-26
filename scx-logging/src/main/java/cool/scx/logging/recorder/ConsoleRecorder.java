@@ -4,7 +4,7 @@ import cool.scx.logging.ScxLogRecord;
 
 import static java.lang.System.Logger.Level.ERROR;
 
-/// 控制台 记录器
+/// ConsoleRecorder
 ///
 /// @author scx567888
 /// @version 0.0.1

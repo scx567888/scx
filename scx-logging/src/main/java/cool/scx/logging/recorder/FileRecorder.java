@@ -11,7 +11,7 @@ import java.time.temporal.TemporalAccessor;
 
 import static java.nio.file.StandardOpenOption.*;
 
-/// 文件记录器
+/// FileRecorder
 ///
 /// @author scx567888
 /// @version 0.0.1

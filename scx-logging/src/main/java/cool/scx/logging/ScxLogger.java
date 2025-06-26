@@ -9,7 +9,15 @@ import static java.lang.System.Logger.Level;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public record ScxLogger(String name, ScxLoggerConfig config) {
+public final class ScxLogger {
+
+    private final String name;
+    private final ScxLoggerConfig config;
+
+    ScxLogger(String name, ScxLoggerConfig config) {
+        this.name = name;
+        this.config = config;
+    }
 
     public boolean isLoggable(Level level) {
         return level.getSeverity() >= config.level().getSeverity();
@@ -33,6 +41,14 @@ public record ScxLogger(String name, ScxLoggerConfig config) {
         for (var r : recorders) {
             r.record(logRecord);
         }
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public ScxLoggerConfig config() {
+        return config;
     }
 
 }
