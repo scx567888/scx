@@ -24,8 +24,7 @@ public class ByteReader implements IByteReader {
     public final ByteSupplier byteSupplier;
     public ByteNode head;
     public ByteNode tail;
-    //标记
-    public ByteNode markNode;
+    public ByteNode markNode; // 标记节点
     public int markNodePosition;
 
     public ByteReader(ByteSupplier byteSupplier) {
@@ -82,7 +81,7 @@ public class ByteReader implements IByteReader {
         }
     }
 
-    public void walk(ByteConsumer consumer, long maxLength, boolean movePointer, long maxPullCount) throws ByteSupplierException {
+    public <E extends Throwable> void walk(ByteConsumer<E> consumer, long maxLength, boolean movePointer, long maxPullCount) throws ByteSupplierException, E {
 
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
@@ -192,7 +191,7 @@ public class ByteReader implements IByteReader {
     }
 
     @Override
-    public void read(ByteConsumer byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
+    public <E extends Throwable> void read(ByteConsumer<E> byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException, E {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
@@ -207,7 +206,7 @@ public class ByteReader implements IByteReader {
     }
 
     @Override
-    public void peek(ByteConsumer byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
+    public <E extends Throwable> void peek(ByteConsumer<E> byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException, E {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
@@ -278,7 +277,7 @@ public class ByteReader implements IByteReader {
             }
             var consumer = new FillByteArrayByteConsumer(b, off, len);
             walk(consumer, len, true, maxPullCount);
-            return consumer.getFilledLength();
+            return consumer.filledLength();
         } catch (ByteSupplierException e) {
             if (e.getCause() instanceof IOException i) {
                 throw i;
@@ -298,7 +297,7 @@ public class ByteReader implements IByteReader {
             }
             var consumer = new OutputStreamByteConsumer(out);
             walk(consumer, maxLength, true, Long.MAX_VALUE);
-            return consumer.byteCount();
+            return consumer.bytesWritten();
         } catch (ByteSupplierException e) {
             if (e.getCause() instanceof IOException i) {
                 throw i;
@@ -318,7 +317,7 @@ public class ByteReader implements IByteReader {
             }
             var consumer = new ByteArrayByteConsumer();
             walk(consumer, len, true, Long.MAX_VALUE);
-            return consumer.getBytes();
+            return consumer.bytes();
         } catch (ByteSupplierException e) {
             if (e.getCause() instanceof IOException i) {
                 throw i;
