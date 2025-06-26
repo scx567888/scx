@@ -4,37 +4,31 @@ import cool.scx.bytes.ByteChunk;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 
-/// 写入到输出流中
+/// OutputStreamByteConsumer
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class OutputStreamByteConsumer implements ByteConsumer {
+public class OutputStreamByteConsumer implements ByteConsumer<IOException> {
 
     private final OutputStream out;
-
-    //记录总的长度 有时候会用到
-    private long byteCount;
+    private long bytesWritten;
 
     public OutputStreamByteConsumer(OutputStream out) {
         this.out = out;
-        this.byteCount = 0;
+        this.bytesWritten = 0;
     }
 
     @Override
-    public boolean accept(ByteChunk chunk) {
-        try {
-            out.write(chunk.bytes, chunk.start, chunk.length);
-            byteCount += chunk.length;
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+    public boolean accept(ByteChunk chunk) throws IOException {
+        out.write(chunk.bytes, chunk.start, chunk.length);
+        bytesWritten += chunk.length;
         return true;
     }
 
-    public long byteCount() {
-        return byteCount;
+    /// 写入的总长度
+    public long bytesWritten() {
+        return bytesWritten;
     }
 
 }
