@@ -1,5 +1,6 @@
 package cool.scx.common.util;
 
+import cool.scx.collections.ScxCollections;
 import cool.scx.collections.count_map.CountMap;
 import cool.scx.collections.multi_map.MultiMap;
 
@@ -20,71 +21,43 @@ public final class $ {
     }
 
     public static <K, T> MultiMap<K, T> groupingBy(Iterable<T> list, Function<? super T, ? extends K> keyFn) {
-        return groupingBy(list, keyFn, t -> t);
+        return ScxCollections.groupingBy(list, keyFn);
     }
 
     public static <K, V, T> MultiMap<K, V> groupingBy(Iterable<T> list, Function<? super T, ? extends K> keyFn, Function<? super T, ? extends V> valueFn) {
-        var multiMap = new MultiMap<K, V>();
-        for (var t : list) {
-            var key = keyFn.apply(t);
-            var value = valueFn.apply(t);
-            multiMap.add(key, value);
-        }
-        return multiMap;
+        return ScxCollections.groupingBy(list, keyFn, valueFn);
     }
 
     public static <K, T> MultiMap<K, T> groupingBy(T[] list, Function<? super T, ? extends K> keyFn) {
-        return groupingBy(list, keyFn, t -> t);
+        return ScxCollections.groupingBy(list, keyFn);
     }
 
     public static <K, V, T> MultiMap<K, V> groupingBy(T[] list, Function<? super T, ? extends K> keyFn, Function<? super T, ? extends V> valueFn) {
-        var multiMap = new MultiMap<K, V>();
-        for (var t : list) {
-            var key = keyFn.apply(t);
-            var value = valueFn.apply(t);
-            multiMap.add(key, value);
-        }
-        return multiMap;
+        return ScxCollections.groupingBy(list, keyFn, valueFn);
     }
 
     public static <T> CountMap<T> countingBy(Iterable<T> list) {
-        return countingBy(list, k -> k, t -> 1L);
+        return ScxCollections.countingBy(list);
     }
 
     public static <K, T> CountMap<K> countingBy(Iterable<T> list, Function<? super T, ? extends K> keyFn) {
-        return countingBy(list, keyFn, t -> 1L);
+        return ScxCollections.countingBy(list, keyFn);
     }
 
     public static <K, T> CountMap<K> countingBy(Iterable<T> list, Function<? super T, ? extends K> keyFn, Function<? super T, Long> countFn) {
-        var countMap = new CountMap<K>();
-        for (var t : list) {
-            var key = keyFn.apply(t);
-            var count = countFn.apply(t);
-            if (count != null) {
-                countMap.add(key, count);
-            }
-        }
-        return countMap;
+        return ScxCollections.countingBy(list, keyFn, countFn);
     }
 
     public static <T> CountMap<T> countingBy(T[] list) {
-        return countingBy(list, k -> k, t -> 1L);
+        return ScxCollections.countingBy(list);
     }
 
     public static <K, T> CountMap<K> countingBy(T[] list, Function<? super T, ? extends K> keyFn) {
-        return countingBy(list, keyFn, t -> 1L);
+        return ScxCollections.countingBy(list, keyFn);
     }
 
     public static <K, T> CountMap<K> countingBy(T[] list, Function<? super T, ? extends K> keyFn, Function<? super T, Long> countFn) {
-        var countMap = new CountMap<K>();
-        for (var t : list) {
-            var key = keyFn.apply(t);
-            var count = countFn.apply(t);
-            if (count != null) {
-                countMap.add(key, count);
-            }
-        }
-        return countMap;
+        return ScxCollections.countingBy(list, keyFn, countFn);
     }
 
 }
