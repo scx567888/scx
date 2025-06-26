@@ -1,6 +1,6 @@
 package cool.scx.logging.spi.log4j;
 
-import cool.scx.logging.ScxLoggerFactory;
+import cool.scx.logging.ScxLogging;
 import org.apache.logging.log4j.message.MessageFactory;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.apache.logging.log4j.spi.LoggerContext;
@@ -23,7 +23,7 @@ public final class ScxLog4jLoggerContext implements LoggerContext {
 
     @Override
     public ExtendedLogger getLogger(String name, MessageFactory messageFactory) {
-        return new ScxLog4jLogger(ScxLoggerFactory.getLogger(name));
+        return new ScxLog4jLogger(ScxLogging.getLogger(name));
     }
 
     @Override
