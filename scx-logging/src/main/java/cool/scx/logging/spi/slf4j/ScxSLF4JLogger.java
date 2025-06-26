@@ -21,6 +21,16 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
         this.scxLogger = scxLogger;
     }
 
+    private static System.Logger.Level toJDKLevel(Level level) {
+        return switch (level) {
+            case ERROR -> System.Logger.Level.ERROR;
+            case WARN -> System.Logger.Level.WARNING;
+            case INFO -> System.Logger.Level.INFO;
+            case DEBUG -> System.Logger.Level.DEBUG;
+            case TRACE -> System.Logger.Level.TRACE;
+        };
+    }
+
     private boolean isLoggable(Level level) {
         return scxLogger.isLoggable(toJDKLevel(level));
     }
@@ -59,16 +69,6 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
     protected void handleNormalizedLoggingCall(Level level, Marker marker, String msg, Object[] args, Throwable t) {
         // handleNormalizedLoggingCall 调用前一定会执行 isLoggable 判断, 所以此处直接调用 log0
         scxLogger.log0(toJDKLevel(level), basicArrayFormat(msg, args), t);
-    }
-
-    private static System.Logger.Level toJDKLevel(Level level) {
-        return switch (level) {
-            case ERROR -> System.Logger.Level.ERROR;
-            case WARN -> System.Logger.Level.WARNING;
-            case INFO -> System.Logger.Level.INFO;
-            case DEBUG -> System.Logger.Level.DEBUG;
-            case TRACE -> System.Logger.Level.TRACE;
-        };
     }
 
 }

@@ -20,30 +20,6 @@ public final class ScxJDKLogger implements Logger {
         this.scxLogger = scxLogger;
     }
 
-    @Override
-    public String getName() {
-        return scxLogger.name();
-    }
-
-    @Override
-    public boolean isLoggable(Level level) {
-        return scxLogger.isLoggable(level);
-    }
-
-    @Override
-    public void log(Level level, ResourceBundle bundle, String msg, Throwable t) {
-        scxLogger.log(level, getResourceString(bundle, msg), t);
-    }
-
-    @Override
-    public void log(Level level, ResourceBundle bundle, String format, Object... params) {
-        var t = getThrowableCandidate(params);
-        if (t != null) {
-            params = Arrays.copyOf(params, params.length - 1);
-        }
-        scxLogger.log(level, formatMessage(getResourceString(bundle, format), params), t);
-    }
-
     private static String formatMessage(String format, Object... parameters) {
         if (parameters == null || parameters.length == 0) {
             return format;
@@ -73,6 +49,30 @@ public final class ScxJDKLogger implements Logger {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public String getName() {
+        return scxLogger.name();
+    }
+
+    @Override
+    public boolean isLoggable(Level level) {
+        return scxLogger.isLoggable(level);
+    }
+
+    @Override
+    public void log(Level level, ResourceBundle bundle, String msg, Throwable t) {
+        scxLogger.log(level, getResourceString(bundle, msg), t);
+    }
+
+    @Override
+    public void log(Level level, ResourceBundle bundle, String format, Object... params) {
+        var t = getThrowableCandidate(params);
+        if (t != null) {
+            params = Arrays.copyOf(params, params.length - 1);
+        }
+        scxLogger.log(level, formatMessage(getResourceString(bundle, format), params), t);
     }
 
 }
