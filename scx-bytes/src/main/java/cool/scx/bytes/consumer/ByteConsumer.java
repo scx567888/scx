@@ -2,7 +2,7 @@ package cool.scx.bytes.consumer;
 
 import cool.scx.bytes.ByteChunk;
 
-/// DataConsumer
+/// ByteConsumer
 ///
 /// @author scx567888
 /// @version 0.0.1
