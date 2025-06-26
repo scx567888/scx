@@ -11,17 +11,18 @@ import java.util.function.Supplier;
 
 /// CountMap
 ///
-/// @param <K> Key
 /// @author scx567888
 /// @version 0.0.1
 public class CountMap<K> implements ICountMap<K> {
 
     private final Map<K, AtomicLong> map;
 
+    /// 默认内部 map 使用 HashMap
     public CountMap() {
         this(HashMap::new);
     }
 
+    /// 指定内部的 map 实现
     public CountMap(Supplier<Map<K, AtomicLong>> mapSupplier) {
         this.map = mapSupplier.get();
     }

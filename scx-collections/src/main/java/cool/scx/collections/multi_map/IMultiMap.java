@@ -8,10 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
-/// MultiMap 接口 用来约束
+/// IMultiMap
 ///
-/// @param <K> Key
-/// @param <V> Value
 /// @author scx567888
 /// @version 0.0.1
 @SuppressWarnings("unchecked")

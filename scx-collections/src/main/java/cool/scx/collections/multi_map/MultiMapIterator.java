@@ -6,8 +6,6 @@ import java.util.Map;
 
 /// MultiMapIterator
 ///
-/// @param <K> K
-/// @param <V> V
 /// @author scx567888
 /// @version 0.0.1
 class MultiMapIterator<K, V> implements Iterator<IMultiMapEntry<K, V>> {
