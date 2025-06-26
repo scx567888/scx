@@ -12,18 +12,18 @@ import cool.scx.http.exception.ContentTooLargeException;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class HttpChunkedDataSupplier implements ByteSupplier {
+public class HttpChunkedByteSupplier implements ByteSupplier {
 
     private final ByteReader dataReader;
     private final long maxLength;
     private long position;
     private boolean isFinished;
 
-    public HttpChunkedDataSupplier(ByteReader dataReader) {
+    public HttpChunkedByteSupplier(ByteReader dataReader) {
         this(dataReader, Long.MAX_VALUE);
     }
 
-    public HttpChunkedDataSupplier(ByteReader dataReader, long maxLength) {
+    public HttpChunkedByteSupplier(ByteReader dataReader, long maxLength) {
         this.dataReader = dataReader;
         this.maxLength = maxLength;
         this.position = 0;

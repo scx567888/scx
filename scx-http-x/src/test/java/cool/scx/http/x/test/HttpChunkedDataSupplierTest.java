@@ -4,7 +4,7 @@ import cool.scx.bytes.ByteReader;
 import cool.scx.bytes.exception.ByteSupplierException;
 import cool.scx.bytes.supplier.ByteArrayByteSupplier;
 import cool.scx.http.exception.BadRequestException;
-import cool.scx.http.x.http1.chunked.HttpChunkedDataSupplier;
+import cool.scx.http.x.http1.chunked.HttpChunkedByteSupplier;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -24,7 +24,7 @@ public class HttpChunkedDataSupplierTest {
         ByteReader byteArrayByteReader = new ByteReader(new ByteArrayByteSupplier(mockData));
 
         // 创建 HttpChunkedDataSupplier 实例
-        HttpChunkedDataSupplier supplier = new HttpChunkedDataSupplier(byteArrayByteReader);
+        HttpChunkedByteSupplier supplier = new HttpChunkedByteSupplier(byteArrayByteReader);
 
         // 验证第一个数据块
         var dataNode1 = supplier.get();
@@ -51,7 +51,7 @@ public class HttpChunkedDataSupplierTest {
         ByteReader byteArrayByteReader = new ByteReader(new ByteArrayByteSupplier(mockData));
 
         // 创建 HttpChunkedDataSupplier 实例
-        HttpChunkedDataSupplier supplier = new HttpChunkedDataSupplier(byteArrayByteReader);
+        HttpChunkedByteSupplier supplier = new HttpChunkedByteSupplier(byteArrayByteReader);
 
         // 验证第一个数据块
         var dataNode1 = supplier.get();
@@ -77,7 +77,7 @@ public class HttpChunkedDataSupplierTest {
         ByteReader byteArrayByteReader = new ByteReader(new ByteArrayByteSupplier(mockData));
 
         // 创建 HttpChunkedDataSupplier 实例
-        HttpChunkedDataSupplier supplier = new HttpChunkedDataSupplier(byteArrayByteReader);
+        HttpChunkedByteSupplier supplier = new HttpChunkedByteSupplier(byteArrayByteReader);
 
         // 验证第一个数据块
         var dataNode1 = supplier.get();
@@ -103,7 +103,7 @@ public class HttpChunkedDataSupplierTest {
         ByteReader byteArrayByteReader = new ByteReader(new ByteArrayByteSupplier(mockData));
 
         // 创建 HttpChunkedDataSupplier 实例
-        HttpChunkedDataSupplier supplier = new HttpChunkedDataSupplier(byteArrayByteReader);
+        HttpChunkedByteSupplier supplier = new HttpChunkedByteSupplier(byteArrayByteReader);
 
         // 验证第一个数据块
         var dataNode1 = supplier.get();

@@ -7,10 +7,10 @@ import cool.scx.bytes.exception.NoMoreDataException;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.ContentTooLargeException;
 import cool.scx.http.exception.URITooLongException;
-import cool.scx.http.x.http1.chunked.HttpChunkedDataSupplier;
+import cool.scx.http.x.http1.chunked.HttpChunkedByteSupplier;
 import cool.scx.http.x.http1.exception.HttpVersionNotSupportedException;
 import cool.scx.http.x.http1.exception.RequestHeaderFieldsTooLargeException;
-import cool.scx.http.x.http1.fixed_length.FixedLengthDataSupplier;
+import cool.scx.http.x.http1.fixed_length.FixedLengthByteSupplier;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.http.x.http1.request_line.InvalidHttpRequestLineException;
@@ -39,7 +39,7 @@ final class Http1Reader {
         //1, 因为 分块传输的优先级高于 contentLength 所以先判断是否为分块传输
         var transferEncoding = headers.transferEncoding();
         if (transferEncoding == CHUNKED) {
-            return new ByteReaderInputStream(new HttpChunkedDataSupplier(dataReader, maxPayloadSize));
+            return new ByteReaderInputStream(new HttpChunkedByteSupplier(dataReader, maxPayloadSize));
         }
 
         //2, 判断请求体是不是有 指定长度
@@ -49,7 +49,7 @@ final class Http1Reader {
             if (contentLength > maxPayloadSize) {
                 throw new ContentTooLargeException();
             }
-            return new ByteReaderInputStream(new FixedLengthDataSupplier(dataReader, contentLength));
+            return new ByteReaderInputStream(new FixedLengthByteSupplier(dataReader, contentLength));
         }
 
         //3, 没有长度的空请求体
