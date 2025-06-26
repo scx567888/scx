@@ -2,6 +2,7 @@ package cool.scx.logging.test;
 
 import cool.scx.logging.ScxLoggerConfig;
 import cool.scx.logging.ScxLogging;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static java.lang.System.Logger.Level.TRACE;
@@ -52,7 +53,7 @@ public class ScxLoggerConcurrentTest {
             //这里应该全部都是  TRACE
             var level = logger.config().level();
             if (level != TRACE) {
-                System.err.println(logger.name() + " " + level);
+                Assert.fail();
             }
         }
 
