@@ -2,7 +2,7 @@ package cool.scx.logging.test;
 
 import cool.scx.logging.ScxLogRecord;
 import cool.scx.logging.ScxLoggerConfig;
-import cool.scx.logging.ScxLoggerFactory;
+import cool.scx.logging.ScxLogging;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class ScxLoggerTest {
             logger.error("测试 {}", i, new RuntimeException("错误"));
         }
         var path = getAppRoot();
-        ScxLoggerFactory.getLogger("test1").config()
+        ScxLogging.getLogger("test1").config()
                 .setLevel(DEBUG)
                 .addRecorder(
                         new ConsoleRecorder() {
@@ -43,7 +43,7 @@ public class ScxLoggerTest {
         for (int i = 0; i < 10; i = i + 1) {
             logger.debug("测试 debug {}", i);
         }
-        ScxLoggerFactory.setConfig("test.*", new ScxLoggerConfig().setLevel(ERROR));
+        ScxLogging.setConfig("test.*", new ScxLoggerConfig().setLevel(ERROR));
         logger.debug("不应该显示出来");
         logger.error("应该显示出来");
     }
