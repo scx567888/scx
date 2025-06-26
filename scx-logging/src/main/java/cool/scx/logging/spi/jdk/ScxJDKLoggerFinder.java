@@ -1,6 +1,6 @@
 package cool.scx.logging.spi.jdk;
 
-import cool.scx.logging.ScxLoggerFactory;
+import cool.scx.logging.ScxLogging;
 
 import java.lang.System.Logger;
 import java.lang.System.LoggerFinder;
@@ -13,7 +13,7 @@ public final class ScxJDKLoggerFinder extends LoggerFinder {
 
     @Override
     public Logger getLogger(String name, Module module) {
-        return new ScxJDKLogger(ScxLoggerFactory.getLogger(name));
+        return new ScxJDKLogger(ScxLogging.getLogger(name));
     }
 
 }
