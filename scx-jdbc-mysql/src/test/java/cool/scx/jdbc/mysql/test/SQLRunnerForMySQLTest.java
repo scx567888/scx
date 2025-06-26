@@ -12,7 +12,7 @@ import cool.scx.jdbc.spy.Spy;
 import cool.scx.jdbc.sql.SQLRunner;
 import cool.scx.jdbc.sql.UpdateResult;
 import cool.scx.logging.ScxLoggerConfig;
-import cool.scx.logging.ScxLoggerFactory;
+import cool.scx.logging.ScxLogging;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -35,7 +35,7 @@ public class SQLRunnerForMySQLTest {
     private static final String tableName = "`scx_sql_test`.`t1`";
 
     static {
-        ScxLoggerFactory.setConfig("ScxSpy", new ScxLoggerConfig().setLevel(DEBUG));
+        ScxLogging.setConfig("ScxSpy", new ScxLoggerConfig().setLevel(DEBUG));
     }
 
     public static void main(String[] args) {
