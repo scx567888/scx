@@ -6,7 +6,7 @@ import cool.scx.bytes.ByteChunk;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class SkipByteConsumer implements ByteConsumer {
+public final class SkipByteConsumer implements ByteConsumer<RuntimeException> {
 
     public static final SkipByteConsumer SKIP_BYTE_CONSUMER = new SkipByteConsumer();
 
