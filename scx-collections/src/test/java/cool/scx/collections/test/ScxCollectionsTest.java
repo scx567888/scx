@@ -44,5 +44,5 @@ public class ScxCollectionsTest {
         expected.add("date", 1L);
         Assert.assertEquals(countMap, expected);
     }
-    
+
 }

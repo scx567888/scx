@@ -78,5 +78,5 @@ public final class ScxCollections {
         }
         return countMap;
     }
-    
+
 }
