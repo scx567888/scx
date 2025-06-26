@@ -5,7 +5,6 @@ import org.slf4j.Marker;
 import org.slf4j.event.Level;
 import org.slf4j.helpers.LegacyAbstractLogger;
 
-import static cool.scx.logging.spi.slf4j.ScxSLF4JLoggerHelper.toJDKLevel;
 import static org.slf4j.event.Level.*;
 import static org.slf4j.helpers.MessageFormatter.basicArrayFormat;
 
@@ -59,6 +58,16 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
     @Override
     protected void handleNormalizedLoggingCall(Level level, Marker marker, String msg, Object[] args, Throwable t) {
         scxLogger.log0(toJDKLevel(level), basicArrayFormat(msg, args), t);
+    }
+
+    private static System.Logger.Level toJDKLevel(Level level) {
+        return switch (level) {
+            case ERROR -> System.Logger.Level.ERROR;
+            case WARN -> System.Logger.Level.WARNING;
+            case INFO -> System.Logger.Level.INFO;
+            case DEBUG -> System.Logger.Level.DEBUG;
+            case TRACE -> System.Logger.Level.TRACE;
+        };
     }
 
 }
