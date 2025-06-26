@@ -27,15 +27,33 @@ public final class ScxLoggerConfig {
     }
 
     public Level level() {
-        return level != null ? level : parent != null ? parent.level() : null;
+        if (level != null) {
+            return level;
+        }
+        if (parent != null) {
+            return parent.level();
+        }
+        throw new IllegalStateException("level is not configured and no fallback found");
     }
 
     public Boolean stackTrace() {
-        return stackTrace != null ? stackTrace : parent != null ? parent.stackTrace() : null;
+        if (stackTrace != null) {
+            return stackTrace;
+        }
+        if (parent != null) {
+            return parent.stackTrace();
+        }
+        throw new IllegalStateException("stackTrace is not configured and no fallback found");
     }
 
     public Set<ScxLogRecorder> recorders() {
-        return recorders != null ? recorders : parent != null ? parent.recorders() : null;
+        if (recorders != null) {
+            return recorders;
+        }
+        if (parent != null) {
+            return parent.recorders();
+        }
+        throw new IllegalStateException("recorders is not configured and no fallback found");
     }
 
     public ScxLoggerConfig setLevel(Level newLevel) {
