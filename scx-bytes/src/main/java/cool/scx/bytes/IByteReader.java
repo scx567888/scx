@@ -7,12 +7,12 @@ import cool.scx.bytes.exception.NoMatchFoundException;
 import cool.scx.bytes.exception.NoMoreDataException;
 import cool.scx.bytes.indexer.ByteIndexer;
 import cool.scx.bytes.indexer.KMPByteIndexer;
-import cool.scx.bytes.indexer.SimpleByteIndexer;
+import cool.scx.bytes.indexer.SingleByteIndexer;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static cool.scx.bytes.consumer.SkipByteConsumer.SKIP_DATA_CONSUMER;
+import static cool.scx.bytes.consumer.SkipByteConsumer.SKIP_BYTE_CONSUMER;
 import static java.lang.Math.toIntExact;
 
 /// IByteReader
@@ -35,7 +35,7 @@ public interface IByteReader {
     /// @param maxLength    最大长度
     /// @param maxPullCount 最大长度
     /// @throws NoMoreDataException 没有更多数据时抛出
-    void read(ByteConsumer byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException;
+    <E extends Throwable> void read(ByteConsumer<E> byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException, E;
 
     /// 查看单个字节 (指针会移动)
     /// 当没有更多的数据时会抛出异常
@@ -51,7 +51,7 @@ public interface IByteReader {
     /// @param maxLength    最大长度
     /// @param maxPullCount 最大长度
     /// @throws NoMoreDataException 没有更多数据时抛出
-    void peek(ByteConsumer byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException;
+    <E extends Throwable> void peek(ByteConsumer<E> byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException, E;
 
     /// 查找索引
     long indexOf(ByteIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, ByteSupplierException;
@@ -81,10 +81,10 @@ public interface IByteReader {
     default byte[] read(int maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
         var consumer = new ByteArrayByteConsumer();
         read(consumer, maxLength, maxPullCount);
-        return consumer.getBytes();
+        return consumer.bytes();
     }
 
-    default void read(ByteConsumer byteConsumer, long maxLength) throws NoMoreDataException, ByteSupplierException {
+    default <E extends Throwable> void read(ByteConsumer<E> byteConsumer, long maxLength) throws NoMoreDataException, ByteSupplierException, E {
         read(byteConsumer, maxLength, Long.MAX_VALUE);
     }
 
@@ -95,10 +95,10 @@ public interface IByteReader {
     default byte[] peek(int maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
         var consumer = new ByteArrayByteConsumer();
         peek(consumer, maxLength, maxPullCount);
-        return consumer.getBytes();
+        return consumer.bytes();
     }
 
-    default void peek(ByteConsumer byteConsumer, long maxLength) throws NoMoreDataException, ByteSupplierException {
+    default <E extends Throwable> void peek(ByteConsumer<E> byteConsumer, long maxLength) throws NoMoreDataException, ByteSupplierException, E {
         peek(byteConsumer, maxLength, Long.MAX_VALUE);
     }
 
@@ -107,7 +107,7 @@ public interface IByteReader {
     }
 
     default void skip(long length, long maxPullCount) throws NoMoreDataException, ByteSupplierException {
-        read(SKIP_DATA_CONSUMER, length, maxPullCount);
+        read(SKIP_BYTE_CONSUMER, length, maxPullCount);
     }
 
     default long indexOf(byte b) throws NoMatchFoundException, NoMoreDataException, ByteSupplierException {
@@ -119,7 +119,7 @@ public interface IByteReader {
     }
 
     default long indexOf(byte b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, ByteSupplierException {
-        return indexOf(new SimpleByteIndexer(b), maxLength, maxPullCount);
+        return indexOf(new SingleByteIndexer(b), maxLength, maxPullCount);
     }
 
     default long indexOf(byte[] b) throws NoMatchFoundException, NoMoreDataException, ByteSupplierException {
