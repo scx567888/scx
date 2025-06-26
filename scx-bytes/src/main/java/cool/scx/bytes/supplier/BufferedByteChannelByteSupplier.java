@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
-/// ByteChannelDataSupplier
+/// BufferedByteChannelByteSupplier
 ///
 /// @author scx567888
 /// @version 0.0.1

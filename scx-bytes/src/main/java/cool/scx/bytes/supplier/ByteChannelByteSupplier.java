@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
-/// ByteChannelDataSupplier
+/// ByteChannelByteSupplier
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -38,7 +38,7 @@ public class ByteChannelByteSupplier implements ByteSupplier {
     @Override
     public ByteChunk get() throws ByteSupplierException {
         try {
-            // 不使用成员变量作为缓冲区的原因 参照 InputStreamDataSupplier
+            // 不使用成员变量作为缓冲区的原因 参照 InputStreamByteSupplier
             var bytes = ByteBuffer.allocate(bufferLength);
             int i = dataChannel.read(bytes);
             if (i == -1) {
