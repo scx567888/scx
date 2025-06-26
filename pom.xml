@@ -202,7 +202,7 @@
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <scx-functional.version>4.0.1</scx-functional.version>
-        <scx-data.version>4.0.0</scx-data.version>
+        <scx-data.version>4.0.1</scx-data.version>
         <jackson.version>2.19.1</jackson.version>
         <hikaricp.version>6.2.1</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
