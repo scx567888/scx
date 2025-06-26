@@ -3,7 +3,6 @@ package cool.scx.logging;
 import java.util.HashSet;
 import java.util.Set;
 
-import static cool.scx.logging.ScxLoggerFactory.*;
 import static java.lang.System.Logger.Level;
 import static java.util.Collections.addAll;
 
@@ -28,15 +27,15 @@ public final class ScxLoggerConfig {
     }
 
     public Level level() {
-        return level != null ? level : parent != null ? parent.level() : DEFAULT_LEVEL;
+        return level != null ? level : parent != null ? parent.level() : null;
     }
 
     public Boolean stackTrace() {
-        return stackTrace != null ? stackTrace : parent != null ? parent.stackTrace() : DEFAULT_STACK_TRACE;
+        return stackTrace != null ? stackTrace : parent != null ? parent.stackTrace() : null;
     }
 
     public Set<ScxLogRecorder> recorders() {
-        return recorders != null ? recorders : parent != null ? parent.recorders() : DEFAULT_RECORDERS;
+        return recorders != null ? recorders : parent != null ? parent.recorders() : null;
     }
 
     public ScxLoggerConfig setLevel(Level newLevel) {
