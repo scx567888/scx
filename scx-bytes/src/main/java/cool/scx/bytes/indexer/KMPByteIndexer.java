@@ -2,23 +2,23 @@ package cool.scx.bytes.indexer;
 
 import cool.scx.bytes.ByteChunk;
 
-/// KMPDataIndexer
+/// KMPByteIndexer
 ///
 /// @author scx567888
 /// @version 0.0.1
 public class KMPByteIndexer implements ByteIndexer {
 
-    private final int[] lps;
     private final byte[] pattern;
-    private int patternIndex;
+    private final int[] lps;
+    private int matchedLength;
 
     public KMPByteIndexer(byte[] pattern) {
         this.pattern = pattern;
-        this.patternIndex = 0; // 模式串索引
-        this.lps = computeLPSArray(pattern);// 创建部分匹配表
+        this.lps = buildLPS(pattern);// 创建部分匹配表
+        this.matchedLength = 0; // 模式串索引
     }
 
-    public static int[] computeLPSArray(byte[] pattern) {
+    public static int[] buildLPS(byte[] pattern) {
         int[] lps = new int[pattern.length];
         int length = 0;
         int i = 1;
@@ -45,34 +45,37 @@ public class KMPByteIndexer implements ByteIndexer {
     public int indexOf(ByteChunk chunk) {
         //KMP 查找
         for (int i = 0; i < chunk.length; i = i + 1) {
-            while (patternIndex > 0 && chunk.getByte(i) != pattern[patternIndex]) {
-                patternIndex = lps[patternIndex - 1];
+
+            var currentByte = chunk.getByte(i);
+            
+            while (matchedLength > 0 && currentByte != pattern[matchedLength]) {
+                matchedLength = lps[matchedLength - 1];
             }
 
-            if (chunk.getByte(i) == pattern[patternIndex]) {
-                patternIndex = patternIndex + 1;
+            if (currentByte == pattern[matchedLength]) {
+                matchedLength = matchedLength + 1;
             }
 
-            if (patternIndex == pattern.length) {
-                var result = i - patternIndex + 1;
+            if (matchedLength == pattern.length) {
+                var result = i - matchedLength + 1;
                 // 重置 patternIndex 为 0, 保证下次匹配 
-                patternIndex = 0;
+                matchedLength = 0;
                 return result;
             }
         }
         return Integer.MIN_VALUE;
     }
 
-    public void reset() {
-        patternIndex = 0;
-    }
-
-    public int patternIndex() {
-        return patternIndex;
-    }
-
     public byte[] pattern() {
         return pattern;
+    }
+
+    public int matchedLength() {
+        return matchedLength;
+    }
+
+    public void reset() {
+        matchedLength = 0;
     }
 
 }
