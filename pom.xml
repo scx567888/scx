@@ -50,7 +50,6 @@
         <module>scx-collections</module>
         <module>scx-common</module>
         <module>scx-config</module>
-        <module>scx-data</module>
         <module>scx-data-serialization</module>
         <module>scx-data-jdbc</module>
         <module>scx-ffm</module>
@@ -104,6 +103,12 @@
                 <groupId>cool.scx</groupId>
                 <artifactId>scx-functional</artifactId>
                 <version>${scx-functional.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-data</artifactId>
+                <version>${scx-data.version}</version>
             </dependency>
 
             <dependency>
@@ -197,6 +202,7 @@
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <scx-functional.version>4.0.0</scx-functional.version>
+        <scx-data.version>4.0.0</scx-data.version>
         <jackson.version>2.19.1</jackson.version>
         <hikaricp.version>6.2.1</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
