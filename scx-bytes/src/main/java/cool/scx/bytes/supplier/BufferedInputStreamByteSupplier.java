@@ -6,8 +6,8 @@ import cool.scx.bytes.exception.ByteSupplierException;
 import java.io.IOException;
 import java.io.InputStream;
 
-/// BufferedInputStreamDataSupplier
-/// 和 [InputStreamByteSupplier] 性能相反
+/// BufferedInputStreamByteSupplier
+/// 和 [InputStreamByteSupplier] 性能表现相反
 /// 1, 当大部分时候读取的数据长度等于 bufferLength 的时候, 性能会差一点 因为多了一次复制
 /// 2, 当大部分时候读取的数据长度小于 bufferLength 的时候, 性能会好一点 因为只会创建一个较小的数组并复制数据
 ///
