@@ -47,7 +47,7 @@ public final class KMPByteIndexer implements ByteIndexer {
         for (int i = 0; i < chunk.length; i = i + 1) {
 
             var currentByte = chunk.getByte(i);
-            
+
             while (matchedLength > 0 && currentByte != pattern[matchedLength]) {
                 matchedLength = lps[matchedLength - 1];
             }

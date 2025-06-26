@@ -4,7 +4,7 @@ package cool.scx.bytes;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ByteNode {
+public final class ByteNode {
 
     public final ByteChunk chunk;
     /// 相对 索引 0 起始

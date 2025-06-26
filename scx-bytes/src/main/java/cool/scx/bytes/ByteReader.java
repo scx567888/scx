@@ -19,7 +19,7 @@ import static java.lang.Math.min;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ByteReader implements IByteReader {
+public final class ByteReader implements IByteReader {
 
     public final ByteSupplier byteSupplier;
     public ByteNode head;
