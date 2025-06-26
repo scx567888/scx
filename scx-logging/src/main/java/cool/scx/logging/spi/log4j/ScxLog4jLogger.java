@@ -6,8 +6,8 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.spi.AbstractLogger;
 
-import static cool.scx.logging.spi.log4j.ScxLog4jLoggerHelper.toJDKLevel;
-import static cool.scx.logging.spi.log4j.ScxLog4jLoggerHelper.toLog4jLevel;
+import static org.apache.logging.log4j.Level.*;
+import static org.apache.logging.log4j.Level.ALL;
 
 /// ScxLog4jLogger
 ///
@@ -113,7 +113,45 @@ public final class ScxLog4jLogger extends AbstractLogger {
 
     @Override
     public void logMessage(String fqcn, Level level, Marker marker, Message message, Throwable t) {
+        // logMessage 调用前一定会执行 isEnabled 判断, 所以此处直接调用 log0
         scxLogger.log0(toJDKLevel(level), message.getFormattedMessage(), t);
+    }
+
+    private static System.Logger.Level toJDKLevel(Level level) {
+        if (level == OFF) {
+            return System.Logger.Level.OFF;
+        }
+        if (level == FATAL || level == ERROR) {
+            return System.Logger.Level.ERROR;
+        }
+        if (level == WARN) {
+            return System.Logger.Level.WARNING;
+        }
+        if (level == INFO) {
+            return System.Logger.Level.INFO;
+        }
+        if (level == DEBUG) {
+            return System.Logger.Level.DEBUG;
+        }
+        if (level == TRACE) {
+            return System.Logger.Level.TRACE;
+        }
+        if (level == ALL) {
+            return System.Logger.Level.ALL;
+        }
+        throw new IllegalArgumentException();
+    }
+
+    private static Level toLog4jLevel(System.Logger.Level level) {
+        return switch (level) {
+            case OFF -> Level.OFF;
+            case ERROR -> Level.ERROR;
+            case WARNING -> Level.WARN;
+            case INFO -> Level.INFO;
+            case DEBUG -> Level.DEBUG;
+            case TRACE -> Level.TRACE;
+            case ALL -> Level.ALL;
+        };
     }
 
 }
