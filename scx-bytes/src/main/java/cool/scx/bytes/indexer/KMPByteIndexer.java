@@ -70,6 +70,7 @@ public class KMPByteIndexer implements ByteIndexer {
         return pattern;
     }
 
+    /// 当前已匹配的模式串长度
     public int matchedLength() {
         return matchedLength;
     }
