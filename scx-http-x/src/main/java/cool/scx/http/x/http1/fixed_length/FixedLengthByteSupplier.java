@@ -1,17 +1,17 @@
 package cool.scx.http.x.http1.fixed_length;
 
 import cool.scx.bytes.ByteChunk;
-import cool.scx.bytes.ByteReader;
+import cool.scx.bytes.IByteReader;
 import cool.scx.bytes.consumer.ByteChunkByteConsumer;
 import cool.scx.bytes.exception.NoMoreDataException;
 import cool.scx.bytes.supplier.ByteSupplier;
 
-public class FixedLengthDataSupplier implements ByteSupplier {
+public class FixedLengthByteSupplier implements ByteSupplier {
 
-    private final ByteReader dataReader;
+    private final IByteReader dataReader;
     private long remaining;
 
-    public FixedLengthDataSupplier(ByteReader dataReader, long maxLength) {
+    public FixedLengthByteSupplier(IByteReader dataReader, long maxLength) {
         this.dataReader = dataReader;
         this.remaining = maxLength;
     }
