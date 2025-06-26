@@ -3,24 +3,23 @@ package cool.scx.logging;
 import cool.scx.logging.recorder.ConsoleRecorder;
 
 import java.util.LinkedHashMap;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Pattern;
 
 import static java.lang.System.Logger.Level.ERROR;
 
-/// ScxLoggerFactory
+/// ScxLogging
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ScxLoggerFactory {
+public final class ScxLogging {
 
-    static final System.Logger.Level DEFAULT_LEVEL = ERROR;
-    static final Boolean DEFAULT_STACK_TRACE = false;
-    static final Set<ScxLogRecorder> DEFAULT_RECORDERS = Set.of(new ConsoleRecorder());
+    // 默认配置 最顶级回退
+    private static final ScxLoggerConfig DEFAULT_CONFIG = new ScxLoggerConfig().setLevel(ERROR).setStackTrace(false).addRecorder(new ConsoleRecorder());
 
-    private static final ScxLoggerConfig ROOT_CONFIG = new ScxLoggerConfig();
+    // 根配置
+    private static final ScxLoggerConfig ROOT_CONFIG = new ScxLoggerConfig(DEFAULT_CONFIG);
 
     // 存储所有日志
     private static final ConcurrentHashMap<String, ScxLogger> LOGGERS = new ConcurrentHashMap<>();
@@ -61,7 +60,7 @@ public final class ScxLoggerFactory {
     }
 
     public static ScxLogger getLogger(String name) {
-        return LOGGERS.computeIfAbsent(name, ScxLoggerFactory::createLogger);
+        return LOGGERS.computeIfAbsent(name, ScxLogging::createLogger);
     }
 
     public static ScxLogger getLogger(Class<?> clazz) {
