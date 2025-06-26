@@ -7,6 +7,8 @@ import org.slf4j.helpers.BasicMarkerFactory;
 import org.slf4j.spi.MDCAdapter;
 import org.slf4j.spi.SLF4JServiceProvider;
 
+import static org.slf4j.helpers.NOP_FallbackServiceProvider.REQUESTED_API_VERSION;
+
 /// ScxSLF4JServiceProvider
 ///
 /// @author scx567888
@@ -16,7 +18,6 @@ public final class ScxSLF4JServiceProvider implements SLF4JServiceProvider {
     private static final ILoggerFactory LOGGER_FACTORY = new ScxSLF4JLoggerFactory();
     private static final IMarkerFactory MARKER_FACTORY = new BasicMarkerFactory();
     private static final MDCAdapter MDC_ADAPTER = new BasicMDCAdapter();
-    private static final String REQUESTED_API_VERSION = "2.0.99";
 
     @Override
     public ILoggerFactory getLoggerFactory() {

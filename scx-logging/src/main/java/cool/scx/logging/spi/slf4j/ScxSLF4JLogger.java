@@ -57,6 +57,7 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
 
     @Override
     protected void handleNormalizedLoggingCall(Level level, Marker marker, String msg, Object[] args, Throwable t) {
+        // handleNormalizedLoggingCall 调用前一定会执行 isLoggable 判断, 所以此处直接调用 log0
         scxLogger.log0(toJDKLevel(level), basicArrayFormat(msg, args), t);
     }
 
