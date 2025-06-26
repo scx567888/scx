@@ -9,7 +9,11 @@ import cool.scx.bytes.indexer.KMPByteIndexer;
 
 import java.util.Arrays;
 
-public class BoundaryByteSupplier implements ByteSupplier {
+/// BoundaryByteSupplier
+///
+/// @author scx567888
+/// @version 0.0.1
+public final class BoundaryByteSupplier implements ByteSupplier {
 
     private final IByteReader dataReader;
     private final KMPByteIndexer dataIndexer;
@@ -42,9 +46,8 @@ public class BoundaryByteSupplier implements ByteSupplier {
             return new ByteChunk(read);
         } catch (NoMatchFoundException e) {
             // 没找到 说明可能还有 继续读取
-            // 为了防止误读这里检查 patternIndex
-            // 没有匹配任何 可以安全读
-            if (dataIndexer.patternIndex() == 0) {
+            // 为了防止误读这里检查 matchedLength,  若为 0, 表示可以安全读
+            if (dataIndexer.matchedLength() == 0) {
                 var read = dataReader.read(bufferLength);
                 return new ByteChunk(read);
             } else {
