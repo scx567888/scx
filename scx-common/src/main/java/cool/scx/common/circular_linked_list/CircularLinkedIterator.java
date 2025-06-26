@@ -1,4 +1,4 @@
-package cool.scx.collections.circular_linked_list;
+package cool.scx.common.circular_linked_list;
 
 /// 无限循环的迭代器
 ///

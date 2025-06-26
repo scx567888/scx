@@ -1,7 +1,7 @@
-package cool.scx.collections.test;
+package cool.scx.common.test;
 
-import cool.scx.collections.bit_array.BitArray;
-import cool.scx.collections.bit_array.BitArrayView;
+import cool.scx.common.bit_array.BitArray;
+import cool.scx.common.bit_array.BitArrayView;
 
 public class BitArrayTest {
 

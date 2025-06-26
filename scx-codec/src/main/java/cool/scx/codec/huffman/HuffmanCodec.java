@@ -1,7 +1,7 @@
 package cool.scx.codec.huffman;
 
-import cool.scx.collections.bit_array.BitArrayView;
-import cool.scx.collections.bit_array.IBitArray;
+import cool.scx.common.bit_array.BitArrayView;
+import cool.scx.common.bit_array.IBitArray;
 
 import java.util.ArrayList;
 import java.util.List;
