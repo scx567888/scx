@@ -9,7 +9,7 @@ import java.io.OutputStream;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class OutputStreamByteConsumer implements ByteConsumer<IOException> {
+public final class OutputStreamByteConsumer implements ByteConsumer<IOException> {
 
     private final OutputStream out;
     private long bytesWritten;

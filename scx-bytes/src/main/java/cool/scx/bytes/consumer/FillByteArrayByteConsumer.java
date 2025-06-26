@@ -6,7 +6,7 @@ import cool.scx.bytes.ByteChunk;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class FillByteArrayByteConsumer implements ByteConsumer<RuntimeException> {
+public final class FillByteArrayByteConsumer implements ByteConsumer<RuntimeException> {
 
     private final byte[] data;
     private final int position;

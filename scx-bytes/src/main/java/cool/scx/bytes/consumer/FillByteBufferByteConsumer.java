@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class FillByteBufferByteConsumer implements ByteConsumer<RuntimeException> {
+public final class FillByteBufferByteConsumer implements ByteConsumer<RuntimeException> {
 
     private final ByteBuffer data;
     private final int startPosition;
