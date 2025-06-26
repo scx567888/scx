@@ -2,15 +2,15 @@ package cool.scx.bytes.indexer;
 
 import cool.scx.bytes.ByteChunk;
 
-/// 单字节查找器
+/// SimpleByteIndexer
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class SimpleByteIndexer implements ByteIndexer {
+public class SingleByteIndexer implements ByteIndexer {
 
     private final byte b;
 
-    public SimpleByteIndexer(byte b) {
+    public SingleByteIndexer(byte b) {
         this.b = b;
     }
 
