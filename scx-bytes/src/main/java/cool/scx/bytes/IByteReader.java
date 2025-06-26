@@ -21,57 +21,29 @@ import static java.lang.Math.toIntExact;
 /// @version 0.0.1
 public interface IByteReader {
 
-    /// 读取单个字节 (指针会移动)
-    /// 当没有更多的数据时会抛出异常
-    ///
-    /// @return byte
-    /// @throws NoMoreDataException 没有更多数据时抛出
     byte read() throws NoMoreDataException, ByteSupplierException;
 
-    /// 向 byteConsumer 写入指定长度字节 (指针会移动)
-    /// 当没有更多的数据时会抛出异常
-    ///
-    /// @param byteConsumer 消费者
-    /// @param maxLength    最大长度
-    /// @param maxPullCount 最大长度
-    /// @throws NoMoreDataException 没有更多数据时抛出
+    /// @param maxPullCount 底层最大拉取次数
     <E extends Throwable> void read(ByteConsumer<E> byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException, E;
 
-    /// 查看单个字节 (指针会移动)
-    /// 当没有更多的数据时会抛出异常
-    ///
-    /// @return byte
-    /// @throws NoMoreDataException 没有更多数据时抛出
     byte peek() throws NoMoreDataException, ByteSupplierException;
 
-    /// 向 byteConsumer 写入指定长度字节 (指针不会移动)
-    /// 当没有更多的数据时会抛出异常
-    ///
-    /// @param byteConsumer 消费者
-    /// @param maxLength    最大长度
-    /// @param maxPullCount 最大长度
-    /// @throws NoMoreDataException 没有更多数据时抛出
+    /// @param maxPullCount 底层最大拉取次数
     <E extends Throwable> void peek(ByteConsumer<E> byteConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, ByteSupplierException, E;
 
-    /// 查找索引
+    /// @param maxPullCount 底层最大拉取次数
     long indexOf(ByteIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, ByteSupplierException;
 
-    /// 标记
     void mark();
 
-    /// 重置
     void reset();
 
-    /// InputStream 写法的 read
     int inputStreamRead() throws IOException;
 
-    /// InputStream 写法的 read
     int inputStreamRead(byte[] b, int off, int len) throws IOException;
 
-    /// InputStream 写法的 TransferTo
     long inputStreamTransferTo(OutputStream out, long maxLength) throws IOException;
 
-    /// InputStream 写法的 read
     byte[] inputStreamReadNBytes(long len) throws IOException;
 
     default byte[] read(int maxLength) throws NoMoreDataException, ByteSupplierException {
