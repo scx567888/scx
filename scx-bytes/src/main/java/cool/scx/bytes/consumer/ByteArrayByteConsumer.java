@@ -3,11 +3,11 @@ package cool.scx.bytes.consumer;
 import cool.scx.bytes.ByteChunk;
 import cool.scx.bytes.ByteNode;
 
-/// ByteArrayDataConsumer
+/// ByteArrayByteConsumer
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ByteArrayByteConsumer implements ByteConsumer {
+public class ByteArrayByteConsumer implements ByteConsumer<RuntimeException> {
 
     private ByteNode head;
     private ByteNode tail;
@@ -33,7 +33,7 @@ public class ByteArrayByteConsumer implements ByteConsumer {
         return true;
     }
 
-    public byte[] getBytes() {
+    public byte[] bytes() {
         var node = head;
 
         //从未调用 accept 会导致此情况
