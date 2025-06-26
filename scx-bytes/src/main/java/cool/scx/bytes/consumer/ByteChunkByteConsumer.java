@@ -6,7 +6,7 @@ import cool.scx.bytes.ByteChunk;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ByteChunkByteConsumer implements ByteConsumer<RuntimeException> {
+public final class ByteChunkByteConsumer implements ByteConsumer<RuntimeException> {
 
     private ByteChunk byteChunk;
 

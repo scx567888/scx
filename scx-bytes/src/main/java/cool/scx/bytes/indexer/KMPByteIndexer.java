@@ -6,7 +6,7 @@ import cool.scx.bytes.ByteChunk;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class KMPByteIndexer implements ByteIndexer {
+public final class KMPByteIndexer implements ByteIndexer {
 
     private final byte[] pattern;
     private final int[] lps;

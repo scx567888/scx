@@ -7,7 +7,7 @@ import cool.scx.bytes.ByteNode;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ByteArrayByteConsumer implements ByteConsumer<RuntimeException> {
+public final class ByteArrayByteConsumer implements ByteConsumer<RuntimeException> {
 
     private ByteNode head;
     private ByteNode tail;

@@ -6,7 +6,7 @@ import cool.scx.bytes.ByteChunk;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class SingleByteIndexer implements ByteIndexer {
+public final class SingleByteIndexer implements ByteIndexer {
 
     private final byte b;
 
