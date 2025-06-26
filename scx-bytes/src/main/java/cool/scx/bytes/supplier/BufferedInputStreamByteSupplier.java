@@ -13,7 +13,7 @@ import java.io.InputStream;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class BufferedInputStreamByteSupplier implements ByteSupplier {
+public final class BufferedInputStreamByteSupplier implements ByteSupplier {
 
     private final InputStream inputStream;
     private final byte[] buffer;

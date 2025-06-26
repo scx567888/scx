@@ -11,7 +11,7 @@ import java.nio.channels.ReadableByteChannel;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ByteChannelByteSupplier implements ByteSupplier {
+public final class ByteChannelByteSupplier implements ByteSupplier {
 
     private final ReadableByteChannel dataChannel;
     private final int bufferLength;

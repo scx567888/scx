@@ -10,7 +10,7 @@ import java.util.List;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ByteArrayByteSupplier implements ByteSupplier {
+public final class ByteArrayByteSupplier implements ByteSupplier {
 
     private final Iterator<byte[]> byteArrayIterator;
 

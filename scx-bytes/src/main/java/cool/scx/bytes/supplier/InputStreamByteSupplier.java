@@ -15,7 +15,7 @@ import java.io.InputStream;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class InputStreamByteSupplier implements ByteSupplier {
+public final class InputStreamByteSupplier implements ByteSupplier {
 
     private final InputStream inputStream;
     private final int bufferLength;

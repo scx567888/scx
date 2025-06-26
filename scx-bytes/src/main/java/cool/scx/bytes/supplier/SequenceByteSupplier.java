@@ -11,7 +11,7 @@ import java.util.List;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class SequenceByteSupplier implements ByteSupplier {
+public final class SequenceByteSupplier implements ByteSupplier {
 
     private final Iterator<ByteSupplier> iterator;
     private ByteSupplier currentSupplier;
