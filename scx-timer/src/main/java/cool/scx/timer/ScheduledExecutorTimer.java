@@ -1,4 +1,4 @@
-package cool.scx.scheduling.timer;
+package cool.scx.timer;
 
 import cool.scx.functional.ScxCallable;
 import cool.scx.functional.ScxRunnable;
@@ -6,13 +6,13 @@ import cool.scx.functional.ScxRunnable;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static cool.scx.scheduling.timer.TaskStatus.*;
+import static cool.scx.timer.TaskStatus.*;
 
 /// ScheduledExecutorTimer
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ScheduledExecutorTimer implements Timer {
+public final class ScheduledExecutorTimer implements ScxTimer {
 
     private final ScheduledExecutorService executor;
 

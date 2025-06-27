@@ -1,4 +1,4 @@
-package cool.scx.scheduling.timer;
+package cool.scx.timer;
 
 import cool.scx.functional.ScxCallable;
 import cool.scx.functional.ScxRunnable;
@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface Timer {
+public interface ScxTimer {
 
     <E extends Throwable> TaskHandle<Void, E> runAfter(ScxRunnable<E> action, long delay, TimeUnit unit);
 

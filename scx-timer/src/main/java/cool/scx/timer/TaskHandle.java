@@ -1,4 +1,4 @@
-package cool.scx.scheduling.timer;
+package cool.scx.timer;
 
 /// TaskHandle
 ///
