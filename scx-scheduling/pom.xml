@@ -20,6 +20,11 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-functional</artifactId>
+        </dependency>
+
         <!-- 解析 cron 表达式 -->
         <dependency>
             <groupId>com.cronutils</groupId>
