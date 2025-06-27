@@ -118,7 +118,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
             throw new IllegalStateException("timer 未设置 !!!");
         }
         if (delay == null) {
-            throw new IllegalStateException("Delay 未设置");
+            throw new IllegalStateException("delay 未设置 !!!");
         }
         //此处立即获取当前时间保证准确
         var now = now();
@@ -130,36 +130,46 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
         }
         //先判断过没过期
         var between = between(now, startTime);
-        //不为负数 则没有过期
-        if (!between.isNegative()) {
-            return doStart(between.toNanos());
+        // 初次启动延时
+        long initialDelayNanos;
+
+        //以下处理过期情况
+        if (between.isNegative()) {
+            
+            switch (expirationPolicy) {
+                //1, 忽略策略
+                case IMMEDIATE_IGNORE, BACKTRACKING_IGNORE -> {
+                    //1, 计算过期次数和最近的开始时间
+                    var delayCount = between.dividedBy(delay) * -1;
+                    var nearestTime = startTime.plus(delay.multipliedBy(delayCount + 1));
+                    //2, 如果是回溯忽略 我们就假设之前的已经都执行了 所以这里需要 修改 runCount
+                    if (expirationPolicy == BACKTRACKING_IGNORE) {
+                        runCount.addAndGet(delayCount);
+                    }
+                    initialDelayNanos = between(now, nearestTime).toNanos();
+                }
+                //2, 补偿策略
+                case IMMEDIATE_COMPENSATION, BACKTRACKING_COMPENSATION -> {
+                    //如果是回溯补偿则需要先把未执行的执行一遍
+                    if (expirationPolicy == BACKTRACKING_COMPENSATION) {
+                        var delayCount = between.dividedBy(delay) * -1;
+                        //2, 执行所有过期的任务
+                        for (var i = 0; i < delayCount; i = i + 1) {
+                            run();
+                        }
+                    }
+                    //补偿策略就是立即执行
+                    initialDelayNanos = 0;
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + expirationPolicy);
+            }
+
+        } else {
+            initialDelayNanos = between.toNanos();
         }
 
-        //以下处理过期情况 
-        //1, 忽略策略
-        if (expirationPolicy == IMMEDIATE_IGNORE || expirationPolicy == BACKTRACKING_IGNORE) {
-            //1, 计算过期次数和最近的开始时间
-            var delayCount = between.dividedBy(delay) * -1;
-            var nearestTime = startTime.plus(delay.multipliedBy(delayCount + 1));
-            //2, 如果是回溯忽略 我们就假设之前的已经都执行了 所以这里需要 修改 runCount
-            if (expirationPolicy == BACKTRACKING_IGNORE) {
-                runCount.addAndGet(delayCount);
-            }
-            return doStart(between(now, nearestTime).toNanos());
-        }
-        //2, 补偿策略
-        if (expirationPolicy == IMMEDIATE_COMPENSATION || expirationPolicy == BACKTRACKING_COMPENSATION) {
-            //如果是回溯补偿则需要先把未执行的执行一遍
-            if (expirationPolicy == BACKTRACKING_COMPENSATION) {
-                var delayCount = between.dividedBy(delay) * -1;
-                //2, 执行所有过期的任务
-                for (var i = 0; i < delayCount; i = i + 1) {
-                    run();
-                }
-            }
-            return doStart(0);
-        }
-        throw new IllegalStateException("Unexpected value: " + expirationPolicy);
+        return doStart(initialDelayNanos);
+
     }
 
 
@@ -257,8 +267,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
                 @Override
                 public ScheduleContext context() {
-                    //todo 这里有可能是 null , 假设 startDelay 为 0 时 有可能先调用 run 然后有返回值
-                    //是否使用锁 来强制 等待创建完成
+                    // todo 这里有可能是 null , 假设 startDelay 为 0 时 有可能先调用 run 然后有返回值 是否使用锁 来强制 等待创建完成
                     return context;
                 }
 
