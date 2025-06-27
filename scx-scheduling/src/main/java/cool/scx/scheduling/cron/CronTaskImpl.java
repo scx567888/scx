@@ -99,6 +99,12 @@ public class CronTaskImpl implements CronTask {
 
     @Override
     public ScheduleContext start() {
+        if (timer == null) {
+            throw new IllegalStateException("timer 未设置 !!!");
+        }
+        if (executionTime == null) {
+            throw new IllegalStateException("execution 未设置 !!!");
+        }
         // cron 不支持过期策略, 这里直接按照正常流程执行
         scheduleNext();
         this.context = new ScheduleContext() {
