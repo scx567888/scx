@@ -5,7 +5,7 @@ import cool.scx.functional.ScxRunnable;
 
 import java.util.concurrent.TimeUnit;
 
-/// Timer
+/// ScxTimer
 ///
 /// @author scx567888
 /// @version 0.0.1
