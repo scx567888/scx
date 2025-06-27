@@ -61,6 +61,7 @@
         <module>scx-reflect</module>
         <module>scx-scheduling</module>
         <module>scx-tcp</module>
+        <module>scx-timer</module>
         <module>scx-web</module>
         <module>scx-websocket</module>
         <module>scx-websocket-routing</module>
