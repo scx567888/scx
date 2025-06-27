@@ -21,9 +21,8 @@
     <dependencies>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>cool.scx</groupId>
             <artifactId>scx-timer</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <!-- 解析 cron 表达式 -->
