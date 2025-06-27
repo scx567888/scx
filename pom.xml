@@ -127,6 +127,12 @@
             </dependency>
 
             <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-timer</artifactId>
+                <version>${scx-timer.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
                 <version>${jackson.version}</version>
@@ -221,6 +227,7 @@
         <scx-collections.version>4.0.0</scx-collections.version>
         <scx-bytes.version>4.0.0</scx-bytes.version>
         <scx-logging.version>4.0.0</scx-logging.version>
+        <scx-timer.version>1.0.0</scx-timer.version>
         <jackson.version>2.19.1</jackson.version>
         <hikaricp.version>6.2.1</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>

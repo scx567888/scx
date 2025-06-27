@@ -1,12 +1,14 @@
 package cool.scx.scheduling.multi_time;
 
+import cool.scx.functional.ScxConsumer;
 import cool.scx.scheduling.*;
+import cool.scx.timer.ScxTimer;
 
 import java.lang.System.Logger;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -20,7 +22,7 @@ import static java.time.Duration.between;
 import static java.time.Instant.now;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
-/// 多次执行的任务
+/// 多次执行的任务 todo 代码过于复杂 待优化
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -29,14 +31,15 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     private static final Logger logger = getLogger(MultiTimeTaskImpl.class.getName());
 
     private final AtomicLong runCount;
+    private final AtomicBoolean cancel;
     private Supplier<Instant> startTimeSupplier;
     private Duration delay;
     private ExecutionPolicy executionPolicy;
     private ConcurrencyPolicy concurrencyPolicy;
     private long maxRunCount;
     private ExpirationPolicy expirationPolicy;
-    private ScheduledExecutorService executor;
-    private Task task;
+    private ScxTimer timer;
+    private ScxConsumer<TaskContext, ?> task;
     private ScheduledFuture<?> scheduledFuture;
     private Consumer<Throwable> errorHandler;
     private ScheduleContext context;
@@ -45,13 +48,14 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
     public MultiTimeTaskImpl() {
         this.runCount = new AtomicLong(0);
+        this.cancel = new AtomicBoolean(false);
         this.startTimeSupplier = null;
         this.delay = null;
         this.executionPolicy = FIXED_RATE;//默认类型
         this.concurrencyPolicy = NO_CONCURRENCY; //默认不允许并发
         this.maxRunCount = -1;// 默认没有最大运行次数
         this.expirationPolicy = IMMEDIATE_COMPENSATION;//默认策略
-        this.executor = null;
+        this.timer = null;
         this.task = null;
         this.scheduledFuture = null;
         this.errorHandler = null;
@@ -94,13 +98,13 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     }
 
     @Override
-    public MultiTimeTask executor(ScheduledExecutorService executor) {
-        this.executor = executor;
+    public MultiTimeTask timer(ScxTimer timer) {
+        this.timer = timer;
         return this;
     }
 
     @Override
-    public MultiTimeTask task(Task task) {
+    public MultiTimeTask task(ScxConsumer<TaskContext, ?> task) {
         this.task = task;
         return this;
     }
@@ -113,11 +117,11 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
     @Override
     public ScheduleContext start() {
-        if (executor == null) {
-            throw new IllegalStateException("Executor 未设置 !!!");
+        if (timer == null) {
+            throw new IllegalStateException("timer 未设置 !!!");
         }
         if (delay == null) {
-            throw new IllegalStateException("Delay 未设置");
+            throw new IllegalStateException("delay 未设置 !!!");
         }
         //此处立即获取当前时间保证准确
         var now = now();
@@ -129,45 +133,55 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
         }
         //先判断过没过期
         var between = between(now, startTime);
-        //不为负数 则没有过期
-        if (!between.isNegative()) {
-            return doStart(between.toNanos());
+        // 初次启动延时
+        long initialDelayNanos;
+
+        //以下处理过期情况
+        if (between.isNegative()) {
+
+            switch (expirationPolicy) {
+                //1, 忽略策略
+                case IMMEDIATE_IGNORE, BACKTRACKING_IGNORE -> {
+                    //1, 计算过期次数和最近的开始时间
+                    var delayCount = between.dividedBy(delay) * -1;
+                    var nearestTime = startTime.plus(delay.multipliedBy(delayCount + 1));
+                    //2, 如果是回溯忽略 我们就假设之前的已经都执行了 所以这里需要 修改 runCount
+                    if (expirationPolicy == BACKTRACKING_IGNORE) {
+                        runCount.addAndGet(delayCount);
+                    }
+                    initialDelayNanos = between(now, nearestTime).toNanos();
+                }
+                //2, 补偿策略
+                case IMMEDIATE_COMPENSATION, BACKTRACKING_COMPENSATION -> {
+                    //如果是回溯补偿则需要先把未执行的执行一遍
+                    if (expirationPolicy == BACKTRACKING_COMPENSATION) {
+                        var delayCount = between.dividedBy(delay) * -1;
+                        //2, 执行所有过期的任务
+                        for (var i = 0; i < delayCount; i = i + 1) {
+                            run();
+                        }
+                    }
+                    //补偿策略就是立即执行
+                    initialDelayNanos = 0;
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + expirationPolicy);
+            }
+
+        } else {
+            initialDelayNanos = between.toNanos();
         }
 
-        //以下处理过期情况 
-        //1, 忽略策略
-        if (expirationPolicy == IMMEDIATE_IGNORE || expirationPolicy == BACKTRACKING_IGNORE) {
-            //1, 计算过期次数和最近的开始时间
-            var delayCount = between.dividedBy(delay) * -1;
-            var nearestTime = startTime.plus(delay.multipliedBy(delayCount + 1));
-            //2, 如果是回溯忽略 我们就假设之前的已经都执行了 所以这里需要 修改 runCount
-            if (expirationPolicy == BACKTRACKING_IGNORE) {
-                runCount.addAndGet(delayCount);
-            }
-            return doStart(between(now, nearestTime).toNanos());
-        }
-        //2, 补偿策略
-        if (expirationPolicy == IMMEDIATE_COMPENSATION || expirationPolicy == BACKTRACKING_COMPENSATION) {
-            //如果是回溯补偿则需要先把未执行的执行一遍
-            if (expirationPolicy == BACKTRACKING_COMPENSATION) {
-                var delayCount = between.dividedBy(delay) * -1;
-                //2, 执行所有过期的任务
-                for (var i = 0; i < delayCount; i = i + 1) {
-                    run();
-                }
-            }
-            return doStart(0);
-        }
-        throw new IllegalStateException("Unexpected value: " + expirationPolicy);
+        return doStart(initialDelayNanos);
+
     }
 
 
     private ScheduleContext doStart(long startDelay) {
         this.initialScheduledTime = Instant.now().plusNanos(startDelay);
-        this.scheduledFuture = switch (executionPolicy) {
-            case FIXED_RATE -> executor.scheduleAtFixedRate(this::run, startDelay, delay.toNanos(), NANOSECONDS);
-            case FIXED_DELAY -> executor.scheduleWithFixedDelay(this::run, startDelay, delay.toNanos(), NANOSECONDS);
-        };
+        this.cancel.set(false);
+
+        scheduleNext(startDelay);
+
         this.context = new ScheduleContext() {
             @Override
             public long runCount() {
@@ -176,7 +190,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
             @Override
             public Instant nextRunTime() {
-                if (scheduledFuture.isCancelled() || scheduledFuture.isDone()) {
+                if (cancel.get()) {
                     return null;
                 }
                 return switch (executionPolicy) {
@@ -193,9 +207,10 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
                 if (count <= 0) {
                     throw new IllegalArgumentException("count must be positive");
                 }
-                if (scheduledFuture.isCancelled() || scheduledFuture.isDone()) {
+                if (cancel.get()) {
                     return null;
                 }
+                ;
                 return switch (executionPolicy) {
                     case FIXED_RATE -> initialScheduledTime.plus(delay.multipliedBy(runCount.get() + count));
                     case FIXED_DELAY -> {
@@ -207,27 +222,51 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
             @Override
             public void cancel() {
-                scheduledFuture.cancel(false);
+                cancel.set(true);
             }
 
             @Override
-            public Status status() {
-                //todo 此处应该返回 任务本身的 而不是 scheduledFuture 的状态
-                var s = scheduledFuture.state();
-                return switch (s) {
-                    case RUNNING -> Status.RUNNING;
-                    case SUCCESS, FAILED -> Status.DONE;
-                    case CANCELLED -> Status.CANCELED;
-                };
+            public ScheduleStatus status() {
+                return cancel.get() ? ScheduleStatus.CANCELLED : (runCount.get() >= maxRunCount ? ScheduleStatus.DONE : ScheduleStatus.RUNNING);
             }
         };
         return this.context;
     }
 
+    private void scheduleNext(long delayNanos) {
+        if (cancel.get()) {
+            return;
+        }
+        timer.runAfter(() -> {
+            if (cancel.get()) {
+                return;
+            }
+            run();
+            if (maxRunCount != -1 && runCount.get() >= maxRunCount) {
+                cancel.set(true);
+                return;
+            }
+            long nextDelayNanos;
+            switch (executionPolicy) {
+                case FIXED_RATE -> {
+                    // 下一次执行的预期时间 = 初始时间 + runCount * delay
+                    Instant nextScheduledTime = initialScheduledTime.plus(delay.multipliedBy(runCount.get()));
+                    long diff = Duration.between(Instant.now(), nextScheduledTime).toNanos();
+                    nextDelayNanos = Math.max(diff, 0);
+                }
+                case FIXED_DELAY -> {
+                    nextDelayNanos = delay.toNanos();
+                }
+                default -> nextDelayNanos = delay.toNanos();
+            }
+            scheduleNext(nextDelayNanos);
+        }, delayNanos, NANOSECONDS);
+    }
+
     private void run() {
         //如果允许并发执行则 开启虚拟线程执行
         switch (concurrencyPolicy) {
-            case CONCURRENCY -> executor.execute(this::run0);
+            case CONCURRENCY -> Thread.ofVirtual().start(this::run0);
             case NO_CONCURRENCY -> run0();
             default -> {
                 //这里只可能是 null 
@@ -246,7 +285,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
             return;
         }
         try {
-            task.run(new TaskStatus() {
+            task.accept(new TaskContext() {
 
                 @Override
                 public long currentRunCount() {
@@ -255,8 +294,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
                 @Override
                 public ScheduleContext context() {
-                    //todo 这里有可能是 null , 假设 startDelay 为 0 时 有可能先调用 run 然后有返回值
-                    //是否使用锁 来强制 等待创建完成
+                    // todo 这里有可能是 null , 假设 startDelay 为 0 时 有可能先调用 run 然后有返回值 是否使用锁 来强制 等待创建完成
                     return context;
                 }
 

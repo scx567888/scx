@@ -6,6 +6,8 @@ import cool.scx.scheduling.multi_time.MultiTimeTask;
 import cool.scx.scheduling.multi_time.MultiTimeTaskImpl;
 import cool.scx.scheduling.single_time.SingleTimeTask;
 import cool.scx.scheduling.single_time.SingleTimeTaskImpl;
+import cool.scx.timer.ScheduledExecutorTimer;
+import cool.scx.timer.ScxTimer;
 
 import java.time.Duration;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -20,29 +22,29 @@ import static cool.scx.scheduling.multi_time.ExecutionPolicy.FIXED_RATE;
 /// @version 0.0.1
 public final class ScxScheduling {
 
-    private static ScheduledThreadPoolExecutor defaultScheduler;
+    private static ScxTimer DEFAULT_TIMER;
 
-    public static ScheduledThreadPoolExecutor defaultScheduler() {
-        if (defaultScheduler == null) {
-            defaultScheduler = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors() * 2);
+    public static ScxTimer defaultTimer() {
+        if (DEFAULT_TIMER == null) {
+            DEFAULT_TIMER = new ScheduledExecutorTimer(new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors() * 2));
         }
-        return defaultScheduler;
+        return DEFAULT_TIMER;
     }
 
     public static MultiTimeTask fixedRate() {
-        return new MultiTimeTaskImpl().executor(defaultScheduler()).executionPolicy(FIXED_RATE);
+        return new MultiTimeTaskImpl().timer(defaultTimer()).executionPolicy(FIXED_RATE);
     }
 
     public static MultiTimeTask fixedDelay() {
-        return new MultiTimeTaskImpl().executor(defaultScheduler()).executionPolicy(FIXED_DELAY);
+        return new MultiTimeTaskImpl().timer(defaultTimer()).executionPolicy(FIXED_DELAY);
     }
 
     public static CronTask cron() {
-        return new CronTaskImpl().executor(defaultScheduler());
+        return new CronTaskImpl().timer(defaultTimer());
     }
 
     public static SingleTimeTask once() {
-        return new SingleTimeTaskImpl().executor(defaultScheduler());
+        return new SingleTimeTaskImpl().timer(defaultTimer());
     }
 
     public static ScheduleContext setTimeout(Runnable task, long delay) {

@@ -21,12 +21,6 @@ public interface ScheduleContext {
     void cancel();
 
     /// 调度器状态 这表示宏观的调度器的状态而不是 子任务的状态 , 比如在两个任务的间歇期间 仍会返回 进行中
-    Status status();
-
-    enum Status {
-        RUNNING,    // 运行中
-        DONE,       // 已完成
-        CANCELED,   // 已取消
-    }
+    ScheduleStatus status();
 
 }

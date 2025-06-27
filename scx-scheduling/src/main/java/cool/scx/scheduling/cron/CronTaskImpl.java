@@ -2,16 +2,17 @@ package cool.scx.scheduling.cron;
 
 import com.cronutils.model.time.ExecutionTime;
 import com.cronutils.parser.CronParser;
+import cool.scx.functional.ScxConsumer;
 import cool.scx.scheduling.ConcurrencyPolicy;
 import cool.scx.scheduling.ScheduleContext;
-import cool.scx.scheduling.Task;
-import cool.scx.scheduling.TaskStatus;
+import cool.scx.scheduling.ScheduleStatus;
+import cool.scx.scheduling.TaskContext;
+import cool.scx.timer.ScxTimer;
 
 import java.lang.System.Logger;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -40,11 +41,11 @@ public class CronTaskImpl implements CronTask {
     private ExecutionTime executionTime;
     private ConcurrencyPolicy concurrencyPolicy;
     private long maxRunCount;
-    private ScheduledExecutorService executor;
-    private Task task;
-    private ZonedDateTime lastNext;
+    private ScxTimer timer;
+    private ScxConsumer<TaskContext, ?> task;
     private Consumer<Throwable> errorHandler;
     private ScheduleContext context;
+    private ZonedDateTime lastNext;
 
     public CronTaskImpl() {
         this.runCount = new AtomicLong(0);
@@ -52,11 +53,11 @@ public class CronTaskImpl implements CronTask {
         this.executionTime = null;
         this.concurrencyPolicy = NO_CONCURRENCY; // 默认不允许并发
         this.maxRunCount = -1; // 默认不限制运行次数
-        this.executor = null;
+        this.timer = null;
         this.task = null;
-        this.lastNext = null;
         this.errorHandler = null;
         this.context = null;
+        this.lastNext = null;
     }
 
     @Override
@@ -79,13 +80,13 @@ public class CronTaskImpl implements CronTask {
     }
 
     @Override
-    public CronTask executor(ScheduledExecutorService executor) {
-        this.executor = executor;
+    public CronTask timer(ScxTimer timer) {
+        this.timer = timer;
         return this;
     }
 
     @Override
-    public CronTask task(Task task) {
+    public CronTask task(ScxConsumer<TaskContext, ?> task) {
         this.task = task;
         return this;
     }
@@ -98,6 +99,13 @@ public class CronTaskImpl implements CronTask {
 
     @Override
     public ScheduleContext start() {
+        if (timer == null) {
+            throw new IllegalStateException("timer 未设置 !!!");
+        }
+        if (executionTime == null) {
+            throw new IllegalStateException("execution 未设置 !!!");
+        }
+        // cron 不支持过期策略, 这里直接按照正常流程执行
         scheduleNext();
         this.context = new ScheduleContext() {
             @Override
@@ -125,14 +133,36 @@ public class CronTaskImpl implements CronTask {
             }
 
             @Override
-            public Status status() {
-                return cancel.get() ? Status.CANCELED : (runCount.get() >= maxRunCount ? Status.DONE : Status.RUNNING);
+            public ScheduleStatus status() {
+                return cancel.get() ? ScheduleStatus.CANCELLED : (runCount.get() >= maxRunCount ? ScheduleStatus.DONE : ScheduleStatus.RUNNING);
             }
+
         };
         return context;
     }
 
-    public void run() {
+    private void scheduleNext() {
+
+        var now = ZonedDateTime.now();
+
+        if (lastNext == null) {
+            lastNext = now;
+        }
+
+        lastNext = executionTime.nextExecution(lastNext).orElse(null);
+
+        if (lastNext == null) {
+            // 没有下一次执行时间，停止调度 这种情况很难发生
+            return;
+        }
+
+        var delay = Duration.between(now, lastNext).toNanos();
+
+        timer.runAfter(this::run, delay, NANOSECONDS);
+
+    }
+
+    private void run() {
         var l = runCount.incrementAndGet();
         // 已经取消了 或者 达到了最大次数
         if (cancel.get() || maxRunCount != -1 && l > maxRunCount) {
@@ -143,7 +173,7 @@ public class CronTaskImpl implements CronTask {
             scheduleNext();
         }
         try {
-            task.run(new TaskStatus() {
+            task.accept(new TaskContext() {
 
                 @Override
                 public long currentRunCount() {
@@ -152,6 +182,7 @@ public class CronTaskImpl implements CronTask {
 
                 @Override
                 public ScheduleContext context() {
+                    // todo 这里有可能是 null , 假设 startDelay 为 0 时 有可能先调用 run 然后有返回值 是否使用锁 来强制 等待创建完成
                     return context;
                 }
 
@@ -172,22 +203,6 @@ public class CronTaskImpl implements CronTask {
         if (concurrencyPolicy != CONCURRENCY) {
             scheduleNext();
         }
-    }
-
-    private void scheduleNext() {
-
-        var now = ZonedDateTime.now();
-
-        if (lastNext == null) {
-            lastNext = now;
-        }
-
-        lastNext = executionTime.nextExecution(lastNext).orElse(null);
-
-        var delay = Duration.between(now, lastNext).toNanos();
-
-        executor.schedule(this::run, delay, NANOSECONDS);
-
     }
 
 }

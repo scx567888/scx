@@ -20,6 +20,11 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-timer</artifactId>
+        </dependency>
+
         <!-- 解析 cron 表达式 -->
         <dependency>
             <groupId>com.cronutils</groupId>
