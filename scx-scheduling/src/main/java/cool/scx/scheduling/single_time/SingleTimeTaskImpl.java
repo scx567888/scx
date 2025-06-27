@@ -93,13 +93,14 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
         }
         //先判断过没过期
         var between = between(now, startTime);
-
+        // 初次启动延时
         long initialDelayNanos;
 
-        // 下面是过期了
-        if (between.isNegative()) {  
-            //因为在单次执行任务中 只有忽略的策略需要特殊处理
+        //以下处理过期情况
+        if (between.isNegative()) { 
+            
             switch (expirationPolicy) {
+                //1, 忽略策略
                 case IMMEDIATE_IGNORE, BACKTRACKING_IGNORE -> {
                     //2, 如果是回溯忽略 我们就假设之前的已经都执行了 所以这里需要 修改 runCount
                     if (expirationPolicy == BACKTRACKING_IGNORE) {
@@ -135,9 +136,9 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
                     };
                     //单次任务 直接返回虚拟的 Status 即可 无需执行
                 }
-
-                //单次任务的补偿策略就是立即执行
+                //2, 补偿策略
                 case IMMEDIATE_COMPENSATION, BACKTRACKING_COMPENSATION -> {
+                    //补偿策略就是立即执行
                     initialDelayNanos = 0;
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + expirationPolicy);
