@@ -86,7 +86,7 @@ public class CronTaskImpl implements CronTask {
     }
 
     @Override
-    public  CronTask task(ScxConsumer<TaskContext, ?> task) {
+    public CronTask task(ScxConsumer<TaskContext, ?> task) {
         this.task = task;
         return this;
     }
