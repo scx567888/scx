@@ -8,6 +8,7 @@ import java.lang.System.Logger;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -30,6 +31,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     private static final Logger logger = getLogger(MultiTimeTaskImpl.class.getName());
 
     private final AtomicLong runCount;
+    private final AtomicBoolean cancel;
     private Supplier<Instant> startTimeSupplier;
     private Duration delay;
     private ExecutionPolicy executionPolicy;
@@ -46,6 +48,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
     public MultiTimeTaskImpl() {
         this.runCount = new AtomicLong(0);
+        this.cancel = new AtomicBoolean(false);
         this.startTimeSupplier = null;
         this.delay = null;
         this.executionPolicy = FIXED_RATE;//默认类型
@@ -135,7 +138,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
         //以下处理过期情况
         if (between.isNegative()) {
-            
+
             switch (expirationPolicy) {
                 //1, 忽略策略
                 case IMMEDIATE_IGNORE, BACKTRACKING_IGNORE -> {
@@ -175,11 +178,10 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
     private ScheduleContext doStart(long startDelay) {
         this.initialScheduledTime = Instant.now().plusNanos(startDelay);
-        this.scheduledFuture = switch (executionPolicy) {
-            // todo 
-            case FIXED_RATE -> executor.scheduleAtFixedRate(this::run, startDelay, delay.toNanos(), NANOSECONDS);
-            case FIXED_DELAY -> executor.scheduleWithFixedDelay(this::run, startDelay, delay.toNanos(), NANOSECONDS);
-        };
+        this.cancel.set(false);
+
+        scheduleNext(startDelay);
+
         this.context = new ScheduleContext() {
             @Override
             public long runCount() {
@@ -188,7 +190,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
             @Override
             public Instant nextRunTime() {
-                if (scheduledFuture.isCancelled() || scheduledFuture.isDone()) {
+                if (cancel.get()) {
                     return null;
                 }
                 return switch (executionPolicy) {
@@ -205,9 +207,10 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
                 if (count <= 0) {
                     throw new IllegalArgumentException("count must be positive");
                 }
-                if (scheduledFuture.isCancelled() || scheduledFuture.isDone()) {
+                if (cancel.get()) {
                     return null;
                 }
+                ;
                 return switch (executionPolicy) {
                     case FIXED_RATE -> initialScheduledTime.plus(delay.multipliedBy(runCount.get() + count));
                     case FIXED_DELAY -> {
@@ -219,27 +222,51 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
             @Override
             public void cancel() {
-                scheduledFuture.cancel(false);
+                cancel.set(true);
             }
 
             @Override
             public ScheduleStatus status() {
-                //todo 此处应该返回 任务本身的 而不是 scheduledFuture 的状态
-                var s = scheduledFuture.state();
-                return switch (s) {
-                    case RUNNING -> ScheduleStatus.RUNNING;
-                    case SUCCESS, FAILED -> ScheduleStatus.DONE;
-                    case CANCELLED -> ScheduleStatus.CANCELLED;
-                };
+                return cancel.get() ? ScheduleStatus.CANCELLED : (runCount.get() >= maxRunCount ? ScheduleStatus.DONE : ScheduleStatus.RUNNING);
             }
         };
         return this.context;
     }
 
+    private void scheduleNext(long delayNanos) {
+        if (cancel.get()) {
+            return;
+        }
+        timer.runAfter(() -> {
+            if (cancel.get()) {
+                return;
+            }
+            run();
+            if (maxRunCount != -1 && runCount.get() >= maxRunCount) {
+                cancel.set(true);
+                return;
+            }
+            long nextDelayNanos;
+            switch (executionPolicy) {
+                case FIXED_RATE -> {
+                    // 下一次执行的预期时间 = 初始时间 + runCount * delay
+                    Instant nextScheduledTime = initialScheduledTime.plus(delay.multipliedBy(runCount.get()));
+                    long diff = Duration.between(Instant.now(), nextScheduledTime).toNanos();
+                    nextDelayNanos = Math.max(diff, 0);
+                }
+                case FIXED_DELAY -> {
+                    nextDelayNanos = delay.toNanos();
+                }
+                default -> nextDelayNanos = delay.toNanos();
+            }
+            scheduleNext(nextDelayNanos);
+        }, delayNanos, NANOSECONDS);
+    }
+
     private void run() {
         //如果允许并发执行则 开启虚拟线程执行
         switch (concurrencyPolicy) {
-            case CONCURRENCY -> executor.execute(this::run0);
+            case CONCURRENCY -> Thread.ofVirtual().start(this::run0);
             case NO_CONCURRENCY -> run0();
             default -> {
                 //这里只可能是 null 
