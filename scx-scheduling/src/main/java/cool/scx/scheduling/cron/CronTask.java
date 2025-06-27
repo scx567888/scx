@@ -18,7 +18,7 @@ public interface CronTask extends ScheduleTask<CronTask> {
 
     @Override
     default CronTask expirationPolicy(ExpirationPolicy expirationPolicy) {
-        //不支持直接跳过
+        //不支持过期策略直接跳过
         return this;
     }
 

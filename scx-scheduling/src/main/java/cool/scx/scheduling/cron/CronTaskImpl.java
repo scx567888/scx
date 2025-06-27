@@ -99,6 +99,7 @@ public class CronTaskImpl implements CronTask {
 
     @Override
     public ScheduleContext start() {
+        // cron 不支持过期策略, 这里直接按照正常流程执行
         scheduleNext();
         this.context = new ScheduleContext() {
             @Override
