@@ -135,7 +135,23 @@ public class CronTaskImpl implements CronTask {
         return context;
     }
 
-    public void run() {
+    private void scheduleNext() {
+
+        var now = ZonedDateTime.now();
+
+        if (lastNext == null) {
+            lastNext = now;
+        }
+
+        lastNext = executionTime.nextExecution(lastNext).orElse(null);
+
+        var delay = Duration.between(now, lastNext).toNanos();
+
+        timer.runAfter(this::run, delay, NANOSECONDS);
+
+    }
+
+    private void run() {
         var l = runCount.incrementAndGet();
         // 已经取消了 或者 达到了最大次数
         if (cancel.get() || maxRunCount != -1 && l > maxRunCount) {
@@ -175,22 +191,6 @@ public class CronTaskImpl implements CronTask {
         if (concurrencyPolicy != CONCURRENCY) {
             scheduleNext();
         }
-    }
-
-    private void scheduleNext() {
-
-        var now = ZonedDateTime.now();
-
-        if (lastNext == null) {
-            lastNext = now;
-        }
-
-        lastNext = executionTime.nextExecution(lastNext).orElse(null);
-
-        var delay = Duration.between(now, lastNext).toNanos();
-
-        timer.runAfter(this::run, delay, NANOSECONDS);
-
     }
 
 }
