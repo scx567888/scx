@@ -92,11 +92,26 @@ public final class ScheduledExecutorTimer implements Timer {
 
         @Override
         public TaskStatus status() {
-            var status = taskStatus.get();
-            if (status == PENDING && future.isCancelled()) {
-                return CANCELLED;
+            //1, 任务完成 需要细化判断具体原因
+            if (future.isDone()) {
+                var status = taskStatus.get();
+                //如果还没开始 就 被取消了 我们直接取消
+                if (status == PENDING && future.isCancelled()) {
+                    return CANCELLED;
+                }
+                //这里只剩下 三种情况 RUNNING, SUCCESS, FAILED
+                // 但是 RUNNING 是不可能的 因为 isDone 表示整个方法块一定是完成了的了 所以只剩下 SUCCESS, FAILED 可以安全返回 
+                return status;
+            } else {//2, 任务还在执行中 这时我们可以使用 taskStatus 来判断 现在的真正状态
+                var status = taskStatus.get();
+                //这时还没有执行
+                if (status == PENDING) {
+                    return PENDING;
+                } else {
+                    //这时虽然 可能 status 已经被设置  SUCCESS 或 FAILED, 但鉴于整个 task 实际上还没有执行完毕所以 只返回 RUNNING
+                    return RUNNING;
+                }
             }
-            return status;
         }
 
         @SuppressWarnings("unchecked")
