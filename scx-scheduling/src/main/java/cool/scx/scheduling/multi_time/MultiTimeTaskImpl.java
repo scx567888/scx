@@ -1,11 +1,12 @@
 package cool.scx.scheduling.multi_time;
 
+import cool.scx.functional.ScxConsumer;
 import cool.scx.scheduling.*;
+import cool.scx.timer.ScxTimer;
 
 import java.lang.System.Logger;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -35,8 +36,8 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     private ConcurrencyPolicy concurrencyPolicy;
     private long maxRunCount;
     private ExpirationPolicy expirationPolicy;
-    private ScheduledExecutorService executor;
-    private Task task;
+    private ScxTimer timer;
+    private ScxConsumer<TaskContext, ?> task;
     private ScheduledFuture<?> scheduledFuture;
     private Consumer<Throwable> errorHandler;
     private ScheduleContext context;
@@ -51,7 +52,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
         this.concurrencyPolicy = NO_CONCURRENCY; //默认不允许并发
         this.maxRunCount = -1;// 默认没有最大运行次数
         this.expirationPolicy = IMMEDIATE_COMPENSATION;//默认策略
-        this.executor = null;
+        this.timer = null;
         this.task = null;
         this.scheduledFuture = null;
         this.errorHandler = null;
@@ -94,13 +95,13 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     }
 
     @Override
-    public MultiTimeTask executor(ScheduledExecutorService executor) {
-        this.executor = executor;
+    public MultiTimeTask timer(ScxTimer timer) {
+        this.timer = timer;
         return this;
     }
 
     @Override
-    public MultiTimeTask task(Task task) {
+    public MultiTimeTask task(ScxConsumer<TaskContext, ?> task) {
         this.task = task;
         return this;
     }
@@ -113,8 +114,8 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
     @Override
     public ScheduleContext start() {
-        if (executor == null) {
-            throw new IllegalStateException("Executor 未设置 !!!");
+        if (timer == null) {
+            throw new IllegalStateException("timer 未设置 !!!");
         }
         if (delay == null) {
             throw new IllegalStateException("Delay 未设置");
@@ -165,6 +166,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     private ScheduleContext doStart(long startDelay) {
         this.initialScheduledTime = Instant.now().plusNanos(startDelay);
         this.scheduledFuture = switch (executionPolicy) {
+            // todo 
             case FIXED_RATE -> executor.scheduleAtFixedRate(this::run, startDelay, delay.toNanos(), NANOSECONDS);
             case FIXED_DELAY -> executor.scheduleWithFixedDelay(this::run, startDelay, delay.toNanos(), NANOSECONDS);
         };
@@ -211,13 +213,13 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
             }
 
             @Override
-            public Status status() {
+            public ScheduleStatus status() {
                 //todo 此处应该返回 任务本身的 而不是 scheduledFuture 的状态
                 var s = scheduledFuture.state();
                 return switch (s) {
-                    case RUNNING -> Status.RUNNING;
-                    case SUCCESS, FAILED -> Status.DONE;
-                    case CANCELLED -> Status.CANCELED;
+                    case RUNNING -> ScheduleStatus.RUNNING;
+                    case SUCCESS, FAILED -> ScheduleStatus.DONE;
+                    case CANCELLED -> ScheduleStatus.CANCELLED;
                 };
             }
         };
@@ -246,7 +248,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
             return;
         }
         try {
-            task.run(new TaskStatus() {
+            task.accept(new TaskContext() {
 
                 @Override
                 public long currentRunCount() {
