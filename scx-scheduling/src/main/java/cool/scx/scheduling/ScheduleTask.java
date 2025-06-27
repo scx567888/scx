@@ -24,7 +24,7 @@ public interface ScheduleTask<T extends ScheduleTask<T>> {
     T timer(ScxTimer timer);
 
     /// 设置任务
-    <E extends Throwable> T task(ScxConsumer<TaskStatus, E> task);
+    <E extends Throwable> T task(ScxConsumer<TaskContext, E> task);
 
     /// 设置错误处理器
     T onError(Consumer<Throwable> errorHandler);
@@ -33,7 +33,7 @@ public interface ScheduleTask<T extends ScheduleTask<T>> {
     ScheduleContext start();
 
     /// 直接启动任务
-    default <E extends Throwable> ScheduleContext start(ScxConsumer<TaskStatus, E> task) {
+    default <E extends Throwable> ScheduleContext start(ScxConsumer<TaskContext, E> task) {
         return task(task).start();
     }
 
