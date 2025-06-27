@@ -13,7 +13,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static cool.scx.scheduling.ExpirationPolicy.*;
+import static cool.scx.scheduling.ExpirationPolicy.BACKTRACKING_IGNORE;
+import static cool.scx.scheduling.ExpirationPolicy.IMMEDIATE_COMPENSATION;
 import static cool.scx.timer.TaskStatus.CANCELLED;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
@@ -92,53 +93,62 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
         }
         //先判断过没过期
         var between = between(now, startTime);
-        //不为负数 则没有过期
-        if (!between.isNegative()) {
-            return doStart(between.toNanos());
-        }
-        // 下面是过期了 
-        //因为在单次执行任务中 只有忽略的策略需要特殊处理
-        if (expirationPolicy == IMMEDIATE_IGNORE || expirationPolicy == BACKTRACKING_IGNORE) {
-            //2, 如果是回溯忽略 我们就假设之前的已经都执行了 所以这里需要 修改 runCount
-            if (expirationPolicy == BACKTRACKING_IGNORE) {
-                runCount.incrementAndGet();
+
+        long initialDelayNanos;
+
+        // 下面是过期了
+        if (between.isNegative()) {  
+            //因为在单次执行任务中 只有忽略的策略需要特殊处理
+            switch (expirationPolicy) {
+                case IMMEDIATE_IGNORE, BACKTRACKING_IGNORE -> {
+                    //2, 如果是回溯忽略 我们就假设之前的已经都执行了 所以这里需要 修改 runCount
+                    if (expirationPolicy == BACKTRACKING_IGNORE) {
+                        runCount.incrementAndGet();
+                    }
+                    //单次任务 直接返回虚拟的 Status 即可 无需执行
+                    return new ScheduleContext() {
+                        @Override
+                        public long runCount() {
+                            return runCount.get();
+                        }
+
+                        @Override
+                        public Instant nextRunTime() {
+                            return null; // 忽略策略没有下一次运行时间
+                        }
+
+                        @Override
+                        public Instant nextRunTime(int count) {
+                            return null;// 同上
+                        }
+
+                        @Override
+                        public void cancel() {
+                            //任务从未执行所以无需取消
+                        }
+
+                        @Override
+                        public ScheduleStatus status() {
+                            return null;
+                        }
+
+                    };
+                    //单次任务 直接返回虚拟的 Status 即可 无需执行
+                }
+
+                //单次任务的补偿策略就是立即执行
+                case IMMEDIATE_COMPENSATION, BACKTRACKING_COMPENSATION -> {
+                    initialDelayNanos = 0;
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + expirationPolicy);
             }
-            //单次任务 直接返回虚拟的 Status 即可 无需执行
-            return new ScheduleContext() {
-                @Override
-                public long runCount() {
-                    return runCount.get();
-                }
 
-                @Override
-                public Instant nextRunTime() {
-                    return null; // 忽略策略没有下一次运行时间
-                }
-
-                @Override
-                public Instant nextRunTime(int count) {
-                    return null;// 同上
-                }
-
-                @Override
-                public void cancel() {
-                    //任务从未执行所以无需取消
-                }
-
-                @Override
-                public ScheduleStatus status() {
-                    return null;
-                }
-
-            };
+        } else {
+            initialDelayNanos = between.toNanos();
         }
 
-        //单次任务的补偿策略就是立即执行
-        if (expirationPolicy == IMMEDIATE_COMPENSATION || expirationPolicy == BACKTRACKING_COMPENSATION) {
-            return doStart(0);
-        }
+        return doStart(initialDelayNanos);
 
-        throw new IllegalStateException("Unexpected value: " + expirationPolicy);
     }
 
     private ScheduleContext doStart(long startDelay) {
