@@ -96,7 +96,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
         if (!between.isNegative()) {
             return doStart(between.toNanos());
         }
-
+        // 下面是过期了 
         //因为在单次执行任务中 只有忽略的策略需要特殊处理
         if (expirationPolicy == IMMEDIATE_IGNORE || expirationPolicy == BACKTRACKING_IGNORE) {
             //2, 如果是回溯忽略 我们就假设之前的已经都执行了 所以这里需要 修改 runCount
@@ -145,7 +145,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
         // 计算任务的实际启动时间
         var scheduledTime = now().plusNanos(startDelay);
         // 调用任务
-        var scheduledFuture = timer.runAfter(this::run, startDelay, NANOSECONDS);
+        var taskHandle = timer.runAfter(this::run, startDelay, NANOSECONDS);
         this.context = new ScheduleContext() {
 
             @Override
@@ -156,7 +156,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
             @Override
             public Instant nextRunTime() {
                 // 任务取消 没有下一次执行时间
-                if (scheduledFuture.status() == CANCELLED) {
+                if (taskHandle.status() == CANCELLED) {
                     return null;
                 }
                 // 如果任务已执行, 则没有下一次运行时间
@@ -173,12 +173,12 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
             @Override
             public void cancel() {
-                scheduledFuture.cancel();
+                taskHandle.cancel();
             }
 
             @Override
             public ScheduleStatus status() {
-                var s = scheduledFuture.status();
+                var s = taskHandle.status();
                 return switch (s) {
                     case PENDING, RUNNING -> ScheduleStatus.RUNNING;
                     case SUCCESS, FAILED -> ScheduleStatus.DONE;
