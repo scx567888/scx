@@ -10,12 +10,12 @@ public interface TaskHandle<V, E extends Throwable> {
     boolean cancel();
 
     /// 同步等待任务完成，并返回结果
-    /// 
+    ///
     /// 如果任务还未完成 (如仍处于 PENDING 或 RUNNING 状态), 则会阻塞直到任务完成.
     /// 如果任务执行失败, 将抛出相应的异常.
     ///
     /// @return 任务的结果
-    /// @throws E 任务执行时抛出的异常
+    /// @throws E                     任务执行时抛出的异常
     /// @throws IllegalStateException 任务未完成，无法获取结果
     V await() throws E, IllegalStateException;
 

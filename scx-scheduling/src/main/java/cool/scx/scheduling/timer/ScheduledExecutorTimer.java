@@ -130,7 +130,7 @@ public final class ScheduledExecutorTimer implements Timer {
 
     }
 
-    // 异常包装器
+    /// 异常包装类
     private static class WrapperRuntimeException extends RuntimeException {
         public WrapperRuntimeException(Throwable cause) {
             super(cause);
