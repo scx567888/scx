@@ -4,6 +4,9 @@ import cool.scx.functional.ScxCallable;
 import cool.scx.functional.ScxRunnable;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static cool.scx.scheduling.timer.TaskStatus.*;
 
 /// ScheduledExecutorTimer
 ///
@@ -19,26 +22,35 @@ public final class ScheduledExecutorTimer implements Timer {
 
     @Override
     public <E extends Throwable> TaskHandle<Void, E> runAfter(ScxRunnable<E> action, long delay, TimeUnit unit) {
+        var taskStatus = new AtomicReference<>(PENDING);
         var future = executor.schedule(() -> {
+            taskStatus.set(RUNNING);
             try {
                 action.run();
+                taskStatus.set(SUCCESS);
             } catch (Throwable e) {
+                taskStatus.set(FAILED);
                 throw new WrapperRuntimeException(e);
             }
         }, delay, unit);
-        return new TaskHandleImpl<>(future);
+        return new TaskHandleImpl<>(future, taskStatus);
     }
 
     @Override
     public <V, E extends Throwable> TaskHandle<V, E> runAfter(ScxCallable<V, E> action, long delay, TimeUnit unit) {
+        var taskStatus = new AtomicReference<>(PENDING);
         var future = executor.schedule(() -> {
+            taskStatus.set(RUNNING);
             try {
-                return action.call();
+                var result = action.call();
+                taskStatus.set(SUCCESS);
+                return result;
             } catch (Throwable e) {
+                taskStatus.set(FAILED);
                 throw new WrapperRuntimeException(e);
             }
         }, delay, unit);
-        return new TaskHandleImpl<>(future);
+        return new TaskHandleImpl<>(future, taskStatus);
     }
 
     // 异常包装器
@@ -48,7 +60,8 @@ public final class ScheduledExecutorTimer implements Timer {
         }
     }
 
-    private record TaskHandleImpl<V, E extends Throwable>(ScheduledFuture<?> future) implements TaskHandle<V, E> {
+    private record TaskHandleImpl<V, E extends Throwable>(ScheduledFuture<?> future,
+                                                          AtomicReference<TaskStatus> taskStatus) implements TaskHandle<V, E> {
 
         @Override
         public boolean cancel() {
@@ -79,14 +92,11 @@ public final class ScheduledExecutorTimer implements Timer {
 
         @Override
         public TaskStatus status() {
-            var state = future.state();
-            //todo PENDING 如何判断
-            return switch (state) {
-                case RUNNING -> TaskStatus.RUNNING;
-                case SUCCESS -> TaskStatus.SUCCESS;
-                case FAILED -> TaskStatus.FAILED;
-                case CANCELLED -> TaskStatus.CANCELLED;
-            };
+            var status = taskStatus.get();
+            if (status == PENDING && future.isCancelled()) {
+                return CANCELLED;
+            }
+            return status;
         }
 
         @SuppressWarnings("unchecked")
@@ -99,12 +109,12 @@ public final class ScheduledExecutorTimer implements Timer {
         @Override
         public E exception() {
             var e = future.exceptionNow();
-            if (e instanceof WrapperRuntimeException w) {
-                e = w.getCause();
+            if (e instanceof WrapperRuntimeException) {
+                e = e.getCause();
             }
             return (E) e;
         }
-        
+
     }
 
 }
