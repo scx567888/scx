@@ -97,8 +97,8 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
         long initialDelayNanos;
 
         //以下处理过期情况
-        if (between.isNegative()) { 
-            
+        if (between.isNegative()) {
+
             switch (expirationPolicy) {
                 //1, 忽略策略
                 case IMMEDIATE_IGNORE, BACKTRACKING_IGNORE -> {

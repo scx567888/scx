@@ -1,6 +1,6 @@
 package cool.scx.scheduling;
 
-/// 任务上下文 
+/// 任务上下文
 public interface TaskContext {
 
     /// 当前运行次数
