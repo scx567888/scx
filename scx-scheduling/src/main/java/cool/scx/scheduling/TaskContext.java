@@ -1,7 +1,7 @@
 package cool.scx.scheduling;
 
-/// 任务状态
-public interface TaskStatus {
+/// 任务上下文 
+public interface TaskContext {
 
     /// 当前运行次数
     long currentRunCount();
