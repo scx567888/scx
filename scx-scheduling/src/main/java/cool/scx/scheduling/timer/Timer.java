@@ -5,7 +5,10 @@ import cool.scx.functional.ScxRunnable;
 
 import java.util.concurrent.TimeUnit;
 
-/// 一个最基本的定时器
+/// Timer
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface Timer {
 
     <E extends Throwable> TaskHandle<Void, E> runAfter(ScxRunnable<E> action, long delay, TimeUnit unit);

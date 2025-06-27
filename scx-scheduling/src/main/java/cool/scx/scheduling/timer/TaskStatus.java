@@ -1,5 +1,9 @@
 package cool.scx.scheduling.timer;
 
+/// TaskStatus
+///
+/// @author scx567888
+/// @version 0.0.1
 public enum TaskStatus {
     
     /// 已提交, 等待执行

@@ -1,5 +1,9 @@
 package cool.scx.scheduling.timer;
 
+/// TaskHandle
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface TaskHandle<V, E extends Throwable> {
 
     /// 取消任务
