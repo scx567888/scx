@@ -2,16 +2,17 @@ package cool.scx.scheduling.cron;
 
 import com.cronutils.model.time.ExecutionTime;
 import com.cronutils.parser.CronParser;
+import cool.scx.functional.ScxConsumer;
 import cool.scx.scheduling.ConcurrencyPolicy;
 import cool.scx.scheduling.ScheduleContext;
-import cool.scx.scheduling.Task;
-import cool.scx.scheduling.TaskStatus;
+import cool.scx.scheduling.ScheduleStatus;
+import cool.scx.scheduling.TaskContext;
+import cool.scx.timer.ScxTimer;
 
 import java.lang.System.Logger;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -40,8 +41,8 @@ public class CronTaskImpl implements CronTask {
     private ExecutionTime executionTime;
     private ConcurrencyPolicy concurrencyPolicy;
     private long maxRunCount;
-    private ScheduledExecutorService executor;
-    private Task task;
+    private ScxTimer timer;
+    private ScxConsumer<TaskContext, ?> task;
     private ZonedDateTime lastNext;
     private Consumer<Throwable> errorHandler;
     private ScheduleContext context;
@@ -52,7 +53,7 @@ public class CronTaskImpl implements CronTask {
         this.executionTime = null;
         this.concurrencyPolicy = NO_CONCURRENCY; // 默认不允许并发
         this.maxRunCount = -1; // 默认不限制运行次数
-        this.executor = null;
+        this.timer = null;
         this.task = null;
         this.lastNext = null;
         this.errorHandler = null;
@@ -79,13 +80,13 @@ public class CronTaskImpl implements CronTask {
     }
 
     @Override
-    public CronTask executor(ScheduledExecutorService executor) {
-        this.executor = executor;
+    public CronTask timer(ScxTimer timer) {
+        this.timer = timer;
         return this;
     }
 
     @Override
-    public CronTask task(Task task) {
+    public  CronTask task(ScxConsumer<TaskContext, ?> task) {
         this.task = task;
         return this;
     }
@@ -125,9 +126,10 @@ public class CronTaskImpl implements CronTask {
             }
 
             @Override
-            public Status status() {
-                return cancel.get() ? Status.CANCELED : (runCount.get() >= maxRunCount ? Status.DONE : Status.RUNNING);
+            public ScheduleStatus status() {
+                return cancel.get() ? ScheduleStatus.CANCELLED : (runCount.get() >= maxRunCount ? ScheduleStatus.DONE : ScheduleStatus.RUNNING);
             }
+
         };
         return context;
     }
@@ -143,7 +145,7 @@ public class CronTaskImpl implements CronTask {
             scheduleNext();
         }
         try {
-            task.run(new TaskStatus() {
+            task.accept(new TaskContext() {
 
                 @Override
                 public long currentRunCount() {
@@ -186,7 +188,7 @@ public class CronTaskImpl implements CronTask {
 
         var delay = Duration.between(now, lastNext).toNanos();
 
-        executor.schedule(this::run, delay, NANOSECONDS);
+        timer.runAfter(this::run, delay, NANOSECONDS);
 
     }
 

@@ -24,7 +24,7 @@ public interface ScheduleTask<T extends ScheduleTask<T>> {
     T timer(ScxTimer timer);
 
     /// 设置任务
-    <E extends Throwable> T task(ScxConsumer<TaskContext, E> task);
+    T task(ScxConsumer<TaskContext, ?> task);
 
     /// 设置错误处理器
     T onError(Consumer<Throwable> errorHandler);

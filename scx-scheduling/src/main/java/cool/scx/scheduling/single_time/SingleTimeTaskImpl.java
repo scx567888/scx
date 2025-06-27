@@ -66,7 +66,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     }
 
     @Override
-    public <E extends Throwable> SingleTimeTask task(ScxConsumer<TaskContext, E> task) {
+    public SingleTimeTask task(ScxConsumer<TaskContext, ?> task) {
         this.task = task;
         return this;
     }
