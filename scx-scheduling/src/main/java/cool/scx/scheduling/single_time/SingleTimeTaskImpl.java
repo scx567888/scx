@@ -35,8 +35,8 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     private ExpirationPolicy expirationPolicy;
     private ScxTimer timer;
     private ScxConsumer<TaskContext, ?> task;
-    private ScheduleContext context;
     private Consumer<Throwable> errorHandler;
+    private ScheduleContext context;
 
     public SingleTimeTaskImpl() {
         this.runCount = new AtomicLong(0);
@@ -44,8 +44,8 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
         this.expirationPolicy = IMMEDIATE_COMPENSATION; //默认过期补偿
         this.timer = null;
         this.task = null;
-        this.context = null;
         this.errorHandler = null;
+        this.context = null;
     }
 
     @Override
@@ -212,8 +212,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
                 @Override
                 public ScheduleContext context() {
-                    //todo 这里有可能是 null , 假设 startDelay 为 0 时 有可能先调用 run 然后有返回值
-                    //是否使用锁 来强制 等待创建完成
+                    // todo 这里有可能是 null , 假设 startDelay 为 0 时 有可能先调用 run 然后有返回值 是否使用锁 来强制 等待创建完成
                     return context;
                 }
 
