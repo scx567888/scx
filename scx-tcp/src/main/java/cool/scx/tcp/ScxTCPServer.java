@@ -20,7 +20,7 @@ import java.net.SocketAddress;
 ///
 /// 2. **用户处理器异常 (如用户在 onConnect 回调中抛出异常) :**
 ///    ScxTCPServer 设计允许用户在 onConnect 回调中直接抛异常,
-///    这是为了防止用户遇到受检异常时不得不进行一次 "肮脏的 RuntimeException 包装" 而预留的方式.
+///    这是为了防止用户遇到受检异常时不得不进行一次 `肮脏的 RuntimeException 包装` 而预留的方式.
 ///    当异常抛出时, 系统会记录日志, 并自动关闭对应的 Socket 连接以清理资源.
 ///
 /// 若需要自定义异常处理逻辑 (如记录告警), 用户可自行在 onConnect 内部根据需要 try/catch 并执行自定义处理.
