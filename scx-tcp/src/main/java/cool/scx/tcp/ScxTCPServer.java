@@ -6,7 +6,19 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-/// TCP 服务器
+/// ScxTCPServer
+///
+/// 为什么没有 onError 回调 ?
+///
+/// ScxTCPServer 的主要职责是提供最小化, 底层的 socket 连接抽象, 只负责接收连接并交由用户处理.
+/// 在 TCP 服务器 层面, 异常通常分为两类:
+///
+///   - 1. 系统异常 (如 accept 异常) : 这类错误无法被用户干预, 只能记录日志并关闭 ServerSocket, 不需要额外回调来「处理, 也没有什么可处理.
+///   - 2. 用户处理器异常 (如用户在 onConnect 回调中抛出异常) : ScxTCPServer 设计允许用户在 onConnect 回调中直接抛异常,
+///     这是为了防止用户遇到受检异常时不得不进行一次肮脏的 RuntimeException 包装而预留的方式,
+///     当异常抛出时, 系统会使用日志记录异常, 并自动关闭对应 socket 以清理资源.
+///
+/// 若需要自定义异常处理逻辑 (如记录告警), 用户可自行在 onConnect 内部根据需要 try/catch 并执行自定义处理.
 ///
 /// @author scx567888
 /// @version 0.0.1
