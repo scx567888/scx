@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
-/// TCP Socket
+/// ScxTCPSocket
 ///
 /// @author scx567888
 /// @version 0.0.1
