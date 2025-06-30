@@ -1,34 +1,30 @@
 package cool.scx.scheduling.multi_time;
 
 import cool.scx.functional.ScxConsumer;
-import cool.scx.scheduling.*;
+import cool.scx.scheduling.ExpirationPolicy;
+import cool.scx.scheduling.ScheduleContext;
+import cool.scx.scheduling.ScheduleStatus;
+import cool.scx.scheduling.TaskContext;
 import cool.scx.timer.ScxTimer;
 
-import java.lang.System.Logger;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static cool.scx.scheduling.ConcurrencyPolicy.NO_CONCURRENCY;
 import static cool.scx.scheduling.ExpirationPolicy.*;
-import static cool.scx.scheduling.multi_time.ExecutionPolicy.FIXED_RATE;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 import static java.time.Duration.between;
 import static java.time.Instant.now;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
-/// 多次执行的任务 todo 代码过于复杂 待优化
-///
-/// @author scx567888
-/// @version 0.0.1
-public final class MultiTimeTaskImpl implements MultiTimeTask {
+public class FixedDelayTask implements MultiTimeTask {
 
-    private static final Logger logger = getLogger(MultiTimeTaskImpl.class.getName());
+
+    private static final System.Logger logger = getLogger(MultiTimeTaskImpl.class.getName());
 
     private final AtomicLong runCount;
     private final AtomicBoolean cancel;
@@ -40,7 +36,6 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     private ExpirationPolicy expirationPolicy;
     private ScxTimer timer;
     private ScxConsumer<TaskContext, ?> task;
-    private ScheduledFuture<?> scheduledFuture;
     private Consumer<Throwable> errorHandler;
     private ScheduleContext context;
     private volatile Instant initialScheduledTime;
@@ -52,12 +47,10 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
         this.startTimeSupplier = null;
         this.delay = null;
         this.executionPolicy = FIXED_RATE;//默认类型
-        this.concurrencyPolicy = NO_CONCURRENCY; //默认不允许并发
         this.maxRunCount = -1;// 默认没有最大运行次数
         this.expirationPolicy = IMMEDIATE_COMPENSATION;//默认策略
         this.timer = null;
         this.task = null;
-        this.scheduledFuture = null;
         this.errorHandler = null;
     }
 
@@ -76,12 +69,6 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     @Override
     public MultiTimeTask executionPolicy(ExecutionPolicy executionPolicy) {
         this.executionPolicy = executionPolicy;
-        return this;
-    }
-
-    @Override
-    public MultiTimeTask concurrencyPolicy(ConcurrencyPolicy concurrencyPolicy) {
-        this.concurrencyPolicy = concurrencyPolicy;
         return this;
     }
 
@@ -159,13 +146,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
                         //2, 执行所有过期的任务
                         for (var i = 0; i < delayCount; i = i + 1) {
                             //根据是否并发执行
-                            switch (concurrencyPolicy) {
-                                case CONCURRENCY -> timer.runAfter(this::run, 0, NANOSECONDS);
-                                case NO_CONCURRENCY -> run();
-                                default -> {
-                                    //这里只可能是 null 
-                                }
-                            }
+                            run();
                         }
                     }
                     //补偿策略就是立即执行
@@ -217,7 +198,6 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
                 if (cancel.get()) {
                     return null;
                 }
-                ;
                 return switch (executionPolicy) {
                     case FIXED_RATE -> initialScheduledTime.plus(delay.multipliedBy(runCount.get() + count));
                     case FIXED_DELAY -> {
@@ -241,18 +221,11 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     }
 
     private void scheduleNext(long delayNanos) {
-        if (cancel.get()) {
-            return;
-        }
+
+        var now = now();
+
         timer.runAfter(() -> {
-            if (cancel.get()) {
-                return;
-            }
             run();
-            if (maxRunCount != -1 && runCount.get() >= maxRunCount) {
-                cancel.set(true);
-                return;
-            }
             long nextDelayNanos;
             switch (executionPolicy) {
                 case FIXED_RATE -> {
@@ -272,13 +245,13 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
     private void run() {
         var l = runCount.incrementAndGet();
-        //判断是否 达到最大次数 停止运行并取消任务
-        if (maxRunCount != -1 && l > maxRunCount) {
-            //todo 这里 scheduledFuture 可能为空吗 ? 
-            if (scheduledFuture != null) {
-                scheduledFuture.cancel(false);
-            }
+        // 已经取消了 或者 达到了最大次数
+        if (cancel.get() || maxRunCount != -1 && l > maxRunCount) {
             return;
+        }
+        //如果是并发的 直接处理下一次
+        if (concurrencyPolicy == CONCURRENCY) {
+            scheduleNext();
         }
         try {
             task.accept(new TaskContext() {
@@ -307,7 +280,11 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
                 logger.log(ERROR, "调度任务时发生错误 !!!", e);
             }
         }
+        //如果不是并发 就需要等待当前任务完成在处理下一次任务
+        if (concurrencyPolicy != CONCURRENCY) {
+            scheduleNext();
+        }
         this.lastExecutionEndTime = Instant.now();
     }
-
+    
 }
