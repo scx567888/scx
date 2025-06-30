@@ -29,11 +29,11 @@ public final class TLSHelper {
             return sslContext;
         } catch (CertificateException | KeyStoreException | IOException | NoSuchAlgorithmException |
                  UnrecoverableKeyException | KeyManagementException e) {
-            throw new IllegalArgumentException("",e);
+            throw new IllegalArgumentException("Failed to create SSLContext", e);
         }
     }
 
-    // 获取系统默认证书并返回 TLS 对象（用于客户端） 
+    /// 获取系统默认证书并返回 TLS 对象（多用于客户端） 
     public static SSLContext createDefaultSSLContext() {
         try {
             // 1, createTrustManagerFactory
@@ -44,13 +44,14 @@ public final class TLSHelper {
             sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
             return sslContext;
         } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException("Failed to create Default SSLContext", e);
         }
     }
 
+    ///创建自定义 TrustManager, 忽略证书验证（建议仅用于测试环境）
     public static SSLContext createTrustAnySSLContext() {
-        // 创建自定义 TrustManager, 忽略证书验证（仅用于测试环境）
-        var trustAllCerts = new TrustManager[]{new X509TrustManager() {
+        
+        var trustAnyManager = new X509TrustManager() {
 
             public X509Certificate[] getAcceptedIssuers() {
                 return new X509Certificate[]{};
@@ -63,14 +64,15 @@ public final class TLSHelper {
             public void checkServerTrusted(X509Certificate[] certs, String authType) {
                 // 此处忽略服务器证书验证逻辑
             }
-        }};
+            
+        };
 
         try {
             var sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts, null);
+            sslContext.init(null, new TrustManager[]{trustAnyManager}, null);
             return sslContext;
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Failed to create TrustAny SSLContext", e);
         }
     }
 
