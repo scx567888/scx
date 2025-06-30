@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
-/// TLS 管理器
+/// ScxTLSManager
 ///
 /// @author scx567888
 /// @version 0.0.1
