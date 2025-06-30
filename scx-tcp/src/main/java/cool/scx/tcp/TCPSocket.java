@@ -9,7 +9,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-/// TCP Socket
+/// TCPSocket
 ///
 /// @author scx567888
 /// @version 0.0.1
