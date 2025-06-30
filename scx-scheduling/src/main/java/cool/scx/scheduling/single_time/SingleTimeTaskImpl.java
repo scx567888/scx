@@ -92,12 +92,12 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
             startTime = now;
         }
         //先判断过没过期
-        var between = between(now, startTime);
-        // 初次启动延时
+        var diff = between(now, startTime);
+        // 启动延时
         long initialDelayNanos;
 
         //以下处理过期情况
-        if (between.isNegative()) {
+        if (diff.isNegative()) {
 
             switch (expirationPolicy) {
                 //1, 忽略策略
@@ -145,18 +145,15 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
             }
 
         } else {
-            initialDelayNanos = between.toNanos();
+            initialDelayNanos = diff.toNanos();
         }
 
-        return doStart(initialDelayNanos);
-
-    }
-
-    private ScheduleContext doStart(long startDelay) {
-        // 计算任务的实际启动时间
-        var scheduledTime = now().plusNanos(startDelay);
         // 调用任务
-        var taskHandle = timer.runAfter(this::run, startDelay, NANOSECONDS);
+        var taskHandle = timer.runAfter(this::run, initialDelayNanos, NANOSECONDS);
+
+        // 计算任务的实际启动时间
+        var scheduledTime = now.plusNanos(initialDelayNanos);
+
         this.context = new ScheduleContext() {
 
             @Override
@@ -198,6 +195,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
             }
 
         };
+
         return this.context;
     }
 
@@ -219,20 +217,16 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
             });
         } catch (Throwable e) {
-            handleTaskError(e);
-        }
-    }
-
-    private void handleTaskError(Throwable e) {
-        if (errorHandler != null) {
-            try {
-                errorHandler.accept(e);
-            } catch (Throwable ex) {
-                e.addSuppressed(ex);
-                logger.log(ERROR, "errorHandler 发生错误 !!!", e);
+            if (errorHandler != null) {
+                try {
+                    errorHandler.accept(e);
+                } catch (Throwable ex) {
+                    e.addSuppressed(ex);
+                    logger.log(ERROR, "errorHandler 发生错误 !!!", e);
+                }
+            } else {
+                logger.log(ERROR, "调度任务时发生错误 !!!", e);
             }
-        } else {
-            logger.log(ERROR, "调度任务时发生错误 !!!", e);
         }
     }
 
