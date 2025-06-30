@@ -15,54 +15,36 @@ public final class TLSHelper {
 
     public static SSLContext createSSLContext(Path path, String password) {
         try {
-            var keyStore = createKeyStore(path, password);
-            return createSSLContext(keyStore, password);
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
+            // 1, createKeyStore
+            var keyStore = KeyStore.getInstance(path.toFile(), password.toCharArray());
+            // 2, createKeyManagerFactory
+            var keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyManagerFactory.init(keyStore, password.toCharArray());
+            // 3, createTrustManagerFactory
+            var trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(keyStore);
+            // 4, createSSLContext
+            var sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+            return sslContext;
+        } catch (CertificateException | KeyStoreException | IOException | NoSuchAlgorithmException |
+                 UnrecoverableKeyException | KeyManagementException e) {
+            throw new IllegalArgumentException("",e);
         }
-    }
-
-    private static KeyStore createKeyStore(Path path, String password) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException {
-        // 证书存储器
-        return KeyStore.getInstance(path.toFile(), password.toCharArray());
-    }
-
-    private static SSLContext createSSLContext(KeyStore keyStore, String password) throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-        var KeyManagerFactory = createKeyManagerFactory(keyStore, password);
-        var trustManagerFactory = createTrustManagerFactory(keyStore);
-        return createSSLContext(KeyManagerFactory, trustManagerFactory);
-    }
-
-    private static KeyManagerFactory createKeyManagerFactory(KeyStore keyStore, String password) throws NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException {
-        // 初始化密钥管理器工厂
-        var keyManagerFactory = KeyManagerFactory.getInstance("PKIX");
-        keyManagerFactory.init(keyStore, password.toCharArray());
-        return keyManagerFactory;
-    }
-
-    private static TrustManagerFactory createTrustManagerFactory(KeyStore keyStore) throws NoSuchAlgorithmException, KeyStoreException {
-        // 初始化 TrustManagerFactory
-        var trustManagerFactory = TrustManagerFactory.getInstance("PKIX");
-        trustManagerFactory.init(keyStore);
-        return trustManagerFactory;
-    }
-
-    private static SSLContext createSSLContext(KeyManagerFactory keyManagerFactory, TrustManagerFactory trustManagerFactory) throws NoSuchAlgorithmException, KeyManagementException {
-        var sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
-        return sslContext;
     }
 
     // 获取系统默认证书并返回 TLS 对象（用于客户端） 
     public static SSLContext createDefaultSSLContext() {
         try {
-            var tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            tmf.init((KeyStore) null);
+            // 1, createTrustManagerFactory
+            var trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init((KeyStore) null);
+            // 2, createSSLContext
             var sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, tmf.getTrustManagers(), null);
+            sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
             return sslContext;
-        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
-            throw new IllegalStateException("Failed to initialize default TLS configuration", e);
+        } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+            throw new RuntimeException(e);
         }
     }
 
