@@ -18,7 +18,7 @@ public class TCPClientTest {
         for (int j = 0; j < 10; j = j + 1) {
             Thread.ofVirtual().start(() -> {
                 var tcpClient = new TCPClient();
-                try (var tcpSocket = tcpClient.connect(new InetSocketAddress(8899));) {
+                try (var tcpSocket = tcpClient.connect(new InetSocketAddress(8899))) {
                     var out = tcpSocket.outputStream();
                     var i = 0;
                     while (i < 10000) {
