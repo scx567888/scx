@@ -8,7 +8,7 @@ import java.net.SocketAddress;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class TCPClient implements ScxTCPClient {
+public final class TCPClient implements ScxTCPClient {
 
     @Override
     public ScxTCPSocket connect(SocketAddress endpoint, int timeout) throws IOException {

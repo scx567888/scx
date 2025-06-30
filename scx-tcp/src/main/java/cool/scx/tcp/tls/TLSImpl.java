@@ -8,7 +8,7 @@ import javax.net.ssl.SSLSocketFactory;
 ///
 /// @author scx567888
 /// @version 0.0.1
-class TLSImpl implements TLS {
+final class TLSImpl implements TLS {
 
     private final SSLContext sslContext;
     private final SSLServerSocketFactory serverSocketFactory;

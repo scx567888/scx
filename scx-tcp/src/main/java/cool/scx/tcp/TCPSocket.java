@@ -13,7 +13,7 @@ import java.net.Socket;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class TCPSocket implements ScxTCPSocket {
+public final class TCPSocket implements ScxTCPSocket {
 
     private Socket socket;
     private InputStream in;

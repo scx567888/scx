@@ -11,7 +11,7 @@ import java.security.cert.X509Certificate;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class TLSHelper {
+final class TLSHelper {
 
     public static SSLContext createSSLContext(Path path, String password) {
         try {

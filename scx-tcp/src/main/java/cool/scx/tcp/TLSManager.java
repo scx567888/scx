@@ -9,7 +9,7 @@ import java.util.function.BiFunction;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class TLSManager implements ScxTLSManager {
+public final class TLSManager implements ScxTLSManager {
 
     private final SSLSocket sslSocket;
 

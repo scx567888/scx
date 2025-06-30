@@ -16,7 +16,7 @@ import static java.lang.System.Logger.Level.TRACE;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class TCPServer implements ScxTCPServer {
+public final class TCPServer implements ScxTCPServer {
 
     private static final Logger LOGGER = System.getLogger(TCPServer.class.getName());
 
