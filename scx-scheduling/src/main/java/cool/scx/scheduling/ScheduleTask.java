@@ -11,9 +11,6 @@ import java.util.function.Consumer;
 /// @version 0.0.1
 public interface ScheduleTask<T extends ScheduleTask<T>> {
 
-    /// 并发策略
-    T concurrencyPolicy(ConcurrencyPolicy concurrencyPolicy);
-
     /// 最大运行次数
     T maxRunCount(long maxRunCount);
 

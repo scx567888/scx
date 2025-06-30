@@ -1,6 +1,5 @@
 package cool.scx.scheduling.single_time;
 
-import cool.scx.scheduling.ConcurrencyPolicy;
 import cool.scx.scheduling.ScheduleTask;
 
 import java.time.Duration;
@@ -23,12 +22,6 @@ public interface SingleTimeTask extends ScheduleTask<SingleTimeTask> {
 
     default SingleTimeTask startDelay(Duration delay) {
         return startTime(() -> now().plus(delay));
-    }
-
-    @Override
-    default SingleTimeTask concurrencyPolicy(ConcurrencyPolicy concurrencyPolicy) {
-        // 不支持, 直接跳过
-        return this;
     }
 
     @Override

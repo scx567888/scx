@@ -175,16 +175,20 @@ public class CronTaskImpl implements CronTask {
 
             });
         } catch (Throwable e) {
-            if (errorHandler != null) {
-                try {
-                    errorHandler.accept(e);
-                } catch (Throwable ex) {
-                    e.addSuppressed(ex);
-                    logger.log(ERROR, "errorHandler 发生错误 !!!", e);
-                }
-            } else {
-                logger.log(ERROR, "调度任务时发生错误 !!!", e);
+            handleTaskError(e);
+        }
+    }
+
+    private void handleTaskError(Throwable e) {
+        if (errorHandler != null) {
+            try {
+                errorHandler.accept(e);
+            } catch (Throwable ex) {
+                e.addSuppressed(ex);
+                logger.log(ERROR, "errorHandler 发生错误 !!!", e);
             }
+        } else {
+            logger.log(ERROR, "调度任务时发生错误 !!!", e);
         }
     }
 
