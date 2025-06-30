@@ -1,6 +1,6 @@
 package cool.scx.tcp;
 
-/// TCP 服务器 配置
+/// TCPServerOptions
 ///
 /// @author scx567888
 /// @version 0.0.1
