@@ -3,7 +3,6 @@ package cool.scx.scheduling.cron;
 import com.cronutils.model.time.ExecutionTime;
 import com.cronutils.parser.CronParser;
 import cool.scx.functional.ScxConsumer;
-import cool.scx.scheduling.ConcurrencyPolicy;
 import cool.scx.scheduling.ScheduleContext;
 import cool.scx.scheduling.ScheduleStatus;
 import cool.scx.scheduling.TaskContext;
@@ -19,8 +18,6 @@ import java.util.function.Consumer;
 
 import static com.cronutils.model.CronType.QUARTZ;
 import static com.cronutils.model.definition.CronDefinitionBuilder.instanceDefinitionFor;
-import static cool.scx.scheduling.ConcurrencyPolicy.CONCURRENCY;
-import static cool.scx.scheduling.ConcurrencyPolicy.NO_CONCURRENCY;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
@@ -39,7 +36,6 @@ public class CronTaskImpl implements CronTask {
     private final AtomicLong runCount;
     private final AtomicBoolean cancel;
     private ExecutionTime executionTime;
-    private ConcurrencyPolicy concurrencyPolicy;
     private long maxRunCount;
     private ScxTimer timer;
     private ScxConsumer<TaskContext, ?> task;
@@ -51,7 +47,6 @@ public class CronTaskImpl implements CronTask {
         this.runCount = new AtomicLong(0);
         this.cancel = new AtomicBoolean(false);
         this.executionTime = null;
-        this.concurrencyPolicy = NO_CONCURRENCY; // 默认不允许并发
         this.maxRunCount = -1; // 默认不限制运行次数
         this.timer = null;
         this.task = null;
@@ -64,12 +59,6 @@ public class CronTaskImpl implements CronTask {
     public CronTask expression(String expression) {
         var cron = CRON_PARSER.parse(expression);
         this.executionTime = ExecutionTime.forCron(cron);
-        return this;
-    }
-
-    @Override
-    public CronTask concurrencyPolicy(ConcurrencyPolicy concurrencyPolicy) {
-        this.concurrencyPolicy = concurrencyPolicy;
         return this;
     }
 
@@ -168,10 +157,8 @@ public class CronTaskImpl implements CronTask {
         if (cancel.get() || maxRunCount != -1 && l > maxRunCount) {
             return;
         }
-        //如果是并发的 直接处理下一次
-        if (concurrencyPolicy == CONCURRENCY) {
-            scheduleNext();
-        }
+        //先处理下一次
+        scheduleNext();
         try {
             task.accept(new TaskContext() {
 
@@ -198,10 +185,6 @@ public class CronTaskImpl implements CronTask {
             } else {
                 logger.log(ERROR, "调度任务时发生错误 !!!", e);
             }
-        }
-        //如果不是并发 就需要等待当前任务完成在处理下一次任务
-        if (concurrencyPolicy != CONCURRENCY) {
-            scheduleNext();
         }
     }
 
