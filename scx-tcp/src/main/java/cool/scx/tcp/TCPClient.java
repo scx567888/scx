@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-/// TCP 客户端
+/// TCPClient
 ///
 /// @author scx567888
 /// @version 0.0.1
