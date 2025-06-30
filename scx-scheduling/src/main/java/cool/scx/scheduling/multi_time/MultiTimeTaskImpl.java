@@ -158,7 +158,14 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
                         var delayCount = between.dividedBy(delay) * -1;
                         //2, 执行所有过期的任务
                         for (var i = 0; i < delayCount; i = i + 1) {
-                            run();
+                            //根据是否并发执行
+                            switch (concurrencyPolicy) {
+                                case CONCURRENCY -> timer.runAfter(this::run, 0, NANOSECONDS);
+                                case NO_CONCURRENCY -> run();
+                                default -> {
+                                    //这里只可能是 null 
+                                }
+                            }
                         }
                     }
                     //补偿策略就是立即执行
@@ -264,17 +271,6 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     }
 
     private void run() {
-        //如果允许并发执行则 开启虚拟线程执行
-        switch (concurrencyPolicy) {
-            case CONCURRENCY -> Thread.ofVirtual().start(this::run0);
-            case NO_CONCURRENCY -> run0();
-            default -> {
-                //这里只可能是 null 
-            }
-        }
-    }
-
-    private void run0() {
         var l = runCount.incrementAndGet();
         //判断是否 达到最大次数 停止运行并取消任务
         if (maxRunCount != -1 && l > maxRunCount) {
