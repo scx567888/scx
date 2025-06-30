@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 
 import static java.time.Instant.now;
 
-
 /// MultipleTimeTask
 ///
 /// @author scx567888
@@ -26,7 +25,5 @@ public interface MultiTimeTask extends ScheduleTask<MultiTimeTask> {
     }
 
     MultiTimeTask delay(Duration delay);
-
-    MultiTimeTask executionPolicy(ExecutionPolicy executionPolicy);
 
 }
