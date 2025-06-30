@@ -21,15 +21,13 @@
     <dependencies>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-common</artifactId>
-            <version>${project.version}</version>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-functional</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-io</artifactId>
-            <version>${project.version}</version>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-bytes</artifactId>
             <scope>test</scope>
         </dependency>
 

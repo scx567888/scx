@@ -33,7 +33,7 @@ public final class TLSHelper {
         }
     }
 
-    /// 获取系统默认证书并返回 TLS 对象（多用于客户端） 
+    /// 获取系统默认证书并返回 TLS 对象（多用于客户端）
     public static SSLContext createDefaultSSLContext() {
         try {
             // 1, createTrustManagerFactory
@@ -48,9 +48,9 @@ public final class TLSHelper {
         }
     }
 
-    ///创建自定义 TrustManager, 忽略证书验证（建议仅用于测试环境）
+    /// 创建自定义 TrustManager, 忽略证书验证（建议仅用于测试环境）
     public static SSLContext createTrustAnySSLContext() {
-        
+
         var trustAnyManager = new X509TrustManager() {
 
             public X509Certificate[] getAcceptedIssuers() {
@@ -64,7 +64,7 @@ public final class TLSHelper {
             public void checkServerTrusted(X509Certificate[] certs, String authType) {
                 // 此处忽略服务器证书验证逻辑
             }
-            
+
         };
 
         try {
