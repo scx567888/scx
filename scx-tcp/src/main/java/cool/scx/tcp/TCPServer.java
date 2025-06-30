@@ -97,7 +97,7 @@ public final class TCPServer implements ScxTCPServer {
                 var socket = this.serverSocket.accept();
                 Thread.ofVirtual().name("TCPServer-Handler-" + socket.getRemoteSocketAddress()).start(() -> handle(socket));
             } catch (IOException e) {
-                //第一种情况 服务器主动关闭
+                //第一种情况 服务器主动关闭, 无需处理, 直接跳出循环即可
                 if (!running) {
                     break;
                 }
