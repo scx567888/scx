@@ -60,7 +60,6 @@
         <module>scx-jdbc-mysql</module>
         <module>scx-reflect</module>
         <module>scx-scheduling</module>
-        <module>scx-tcp</module>
         <module>scx-web</module>
         <module>scx-websocket</module>
         <module>scx-websocket-routing</module>
@@ -130,6 +129,12 @@
                 <groupId>cool.scx</groupId>
                 <artifactId>scx-timer</artifactId>
                 <version>${scx-timer.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-tcp</artifactId>
+                <version>${scx-tcp.version}</version>
             </dependency>
 
             <dependency>
@@ -228,6 +233,7 @@
         <scx-bytes.version>4.0.0</scx-bytes.version>
         <scx-logging.version>4.0.0</scx-logging.version>
         <scx-timer.version>1.0.0</scx-timer.version>
+        <scx-tcp.version>4.0.0</scx-tcp.version>
         <jackson.version>2.19.1</jackson.version>
         <hikaricp.version>6.2.1</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
