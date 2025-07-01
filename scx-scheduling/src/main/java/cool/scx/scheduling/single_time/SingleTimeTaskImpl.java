@@ -5,17 +5,15 @@ import cool.scx.scheduling.ExpirationPolicy;
 import cool.scx.scheduling.ScheduleContext;
 import cool.scx.scheduling.ScheduleStatus;
 import cool.scx.scheduling.TaskContext;
-import cool.scx.timer.ScxTimer;
 
 import java.lang.System.Logger;
 import java.time.Instant;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static cool.scx.scheduling.ExpirationPolicy.BACKTRACKING_IGNORE;
-import static cool.scx.scheduling.ExpirationPolicy.IMMEDIATE_COMPENSATION;
-import static cool.scx.timer.TaskStatus.CANCELLED;
+import static cool.scx.scheduling.ExpirationPolicy.*;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 import static java.time.Duration.between;
@@ -33,19 +31,19 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     private final AtomicLong runCount;
     private Supplier<Instant> startTimeSupplier;
     private ExpirationPolicy expirationPolicy;
-    private ScxTimer timer;
-    private ScxConsumer<TaskContext, ?> task;
-    private Consumer<Throwable> errorHandler;
+    private ScheduledExecutorService executor;
+    private ScxConsumer<TaskContext,?> task;
     private ScheduleContext context;
+    private Consumer<Throwable> errorHandler;
 
     public SingleTimeTaskImpl() {
         this.runCount = new AtomicLong(0);
         this.startTimeSupplier = null;
         this.expirationPolicy = IMMEDIATE_COMPENSATION; //默认过期补偿
-        this.timer = null;
+        this.executor = null;
         this.task = null;
-        this.errorHandler = null;
         this.context = null;
+        this.errorHandler = null;
     }
 
     @Override
@@ -61,13 +59,13 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     }
 
     @Override
-    public SingleTimeTask timer(ScxTimer timer) {
-        this.timer = timer;
+    public SingleTimeTask executor(ScheduledExecutorService executor) {
+        this.executor = executor;
         return this;
     }
 
     @Override
-    public SingleTimeTask task(ScxConsumer<TaskContext, ?> task) {
+    public SingleTimeTask task(ScxConsumer<TaskContext,?> task) {
         this.task = task;
         return this;
     }
@@ -80,8 +78,8 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
     @Override
     public ScheduleContext start() {
-        if (timer == null) {
-            throw new IllegalStateException("timer 未设置 !!!");
+        if (executor == null) {
+            throw new IllegalStateException("Executor 未设置 !!!");
         }
         //此处立即获取当前时间保证准确
         var now = now();
@@ -92,68 +90,61 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
             startTime = now;
         }
         //先判断过没过期
-        var diff = between(now, startTime);
-        // 启动延时
-        long initialDelayNanos;
-
-        //以下处理过期情况
-        if (diff.isNegative()) {
-
-            switch (expirationPolicy) {
-                //1, 忽略策略
-                case IMMEDIATE_IGNORE, BACKTRACKING_IGNORE -> {
-                    //2, 如果是回溯忽略 我们就假设之前的已经都执行了 所以这里需要 修改 runCount
-                    if (expirationPolicy == BACKTRACKING_IGNORE) {
-                        runCount.incrementAndGet();
-                    }
-                    //单次任务 直接返回虚拟的 Status 即可 无需执行
-                    return new ScheduleContext() {
-                        @Override
-                        public long runCount() {
-                            return runCount.get();
-                        }
-
-                        @Override
-                        public Instant nextRunTime() {
-                            return null; // 忽略策略没有下一次运行时间
-                        }
-
-                        @Override
-                        public Instant nextRunTime(int count) {
-                            return null;// 同上
-                        }
-
-                        @Override
-                        public void cancel() {
-                            //任务从未执行所以无需取消
-                        }
-
-                        @Override
-                        public ScheduleStatus status() {
-                            return null;
-                        }
-
-                    };
-                    //单次任务 直接返回虚拟的 Status 即可 无需执行
-                }
-                //2, 补偿策略
-                case IMMEDIATE_COMPENSATION, BACKTRACKING_COMPENSATION -> {
-                    //补偿策略就是立即执行
-                    initialDelayNanos = 0;
-                }
-                default -> throw new IllegalStateException("Unexpected value: " + expirationPolicy);
-            }
-
-        } else {
-            initialDelayNanos = diff.toNanos();
+        var between = between(now, startTime);
+        //不为负数 则没有过期
+        if (!between.isNegative()) {
+            return doStart(between.toNanos());
         }
 
-        // 调用任务
-        var taskHandle = timer.runAfter(this::run, initialDelayNanos, NANOSECONDS);
+        //因为在单次执行任务中 只有忽略的策略需要特殊处理
+        if (expirationPolicy == IMMEDIATE_IGNORE || expirationPolicy == BACKTRACKING_IGNORE) {
+            //2, 如果是回溯忽略 我们就假设之前的已经都执行了 所以这里需要 修改 runCount
+            if (expirationPolicy == BACKTRACKING_IGNORE) {
+                runCount.incrementAndGet();
+            }
+            //单次任务 直接返回虚拟的 Status 即可 无需执行
+            return new ScheduleContext() {
+                @Override
+                public long runCount() {
+                    return runCount.get();
+                }
 
+                @Override
+                public Instant nextRunTime() {
+                    return null; // 忽略策略没有下一次运行时间
+                }
+
+                @Override
+                public Instant nextRunTime(int count) {
+                    return null;// 同上
+                }
+
+                @Override
+                public void cancel() {
+                    //任务从未执行所以无需取消
+                }
+
+                @Override
+                public ScheduleStatus status() {
+                    return null;
+                }
+
+            };
+        }
+
+        //单次任务的补偿策略就是立即执行
+        if (expirationPolicy == IMMEDIATE_COMPENSATION || expirationPolicy == BACKTRACKING_COMPENSATION) {
+            return doStart(0);
+        }
+
+        throw new IllegalStateException("Unexpected value: " + expirationPolicy);
+    }
+
+    private ScheduleContext doStart(long startDelay) {
         // 计算任务的实际启动时间
-        var scheduledTime = now.plusNanos(initialDelayNanos);
-
+        var scheduledTime = now().plusNanos(startDelay);
+        // 调用任务
+        var scheduledFuture = executor.schedule(this::run, startDelay, NANOSECONDS);
         this.context = new ScheduleContext() {
 
             @Override
@@ -164,7 +155,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
             @Override
             public Instant nextRunTime() {
                 // 任务取消 没有下一次执行时间
-                if (taskHandle.status() == CANCELLED) {
+                if (scheduledFuture.isCancelled()) {
                     return null;
                 }
                 // 如果任务已执行, 则没有下一次运行时间
@@ -181,21 +172,19 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
             @Override
             public void cancel() {
-                taskHandle.cancel();
+                scheduledFuture.cancel(false);
             }
 
             @Override
             public ScheduleStatus status() {
-                var s = taskHandle.status();
+                var s = scheduledFuture.state();
                 return switch (s) {
-                    case PENDING, RUNNING -> ScheduleStatus.RUNNING;
+                    case RUNNING -> ScheduleStatus.RUNNING;
                     case SUCCESS, FAILED -> ScheduleStatus.DONE;
                     case CANCELLED -> ScheduleStatus.CANCELLED;
                 };
             }
-
         };
-
         return this.context;
     }
 
