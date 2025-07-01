@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 
 import static java.time.Instant.now;
 
-
 /// MultipleTimeTask
 ///
 /// @author scx567888

@@ -5,7 +5,6 @@ import cool.scx.scheduling.ScxScheduling;
 import java.time.Duration;
 import java.time.Instant;
 
-import static cool.scx.scheduling.ConcurrencyPolicy.CONCURRENCY;
 import static cool.scx.scheduling.ExpirationPolicy.*;
 
 public class ScxSchedulingTest {
@@ -67,7 +66,6 @@ public class ScxSchedulingTest {
         ScxScheduling
                 .fixedRate()
                 .delay(Duration.ofMillis(200))
-                .concurrencyPolicy(CONCURRENCY)
                 .maxRunCount(10)
                 .task((a) -> {
                     System.err.println("这是通过 fixedRate() 0 打印的 : 第 10 次会取消 , 这时第 " + a.currentRunCount() + " 次执行 !!!");
@@ -81,7 +79,6 @@ public class ScxSchedulingTest {
                 .startTime(Instant.now().minusMillis(10000))
                 .expirationPolicy(IMMEDIATE_IGNORE)
                 .delay(Duration.ofMillis(500))
-                .concurrencyPolicy(CONCURRENCY)
                 .maxRunCount(10)
                 .task((a) -> {
                     System.err.println("这是通过 fixedRate() 1 打印的 : 第 10 次会取消 , 这时第 " + a.currentRunCount() + " 次执行 !!!");
@@ -95,7 +92,6 @@ public class ScxSchedulingTest {
                 .startTime(Instant.now().minusMillis(1000))
                 .expirationPolicy(BACKTRACKING_IGNORE)
                 .delay(Duration.ofMillis(500))
-                .concurrencyPolicy(CONCURRENCY)
                 .maxRunCount(10)
                 .task((a) -> {
                     System.err.println("这是通过 fixedRate() 2 打印的 : 第 10 次会取消 , 这时第 " + a.currentRunCount() + " 次执行 !!!");
@@ -109,7 +105,6 @@ public class ScxSchedulingTest {
                 .startTime(Instant.now().minusMillis(1000))
                 .expirationPolicy(IMMEDIATE_COMPENSATION)
                 .delay(Duration.ofMillis(500))
-                .concurrencyPolicy(CONCURRENCY)
                 .maxRunCount(10)
                 .task((a) -> {
                     System.err.println("这是通过 fixedRate() 3 打印的 : 第 10 次会取消 , 这时第 " + a.currentRunCount() + " 次执行 !!!");
@@ -123,7 +118,6 @@ public class ScxSchedulingTest {
                 .startTime(Instant.now().minusMillis(1000))
                 .expirationPolicy(BACKTRACKING_COMPENSATION)
                 .delay(Duration.ofMillis(500))
-                .concurrencyPolicy(CONCURRENCY)
                 .maxRunCount(10)
                 .task((a) -> {
                     System.err.println("这是通过 fixedRate() 3 打印的 : 第 10 次会取消 , 这时第 " + a.currentRunCount() + " 次执行 !!!");
@@ -138,7 +132,6 @@ public class ScxSchedulingTest {
         ScxScheduling
                 .cron()
                 .expression("*/1 * * * * ?")
-                .concurrencyPolicy(CONCURRENCY)
                 .maxRunCount(3)
                 .start((a) -> {
                     //测试
