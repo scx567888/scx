@@ -10,7 +10,8 @@ import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.sql.SQL;
 
-import static cool.scx.common.util.ArrayUtils.tryConcat;
+
+import static cool.scx.collections.ArrayUtils.concat;
 import static cool.scx.common.util.StringUtils.notEmpty;
 import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.extractValues;
 import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByUpdateFieldPolicy;
@@ -64,7 +65,7 @@ public class UpdateSQLBuilder {
         //3, 创建 表达式 set 子句
         var updateSetExpressionsColumns = createUpdateSetExpressionsClauses(updateFilter, columnNameParser);
         //4, 创建最终的 set 子句
-        var finalUpdateSetClauses = tryConcat(updateSetClauses, updateSetExpressionsColumns);
+        var finalUpdateSetClauses = concat(updateSetClauses, updateSetExpressionsColumns);
         //5, 创建 where 子句
         var whereClause = whereParser.parse(query.getWhere());
         //6, 创建 orderBy 子句
@@ -74,7 +75,7 @@ public class UpdateSQLBuilder {
         //8, 提取 entity 参数
         var entityParams = extractValues(updateSetColumns, entity);
         //9, 拼接参数 
-        var finalParams = tryConcat(entityParams, whereClause.params());
+        var finalParams = concat(entityParams, whereClause.params());
         return sql(sql, finalParams);
     }
 

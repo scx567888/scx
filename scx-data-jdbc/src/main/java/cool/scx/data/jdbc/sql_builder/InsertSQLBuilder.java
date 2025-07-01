@@ -1,5 +1,6 @@
 package cool.scx.data.jdbc.sql_builder;
 
+import cool.scx.collections.ArrayUtils;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.mapping.EntityTable;
 import cool.scx.data.jdbc.parser.JDBCColumnNameParser;
@@ -10,8 +11,8 @@ import cool.scx.jdbc.sql.SQL;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static cool.scx.common.util.ArrayUtils.tryConcat;
-import static cool.scx.common.util.ArrayUtils.tryConcatAny;
+
+import static cool.scx.collections.ArrayUtils.concat;
 import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.*;
 import static cool.scx.jdbc.sql.SQL.sql;
 
@@ -67,9 +68,9 @@ public class InsertSQLBuilder {
         //4, 创建 插入表达式
         var insertExpressionsValue = createInsertExpressionsValue(fieldPolicy);
         //5, 拼接最终的 插入列
-        var finalInsertColumns = tryConcatAny(insertColumns, (Object[]) insertExpressionsColumns);
+        var finalInsertColumns = concat(insertColumns, insertExpressionsColumns);
         //6, 拼接最终的 插入值
-        var finalInsertValues = tryConcat(insertValues, insertExpressionsValue);
+        var finalInsertValues = concat(insertValues, insertExpressionsValue);
         //7, 创建 SQL 语句字符串
         var sql = GetInsertSQL(finalInsertColumns, finalInsertValues);
         //8, 提取 entity 中的值作为 SQL 参数
@@ -87,9 +88,9 @@ public class InsertSQLBuilder {
         //4, 创建 插入表达式
         var insertExpressionsValue = createInsertExpressionsValue(fieldPolicy);
         //5, 拼接最终的 插入列
-        var finalInsertColumns = tryConcatAny(insertColumns, (Object[]) insertExpressionsColumns);
+        var finalInsertColumns = concat(insertColumns, insertExpressionsColumns);
         //6, 拼接最终的 插入值
-        var finalInsertValues = tryConcat(insertValues, insertExpressionsValue);
+        var finalInsertValues = concat(insertValues, insertExpressionsValue);
         //7, 创建 SQL 语句字符串
         var sql = GetInsertSQL(finalInsertColumns, finalInsertValues);
         //8, 提取 entity 中的值作为 SQL 参数

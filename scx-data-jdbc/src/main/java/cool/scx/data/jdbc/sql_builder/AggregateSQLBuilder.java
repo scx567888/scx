@@ -13,7 +13,8 @@ import cool.scx.jdbc.sql.SQL;
 
 import java.util.ArrayList;
 
-import static cool.scx.common.util.ArrayUtils.tryConcat;
+
+import static cool.scx.collections.ArrayUtils.concat;
 import static cool.scx.common.util.StringUtils.notEmpty;
 
 public class AggregateSQLBuilder {
@@ -45,7 +46,7 @@ public class AggregateSQLBuilder {
         var orderByClauses = orderByParser.parse(afterAggregateQuery.getOrderBys());
         //6, 创建 SQL
         var sql = GetAggregateSQL(selectColumns, whereClause.expression(), groupByColumn, havingClause.expression(), orderByClauses, afterAggregateQuery.getOffset(), afterAggregateQuery.getLimit());
-        var finalParams = tryConcat(whereClause.params(), havingClause.params());
+        var finalParams = concat(whereClause.params(), havingClause.params());
         return SQL.sql(sql, finalParams);
     }
 
@@ -62,7 +63,7 @@ public class AggregateSQLBuilder {
         var orderByClauses = orderByParser.parse(afterAggregateQuery.getOrderBys());
         //6, 创建 SQL
         var sql = GetAggregateSQL(selectColumns, whereClause.expression(), groupByColumn, havingClause.expression(), orderByClauses, null, 1L);
-        var finalParams = tryConcat(whereClause.params(), havingClause.params());
+        var finalParams = concat(whereClause.params(), havingClause.params());
         return SQL.sql(sql, finalParams);
     }
 
