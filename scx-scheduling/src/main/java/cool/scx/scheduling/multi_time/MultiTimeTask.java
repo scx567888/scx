@@ -26,4 +26,6 @@ public interface MultiTimeTask extends ScheduleTask<MultiTimeTask> {
 
     MultiTimeTask delay(Duration delay);
 
+    MultiTimeTask executionPolicy(ExecutionPolicy executionPolicy);
+
 }
