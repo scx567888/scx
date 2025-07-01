@@ -1,6 +1,5 @@
 package cool.scx.data.jdbc.sql_builder;
 
-import cool.scx.collections.ArrayUtils;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.mapping.EntityTable;
 import cool.scx.data.jdbc.parser.JDBCColumnNameParser;
@@ -10,7 +9,6 @@ import cool.scx.jdbc.sql.SQL;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 
 import static cool.scx.collections.ArrayUtils.concat;
 import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.*;

@@ -80,7 +80,7 @@ public final class Ansi {
     }
 
     public Ansi red(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements,new AnsiElement[]{ RED}));
+        return add(o, concat(ansiElements, new AnsiElement[]{RED}));
     }
 
     public Ansi green(Object o, AnsiElement... ansiElements) {
@@ -88,15 +88,15 @@ public final class Ansi {
     }
 
     public Ansi yellow(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements,new AnsiElement[]{ YELLOW}));
+        return add(o, concat(ansiElements, new AnsiElement[]{YELLOW}));
     }
 
     public Ansi blue(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements,new AnsiElement[]{ BLUE}));
+        return add(o, concat(ansiElements, new AnsiElement[]{BLUE}));
     }
 
     public Ansi magenta(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements,new AnsiElement[]{ MAGENTA}));
+        return add(o, concat(ansiElements, new AnsiElement[]{MAGENTA}));
     }
 
     public Ansi cyan(Object o, AnsiElement... ansiElements) {
@@ -112,15 +112,15 @@ public final class Ansi {
     }
 
     public Ansi brightRed(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements,new AnsiElement[]{ BRIGHT_RED}));
+        return add(o, concat(ansiElements, new AnsiElement[]{BRIGHT_RED}));
     }
 
     public Ansi brightGreen(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements,new AnsiElement[]{ BRIGHT_GREEN}));
+        return add(o, concat(ansiElements, new AnsiElement[]{BRIGHT_GREEN}));
     }
 
     public Ansi brightYellow(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements,new AnsiElement[]{ BRIGHT_YELLOW}));
+        return add(o, concat(ansiElements, new AnsiElement[]{BRIGHT_YELLOW}));
     }
 
     public Ansi brightBlue(Object o, AnsiElement... ansiElements) {
