@@ -1,7 +1,10 @@
 package cool.scx.scheduling.multi_time;
 
 import cool.scx.functional.ScxConsumer;
-import cool.scx.scheduling.*;
+import cool.scx.scheduling.ExpirationPolicy;
+import cool.scx.scheduling.ScheduleContext;
+import cool.scx.scheduling.ScheduleStatus;
+import cool.scx.scheduling.TaskContext;
 
 import java.lang.System.Logger;
 import java.time.Duration;
@@ -35,7 +38,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     private long maxRunCount;
     private ExpirationPolicy expirationPolicy;
     private ScheduledExecutorService executor;
-    private ScxConsumer<TaskContext,?> task;
+    private ScxConsumer<TaskContext, ?> task;
     private ScheduledFuture<?> scheduledFuture;
     private Consumer<Throwable> errorHandler;
     private ScheduleContext context;
@@ -92,7 +95,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     }
 
     @Override
-    public MultiTimeTask task(ScxConsumer<TaskContext,?> task) {
+    public MultiTimeTask task(ScxConsumer<TaskContext, ?> task) {
         this.task = task;
         return this;
     }

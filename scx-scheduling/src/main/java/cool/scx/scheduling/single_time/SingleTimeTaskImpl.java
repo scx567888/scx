@@ -32,7 +32,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     private Supplier<Instant> startTimeSupplier;
     private ExpirationPolicy expirationPolicy;
     private ScheduledExecutorService executor;
-    private ScxConsumer<TaskContext,?> task;
+    private ScxConsumer<TaskContext, ?> task;
     private ScheduleContext context;
     private Consumer<Throwable> errorHandler;
 
@@ -65,7 +65,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     }
 
     @Override
-    public SingleTimeTask task(ScxConsumer<TaskContext,?> task) {
+    public SingleTimeTask task(ScxConsumer<TaskContext, ?> task) {
         this.task = task;
         return this;
     }
