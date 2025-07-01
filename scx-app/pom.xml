@@ -6,7 +6,7 @@
     <parent>
         <groupId>cool.scx</groupId>
         <artifactId>scx</artifactId>
-        <version>3.8.6</version>
+        <version>3.8.7</version>
     </parent>
 
     <artifactId>scx-app</artifactId>
@@ -52,12 +52,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>scx-scheduling</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-tcp</artifactId>
             <version>${project.version}</version>
         </dependency>
 

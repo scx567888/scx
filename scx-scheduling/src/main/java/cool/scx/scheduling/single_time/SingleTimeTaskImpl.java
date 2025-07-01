@@ -13,7 +13,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static cool.scx.scheduling.ExpirationPolicy.*;
+import static cool.scx.scheduling.ExpirationPolicy.BACKTRACKING_IGNORE;
+import static cool.scx.scheduling.ExpirationPolicy.IMMEDIATE_COMPENSATION;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 import static java.time.Duration.between;
