@@ -57,12 +57,6 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-tcp</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>scx-http-x</artifactId>
             <version>${project.version}</version>
         </dependency>
