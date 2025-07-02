@@ -1,22 +1,22 @@
 package cool.scx.codec.huffman;
 
+import cool.scx.codec.bit_array.BitArray;
+import cool.scx.codec.bit_array.IBitArray;
 import cool.scx.collections.count_map.CountMap;
 import cool.scx.collections.count_map.ICountMap;
-import cool.scx.common.bit_array.BitArray;
-import cool.scx.common.bit_array.IBitArray;
-import cool.scx.common.util.$;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import static cool.scx.collections.ScxCollections.countingBy;
 import static java.util.Comparator.comparingInt;
 
 public class HuffmanHelper {
 
     // 统计频率
     public static <T> CountMap<T> buildCountMap(T[] data) {
-        return $.countingBy(data);
+        return countingBy(data);
     }
 
     // 构建优先队列

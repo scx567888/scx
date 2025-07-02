@@ -21,9 +21,8 @@
     <dependencies>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-common</artifactId>
-            <version>${project.version}</version>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-collections</artifactId>
         </dependency>
 
         <!-- TestNG 测试包 -->

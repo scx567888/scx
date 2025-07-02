@@ -1,4 +1,4 @@
-package cool.scx.common.bit_array;
+package cool.scx.codec.bit_array;
 
 public class BitArrayHelper {
 
