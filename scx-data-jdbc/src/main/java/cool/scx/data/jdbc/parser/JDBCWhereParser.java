@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static cool.scx.common.util.ArrayUtils.toObjectArray;
+import static cool.scx.collections.ArrayUtils.toObjectArray;
 import static cool.scx.data.query.QueryBuilder.and;
 import static cool.scx.data.query.QueryBuilder.or;
 import static java.util.Collections.addAll;

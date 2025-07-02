@@ -9,7 +9,7 @@ import cool.scx.data.query.Query;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sql.SQL;
 
-import static cool.scx.common.util.ArrayUtils.tryConcatAny;
+import static cool.scx.collections.ArrayUtils.concat;
 import static cool.scx.common.util.RandomUtils.randomString;
 import static cool.scx.common.util.StringUtils.notEmpty;
 import static cool.scx.data.LockMode.EXCLUSIVE;
@@ -53,7 +53,7 @@ public class SelectSQLBuilder {
         //2, 创建虚拟查询列
         var virtualSelectColumns = createVirtualSelectColumns(fieldPolicy, dialect);
         //3, 创建最终查询列
-        var finalSelectColumns = tryConcatAny(selectColumns, (Object[]) virtualSelectColumns);
+        var finalSelectColumns = concat(selectColumns, virtualSelectColumns);
         //4, 创建 where 子句
         var whereClause = whereParser.parse(query.getWhere());
         //6, 创建 orderBy 子句
@@ -69,7 +69,7 @@ public class SelectSQLBuilder {
         //2, 创建虚拟查询列
         var virtualSelectColumns = createVirtualSelectColumns(fieldPolicy, dialect);
         //3, 创建最终查询列
-        var finalSelectColumns = tryConcatAny(selectColumns, (Object[]) virtualSelectColumns);
+        var finalSelectColumns = concat(selectColumns, virtualSelectColumns);
         //4, 创建 where 子句
         var whereClause = whereParser.parse(query.getWhere());
         //6, 创建 orderBy 子句

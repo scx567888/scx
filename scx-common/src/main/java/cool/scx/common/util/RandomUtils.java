@@ -1,5 +1,7 @@
 package cool.scx.common.util;
 
+import cool.scx.collections.ArrayUtils;
+
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -93,7 +95,7 @@ public final class RandomUtils {
             throw new IndexOutOfBoundsException("取出 Array 的长度必须小于 原 Array 的长度 !!!");
         }
         var c = Arrays.copyOf(array, array.length);
-        ArrayUtils.shuffle(c);
+        ArrayUtils.shuffle((Object[]) c);
         return Arrays.copyOf(c, size);
     }
 
