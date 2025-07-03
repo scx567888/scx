@@ -13,6 +13,9 @@ public interface FieldInfo extends MemberInfo {
     /// 是否为 final 字段
     boolean isFinal();
 
+    /// 是否 静态 字段
+    boolean isStatic();
+
     /// 字段本身的类型
     ClassInfo fieldType();
 

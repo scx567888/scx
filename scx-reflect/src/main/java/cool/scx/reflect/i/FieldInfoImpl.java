@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 
 import static cool.scx.reflect.i.ClassInfoHelper._findAccessModifier;
 import static java.lang.reflect.AccessFlag.FINAL;
+import static java.lang.reflect.AccessFlag.STATIC;
 
 public class FieldInfoImpl implements FieldInfo {
 
@@ -13,6 +14,7 @@ public class FieldInfoImpl implements FieldInfo {
     private final String name;
     private final AccessModifier accessModifier;
     private final boolean isFinal;
+    private final boolean isStatic;
     private final ClassInfo fieldType;
     private final Annotation[] annotations;
 
@@ -23,6 +25,7 @@ public class FieldInfoImpl implements FieldInfo {
         var accessFlags = field.accessFlags();
         this.accessModifier = _findAccessModifier(accessFlags);
         this.isFinal = accessFlags.contains(FINAL);
+        this.isStatic = accessFlags.contains(STATIC);
         this.fieldType = ScxReflect.getClassInfo(field.getGenericType());
         this.annotations = field.getDeclaredAnnotations();
     }
@@ -50,6 +53,11 @@ public class FieldInfoImpl implements FieldInfo {
     @Override
     public boolean isFinal() {
         return isFinal;
+    }
+
+    @Override
+    public boolean isStatic() {
+        return isStatic;
     }
 
     @Override
