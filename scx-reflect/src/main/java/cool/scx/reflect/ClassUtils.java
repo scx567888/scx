@@ -1,4 +1,4 @@
-package cool.scx.common.util;
+package cool.scx.reflect;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static cool.scx.common.exception.ScxExceptionHelper.noException;
+import static cool.scx.common.util.ExceptionUtils.noException;
 import static cool.scx.common.util.StringUtils.endsWithIgnoreCase;
 
 /// 类工具类
