@@ -3,11 +3,11 @@ package cool.scx.reflect.i;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-import static cool.scx.reflect.i.ClassInfoHelper._findAccessModifier;
+import static cool.scx.reflect.i.ReflectHelper._findAccessModifier;
 import static java.lang.reflect.AccessFlag.FINAL;
 import static java.lang.reflect.AccessFlag.STATIC;
 
-public class FieldInfoImpl implements FieldInfo {
+public final class FieldInfoImpl implements FieldInfo {
 
     private final Field rawField;
     private final ClassInfo declaringClass;
