@@ -14,7 +14,7 @@ public interface FieldInfo extends MemberInfo, AnnotatedElementInfo {
     boolean isFinal();
 
     /// 字段本身的类型
-    ClassInfo classInfo();
+    ClassInfo fieldType();
 
     //************* 简化操作 *****************
 
