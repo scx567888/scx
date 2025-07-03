@@ -1,13 +1,11 @@
 package cool.scx.reflect.i;
 
-import cool.scx.reflect.ClassType;
-import cool.scx.reflect.ConstructorInfo;
-import cool.scx.reflect.FieldInfo;
 import cool.scx.reflect.MethodInfo;
 
 import java.lang.annotation.Annotation;
 
-public interface ClassInfo {
+/// 类 信息
+public interface ClassInfo extends AnnotatedElementInfo {
 
     /// 原始类
     Class<?> rawClass();

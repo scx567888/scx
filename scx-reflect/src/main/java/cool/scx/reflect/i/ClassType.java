@@ -1,4 +1,4 @@
-package cool.scx.reflect;
+package cool.scx.reflect.i;
 
 /// 类的类型.
 ///
