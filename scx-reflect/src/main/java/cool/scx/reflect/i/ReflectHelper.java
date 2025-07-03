@@ -1,12 +1,15 @@
 package cool.scx.reflect.i;
 
 import java.lang.reflect.AccessFlag;
+import java.lang.reflect.Executable;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Set;
 
 import static cool.scx.reflect.i.ClassType.ENUM;
 import static cool.scx.reflect.i.ClassType.RECORD;
 
-public class ClassInfoHelper {
+public final class ReflectHelper {
 
     public static AccessModifier _findAccessModifier(Set<AccessFlag> accessFlags) {
         if (accessFlags.contains(AccessFlag.PUBLIC)) {
@@ -82,14 +85,17 @@ public class ClassInfoHelper {
         return result;
     }
 
-    /// 获取当前 ClassInfo 的所有方法 (不包括父类方法 不包括桥接方法)
+    /// 获取当前 ClassInfo 的所有方法 (不包括桥接方法)
     public static MethodInfo[] _findMethods(Class<?> rawClass, ClassInfo classInfo) {
+        var list = new ArrayList<MethodInfo>();
         var methods = rawClass.getDeclaredMethods();
-        var result = new MethodInfo[methods.length];
-        for (int i = 0; i < methods.length; i = i + 1) {
-            result[i] = new MethodInfoImpl(methods[i], classInfo);
+        for (var method : methods) {
+            //过滤掉桥接方法, 因为我们几乎用不到
+            if (!method.isBridge()) {
+                list.add(new MethodInfoImpl(method, classInfo));
+            }
         }
-        return result;
+        return list.toArray(MethodInfo[]::new);
     }
 
     /// 返回当前 ClassInfo 所表示的枚举类的“真实”枚举类型。
@@ -117,6 +123,25 @@ public class ClassInfoHelper {
         } else {
             return null;
         }
+    }
+
+    public static MethodType _findMethodType(Method method, Set<AccessFlag> accessFlags) {
+        if (accessFlags.contains(AccessFlag.ABSTRACT)) {
+            return MethodType.ABSTRACT;
+        }
+        if (method.isDefault()) {
+            return MethodType.DEFAULT;
+        }
+        return MethodType.NORMAL;
+    }
+
+    public static ParameterInfo[] _findParameters(Executable rawExecutable, ExecutableInfo executableInfo) {
+        var parameters = rawExecutable.getParameters();
+        var result = new ParameterInfo[parameters.length];
+        for (int i = 0; i < parameters.length; i = i + 1) {
+            result[i] = new ParameterInfoImpl(parameters[i], executableInfo);
+        }
+        return result;
     }
 
 }
