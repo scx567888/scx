@@ -3,7 +3,7 @@ package cool.scx.reflect.i;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 
-public class ParameterInfoImpl implements ParameterInfo {
+public final class ParameterInfoImpl implements ParameterInfo {
 
     private final Parameter rawParameter;
     private final ExecutableInfo declaringExecutable;
