@@ -14,6 +14,6 @@ public interface ParameterInfo extends AnnotatedElementInfo {
     ExecutableInfo declaringExecutable();
     
     /// 参数本身的类型
-    ClassInfo classInfo();
+    ClassInfo parameterType();
     
 }
