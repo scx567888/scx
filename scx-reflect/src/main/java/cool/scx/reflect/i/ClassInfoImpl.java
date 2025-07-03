@@ -4,14 +4,15 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import static cool.scx.reflect.i.ClassInfoHelper.*;
-import static cool.scx.reflect.i.ScxReflect.CLASS_INFO_CACHE;
+import static cool.scx.reflect.i.ReflectHelper.*;
+import static cool.scx.reflect.i.ScxReflect.TYPE_INFO_CACHE;
 import static java.lang.reflect.AccessFlag.FINAL;
 import static java.lang.reflect.AccessFlag.STATIC;
 
 public class ClassInfoImpl implements ClassInfo {
 
-    private Class<?> rawClass;
+    private final Class<?> rawClass;
+    private final GenericInfo[] generics;
 
     private final String name;
     private final AccessModifier accessModifier;
@@ -37,22 +38,25 @@ public class ClassInfoImpl implements ClassInfo {
     private final ClassInfo enumClass;
     private final ClassInfo componentType;
 
-    public ClassInfoImpl(Type type) {
+    ClassInfoImpl(Type type) {
         //0, 先添加到 CLASS_INFO_CACHE 中
-        CLASS_INFO_CACHE.put(type, this);
+        TYPE_INFO_CACHE.put(type, this);
 
-        Class<?> _rawClass = null;
-        if (type instanceof Class<?> c) {
-            _rawClass = c;
-        } else if (type instanceof ParameterizedType t) {
-            Type rawType = t.getRawType();
-            Type[] actualTypeArguments = t.getActualTypeArguments();
-            if (rawType instanceof Class<?> c) {
-                _rawClass = c;
+        // 我们只允许 class 和 parameterizedType
+        switch (type) {
+            case Class<?> c -> {
+                this.rawClass = c;
+                this.generics = new GenericInfo[0];
+            }
+            case ParameterizedType p -> {
+                //这里我们假设 p 一定是 ParameterizedTypeImpl, 所以 getRawType 一定是 class
+                this.rawClass = (Class<?>) p.getRawType();
+                this.generics = _findGenerics(this.rawClass.getTypeParameters(), p.getActualTypeArguments());
+            }
+            default -> {
+                throw new IllegalArgumentException("Unsupported type: " + type);
             }
         }
-
-        this.rawClass = _rawClass;
 
         var accessFlags = this.rawClass.accessFlags();
 
@@ -85,6 +89,11 @@ public class ClassInfoImpl implements ClassInfo {
     @Override
     public Class<?> rawClass() {
         return rawClass;
+    }
+
+    @Override
+    public GenericInfo[] generics() {
+        return generics;
     }
 
     @Override
@@ -154,6 +163,7 @@ public class ClassInfoImpl implements ClassInfo {
 
     @Override
     public ConstructorInfo recordConstructor() {
+        //todo 待完成
         return null;
     }
 
@@ -164,6 +174,7 @@ public class ClassInfoImpl implements ClassInfo {
 
     @Override
     public FieldInfo[] allFields() {
+        //todo 待完成
         return new FieldInfo[0];
     }
 
@@ -174,6 +185,7 @@ public class ClassInfoImpl implements ClassInfo {
 
     @Override
     public MethodInfo[] allMethods() {
+        //todo 待完成
         return new MethodInfo[0];
     }
 
@@ -195,11 +207,6 @@ public class ClassInfoImpl implements ClassInfo {
     @Override
     public ClassInfo componentType() {
         return componentType;
-    }
-
-    @Override
-    public ClassInfo[] generics() {
-        return new ClassInfo[0];
     }
 
 }

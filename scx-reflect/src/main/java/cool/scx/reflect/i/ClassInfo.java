@@ -8,6 +8,9 @@ public interface ClassInfo extends AnnotatedElementInfo {
     /// 原始类
     Class<?> rawClass();
 
+    /// 泛型列表
+    GenericInfo[] generics();
+
     //************ 类的基本信息 ***************
 
     /// 类名
@@ -85,9 +88,6 @@ public interface ClassInfo extends AnnotatedElementInfo {
 
     /// 数组成员类型
     ClassInfo componentType();
-
-    /// 泛型列表
-    ClassInfo[] generics();
 
     //************* 辅助方法 **************
 
