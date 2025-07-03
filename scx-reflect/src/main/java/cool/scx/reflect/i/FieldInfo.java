@@ -17,7 +17,7 @@ public interface FieldInfo extends MemberInfo {
     boolean isStatic();
 
     /// 字段本身的类型
-    ClassInfo fieldType();
+    TypeInfo fieldType();
 
     //************* 简化操作 *****************
 

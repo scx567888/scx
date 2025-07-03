@@ -15,7 +15,7 @@ public final class FieldInfoImpl implements FieldInfo {
     private final AccessModifier accessModifier;
     private final boolean isFinal;
     private final boolean isStatic;
-    private final ClassInfo fieldType;
+    private final TypeInfo fieldType;
     private final Annotation[] annotations;
 
     public FieldInfoImpl(Field field, ClassInfo declaringClass) {
@@ -26,7 +26,7 @@ public final class FieldInfoImpl implements FieldInfo {
         this.accessModifier = _findAccessModifier(accessFlags);
         this.isFinal = accessFlags.contains(FINAL);
         this.isStatic = accessFlags.contains(STATIC);
-        this.fieldType = ScxReflect.getClassInfo(field.getGenericType());
+        this.fieldType = ScxReflect.getTypeInfo(field.getGenericType());
         this.annotations = field.getDeclaredAnnotations();
     }
 
@@ -61,7 +61,7 @@ public final class FieldInfoImpl implements FieldInfo {
     }
 
     @Override
-    public ClassInfo fieldType() {
+    public TypeInfo fieldType() {
         return fieldType;
     }
 
