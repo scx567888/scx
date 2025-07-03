@@ -13,8 +13,8 @@ public class FieldInfoImpl implements FieldInfo {
     private final String name;
     private final AccessModifier accessModifier;
     private final boolean isFinal;
-    private final Annotation[] annotations;
     private final ClassInfo fieldType;
+    private final Annotation[] annotations;
 
     public FieldInfoImpl(Field field, ClassInfo declaringClass) {
         this.rawField = field;
@@ -23,8 +23,8 @@ public class FieldInfoImpl implements FieldInfo {
         var accessFlags = field.accessFlags();
         this.accessModifier = _findAccessModifier(accessFlags);
         this.isFinal = accessFlags.contains(FINAL);
-        this.annotations = field.getDeclaredAnnotations();
         this.fieldType = ScxReflect.getClassInfo(field.getGenericType());
+        this.annotations = field.getDeclaredAnnotations();
     }
 
     @Override
@@ -53,13 +53,13 @@ public class FieldInfoImpl implements FieldInfo {
     }
 
     @Override
-    public Annotation[] annotations() {
-        return annotations;
+    public ClassInfo fieldType() {
+        return fieldType;
     }
 
     @Override
-    public ClassInfo fieldType() {
-        return fieldType;
+    public Annotation[] annotations() {
+        return annotations;
     }
 
 }

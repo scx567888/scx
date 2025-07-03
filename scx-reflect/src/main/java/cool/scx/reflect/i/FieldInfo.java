@@ -2,7 +2,7 @@ package cool.scx.reflect.i;
 
 import java.lang.reflect.Field;
 
-public interface FieldInfo extends MemberInfo, AnnotatedElementInfo {
+public interface FieldInfo extends MemberInfo {
 
     /// 原始 Field
     Field rawField();
@@ -18,6 +18,7 @@ public interface FieldInfo extends MemberInfo, AnnotatedElementInfo {
 
     //************* 简化操作 *****************
 
+    @Override
     default void setAccessible(boolean flag) {
         rawField().setAccessible(flag);
     }
