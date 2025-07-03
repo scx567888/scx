@@ -1,7 +1,5 @@
 package cool.scx.reflect.i;
 
-import cool.scx.reflect.MethodInfo;
-
 import java.lang.annotation.Annotation;
 
 /// 类 信息
