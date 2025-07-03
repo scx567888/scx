@@ -3,7 +3,7 @@ package cool.scx.reflect.i;
 import java.lang.annotation.Annotation;
 
 /// 类 信息
-public interface ClassInfo extends AnnotatedElementInfo {
+public interface ClassInfo extends TypeInfo, AnnotatedElementInfo {
 
     /// 原始类
     Class<?> rawClass();
