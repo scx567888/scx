@@ -42,15 +42,14 @@
     </scm>
 
     <modules>
-        <module>scx-ansi</module>
         <module>scx-app</module>
         <module>scx-bean</module>
         <module>scx-codec</module>
-        <module>scx-common</module>
         <module>scx-config</module>
+        <module>scx-crypto</module>
         <module>scx-data-serialization</module>
         <module>scx-data-jdbc</module>
-        <module>scx-ffm</module>
+        <module>scx-ffm-platform</module>
         <module>scx-http</module>
         <module>scx-http-routing</module>
         <module>scx-http-x</module>
@@ -58,6 +57,7 @@
         <module>scx-jdbc</module>
         <module>scx-jdbc-spy</module>
         <module>scx-jdbc-mysql</module>
+        <module>scx-object</module>
         <module>scx-reflect</module>
         <module>scx-scheduling</module>
         <module>scx-web</module>
@@ -135,6 +135,24 @@
                 <groupId>cool.scx</groupId>
                 <artifactId>scx-tcp</artifactId>
                 <version>${scx-tcp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-common</artifactId>
+                <version>${scx-common.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-ffm</artifactId>
+                <version>${scx-ffm.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-ansi</artifactId>
+                <version>${scx-ansi.version}</version>
             </dependency>
 
             <dependency>
@@ -234,6 +252,9 @@
         <scx-logging.version>4.0.0</scx-logging.version>
         <scx-timer.version>1.0.0</scx-timer.version>
         <scx-tcp.version>4.0.0</scx-tcp.version>
+        <scx-common.version>4.0.0</scx-common.version>
+        <scx-ffm.version>4.0.0</scx-ffm.version>
+        <scx-ansi.version>4.0.0</scx-ansi.version>
         <jackson.version>2.19.1</jackson.version>
         <hikaricp.version>6.2.1</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
