@@ -87,7 +87,7 @@ public interface ClassInfo extends TypeInfo, AnnotatedElementInfo {
     ClassInfo enumClass();
 
     /// 数组成员类型
-    ClassInfo componentType();
+    TypeInfo componentType();
 
     //************* 辅助方法 **************
 

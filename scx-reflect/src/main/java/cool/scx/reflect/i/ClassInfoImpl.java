@@ -1,6 +1,7 @@
 package cool.scx.reflect.i;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -36,13 +37,13 @@ public class ClassInfoImpl implements ClassInfo {
     private final Annotation[] annotations;
 
     private final ClassInfo enumClass;
-    private final ClassInfo componentType;
+    private final TypeInfo componentType;
 
     ClassInfoImpl(Type type) {
         //0, 先添加到 CLASS_INFO_CACHE 中
         TYPE_INFO_CACHE.put(type, this);
 
-        // 我们只允许 class 和 parameterizedType
+        // 我们只允许 class 和 parameterizedType 和 GenericArrayType
         switch (type) {
             case Class<?> c -> {
                 this.rawClass = c;
@@ -52,6 +53,10 @@ public class ClassInfoImpl implements ClassInfo {
                 //这里我们假设 p 一定是 ParameterizedTypeImpl, 所以 getRawType 一定是 class
                 this.rawClass = (Class<?>) p.getRawType();
                 this.generics = _findGenerics(this.rawClass.getTypeParameters(), p.getActualTypeArguments());
+            }
+            case GenericArrayType g -> {
+                this.rawClass = _findRawClass(g);
+                this.generics = new GenericInfo[0];
             }
             default -> {
                 throw new IllegalArgumentException("Unsupported type: " + type);
@@ -82,7 +87,7 @@ public class ClassInfoImpl implements ClassInfo {
         this.annotations = this.rawClass.getDeclaredAnnotations();
 
         this.enumClass = _findEnumClass(this);
-        this.componentType = _findComponentType(this);
+        this.componentType = _findComponentType(type);
 
     }
 
@@ -205,7 +210,7 @@ public class ClassInfoImpl implements ClassInfo {
     }
 
     @Override
-    public ClassInfo componentType() {
+    public TypeInfo componentType() {
         return componentType;
     }
 
