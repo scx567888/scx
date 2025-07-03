@@ -185,7 +185,6 @@ public final class ReflectHelper {
     }
 
 
-
 //    public static JavaType _findType(Type type, ClassInfo classInfo) {
 //        return resolveMemberType(type, classInfo.type().getBindings());
 //    }

@@ -16,7 +16,7 @@ public class GenericInfoImpl implements GenericInfo {
         this.name = typeVariable.getName();
         this.upperBounds = _findUpperBounds(typeVariable);
         this.lowerBounds = new ClassInfo[0];
-        this.actualType =  ScxReflect.getTypeInfo(type);
+        this.actualType = ScxReflect.getTypeInfo(type);
     }
 
     @Override

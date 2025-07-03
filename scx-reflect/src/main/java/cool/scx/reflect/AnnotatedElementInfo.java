@@ -1,10 +1,9 @@
 package cool.scx.reflect;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
 
 //todo 待完成
+
 /// 可被注解的元素
 public interface AnnotatedElementInfo {
 

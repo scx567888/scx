@@ -11,7 +11,7 @@ public enum MethodType {
 
     /// 抽象方法
     ABSTRACT,
-    
+
     /// 默认方法
     DEFAULT
 

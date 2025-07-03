@@ -15,5 +15,5 @@ public interface ParameterInfo extends AnnotatedElementInfo {
 
     /// 参数本身的类型
     TypeInfo parameterType();
-    
+
 }
