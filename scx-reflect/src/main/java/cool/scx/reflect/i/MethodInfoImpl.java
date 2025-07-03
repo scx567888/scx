@@ -69,13 +69,19 @@ public final class MethodInfoImpl implements MethodInfo {
     }
 
     @Override
+    public ParameterInfo[] parameters() {
+        return parameters;
+    }
+
+    @Override
     public ClassInfo returnType() {
         return returnType;
     }
 
     @Override
-    public ParameterInfo[] parameters() {
-        return parameters;
+    public MethodInfo superMethod() {
+        //todo 待完成
+        return null;
     }
 
     @Override

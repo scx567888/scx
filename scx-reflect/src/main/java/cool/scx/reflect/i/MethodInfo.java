@@ -17,6 +17,9 @@ public interface MethodInfo extends ExecutableInfo {
 
     ClassInfo returnType();
 
+    /// 获取当前方法重写的父类的方法 (可能为空)
+    MethodInfo superMethod();
+
     //************ 简化操作 **************
 
     @Override
