@@ -4,9 +4,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessFlag;
 import java.lang.reflect.Method;
 
-import static cool.scx.reflect.i.ClassInfoHelper.*;
+import static cool.scx.reflect.i.ReflectHelper.*;
 
-public class MethodInfoImpl implements MethodInfo {
+public final class MethodInfoImpl implements MethodInfo {
 
     private final Method rawMethod;
     private final ClassInfo declaringClass;
@@ -25,7 +25,7 @@ public class MethodInfoImpl implements MethodInfo {
         this.name = method.getName();
         var accessFlags = method.accessFlags();
         this.accessModifier = _findAccessModifier(accessFlags);
-        this.methodType = _findMethodType(this.rawMethod,accessFlags);
+        this.methodType = _findMethodType(this.rawMethod, accessFlags);
         this.isFinal = accessFlags.contains(AccessFlag.FINAL);
         this.isStatic = accessFlags.contains(AccessFlag.STATIC);
         this.parameters = _findParameters(this.rawMethod, this);
@@ -42,7 +42,7 @@ public class MethodInfoImpl implements MethodInfo {
     public ClassInfo declaringClass() {
         return declaringClass;
     }
-    
+
     @Override
     public AccessModifier accessModifier() {
         return accessModifier;
