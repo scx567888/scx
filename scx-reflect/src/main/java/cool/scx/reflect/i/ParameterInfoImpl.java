@@ -9,13 +9,13 @@ public final class ParameterInfoImpl implements ParameterInfo {
     private final ExecutableInfo declaringExecutable;
     private final String name;
     private final Annotation[] annotations;
-    private final ClassInfo parameterType;
+    private final TypeInfo parameterType;
 
     public ParameterInfoImpl(Parameter parameter, ExecutableInfo declaringExecutable) {
         this.rawParameter = parameter;
         this.declaringExecutable = declaringExecutable;
         this.name = parameter.getName();
-        this.parameterType = ScxReflect.getClassInfo(parameter.getParameterizedType());
+        this.parameterType = ScxReflect.getTypeInfo(parameter.getParameterizedType());
         this.annotations = parameter.getDeclaredAnnotations();
     }
 
@@ -35,7 +35,7 @@ public final class ParameterInfoImpl implements ParameterInfo {
     }
 
     @Override
-    public ClassInfo parameterType() {
+    public TypeInfo parameterType() {
         return parameterType;
     }
 
