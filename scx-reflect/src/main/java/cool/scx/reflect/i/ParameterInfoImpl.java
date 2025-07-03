@@ -35,13 +35,13 @@ public class ParameterInfoImpl implements ParameterInfo {
     }
 
     @Override
-    public Annotation[] annotations() {
-        return annotations;
+    public ClassInfo parameterType() {
+        return parameterType;
     }
 
     @Override
-    public ClassInfo parameterType() {
-        return parameterType;
+    public Annotation[] annotations() {
+        return annotations;
     }
 
 }
