@@ -15,8 +15,8 @@ public class ParameterInfoImpl implements ParameterInfo {
         this.rawParameter = parameter;
         this.declaringExecutable = declaringExecutable;
         this.name = parameter.getName();
-        this.annotations = parameter.getDeclaredAnnotations();
         this.parameterType = ScxReflect.getClassInfo(parameter.getParameterizedType());
+        this.annotations = parameter.getDeclaredAnnotations();
     }
 
     @Override
