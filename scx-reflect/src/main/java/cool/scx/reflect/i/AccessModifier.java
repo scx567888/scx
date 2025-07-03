@@ -1,4 +1,4 @@
-package cool.scx.reflect;
+package cool.scx.reflect.i;
 
 /// 访问修饰符
 ///
