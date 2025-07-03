@@ -1,0 +1,47 @@
+package cool.scx.reflect.i;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Parameter;
+
+public class ParameterInfoImpl implements ParameterInfo {
+
+    private final Parameter rawParameter;
+    private final ExecutableInfo declaringExecutable;
+    private final String name;
+    private final Annotation[] annotations;
+    private final ClassInfo classInfo;
+
+    public ParameterInfoImpl(Parameter parameter, ExecutableInfo declaringExecutable) {
+        this.rawParameter = parameter;
+        this.declaringExecutable = declaringExecutable;
+        this.name = parameter.getName();
+        this.annotations = parameter.getDeclaredAnnotations();
+        this.classInfo = ScxReflect.getClassInfo(parameter.getParameterizedType());
+    }
+
+    @Override
+    public Parameter rawParameter() {
+        return rawParameter;
+    }
+
+    @Override
+    public ExecutableInfo declaringExecutable() {
+        return declaringExecutable;
+    }
+
+    @Override
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public Annotation[] annotations() {
+        return annotations;
+    }
+
+    @Override
+    public ClassInfo classInfo() {
+        return classInfo;
+    }
+
+}
