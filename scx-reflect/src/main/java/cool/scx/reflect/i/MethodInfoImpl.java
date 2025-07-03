@@ -16,7 +16,7 @@ public final class MethodInfoImpl implements MethodInfo {
     private final boolean isFinal;
     private final boolean isStatic;
     private final ParameterInfo[] parameters;
-    private final ClassInfo returnType;
+    private final TypeInfo returnType;
     private final Annotation[] annotations;
 
     public MethodInfoImpl(Method method, ClassInfo declaringClass) {
@@ -29,7 +29,7 @@ public final class MethodInfoImpl implements MethodInfo {
         this.isFinal = accessFlags.contains(AccessFlag.FINAL);
         this.isStatic = accessFlags.contains(AccessFlag.STATIC);
         this.parameters = _findParameters(this.rawMethod, this);
-        this.returnType = ScxReflect.getClassInfo(method.getGenericReturnType());
+        this.returnType = ScxReflect.getTypeInfo(method.getGenericReturnType());
         this.annotations = method.getDeclaredAnnotations();
     }
 
@@ -74,7 +74,7 @@ public final class MethodInfoImpl implements MethodInfo {
     }
 
     @Override
-    public ClassInfo returnType() {
+    public TypeInfo returnType() {
         return returnType;
     }
 

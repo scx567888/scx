@@ -15,7 +15,7 @@ public interface MethodInfo extends ExecutableInfo {
 
     boolean isStatic();
 
-    ClassInfo returnType();
+    TypeInfo returnType();
 
     /// 获取当前方法重写的父类的方法 (可能为空)
     MethodInfo superMethod();
