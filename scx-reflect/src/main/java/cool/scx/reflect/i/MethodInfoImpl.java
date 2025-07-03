@@ -1,10 +1,10 @@
 package cool.scx.reflect.i;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessFlag;
 import java.lang.reflect.Method;
 
-import static cool.scx.reflect.i.ClassInfoHelper._findAccessModifier;
-import static cool.scx.reflect.i.ConstructorInfoHelper._findParameters;
+import static cool.scx.reflect.i.ClassInfoHelper.*;
 
 public class MethodInfoImpl implements MethodInfo {
 
@@ -12,6 +12,9 @@ public class MethodInfoImpl implements MethodInfo {
     private final ClassInfo declaringClass;
     private final String name;
     private final AccessModifier accessModifier;
+    private final MethodType methodType;
+    private final boolean isFinal;
+    private final boolean isStatic;
     private final ParameterInfo[] parameters;
     private final ClassInfo returnType;
     private final Annotation[] annotations;
@@ -22,6 +25,9 @@ public class MethodInfoImpl implements MethodInfo {
         this.name = method.getName();
         var accessFlags = method.accessFlags();
         this.accessModifier = _findAccessModifier(accessFlags);
+        this.methodType = _findMethodType(this.rawMethod,accessFlags);
+        this.isFinal = accessFlags.contains(AccessFlag.FINAL);
+        this.isStatic = accessFlags.contains(AccessFlag.STATIC);
         this.parameters = _findParameters(this.rawMethod, this);
         this.returnType = ScxReflect.getClassInfo(method.getGenericReturnType());
         this.annotations = method.getDeclaredAnnotations();
@@ -36,6 +42,11 @@ public class MethodInfoImpl implements MethodInfo {
     public ClassInfo declaringClass() {
         return declaringClass;
     }
+    
+    @Override
+    public AccessModifier accessModifier() {
+        return accessModifier;
+    }
 
     @Override
     public String name() {
@@ -43,13 +54,23 @@ public class MethodInfoImpl implements MethodInfo {
     }
 
     @Override
-    public ClassInfo returnType() {
-        return returnType;
+    public MethodType methodType() {
+        return methodType;
     }
 
     @Override
-    public AccessModifier accessModifier() {
-        return accessModifier;
+    public boolean isFinal() {
+        return isFinal;
+    }
+
+    @Override
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    @Override
+    public ClassInfo returnType() {
+        return returnType;
     }
 
     @Override

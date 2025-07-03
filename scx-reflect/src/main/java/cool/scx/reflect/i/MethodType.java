@@ -1,4 +1,4 @@
-package cool.scx.reflect;
+package cool.scx.reflect.i;
 
 /// 方法类型
 ///
@@ -6,9 +6,13 @@ package cool.scx.reflect;
 /// @version 0.0.1
 public enum MethodType {
 
+    /// 普通方法
     NORMAL,
-    STATIC,
+
+    /// 抽象方法
     ABSTRACT,
+    
+    /// 默认方法
     DEFAULT
 
 }

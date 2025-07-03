@@ -1,13 +1,31 @@
 package cool.scx.reflect.i;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public interface MethodInfo extends ExecutableInfo, MemberInfo, AnnotatedElementInfo {
+public interface MethodInfo extends ExecutableInfo {
 
     Method rawMethod();
 
     String name();
 
+    MethodType methodType();
+
+    boolean isFinal();
+
+    boolean isStatic();
+
     ClassInfo returnType();
+
+    //************ 简化操作 **************
+
+    @Override
+    default void setAccessible(boolean flag) {
+        rawMethod().setAccessible(flag);
+    }
+
+    default Object invoke(Object obj, Object... args) throws InvocationTargetException, IllegalAccessException {
+        return rawMethod().invoke(obj, args);
+    }
 
 }
