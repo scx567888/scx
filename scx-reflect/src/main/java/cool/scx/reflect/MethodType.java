@@ -1,4 +1,4 @@
-package cool.scx.reflect.i;
+package cool.scx.reflect;
 
 /// 方法类型
 ///

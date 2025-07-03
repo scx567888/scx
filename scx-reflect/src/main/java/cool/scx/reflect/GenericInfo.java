@@ -1,5 +1,6 @@
-package cool.scx.reflect.i;
+package cool.scx.reflect;
 
+/// todo 这个类的定位是什么 ? 
 /// 表示泛型
 public interface GenericInfo {
     
@@ -13,6 +14,6 @@ public interface GenericInfo {
     ClassInfo[] lowerBounds();
     
     /// 真实类型
-    ClassInfo actualType();
+    TypeInfo actualType();
     
 }

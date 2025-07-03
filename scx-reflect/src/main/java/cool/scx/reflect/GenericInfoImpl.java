@@ -1,16 +1,22 @@
-package cool.scx.reflect.i;
+package cool.scx.reflect;
 
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 
+import static cool.scx.reflect.ReflectHelper._findUpperBounds;
+
 public class GenericInfoImpl implements GenericInfo {
 
     private final String name;
-    private final ClassInfo actualType;
+    private final ClassInfo[] upperBounds;
+    private final ClassInfo[] lowerBounds;
+    private final TypeInfo actualType;
 
     public GenericInfoImpl(TypeVariable<?> typeVariable, Type type) {
         this.name = typeVariable.getName();
-        this.actualType = ScxReflect.getClassInfo(type);
+        this.upperBounds = _findUpperBounds(typeVariable);
+        this.lowerBounds = new ClassInfo[0];
+        this.actualType =  ScxReflect.getTypeInfo(type);
     }
 
     @Override
@@ -20,16 +26,16 @@ public class GenericInfoImpl implements GenericInfo {
 
     @Override
     public ClassInfo[] upperBounds() {
-        return new ClassInfo[0];
+        return upperBounds;
     }
 
     @Override
     public ClassInfo[] lowerBounds() {
-        return new ClassInfo[0];
+        return lowerBounds;
     }
 
     @Override
-    public ClassInfo actualType() {
+    public TypeInfo actualType() {
         return actualType;
     }
 

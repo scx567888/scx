@@ -1,82 +1,37 @@
 package cool.scx.reflect;
 
-import com.fasterxml.jackson.databind.JavaType;
-
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-import static cool.scx.reflect.ReflectHelper._findAccessModifier;
-import static cool.scx.reflect.ReflectHelper._findType;
-import static java.lang.reflect.AccessFlag.FINAL;
+public interface FieldInfo extends MemberInfo {
 
-/// FieldInfo
-///
-/// @author scx567888
-/// @version 0.0.1
-public final class FieldInfo implements MemberInfo {
+    /// 原始 Field
+    Field rawField();
 
-    private final Field field;
-    private final ClassInfo classInfo;
-    private final AccessModifier accessModifier;
-    private final String name;
-    private final JavaType type;
-    private final Annotation[] annotations;
-    private final boolean isFinal;
+    /// 字段名称
+    String name();
 
-    FieldInfo(Field field, ClassInfo classInfo) {
-        this.field = field;
-        this.classInfo = classInfo;
-        var accessFlags = field.accessFlags();
-        this.accessModifier = _findAccessModifier(accessFlags);
-        this.name = field.getName();
-        this.type = _findType(field.getGenericType(), classInfo);
-        this.annotations = field.getDeclaredAnnotations();
-        this.isFinal = accessFlags.contains(FINAL);
-    }
+    /// 是否为 final 字段
+    boolean isFinal();
 
-    public Field field() {
-        return field;
-    }
+    /// 是否 静态 字段
+    boolean isStatic();
 
-    public String name() {
-        return name;
-    }
+    /// 字段本身的类型
+    TypeInfo fieldType();
 
-    public JavaType type() {
-        return type;
-    }
-
-    public void set(Object obj, Object value) throws IllegalAccessException {
-        field.set(obj, value);
-    }
-
-    public Object get(Object obj) throws IllegalAccessException {
-        return field.get(obj);
-    }
+    //************* 简化操作 *****************
 
     @Override
-    public ClassInfo classInfo() {
-        return classInfo;
+    default void setAccessible(boolean flag) {
+        rawField().setAccessible(flag);
     }
 
-    @Override
-    public AccessModifier accessModifier() {
-        return accessModifier;
+    default void set(Object obj, Object value) throws IllegalAccessException {
+        rawField().set(obj, value);
     }
 
-    @Override
-    public void setAccessible(boolean flag) {
-        field.setAccessible(flag);
-    }
-
-    @Override
-    public Annotation[] annotations() {
-        return annotations;
-    }
-
-    /// 是否 final 字段
-    public boolean isFinal() {
-        return isFinal;
+    default Object get(Object obj) throws IllegalAccessException {
+        return rawField().get(obj);
     }
 
 }

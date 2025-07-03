@@ -1,4 +1,4 @@
-package cool.scx.reflect.i;
+package cool.scx.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;

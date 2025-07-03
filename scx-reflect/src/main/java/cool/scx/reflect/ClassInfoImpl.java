@@ -1,12 +1,12 @@
-package cool.scx.reflect.i;
+package cool.scx.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import static cool.scx.reflect.i.ReflectHelper.*;
-import static cool.scx.reflect.i.ScxReflect.TYPE_INFO_CACHE;
+import static cool.scx.reflect.ReflectHelper.*;
+import static cool.scx.reflect.ScxReflect.TYPE_INFO_CACHE;
 import static java.lang.reflect.AccessFlag.FINAL;
 import static java.lang.reflect.AccessFlag.STATIC;
 

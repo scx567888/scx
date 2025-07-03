@@ -1,9 +1,9 @@
-package cool.scx.reflect.i;
+package cool.scx.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-import static cool.scx.reflect.i.ReflectHelper._findAccessModifier;
+import static cool.scx.reflect.ReflectHelper._findAccessModifier;
 import static java.lang.reflect.AccessFlag.FINAL;
 import static java.lang.reflect.AccessFlag.STATIC;
 

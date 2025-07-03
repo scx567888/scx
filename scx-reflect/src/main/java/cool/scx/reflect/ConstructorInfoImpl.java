@@ -1,10 +1,10 @@
-package cool.scx.reflect.i;
+package cool.scx.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 
-import static cool.scx.reflect.i.ReflectHelper._findAccessModifier;
-import static cool.scx.reflect.i.ReflectHelper._findParameters;
+import static cool.scx.reflect.ReflectHelper._findAccessModifier;
+import static cool.scx.reflect.ReflectHelper._findParameters;
 
 public final class ConstructorInfoImpl implements ConstructorInfo {
 
