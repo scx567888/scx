@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 
 import static cool.scx.reflect.i.ClassInfoHelper._findAccessModifier;
-import static cool.scx.reflect.i.ConstructorInfoHelper._findParameters;
+import static cool.scx.reflect.i.ClassInfoHelper._findParameters;
 
 public class ConstructorInfoImpl implements ConstructorInfo {
 
