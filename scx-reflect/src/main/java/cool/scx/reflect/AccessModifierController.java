@@ -6,7 +6,4 @@ public sealed interface AccessModifierController extends AccessModifierOwner per
     /// 允许访问
     void setAccessible(boolean flag);
 
-    /// 是否允许访问
-    boolean isAccessible();
-
 }

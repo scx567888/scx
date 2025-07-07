@@ -42,16 +42,16 @@ final class ReflectSupport {
                 //这里我们假设 typeParameters 和 actualTypeArguments 的长度和顺序是完全一一对应的
                 var typeParameters = ((Class<?>) p.getRawType()).getTypeParameters();
                 var actualTypeArguments = p.getActualTypeArguments();
-                
+
                 var result = new LinkedHashMap<TypeVariable<?>, TypeInfo>();
-                
+
                 for (int i = 0; i < typeParameters.length; i = i + 1) {
                     var typeParameter = typeParameters[i];
                     var actualTypeArgument = actualTypeArguments[i];
                     var typeInfo = ScxReflect.getType(actualTypeArgument, bindings);
                     result.put(typeParameter, typeInfo);
                 }
-                
+
                 return result;
             }
             default -> throw new IllegalArgumentException("unsupported type: " + type);
@@ -144,7 +144,7 @@ final class ReflectSupport {
         }
         return result;
     }
-    
+
     
     
     
@@ -357,7 +357,7 @@ final class ReflectSupport {
 //            return null;
 //        }
 //    }
-    
+
 
 //
 //    /// 获取当前方法的注解 同时包含 重写方法的注解
