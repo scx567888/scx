@@ -33,6 +33,8 @@ public interface ClassInfo extends TypeInfo {
 
     //************ 类属性 *****************
 
+    boolean isAbstract();
+
     /// 是否 final 类
     boolean isFinal();
 
