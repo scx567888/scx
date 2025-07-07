@@ -31,7 +31,7 @@ public final class MethodInfoImpl implements MethodInfo {
         this.isFinal = accessFlags.contains(AccessFlag.FINAL);
         this.isStatic = accessFlags.contains(AccessFlag.STATIC);
         this.parameters = _findParameters(this.rawMethod, this);
-        this.returnType = TypeFactory.fromType(this.rawMethod.getGenericReturnType(), this.declaringClass.bindings());
+        this.returnType = TypeFactory.getType(this.rawMethod.getGenericReturnType(), this.declaringClass.bindings());
         this.annotations = this.rawMethod.getDeclaredAnnotations();
     }
 

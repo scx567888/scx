@@ -31,7 +31,7 @@ public final class FieldInfoImpl implements FieldInfo {
         this.accessModifier = _findAccessModifier(accessFlags);
         this.isFinal = accessFlags.contains(FINAL);
         this.isStatic = accessFlags.contains(STATIC);
-        this.fieldType = TypeFactory.fromType(this.rawField.getGenericType(), this.declaringClass.bindings());
+        this.fieldType = TypeFactory.getType(this.rawField.getGenericType(), this.declaringClass.bindings());
         this.annotations = this.rawField.getDeclaredAnnotations();
     }
 
