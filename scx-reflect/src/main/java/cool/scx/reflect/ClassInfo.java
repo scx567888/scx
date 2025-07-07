@@ -59,22 +59,22 @@ public interface ClassInfo extends TypeInfo {
     ConstructorInfo[] constructors();
 
     /// 默认构造函数 (无参构造函数) 可能为空
-//    ConstructorInfo defaultConstructor();
+    ConstructorInfo defaultConstructor();
 
     /// Record 规范构造参数 可能为空
-//    ConstructorInfo recordConstructor();
+    ConstructorInfo recordConstructor();
 
     /// 字段列表
     FieldInfo[] fields();
 
     /// 获取类所有字段 包括继承自父类的字段
-//    FieldInfo[] allFields();
+    FieldInfo[] allFields();
 
     /// 方法列表
     MethodInfo[] methods();
 
     /// 获取类所有方法 包括继承自父类的方法
-//    MethodInfo[] allMethods();
+    MethodInfo[] allMethods();
 
     //************* 注解 ****************
 
