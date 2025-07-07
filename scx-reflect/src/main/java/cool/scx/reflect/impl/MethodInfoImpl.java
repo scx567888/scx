@@ -19,6 +19,7 @@ public final class MethodInfoImpl implements MethodInfo {
     private final boolean isStatic;
     private final ParameterInfo[] parameters;
     private final TypeInfo returnType;
+    private final MethodInfo superMethod;
     private final Annotation[] annotations;
 
     MethodInfoImpl(Method method, ClassInfo declaringClass) {
@@ -32,6 +33,7 @@ public final class MethodInfoImpl implements MethodInfo {
         this.isStatic = accessFlags.contains(AccessFlag.STATIC);
         this.parameters = _findParameters(this.rawMethod, this);
         this.returnType = TypeFactory.getType(this.rawMethod.getGenericReturnType(), this.declaringClass.bindings());
+        this.superMethod = _findSuperMethod(this);
         this.annotations = this.rawMethod.getDeclaredAnnotations();
     }
 
@@ -82,8 +84,7 @@ public final class MethodInfoImpl implements MethodInfo {
 
     @Override
     public MethodInfo superMethod() {
-        //todo 待完成
-        return null;
+        return superMethod;
     }
 
     @Override

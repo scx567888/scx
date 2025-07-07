@@ -39,11 +39,18 @@ public final class ClassInfoImpl implements ClassInfo {
 
     // 类成员
     private final ConstructorInfo[] constructors;
+    private final ConstructorInfo defaultConstructor;
+    private final ConstructorInfo recordConstructor;
+
     private final FieldInfo[] fields;
+    private final FieldInfo[] allFields;
+
     private final MethodInfo[] methods;
+    private final MethodInfo[] allMethods;
 
     // 注解
     private final Annotation[] annotations;
+
 
     ClassInfoImpl(Type type, Map<TypeVariable<?>, TypeInfo> bindings) {
         TYPE_CACHE.put(type, this);
@@ -64,9 +71,14 @@ public final class ClassInfoImpl implements ClassInfo {
         this.interfaces = _findInterfaces(this.rawClass, this.bindings);
 
         this.constructors = _findConstructors(this.rawClass, this);
+        this.defaultConstructor = _findDefaultConstructor(this.constructors);
+        this.recordConstructor = _findRecordConstructor(this);
 
         this.fields = _findFields(this.rawClass, this);
+        this.allFields = _findAllFields(this);
+
         this.methods = _findMethods(this.rawClass, this);
+        this.allMethods = _findAllMethods(this);
 
         this.annotations = this.rawClass.getDeclaredAnnotations();
 
@@ -133,13 +145,33 @@ public final class ClassInfoImpl implements ClassInfo {
     }
 
     @Override
+    public ConstructorInfo defaultConstructor() {
+        return defaultConstructor;
+    }
+
+    @Override
+    public ConstructorInfo recordConstructor() {
+        return recordConstructor;
+    }
+
+    @Override
     public FieldInfo[] fields() {
         return fields;
     }
 
     @Override
+    public FieldInfo[] allFields() {
+        return allFields;
+    }
+
+    @Override
     public MethodInfo[] methods() {
         return methods;
+    }
+
+    @Override
+    public MethodInfo[] allMethods() {
+        return allMethods;
     }
 
     @Override
