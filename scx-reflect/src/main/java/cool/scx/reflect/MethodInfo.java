@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface MethodInfo extends ExecutableInfo {
+public sealed interface MethodInfo extends ExecutableInfo permits MethodInfoImpl {
 
     /// 原始 Method
     Method rawMethod();
@@ -15,6 +15,7 @@ public interface MethodInfo extends ExecutableInfo {
     /// 名称
     String name();
 
+    /// isAbstract
     boolean isAbstract();
 
     /// 是否为 final 方法
@@ -23,8 +24,10 @@ public interface MethodInfo extends ExecutableInfo {
     /// 是否为 static 方法
     boolean isStatic();
 
+    /// isNative
     boolean isNative();
 
+    /// isDefault
     boolean isDefault();
 
     /// 返回值

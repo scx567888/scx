@@ -1,12 +1,10 @@
-package cool.scx.reflect.impl;
-
-import cool.scx.reflect.*;
+package cool.scx.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessFlag;
 import java.lang.reflect.Method;
 
-import static cool.scx.reflect.impl.ReflectHelper.*;
+import static cool.scx.reflect.ReflectHelper.*;
 
 public final class MethodInfoImpl implements MethodInfo {
 
