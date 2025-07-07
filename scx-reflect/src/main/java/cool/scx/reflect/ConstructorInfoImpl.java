@@ -3,8 +3,8 @@ package cool.scx.reflect;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 
-import static cool.scx.reflect.ReflectHelper._findAccessModifier;
-import static cool.scx.reflect.ReflectHelper._findParameters;
+import static cool.scx.reflect.ReflectSupport._findAccessModifier;
+import static cool.scx.reflect.ReflectSupport._findParameters;
 
 /// 构造函数 信息
 ///

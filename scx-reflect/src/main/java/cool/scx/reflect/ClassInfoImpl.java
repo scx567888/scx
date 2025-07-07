@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Map;
 
-import static cool.scx.reflect.ReflectHelper.*;
+import static cool.scx.reflect.ReflectSupport.*;
 import static cool.scx.reflect.ScxReflect.TYPE_CACHE;
 import static java.lang.reflect.AccessFlag.*;
 

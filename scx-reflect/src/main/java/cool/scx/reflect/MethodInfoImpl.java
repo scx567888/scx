@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessFlag;
 import java.lang.reflect.Method;
 
-import static cool.scx.reflect.ReflectHelper.*;
+import static cool.scx.reflect.ReflectSupport.*;
 
 /// MethodInfoImpl
 ///
