@@ -6,7 +6,11 @@ import java.lang.reflect.Method;
 
 import static cool.scx.reflect.ReflectHelper.*;
 
-public final class MethodInfoImpl implements MethodInfo {
+/// MethodInfoImpl
+///
+/// @author scx567888
+/// @version 0.0.1
+final class MethodInfoImpl implements MethodInfo {
 
     private final Method rawMethod;
     private final ClassInfo declaringClass;
@@ -34,7 +38,7 @@ public final class MethodInfoImpl implements MethodInfo {
         this.isNative = accessFlags.contains(AccessFlag.NATIVE);
         this.isDefault = this.rawMethod.isDefault();
         this.parameters = _findParameters(this.rawMethod, this);
-        this.returnType = TypeFactory.getType(this.rawMethod.getGenericReturnType(), this.declaringClass.bindings());
+        this.returnType = ScxReflect.getType(this.rawMethod.getGenericReturnType(), this.declaringClass.bindings());
         this.superMethod = _findSuperMethod(this);
         this.annotations = this.rawMethod.getDeclaredAnnotations();
     }

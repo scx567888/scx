@@ -7,7 +7,7 @@ import java.lang.reflect.Parameter;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ParameterInfoImpl implements ParameterInfo {
+final class ParameterInfoImpl implements ParameterInfo {
 
     private final Parameter rawParameter;
     private final ExecutableInfo declaringExecutable;
@@ -19,7 +19,7 @@ public final class ParameterInfoImpl implements ParameterInfo {
         this.rawParameter = parameter;
         this.declaringExecutable = declaringExecutable;
         this.name = this.rawParameter.getName();
-        this.parameterType = TypeFactory.getType(this.rawParameter.getParameterizedType(), this.declaringExecutable.declaringClass().bindings());
+        this.parameterType = ScxReflect.getType(this.rawParameter.getParameterizedType(), this.declaringExecutable.declaringClass().bindings());
         this.annotations = this.rawParameter.getDeclaredAnnotations();
     }
 

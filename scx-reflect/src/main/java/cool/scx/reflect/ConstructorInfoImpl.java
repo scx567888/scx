@@ -10,7 +10,7 @@ import static cool.scx.reflect.ReflectHelper._findParameters;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ConstructorInfoImpl implements ConstructorInfo {
+final class ConstructorInfoImpl implements ConstructorInfo {
 
     private final Constructor<?> rawConstructor;
     private final ClassInfo declaringClass;

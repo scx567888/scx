@@ -5,13 +5,13 @@ import java.lang.reflect.TypeVariable;
 import java.util.Map;
 
 import static cool.scx.reflect.ReflectHelper._findComponentType;
-import static cool.scx.reflect.TypeFactory.TYPE_CACHE;
+import static cool.scx.reflect.ScxReflect.TYPE_CACHE;
 
 /// ArrayTypeInfoImpl
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ArrayTypeInfoImpl implements ArrayTypeInfo {
+final class ArrayTypeInfoImpl implements ArrayTypeInfo {
 
     private final TypeInfo componentType;
 

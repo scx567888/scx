@@ -11,7 +11,7 @@ import static java.lang.reflect.AccessFlag.STATIC;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class FieldInfoImpl implements FieldInfo {
+final class FieldInfoImpl implements FieldInfo {
 
     private final Field rawField;
     private final ClassInfo declaringClass;
@@ -30,7 +30,7 @@ public final class FieldInfoImpl implements FieldInfo {
         this.accessModifier = _findAccessModifier(accessFlags);
         this.isFinal = accessFlags.contains(FINAL);
         this.isStatic = accessFlags.contains(STATIC);
-        this.fieldType = TypeFactory.getType(this.rawField.getGenericType(), this.declaringClass.bindings());
+        this.fieldType = ScxReflect.getType(this.rawField.getGenericType(), this.declaringClass.bindings());
         this.annotations = this.rawField.getDeclaredAnnotations();
     }
 

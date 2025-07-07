@@ -1,21 +1,19 @@
-package cool.scx.reflect.impl;
-
-import cool.scx.reflect.*;
+package cool.scx.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Map;
 
-import static cool.scx.reflect.impl.ReflectHelper.*;
-import static cool.scx.reflect.impl.TypeFactory.TYPE_CACHE;
+import static cool.scx.reflect.ReflectHelper.*;
+import static cool.scx.reflect.ScxReflect.TYPE_CACHE;
 import static java.lang.reflect.AccessFlag.*;
 
 /// ClassInfoImpl
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ClassInfoImpl implements ClassInfo {
+final class ClassInfoImpl implements ClassInfo {
 
     // TypeInfo
     private final Class<?> rawClass;
