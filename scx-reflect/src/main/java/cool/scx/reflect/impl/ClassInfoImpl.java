@@ -9,8 +9,7 @@ import java.util.Map;
 
 import static cool.scx.reflect.impl.ReflectHelper.*;
 import static cool.scx.reflect.impl.TypeFactory.TYPE_CACHE;
-import static java.lang.reflect.AccessFlag.FINAL;
-import static java.lang.reflect.AccessFlag.STATIC;
+import static java.lang.reflect.AccessFlag.*;
 
 /// ClassInfoImpl
 ///
@@ -28,6 +27,7 @@ public final class ClassInfoImpl implements ClassInfo {
     private final ClassKind classKind;
 
     // 类属性
+    private final boolean isAbstract;
     private final boolean isFinal;
     private final boolean isStatic;
     private final boolean isAnonymousClass;
@@ -62,6 +62,7 @@ public final class ClassInfoImpl implements ClassInfo {
         var accessFlags = this.rawClass.accessFlags();
         this.accessModifier = _findAccessModifier(accessFlags);
         this.classKind = _findClassKind(this.rawClass, accessFlags);
+        this.isAbstract = accessFlags.contains(ABSTRACT);
         this.isFinal = accessFlags.contains(FINAL);
         this.isStatic = accessFlags.contains(STATIC);
         this.isAnonymousClass = this.rawClass.isAnonymousClass();
@@ -107,6 +108,11 @@ public final class ClassInfoImpl implements ClassInfo {
     @Override
     public ClassKind classKind() {
         return classKind;
+    }
+
+    @Override
+    public boolean isAbstract() {
+        return isAbstract;
     }
 
     @Override
