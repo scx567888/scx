@@ -4,7 +4,7 @@ import cool.scx.bean.BeanFactory;
 import cool.scx.bean.annotation.Autowired;
 import cool.scx.bean.exception.NoSuchBeanException;
 import cool.scx.bean.exception.NoUniqueBeanException;
-import cool.scx.common.constant.AnnotationValueHelper;
+import cool.scx.common.constant.AnnotationValues;
 import cool.scx.reflect.AnnotatedElementInfo;
 import cool.scx.reflect.FieldInfo;
 import cool.scx.reflect.ParameterInfo;
@@ -27,7 +27,7 @@ public class AutowiredAnnotationResolver implements BeanResolver {
         if (autowired == null) {
             return null;
         }
-        var name = AnnotationValueHelper.getRealValue(autowired.value());
+        var name = AnnotationValues.getRealValue(autowired.value());
         if (name != null) {
             return beanFactory.getBean(name, clazz);
         } else {
@@ -40,14 +40,14 @@ public class AutowiredAnnotationResolver implements BeanResolver {
         var annotations = parameter.allAnnotations();
         // 构造参数和 fieldValue 规则略有不同, 没有任何其他注解 强制注入
         if (annotations.length == 0) {
-            return beanFactory.getBean(parameter.parameter().getType());
+            return beanFactory.getBean(parameter.rawParameter().getType());
         }
-        return resolveValue(parameter, parameter.parameter().getType());
+        return resolveValue(parameter, parameter.rawParameter().getType());
     }
 
     @Override
     public Object resolveFieldValue(FieldInfo fieldInfo) {
-        return resolveValue(fieldInfo, fieldInfo.field().getType());
+        return resolveValue(fieldInfo, fieldInfo.rawField().getType());
     }
 
 }

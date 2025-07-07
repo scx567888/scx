@@ -21,7 +21,7 @@ public class BeanFactoryTest {
     public static void test1() {
         var beanFactory = new BeanFactoryImpl();
         beanFactory.addBeanResolver(new AutowiredAnnotationResolver(beanFactory));
-        beanFactory.addBeanResolver(new ValueAnnotationResolver(Map.of("key1", "Hello", "key2", "12345")));
+        beanFactory.addBeanResolver(new ValueAnnotationResolver(Map.of("key1", "Hello", "key2", 12345)));
 
         registerBeans(beanFactory);
 

@@ -3,7 +3,8 @@ package cool.scx.bean.provider;
 import cool.scx.bean.BeanFactory;
 import cool.scx.bean.dependency.DependencyContext;
 import cool.scx.bean.exception.BeanCreationException;
-import cool.scx.reflect.ClassInfoFactory;
+import cool.scx.reflect.ClassInfo;
+import cool.scx.reflect.ScxReflect;
 import cool.scx.reflect.FieldInfo;
 
 import static cool.scx.bean.dependency.CircularDependencyChecker.*;
@@ -93,7 +94,13 @@ public class InjectingBeanProvider implements BeanProvider {
     }
 
     private void injectField(Object bean, BeanFactory beanFactory) throws BeanCreationException {
-        var classInfo = ClassInfoFactory.getClassInfo(beanClass());
+        var type = ScxReflect.getType(beanClass());
+        ClassInfo classInfo;
+        if (type instanceof ClassInfo c) {
+            classInfo = c;
+        } else {
+            throw new BeanCreationException("beanClass " + beanClass().getName() + " 不支持非标准类 ");
+        }
         var fieldInfos = classInfo.allFields();
 
         for (var fieldInfo : fieldInfos) {

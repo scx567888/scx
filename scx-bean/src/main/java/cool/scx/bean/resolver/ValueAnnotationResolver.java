@@ -1,12 +1,11 @@
 package cool.scx.bean.resolver;
 
-import com.fasterxml.jackson.databind.JavaType;
 import cool.scx.bean.annotation.Value;
 import cool.scx.bean.exception.MissingValueException;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.reflect.AnnotatedElementInfo;
 import cool.scx.reflect.FieldInfo;
 import cool.scx.reflect.ParameterInfo;
+import cool.scx.reflect.TypeInfo;
 
 import java.util.Map;
 
@@ -22,7 +21,7 @@ public class ValueAnnotationResolver implements BeanResolver {
         this.map = map;
     }
 
-    public Object resolveValue(AnnotatedElementInfo annotatedElementInfo, JavaType javaType) throws MissingValueException {
+    public Object resolveValue(AnnotatedElementInfo annotatedElementInfo, TypeInfo typeInfo) throws MissingValueException {
         var annotation = annotatedElementInfo.findAnnotation(Value.class);
         if (annotation == null) {
             return null;
@@ -31,17 +30,18 @@ public class ValueAnnotationResolver implements BeanResolver {
         if (rawValue == null) {
             throw new MissingValueException("未找到 @Value 值 " + annotation.value());
         }
-        return ObjectUtils.convertValue(rawValue, javaType);
+        //todo 这里需要转换
+        return rawValue;
     }
 
     @Override
     public Object resolveConstructorArgument(ParameterInfo parameterInfo) {
-        return resolveValue(parameterInfo, parameterInfo.type());
+        return resolveValue(parameterInfo, parameterInfo.parameterType());
     }
 
     @Override
     public Object resolveFieldValue(FieldInfo fieldInfo) {
-        return resolveValue(fieldInfo, fieldInfo.type());
+        return resolveValue(fieldInfo, fieldInfo.fieldType());
     }
 
 }
