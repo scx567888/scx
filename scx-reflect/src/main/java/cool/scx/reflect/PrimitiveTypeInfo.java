@@ -4,7 +4,7 @@ package cool.scx.reflect;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface PrimitiveTypeInfo extends TypeInfo {
+public sealed interface PrimitiveTypeInfo extends TypeInfo permits PrimitiveTypeInfoImpl {
 
     /// 基本类型的 Class
     Class<?> primitiveClass();

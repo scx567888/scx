@@ -1,8 +1,6 @@
-package cool.scx.reflect.impl;
+package cool.scx.reflect;
 
-import cool.scx.reflect.PrimitiveTypeInfo;
-
-import static cool.scx.reflect.impl.TypeFactory.TYPE_CACHE;
+import static cool.scx.reflect.TypeFactory.TYPE_CACHE;
 
 /// 基本类型
 public final class PrimitiveTypeInfoImpl implements PrimitiveTypeInfo {
