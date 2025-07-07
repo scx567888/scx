@@ -4,6 +4,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import static cool.scx.reflect.AccessModifier.PRIVATE;
+import static cool.scx.reflect.ClassKind.ENUM;
 import static cool.scx.reflect.ClassKind.RECORD;
 import static java.util.Collections.addAll;
 
@@ -79,7 +80,7 @@ final class ReflectSupport {
             return ClassKind.INTERFACE;
         }
         if (accessFlags.contains(AccessFlag.ENUM)) {
-            return ClassKind.ENUM;
+            return ENUM;
         }
         if (rawClass.isRecord()) {
             return RECORD;
@@ -144,78 +145,6 @@ final class ReflectSupport {
         }
         return result;
     }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-   
-
-    
-
-
-    
-
-   
-
-  
-
-   
-
- 
-
-   
-
-
 
     /// 寻找 无参构造函数 (不支持成员类)
     public static ConstructorInfo _findDefaultConstructor(ConstructorInfo[] constructors) {
@@ -298,6 +227,25 @@ final class ReflectSupport {
         return allMethodInfo.toArray(MethodInfo[]::new);
     }
 
+    /// 返回当前 ClassInfo 所表示的枚举类的“真实”枚举类型。
+    /// 在 Java 中，枚举常量有时会被编译成枚举的匿名子类（匿名枚举类），
+    /// 这时直接拿匿名类的 ClassInfo 并不能代表真正的枚举类型。
+    /// 该方法的作用是：
+    /// - 如果 classInfo 表示的是匿名枚举类，则返回它的父类（即真正的枚举类）。
+    /// - 如果 classInfo 是普通的枚举类，则直接返回它自身。
+    /// - 如果不是枚举类，则返回 null。
+    /// 这样在处理枚举类型时，可以统一拿到“真实”的枚举声明类，方便后续处理。
+    ///
+    /// @param classInfo 需要判断的 ClassInfo 对象
+    /// @return 真实的枚举类型 ClassInfo，或者非枚举时返回 null
+    public static ClassInfo _findEnumClass(ClassInfo classInfo) {
+        if (classInfo.classKind() == ENUM) {
+            return classInfo.isAnonymousClass() ? classInfo.superClass() : classInfo;
+        } else {
+            return null;
+        }
+    }
+
     public static MethodInfo _findSuperMethod(MethodInfo methodInfo) {
         var superClass = methodInfo.declaringClass().superClass();
         while (superClass != null) {
@@ -321,7 +269,6 @@ final class ReflectSupport {
                 _hasSameParameterTypes(rootMethod, candidateMethod);
     }
 
-
     private static boolean _hasSameParameterTypes(ExecutableInfo rootMethod, ExecutableInfo candidateMethod) {
         if (candidateMethod.parameters().length != rootMethod.parameters().length) {
             return false;
@@ -329,34 +276,97 @@ final class ReflectSupport {
         var p1 = rootMethod.parameters();
         var p2 = candidateMethod.parameters();
         for (int i = 0; i < p1.length; i = i + 1) {
-//            var p1Type = p1[i].type().getRawClass();
-//            var p2Type = p2[i].type().getRawClass();
-//            if (p1Type != p2Type) {
-//                return false;
-//            }
+            //todo 这个判断合理吗？ 
+            var p1Type = p1[i].parameterType();
+            var p2Type = p2[i].parameterType();
+            if (p1Type != p2Type) {
+                return false;
+            }
         }
         return true;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+   
+
+    
 
 
-    /// 返回当前 ClassInfo 所表示的枚举类的“真实”枚举类型。
-    /// 在 Java 中，枚举常量有时会被编译成枚举的匿名子类（匿名枚举类），
-    /// 这时直接拿匿名类的 ClassInfo 并不能代表真正的枚举类型。
-    /// 该方法的作用是：
-    /// - 如果 classInfo 表示的是匿名枚举类，则返回它的父类（即真正的枚举类）。
-    /// - 如果 classInfo 是普通的枚举类，则直接返回它自身。
-    /// - 如果不是枚举类，则返回 null。
-    /// 这样在处理枚举类型时，可以统一拿到“真实”的枚举声明类，方便后续处理。
-    ///
-    /// @param classInfo 需要判断的 ClassInfo 对象
-    /// @return 真实的枚举类型 ClassInfo，或者非枚举时返回 null
-//    public static ClassInfo _findEnumClass(ClassInfo classInfo) {
-//        if (classInfo.classType() == ENUM) {
-//            return classInfo.isAnonymousClass() ? classInfo.superClass() : classInfo;
-//        } else {
-//            return null;
-//        }
-//    }
+    
+
+   
+
+  
+
+   
+
+ 
+
+   
+
+
+
+    
+
+   
+
+  
+
+    
+
+    
+
+    
+
+
+
+    
+
+
+   
 
 
 //

@@ -37,18 +37,18 @@ final class ClassInfoImpl implements ClassInfo {
 
     // 类成员
     private final ConstructorInfo[] constructors;
-    private final ConstructorInfo defaultConstructor;
-    private final ConstructorInfo recordConstructor;
-
     private final FieldInfo[] fields;
-    private final FieldInfo[] allFields;
-
     private final MethodInfo[] methods;
-    private final MethodInfo[] allMethods;
 
     // 注解
     private final Annotation[] annotations;
 
+    //快捷属性
+    private final ConstructorInfo defaultConstructor;
+    private final ConstructorInfo recordConstructor;
+    private final FieldInfo[] allFields;
+    private final MethodInfo[] allMethods;
+    private final ClassInfo enumClass;
 
     ClassInfoImpl(Type type, Map<TypeVariable<?>, TypeInfo> bindings) {
         TYPE_CACHE.put(type, this);
@@ -70,16 +70,16 @@ final class ClassInfoImpl implements ClassInfo {
         this.interfaces = _findInterfaces(this.rawClass, this.bindings);
 
         this.constructors = _findConstructors(this.rawClass, this);
-        this.defaultConstructor = _findDefaultConstructor(this.constructors);
-        this.recordConstructor = _findRecordConstructor(this);
-
         this.fields = _findFields(this.rawClass, this);
-        this.allFields = _findAllFields(this);
-
         this.methods = _findMethods(this.rawClass, this);
-        this.allMethods = _findAllMethods(this);
 
         this.annotations = this.rawClass.getDeclaredAnnotations();
+
+        this.defaultConstructor = _findDefaultConstructor(this.constructors);
+        this.recordConstructor = _findRecordConstructor(this);
+        this.allFields = _findAllFields(this);
+        this.allMethods = _findAllMethods(this);
+        this.enumClass = _findEnumClass(this);
 
     }
 
@@ -149,6 +149,21 @@ final class ClassInfoImpl implements ClassInfo {
     }
 
     @Override
+    public FieldInfo[] fields() {
+        return fields;
+    }
+
+    @Override
+    public MethodInfo[] methods() {
+        return methods;
+    }
+
+    @Override
+    public Annotation[] annotations() {
+        return annotations;
+    }
+
+    @Override
     public ConstructorInfo defaultConstructor() {
         return defaultConstructor;
     }
@@ -159,18 +174,8 @@ final class ClassInfoImpl implements ClassInfo {
     }
 
     @Override
-    public FieldInfo[] fields() {
-        return fields;
-    }
-
-    @Override
     public FieldInfo[] allFields() {
         return allFields;
-    }
-
-    @Override
-    public MethodInfo[] methods() {
-        return methods;
     }
 
     @Override
@@ -179,8 +184,8 @@ final class ClassInfoImpl implements ClassInfo {
     }
 
     @Override
-    public Annotation[] annotations() {
-        return annotations;
+    public ClassInfo enumClass() {
+        return enumClass;
     }
 
     @Override

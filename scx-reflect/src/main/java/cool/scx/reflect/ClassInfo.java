@@ -56,30 +56,28 @@ public sealed interface ClassInfo extends TypeInfo, AccessModifierOwner, Annotat
     /// 构造参数列表
     ConstructorInfo[] constructors();
 
+    /// 字段列表
+    FieldInfo[] fields();
+
+    /// 方法列表
+    MethodInfo[] methods();
+
+    //************* 辅助方法 **************
+
     /// 默认构造函数 (无参构造函数) 可能为空
     ConstructorInfo defaultConstructor();
 
     /// Record 规范构造参数 可能为空
     ConstructorInfo recordConstructor();
 
-    /// 字段列表
-    FieldInfo[] fields();
-
     /// 获取类所有字段 包括继承自父类的字段
     FieldInfo[] allFields();
-
-    /// 方法列表
-    MethodInfo[] methods();
 
     /// 获取类所有方法 包括继承自父类的方法
     MethodInfo[] allMethods();
 
-    //********** 其他信息 **************
-
     /// 枚举类型 (如果类是匿名枚举类的话可以正确获取到真正的枚举类型)
-//    ClassInfo enumClass();
-
-    //************* 辅助方法 **************
+    ClassInfo enumClass();
 
     /// 返回指定类型的 父级 ClassInfo 支持常规类,抽象类,接口
     default ClassInfo findSuperType(Class<?> rawTarget) {
