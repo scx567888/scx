@@ -1,12 +1,12 @@
-package cool.scx.reflect.impl;
-
-import cool.scx.reflect.ExecutableInfo;
-import cool.scx.reflect.ParameterInfo;
-import cool.scx.reflect.TypeInfo;
+package cool.scx.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 
+/// ParameterInfoImpl
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ParameterInfoImpl implements ParameterInfo {
 
     private final Parameter rawParameter;

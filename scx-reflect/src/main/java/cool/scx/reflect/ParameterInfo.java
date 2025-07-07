@@ -6,7 +6,7 @@ import java.lang.reflect.Parameter;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ParameterInfo extends AnnotatedElementInfo {
+public sealed interface ParameterInfo extends AnnotatedElementInfo permits ParameterInfoImpl {
 
     /// 原始 Parameter
     Parameter rawParameter();
