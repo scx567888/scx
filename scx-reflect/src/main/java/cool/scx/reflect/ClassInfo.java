@@ -10,7 +10,7 @@ import java.util.Map;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ClassInfo extends TypeInfo {
+public sealed interface ClassInfo extends TypeInfo permits ClassInfoImpl {
 
     //***************** TypeInfo **************
 
