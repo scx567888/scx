@@ -1,9 +1,14 @@
-package cool.scx.reflect.impl;
+package cool.scx.reflect;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+/// TypeReference
+///
+/// @author scx567888
+/// @version 0.0.1
 public abstract class TypeReference<T> {
+
     protected final Type _type;
 
     protected TypeReference() {
