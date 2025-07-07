@@ -1,17 +1,16 @@
-package cool.scx.reflect.impl;
-
-import cool.scx.reflect.AccessModifier;
-import cool.scx.reflect.ClassInfo;
-import cool.scx.reflect.FieldInfo;
-import cool.scx.reflect.TypeInfo;
+package cool.scx.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-import static cool.scx.reflect.impl.ReflectHelper._findAccessModifier;
+import static cool.scx.reflect.ReflectHelper._findAccessModifier;
 import static java.lang.reflect.AccessFlag.FINAL;
 import static java.lang.reflect.AccessFlag.STATIC;
 
+/// FieldInfoImpl
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class FieldInfoImpl implements FieldInfo {
 
     private final Field rawField;

@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface FieldInfo extends MemberInfo {
+public sealed interface FieldInfo extends MemberInfo permits FieldInfoImpl {
 
     /// 原始 Field
     Field rawField();
