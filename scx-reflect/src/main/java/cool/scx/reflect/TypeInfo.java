@@ -55,6 +55,6 @@ import java.lang.reflect.WildcardType;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface TypeInfo {
+public sealed interface TypeInfo permits ArrayTypeInfo, ClassInfo, PrimitiveTypeInfo {
 
 }
