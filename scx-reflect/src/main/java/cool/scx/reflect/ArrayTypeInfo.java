@@ -4,7 +4,7 @@ package cool.scx.reflect;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ArrayTypeInfo extends TypeInfo {
+public sealed interface ArrayTypeInfo extends TypeInfo permits ArrayTypeInfoImpl {
 
     /// 组件类型
     TypeInfo componentType();

@@ -1,14 +1,11 @@
-package cool.scx.reflect.impl;
-
-import cool.scx.reflect.ArrayTypeInfo;
-import cool.scx.reflect.TypeInfo;
+package cool.scx.reflect;
 
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Map;
 
-import static cool.scx.reflect.impl.ReflectHelper._findComponentType;
-import static cool.scx.reflect.impl.TypeFactory.TYPE_CACHE;
+import static cool.scx.reflect.ReflectHelper._findComponentType;
+import static cool.scx.reflect.TypeFactory.TYPE_CACHE;
 
 /// ArrayTypeInfoImpl
 ///
