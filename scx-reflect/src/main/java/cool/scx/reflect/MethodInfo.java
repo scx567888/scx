@@ -15,14 +15,17 @@ public interface MethodInfo extends ExecutableInfo {
     /// 名称
     String name();
 
-    /// 方法种类
-    MethodKind methodKind();
+    boolean isAbstract();
 
     /// 是否为 final 方法
     boolean isFinal();
 
     /// 是否为 static 方法
     boolean isStatic();
+
+    boolean isNative();
+
+    boolean isDefault();
 
     /// 返回值
     TypeInfo returnType();
