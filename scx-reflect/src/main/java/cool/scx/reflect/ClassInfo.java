@@ -1,6 +1,5 @@
 package cool.scx.reflect;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.TypeVariable;
 import java.util.Map;
 
@@ -10,7 +9,7 @@ import java.util.Map;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public sealed interface ClassInfo extends TypeInfo permits ClassInfoImpl {
+public sealed interface ClassInfo extends TypeInfo, AccessModifierOwner, AnnotatedElementInfo permits ClassInfoImpl {
 
     //***************** TypeInfo **************
 
@@ -24,9 +23,6 @@ public sealed interface ClassInfo extends TypeInfo permits ClassInfoImpl {
 
     /// 类名
     String name();
-
-    /// 类修饰符
-    AccessModifier accessModifier();
 
     /// 类的类型
     ClassKind classKind();
@@ -77,14 +73,6 @@ public sealed interface ClassInfo extends TypeInfo permits ClassInfoImpl {
 
     /// 获取类所有方法 包括继承自父类的方法
     MethodInfo[] allMethods();
-
-    //************* 注解 ****************
-
-    /// 类的注解
-    Annotation[] annotations();
-
-    /// 获取所有的注解 包括继承自父类的注解
-//    Annotation[] allAnnotations();
 
     //********** 其他信息 **************
 
