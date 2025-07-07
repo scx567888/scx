@@ -3,27 +3,28 @@ package cool.scx.reflect;
 import java.lang.annotation.Annotation;
 
 /// 可被注解的元素
+@SuppressWarnings("unchecked")
 public sealed interface AnnotatedElementInfo permits ClassInfo, MemberInfo, ParameterInfo {
 
     /// 元素上的注解
     Annotation[] annotations();
 
-//todo 待完成
-//    /// 获取所有的注解 包括继承自父级的注解 (假设存在继承的话, 如类或方法)
-//    default Annotation[] allAnnotations() {
-//        return annotations();
-//    }
-//
-//    /// 查找指定类型的注解
-//    default <T extends Annotation> T findAnnotation(Class<T> annotationClass) {
-//        var annotations = annotations();
-//        for (var annotation : annotations) {
-//            if (annotationClass.isInstance(annotation)) {
-//                return (T) annotation;
-//            }
-//        }
-//        return null;
-//    }
+    /// 获取所有的注解 包括继承自父级的注解 (假设存在继承的话, 如类或方法)
+    default Annotation[] allAnnotations() {
+        return annotations();
+    }
+    
+    /// 查找指定类型的注解
+    default <T extends Annotation> T findAnnotation(Class<T> annotationClass) {
+        var annotations = annotations();
+        for (var annotation : annotations) {
+            if (annotationClass.isInstance(annotation)) {
+                return (T) annotation;
+            }
+        }
+        return null;
+    }
+
 //
 //    /// 查找所有指定类型的注解
 //    default <T extends Annotation> List<T> findAnnotationList(Class<T> annotationClass) {

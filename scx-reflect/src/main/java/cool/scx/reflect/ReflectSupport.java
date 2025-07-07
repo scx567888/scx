@@ -1,5 +1,6 @@
 package cool.scx.reflect;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -285,8 +286,16 @@ final class ReflectSupport {
         }
         return true;
     }
-    
-    
+
+    /// 获取当前方法的注解 同时包含 重写方法的注解
+    public static Annotation[] _findAllAnnotations(ClassInfo classInfo) {
+        var allAnnotations = new ArrayList<Annotation>();
+        while (classInfo != null) {
+            addAll(allAnnotations, classInfo.annotations());
+            classInfo = classInfo.superClass();
+        }
+        return allAnnotations.toArray(Annotation[]::new);
+    }
     
     
     
@@ -370,17 +379,7 @@ final class ReflectSupport {
 
 
 //
-//    /// 获取当前方法的注解 同时包含 重写方法的注解
-//    ///
-//    /// @return a
-//    public static Annotation[] _findAllAnnotations(ClassInfo classInfo) {
-//        var allAnnotations = new ArrayList<Annotation>();
-//        while (classInfo != null) {
-//            addAll(allAnnotations, classInfo.annotations());
-//            classInfo = classInfo.superClass();
-//        }
-//        return allAnnotations.toArray(Annotation[]::new);
-//    }
+    
 //
 
 

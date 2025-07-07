@@ -49,6 +49,7 @@ final class ClassInfoImpl implements ClassInfo {
     private FieldInfo[] allFields;
     private MethodInfo[] allMethods;
     private ClassInfo enumClass;
+    private Annotation[] allAnnotations;
 
     ClassInfoImpl(Type type, Map<TypeVariable<?>, TypeInfo> bindings) {
         TYPE_CACHE.put(type, this);
@@ -163,6 +164,14 @@ final class ClassInfoImpl implements ClassInfo {
     @Override
     public Annotation[] annotations() {
         return annotations;
+    }
+
+    @Override
+    public Annotation[] allAnnotations() {
+        if (allAnnotations == null) {
+            allAnnotations = _findAllAnnotations(this);
+        }
+        return allAnnotations;
     }
 
     @Override
