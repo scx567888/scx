@@ -32,28 +32,18 @@ public final class TypeFactory {
             return new ArrayTypeInfoImpl(g, bindings);
         }
         if (type instanceof TypeVariable<?> typeVariable) {
-            return fromTypeVariable(typeVariable, bindings);
+            //尝试从从绑定中获取 否则回退到 上界
+            var typeInfo = bindings.get(typeVariable);
+            if (typeInfo != null) {
+                return typeInfo;
+            }
+            return getType(typeVariable.getBounds()[0], bindings);
         }
         if (type instanceof WildcardType wildcardType) {
-            return fromWildcardType(wildcardType, bindings);
+            //直接回退到上界
+            return getType(wildcardType.getUpperBounds()[0], bindings);
         }
         throw new IllegalArgumentException("unsupported type: " + type);
-    }
-
-    static TypeInfo fromTypeVariable(TypeVariable<?> typeVariable, Map<TypeVariable<?>, TypeInfo> bindings) {
-        //尝试从从绑定中获取 否则回退到 上界
-        var typeInfo = bindings.get(typeVariable);
-        if (typeInfo == null) {
-            Type bound = typeVariable.getBounds()[0];
-            return getType(bound, bindings);
-        }
-        return typeInfo;
-    }
-
-    static TypeInfo fromWildcardType(WildcardType wildcardType, Map<TypeVariable<?>, TypeInfo> bindings) {
-        //直接回退到上界
-        var upperBound = wildcardType.getUpperBounds()[0];
-        return getType(upperBound, bindings);
     }
 
     public static TypeInfo getType(TypeReference<?> typeReference) {
