@@ -7,10 +7,7 @@ package cool.scx.reflect;
 public enum ClassKind {
 
     /// 普通类
-    CONCRETE,
-
-    /// 抽象类
-    ABSTRACT_CLASS,
+    CLASS,
 
     /// 接口
     INTERFACE,
