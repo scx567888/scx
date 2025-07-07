@@ -25,7 +25,7 @@ final class MethodInfoImpl implements MethodInfo {
     private final TypeInfo returnType;
     private final Annotation[] annotations;
     
-    private final MethodInfo superMethod;
+    private MethodInfo superMethod;
 
     MethodInfoImpl(Method method, ClassInfo declaringClass) {
         this.rawMethod = method;
@@ -41,8 +41,7 @@ final class MethodInfoImpl implements MethodInfo {
         this.parameters = _findParameters(this.rawMethod, this);
         this.returnType = ScxReflect.getType(this.rawMethod.getGenericReturnType(), this.declaringClass.bindings());
         this.annotations = this.rawMethod.getDeclaredAnnotations();
-        
-        this.superMethod = _findSuperMethod(this);
+
     }
 
     @Override
@@ -102,6 +101,9 @@ final class MethodInfoImpl implements MethodInfo {
 
     @Override
     public MethodInfo superMethod() {
+        if (superMethod == null) {
+            superMethod = _findSuperMethod(this);
+        }
         return superMethod;
     }
 

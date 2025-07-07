@@ -32,23 +32,23 @@ final class ClassInfoImpl implements ClassInfo {
     private final boolean isMemberClass;
 
     // 继承结构
-    private final ClassInfo superClass;
-    private final ClassInfo[] interfaces;
+    private ClassInfo superClass;
+    private ClassInfo[] interfaces;
 
     // 类成员
-    private final ConstructorInfo[] constructors;
-    private final FieldInfo[] fields;
-    private final MethodInfo[] methods;
+    private ConstructorInfo[] constructors;
+    private FieldInfo[] fields;
+    private MethodInfo[] methods;
 
     // 注解
     private final Annotation[] annotations;
 
     //快捷属性
-    private final ConstructorInfo defaultConstructor;
-    private final ConstructorInfo recordConstructor;
-    private final FieldInfo[] allFields;
-    private final MethodInfo[] allMethods;
-    private final ClassInfo enumClass;
+    private ConstructorInfo defaultConstructor;
+    private ConstructorInfo recordConstructor;
+    private FieldInfo[] allFields;
+    private MethodInfo[] allMethods;
+    private ClassInfo enumClass;
 
     ClassInfoImpl(Type type, Map<TypeVariable<?>, TypeInfo> bindings) {
         TYPE_CACHE.put(type, this);
@@ -66,20 +66,7 @@ final class ClassInfoImpl implements ClassInfo {
         this.isAnonymousClass = this.rawClass.isAnonymousClass();
         this.isMemberClass = this.rawClass.isMemberClass();
 
-        this.superClass = _findSuperClass(this.rawClass, this.bindings);
-        this.interfaces = _findInterfaces(this.rawClass, this.bindings);
-
-        this.constructors = _findConstructors(this.rawClass, this);
-        this.fields = _findFields(this.rawClass, this);
-        this.methods = _findMethods(this.rawClass, this);
-
         this.annotations = this.rawClass.getDeclaredAnnotations();
-
-        this.defaultConstructor = _findDefaultConstructor(this.constructors);
-        this.recordConstructor = _findRecordConstructor(this);
-        this.allFields = _findAllFields(this);
-        this.allMethods = _findAllMethods(this);
-        this.enumClass = _findEnumClass(this);
 
     }
 
@@ -135,26 +122,41 @@ final class ClassInfoImpl implements ClassInfo {
 
     @Override
     public ClassInfo superClass() {
+        if (superClass == null) {
+            superClass = _findSuperClass(this.rawClass, this.bindings);
+        }
         return superClass;
     }
 
     @Override
     public ClassInfo[] interfaces() {
+        if (interfaces == null) {
+            interfaces = _findInterfaces(this.rawClass, this.bindings);
+        }
         return interfaces;
     }
 
     @Override
     public ConstructorInfo[] constructors() {
+        if (constructors == null) {
+            constructors = _findConstructors(this.rawClass, this);
+        }
         return constructors;
     }
 
     @Override
     public FieldInfo[] fields() {
+        if (fields == null) {
+            fields = _findFields(this.rawClass, this);
+        }
         return fields;
     }
 
     @Override
     public MethodInfo[] methods() {
+        if (methods == null) {
+            methods = _findMethods(this.rawClass, this);
+        }
         return methods;
     }
 
@@ -165,26 +167,41 @@ final class ClassInfoImpl implements ClassInfo {
 
     @Override
     public ConstructorInfo defaultConstructor() {
+        if (defaultConstructor == null) {
+            defaultConstructor = _findDefaultConstructor(this.constructors);
+        }
         return defaultConstructor;
     }
 
     @Override
     public ConstructorInfo recordConstructor() {
+        if (recordConstructor == null) {
+            recordConstructor = _findRecordConstructor(this);
+        }
         return recordConstructor;
     }
 
     @Override
     public FieldInfo[] allFields() {
+        if (allFields == null) {
+            allFields = _findAllFields(this);
+        }
         return allFields;
     }
 
     @Override
     public MethodInfo[] allMethods() {
+        if (allMethods == null) {
+            allMethods = _findAllMethods(this);
+        }
         return allMethods;
     }
 
     @Override
     public ClassInfo enumClass() {
+        if (enumClass == null) {
+            enumClass = _findEnumClass(this);
+        }
         return enumClass;
     }
 
