@@ -14,9 +14,11 @@ public final class MethodInfoImpl implements MethodInfo {
     private final ClassInfo declaringClass;
     private final String name;
     private final AccessModifier accessModifier;
-    private final MethodKind methodKind;
+    private final boolean isAbstract;
     private final boolean isFinal;
     private final boolean isStatic;
+    private final boolean isNative;
+    private final boolean isDefault;
     private final ParameterInfo[] parameters;
     private final TypeInfo returnType;
     private final MethodInfo superMethod;
@@ -28,9 +30,11 @@ public final class MethodInfoImpl implements MethodInfo {
         this.name = this.rawMethod.getName();
         var accessFlags = this.rawMethod.accessFlags();
         this.accessModifier = _findAccessModifier(accessFlags);
-        this.methodKind = _findMethodKind(this.rawMethod, accessFlags);
+        this.isAbstract = accessFlags.contains(AccessFlag.ABSTRACT);
         this.isFinal = accessFlags.contains(AccessFlag.FINAL);
         this.isStatic = accessFlags.contains(AccessFlag.STATIC);
+        this.isNative = accessFlags.contains(AccessFlag.NATIVE);
+        this.isDefault = this.rawMethod.isDefault();
         this.parameters = _findParameters(this.rawMethod, this);
         this.returnType = TypeFactory.getType(this.rawMethod.getGenericReturnType(), this.declaringClass.bindings());
         this.superMethod = _findSuperMethod(this);
@@ -58,8 +62,8 @@ public final class MethodInfoImpl implements MethodInfo {
     }
 
     @Override
-    public MethodKind methodKind() {
-        return methodKind;
+    public boolean isAbstract() {
+        return isAbstract;
     }
 
     @Override
@@ -70,6 +74,16 @@ public final class MethodInfoImpl implements MethodInfo {
     @Override
     public boolean isStatic() {
         return isStatic;
+    }
+
+    @Override
+    public boolean isNative() {
+        return isNative;
+    }
+
+    @Override
+    public boolean isDefault() {
+        return isDefault;
     }
 
     @Override
@@ -102,7 +116,7 @@ public final class MethodInfoImpl implements MethodInfo {
         if (isStatic) {
             sb.append(" static");
         }
-        if (methodKind == MethodKind.ABSTRACT) {
+        if (isAbstract) {
             sb.append(" abstract");
         }
         if (isFinal) {
