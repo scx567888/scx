@@ -1,13 +1,16 @@
-package cool.scx.reflect;
+package cool.scx.reflect.impl;
+
+import cool.scx.reflect.*;
 
 import java.lang.reflect.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
-import static cool.scx.reflect.ClassType.ENUM;
-import static cool.scx.reflect.ClassType.RECORD;
+import static cool.scx.reflect.ClassKind.RECORD;
 
-public final class ReflectHelper {
+final class ReflectHelper {
 
     public static AccessModifier _findAccessModifier(Set<AccessFlag> accessFlags) {
         if (accessFlags.contains(AccessFlag.PUBLIC)) {
@@ -22,41 +25,51 @@ public final class ReflectHelper {
         return AccessModifier.PACKAGE_PRIVATE;
     }
 
-    public static ClassType _findClassType(Class<?> rawClass, Set<AccessFlag> accessFlags) {
+    public static ClassKind _findClassKind(Class<?> rawClass, Set<AccessFlag> accessFlags) {
         if (accessFlags.contains(AccessFlag.ANNOTATION)) {
-            return ClassType.ANNOTATION;
+            return ClassKind.ANNOTATION;
         }
         if (accessFlags.contains(AccessFlag.INTERFACE)) {
-            return ClassType.INTERFACE;
+            return ClassKind.INTERFACE;
         }
         if (accessFlags.contains(AccessFlag.ABSTRACT)) {
-            return ClassType.ABSTRACT_CLASS;
+            return ClassKind.ABSTRACT_CLASS;
         }
         if (accessFlags.contains(AccessFlag.ENUM)) {
-            return ClassType.ENUM;
+            return ClassKind.ENUM;
         }
         if (rawClass.isRecord()) {
             return RECORD;
         }
-        return ClassType.CONCRETE;
+        return ClassKind.CONCRETE;
     }
 
-    public static ClassInfo _findSuperClass(Class<?> rawClass) {
+    public static ClassInfo _findSuperClass(Class<?> rawClass, Map<TypeVariable<?>, TypeInfo> bindings) {
         var superClass = rawClass.getGenericSuperclass();
-        // superClass 只可能是 Class 或 ParameterizedType 
-        // 所以我们 使用 getTypeInfo 返回的也必然是 ClassInfo, 此处强转安全
-        return superClass != null ? (ClassInfo) ScxReflect.getTypeInfo(superClass) : null;
+        // superClass 只可能是 Class (非数组,非基本类型) 或 ParameterizedType (rawClass 同样非数组,非基本类型)
+        // 所以我们 使用 getType 返回的也必然是 ClassInfo, 此处强转安全
+        return superClass != null ? (ClassInfo) TypeFactory.getType(superClass, bindings) : null;
     }
 
-    public static ClassInfo[] _findInterfaces(Class<?> rawClass) {
+    public static ClassInfo[] _findInterfaces(Class<?> rawClass, Map<TypeVariable<?>, TypeInfo> bindings) {
         var interfaces = rawClass.getGenericInterfaces();
-        // interface 只可能是 Class 或 ParameterizedType 
-        // 所以我们 使用 getTypeInfo 返回的也必然是 ClassInfo, 此处强转安全
+        // interface 只可能是 Class (非数组,非基本类型) 或 ParameterizedType (rawClass 同样非数组,非基本类型)
+        // 所以我们 使用 getType 返回的也必然是 ClassInfo, 此处强转安全
         var result = new ClassInfo[interfaces.length];
         for (int i = 0; i < interfaces.length; i = i + 1) {
-            result[i] = (ClassInfo) ScxReflect.getTypeInfo(interfaces[i]);
+            result[i] = (ClassInfo) TypeFactory.getType(interfaces[i], bindings);
         }
         return result;
+    }
+
+    public static MethodKind _findMethodKind(Method method, Set<AccessFlag> accessFlags) {
+        if (accessFlags.contains(AccessFlag.ABSTRACT)) {
+            return MethodKind.ABSTRACT;
+        }
+        if (method.isDefault()) {
+            return MethodKind.DEFAULT;
+        }
+        return MethodKind.NORMAL;
     }
 
     public static ConstructorInfo[] _findConstructors(Class<?> rawClass, ClassInfo classInfo) {
@@ -66,16 +79,6 @@ public final class ReflectHelper {
             result[i] = new ConstructorInfoImpl(constructors[i], classInfo);
         }
         return result;
-    }
-
-    /// 寻找 无参构造函数 (不支持成员类)
-    public static ConstructorInfo _findDefaultConstructor(ConstructorInfo[] constructors) {
-        for (var constructor : constructors) {
-            if (constructor.parameters().length == 0) {
-                return constructor;
-            }
-        }
-        return null;
     }
 
     public static FieldInfo[] _findFields(Class<?> rawClass, ClassInfo classInfo) {
@@ -100,46 +103,49 @@ public final class ReflectHelper {
         return list.toArray(MethodInfo[]::new);
     }
 
-    /// 返回当前 ClassInfo 所表示的枚举类的“真实”枚举类型。
-    /// 在 Java 中，枚举常量有时会被编译成枚举的匿名子类（匿名枚举类），
-    /// 这时直接拿匿名类的 ClassInfo 并不能代表真正的枚举类型。
-    /// 该方法的作用是：
-    /// - 如果 classInfo 表示的是匿名枚举类，则返回它的父类（即真正的枚举类）。
-    /// - 如果 classInfo 是普通的枚举类，则直接返回它自身。
-    /// - 如果不是枚举类，则返回 null。
-    /// 这样在处理枚举类型时，可以统一拿到“真实”的枚举声明类，方便后续处理。
-    ///
-    /// @param classInfo 需要判断的 ClassInfo 对象
-    /// @return 真实的枚举类型 ClassInfo，或者非枚举时返回 null
-    public static ClassInfo _findEnumClass(ClassInfo classInfo) {
-        if (classInfo.classType() == ENUM) {
-            return classInfo.isAnonymousClass() ? classInfo.superClass() : classInfo;
-        } else {
-            return null;
-        }
+    public static Class<?> _findRawClass(Type type) {
+        // 我们假设 此处 type 已经被正确过滤了 所以不做过多判断了
+        return switch (type) {
+            case Class<?> c -> c;
+            // 我们假设 ParameterizedType 不是用户自定义的 那么 getRawType 的返回值实际上永远都是 Class
+            case ParameterizedType p -> (Class<?>) p.getRawType();
+            default -> throw new IllegalArgumentException("unsupported type: " + type);
+        };
     }
 
-    public static TypeInfo _findComponentType(Type type) {
-        //数组只可能是 Class 或者 GenericArrayType 其余我们都返回 null
-        if (type instanceof Class<?> c) {
-            if (c.isArray()) {
-                return ScxReflect.getTypeInfo(c.getComponentType());
+    public static Map<TypeVariable<?>, TypeInfo> _findBindings(Type type, Map<TypeVariable<?>, TypeInfo> bindings) {
+        // 我们假设 此处 type 已经被正确过滤了 所以不做过多判断了
+        switch (type) {
+            // Class 没有 bindings 的概念
+            case Class<?> c -> {
+                return Map.of();
             }
-            return null;
-        } else if (type instanceof GenericArrayType g) {
-            return ScxReflect.getTypeInfo(g.getGenericComponentType());
+            // 我们假设 ParameterizedType 不是用户自定义的 那么 getRawType 的返回值实际上永远都是 Class
+            case ParameterizedType p -> {
+                //这里我们假设 typeParameters 和 actualTypeArguments 的长度和顺序是完全一一对应的
+                var typeParameters = ((Class<?>) p.getRawType()).getTypeParameters();
+                var actualTypeArguments = p.getActualTypeArguments();
+                var map = new LinkedHashMap<TypeVariable<?>, TypeInfo>();
+                for (int i = 0; i < typeParameters.length; i++) {
+                    var typeParameter = typeParameters[i];
+                    var actualTypeArgument = actualTypeArguments[i];
+                    var typeInfo = TypeFactory.getType(actualTypeArgument, bindings);
+                    map.put(typeParameter, typeInfo);
+                }
+                return map;
+            }
+            default -> throw new IllegalArgumentException("unsupported type: " + type);
         }
-        return null;
     }
 
-    public static MethodType _findMethodType(Method method, Set<AccessFlag> accessFlags) {
-        if (accessFlags.contains(AccessFlag.ABSTRACT)) {
-            return MethodType.ABSTRACT;
-        }
-        if (method.isDefault()) {
-            return MethodType.DEFAULT;
-        }
-        return MethodType.NORMAL;
+    public static TypeInfo _findComponentType(Type type, Map<TypeVariable<?>, TypeInfo> bindings) {
+        // 我们假设 此处 type 已经被正确过滤了 所以不做过多判断了
+        var componentType = switch (type) {
+            case Class<?> c -> c.componentType();
+            case GenericArrayType g -> g.getGenericComponentType();
+            default -> throw new IllegalArgumentException("ArrayType cannot have a generic array type");
+        };
+        return TypeFactory.getType(componentType, bindings);
     }
 
     public static ParameterInfo[] _findParameters(Executable rawExecutable, ExecutableInfo executableInfo) {
@@ -151,38 +157,84 @@ public final class ReflectHelper {
         return result;
     }
 
-    public static GenericInfo[] _findGenerics(TypeVariable<?>[] typeVariables, Type[] types) {
-        var result = new GenericInfo[typeVariables.length];
-        for (int i = 0; i < typeVariables.length; i = i + 1) {
-            result[i] = new GenericInfoImpl(typeVariables[i], types[i]);
-        }
-        return result;
-    }
 
-    public static Class<?> _findRawClass(Type t) {
-        if (t instanceof Class<?>) {
-            return (Class<?>) t;
-        } else if (t instanceof GenericArrayType g) {
-            return Array.newInstance(_findRawClass(g.getGenericComponentType()), 0).getClass();
-        } else if (t instanceof ParameterizedType p) {
-            return _findRawClass(p.getRawType());
-        } else if (t instanceof TypeVariable<?> v) {
-            return _findRawClass(v.getBounds()[0]);
-        } else if (t instanceof WildcardType w) {
-            return _findRawClass(w.getUpperBounds()[0]);
-        }
-        throw new RuntimeException("unknown type: " + t);
-    }
+    /// 寻找 无参构造函数 (不支持成员类)
+//    public static ConstructorInfo _findDefaultConstructor(ConstructorInfo[] constructors) {
+//        for (var constructor : constructors) {
+//            if (constructor.parameters().length == 0) {
+//                return constructor;
+//            }
+//        }
+//        return null;
+//    }
 
-    public static ClassInfo[] _findUpperBounds(TypeVariable<?> typeVariable) {
-        //todo 
-        Type[] bounds = typeVariable.getBounds();
-        var result = new ClassInfo[bounds.length];
-        for (int i = 0; i < bounds.length; i = i + 1) {
-//            result[i] = ScxReflect.getTypeInfo(bounds[i]);
-        }
-        return result;
-    }
+
+    /// 返回当前 ClassInfo 所表示的枚举类的“真实”枚举类型。
+    /// 在 Java 中，枚举常量有时会被编译成枚举的匿名子类（匿名枚举类），
+    /// 这时直接拿匿名类的 ClassInfo 并不能代表真正的枚举类型。
+    /// 该方法的作用是：
+    /// - 如果 classInfo 表示的是匿名枚举类，则返回它的父类（即真正的枚举类）。
+    /// - 如果 classInfo 是普通的枚举类，则直接返回它自身。
+    /// - 如果不是枚举类，则返回 null。
+    /// 这样在处理枚举类型时，可以统一拿到“真实”的枚举声明类，方便后续处理。
+    ///
+    /// @param classInfo 需要判断的 ClassInfo 对象
+    /// @return 真实的枚举类型 ClassInfo，或者非枚举时返回 null
+//    public static ClassInfo _findEnumClass(ClassInfo classInfo) {
+//        if (classInfo.classType() == ENUM) {
+//            return classInfo.isAnonymousClass() ? classInfo.superClass() : classInfo;
+//        } else {
+//            return null;
+//        }
+//    }
+
+//    public static TypeInfo _findComponentType(Type type) {
+//        //数组只可能是 Class 或者 GenericArrayType 其余我们都返回 null
+//        if (type instanceof Class<?> c) {
+//            if (c.isArray()) {
+//                return ScxReflect.getTypeInfo(c.getComponentType());
+//            }
+//            return null;
+//        } else if (type instanceof GenericArrayType g) {
+//            return ScxReflect.getTypeInfo(g.getGenericComponentType());
+//        }
+//        return null;
+//    }
+//
+
+
+//    public static GenericInfo[] _findGenerics(TypeVariable<?>[] typeVariables, Type[] types) {
+//        var result = new GenericInfo[typeVariables.length];
+//        for (int i = 0; i < typeVariables.length; i = i + 1) {
+//            result[i] = new GenericInfoImpl(typeVariables[i], types[i]);
+//        }
+//        return result;
+//    }
+
+//    public static Class<?> _findRawClass(Type t) {
+//        if (t instanceof Class<?>) {
+//            return (Class<?>) t;
+//        } else if (t instanceof GenericArrayType g) {
+//            return Array.newInstance(_findRawClass(g.getGenericComponentType()), 0).getClass();
+//        } else if (t instanceof ParameterizedType p) {
+//            return _findRawClass(p.getRawType());
+//        } else if (t instanceof TypeVariable<?> v) {
+//            return _findRawClass(v.getBounds()[0]);
+//        } else if (t instanceof WildcardType w) {
+//            return _findRawClass(w.getUpperBounds()[0]);
+//        }
+//        throw new RuntimeException("unknown type: " + t);
+//    }
+
+//    public static ClassInfo[] _findUpperBounds(TypeVariable<?> typeVariable) {
+//        //todo
+//        Type[] bounds = typeVariable.getBounds();
+//        var result = new ClassInfo[bounds.length];
+//        for (int i = 0; i < bounds.length; i = i + 1) {
+////            result[i] = ScxReflect.getTypeInfo(bounds[i]);
+//        }
+//        return result;
+//    }
 
 
 //    public static JavaType _findType(Type type, ClassInfo classInfo) {
@@ -318,7 +370,7 @@ public final class ReflectHelper {
 //            var superMethods = superClass.methods();
 //            for (var superMethod : superMethods) {
 //                var b = isOverride(methodInfo, superMethod);
-//                // 只查找第一次匹配的方法 
+//                // 只查找第一次匹配的方法
 //                if (b) {
 //                    return superMethod;
 //                }

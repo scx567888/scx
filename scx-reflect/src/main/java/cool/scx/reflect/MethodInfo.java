@@ -3,18 +3,28 @@ package cool.scx.reflect;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/// MethodInfo
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface MethodInfo extends ExecutableInfo {
 
+    /// 原始 Method
     Method rawMethod();
 
+    /// 名称
     String name();
 
-    MethodType methodType();
+    /// 方法种类
+    MethodKind methodKind();
 
+    /// 是否为 final 方法
     boolean isFinal();
 
+    /// 是否为 static 方法
     boolean isStatic();
 
+    /// 返回值
     TypeInfo returnType();
 
     /// 获取当前方法重写的父类的方法 (可能为空)

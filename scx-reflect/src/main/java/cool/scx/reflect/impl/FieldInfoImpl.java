@@ -1,9 +1,14 @@
-package cool.scx.reflect;
+package cool.scx.reflect.impl;
+
+import cool.scx.reflect.AccessModifier;
+import cool.scx.reflect.ClassInfo;
+import cool.scx.reflect.FieldInfo;
+import cool.scx.reflect.TypeInfo;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-import static cool.scx.reflect.ReflectHelper._findAccessModifier;
+import static cool.scx.reflect.impl.ReflectHelper._findAccessModifier;
 import static java.lang.reflect.AccessFlag.FINAL;
 import static java.lang.reflect.AccessFlag.STATIC;
 
@@ -18,16 +23,16 @@ public final class FieldInfoImpl implements FieldInfo {
     private final TypeInfo fieldType;
     private final Annotation[] annotations;
 
-    public FieldInfoImpl(Field field, ClassInfo declaringClass) {
+    FieldInfoImpl(Field field, ClassInfo declaringClass) {
         this.rawField = field;
         this.declaringClass = declaringClass;
-        this.name = field.getName();
-        var accessFlags = field.accessFlags();
+        this.name = this.rawField.getName();
+        var accessFlags = this.rawField.accessFlags();
         this.accessModifier = _findAccessModifier(accessFlags);
         this.isFinal = accessFlags.contains(FINAL);
         this.isStatic = accessFlags.contains(STATIC);
-        this.fieldType = ScxReflect.getTypeInfo(field.getGenericType());
-        this.annotations = field.getDeclaredAnnotations();
+        this.fieldType = TypeFactory.getType(this.rawField.getGenericType(), this.declaringClass.bindings());
+        this.annotations = this.rawField.getDeclaredAnnotations();
     }
 
     @Override
@@ -68,6 +73,30 @@ public final class FieldInfoImpl implements FieldInfo {
     @Override
     public Annotation[] annotations() {
         return annotations;
+    }
+
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+
+        // 修饰符
+        sb.append(accessModifier.name().toLowerCase());
+        if (isStatic) {
+            sb.append(" static");
+        }
+        if (isFinal) {
+            sb.append(" final");
+        }
+
+        // 类型
+        sb.append(" ");
+        sb.append(fieldType);
+
+        // 名称
+        sb.append(" ");
+        sb.append(name);
+
+        return sb.toString();
     }
 
 }

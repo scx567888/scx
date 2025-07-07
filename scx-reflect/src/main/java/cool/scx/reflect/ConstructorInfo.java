@@ -4,6 +4,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /// 构造函数 信息
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ConstructorInfo extends ExecutableInfo {
 
     /// 获取原始的 构造函数

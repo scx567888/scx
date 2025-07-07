@@ -1,10 +1,10 @@
 package cool.scx.reflect;
 
-/// 类的类型.
+/// 类的种类.
 ///
 /// @author scx567888
 /// @version 0.0.1
-public enum ClassType {
+public enum ClassKind {
 
     /// 普通类
     CONCRETE,

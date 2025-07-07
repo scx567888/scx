@@ -2,6 +2,10 @@ package cool.scx.reflect;
 
 import java.lang.reflect.Parameter;
 
+/// ParameterInfo
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ParameterInfo extends AnnotatedElementInfo {
 
     /// 原始 Parameter

@@ -2,6 +2,10 @@ package cool.scx.reflect;
 
 import java.lang.reflect.Field;
 
+/// FieldInfo
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface FieldInfo extends MemberInfo {
 
     /// 原始 Field

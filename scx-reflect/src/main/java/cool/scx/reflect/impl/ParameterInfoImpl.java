@@ -1,4 +1,8 @@
-package cool.scx.reflect;
+package cool.scx.reflect.impl;
+
+import cool.scx.reflect.ExecutableInfo;
+import cool.scx.reflect.ParameterInfo;
+import cool.scx.reflect.TypeInfo;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
@@ -11,12 +15,12 @@ public final class ParameterInfoImpl implements ParameterInfo {
     private final Annotation[] annotations;
     private final TypeInfo parameterType;
 
-    public ParameterInfoImpl(Parameter parameter, ExecutableInfo declaringExecutable) {
+    ParameterInfoImpl(Parameter parameter, ExecutableInfo declaringExecutable) {
         this.rawParameter = parameter;
         this.declaringExecutable = declaringExecutable;
-        this.name = parameter.getName();
-        this.parameterType = ScxReflect.getTypeInfo(parameter.getParameterizedType());
-        this.annotations = parameter.getDeclaredAnnotations();
+        this.name = this.rawParameter.getName();
+        this.parameterType = TypeFactory.getType(this.rawParameter.getParameterizedType(), this.declaringExecutable.declaringClass().bindings());
+        this.annotations = this.rawParameter.getDeclaredAnnotations();
     }
 
     @Override
@@ -42,6 +46,11 @@ public final class ParameterInfoImpl implements ParameterInfo {
     @Override
     public Annotation[] annotations() {
         return annotations;
+    }
+
+    @Override
+    public String toString() {
+        return parameterType.toString() + " " + name();
     }
 
 }

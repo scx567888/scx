@@ -1,15 +1,24 @@
 package cool.scx.reflect;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.TypeVariable;
+import java.util.Map;
 
-/// 类 信息
-public interface ClassInfo extends TypeInfo, AnnotatedElementInfo {
+/// ClassInfo
+///
+/// 在当前环境中 可以看作 「Class + 类型参数」.
+///
+/// @author scx567888
+/// @version 0.0.1
+public interface ClassInfo extends TypeInfo {
+
+    //***************** TypeInfo **************
 
     /// 原始类
     Class<?> rawClass();
 
-    /// 泛型列表
-    GenericInfo[] generics();
+    /// 泛型绑定
+    Map<TypeVariable<?>, TypeInfo> bindings();
 
     //************ 类的基本信息 ***************
 
@@ -20,7 +29,7 @@ public interface ClassInfo extends TypeInfo, AnnotatedElementInfo {
     AccessModifier accessModifier();
 
     /// 类的类型
-    ClassType classType();
+    ClassKind classKind();
 
     //************ 类属性 *****************
 
@@ -36,12 +45,6 @@ public interface ClassInfo extends TypeInfo, AnnotatedElementInfo {
     /// 是否 内部类
     boolean isMemberClass();
 
-    /// 是否基本类型
-    boolean isPrimitive();
-
-    /// 是否数组
-    boolean isArray();
-
     //************* 继承结构 *****************
 
     /// 父类 可能为空
@@ -56,22 +59,22 @@ public interface ClassInfo extends TypeInfo, AnnotatedElementInfo {
     ConstructorInfo[] constructors();
 
     /// 默认构造函数 (无参构造函数) 可能为空
-    ConstructorInfo defaultConstructor();
+//    ConstructorInfo defaultConstructor();
 
     /// Record 规范构造参数 可能为空
-    ConstructorInfo recordConstructor();
+//    ConstructorInfo recordConstructor();
 
     /// 字段列表
     FieldInfo[] fields();
 
     /// 获取类所有字段 包括继承自父类的字段
-    FieldInfo[] allFields();
+//    FieldInfo[] allFields();
 
     /// 方法列表
     MethodInfo[] methods();
 
     /// 获取类所有方法 包括继承自父类的方法
-    MethodInfo[] allMethods();
+//    MethodInfo[] allMethods();
 
     //************* 注解 ****************
 
@@ -79,15 +82,12 @@ public interface ClassInfo extends TypeInfo, AnnotatedElementInfo {
     Annotation[] annotations();
 
     /// 获取所有的注解 包括继承自父类的注解
-    Annotation[] allAnnotations();
+//    Annotation[] allAnnotations();
 
     //********** 其他信息 **************
 
     /// 枚举类型 (如果类是匿名枚举类的话可以正确获取到真正的枚举类型)
-    ClassInfo enumClass();
-
-    /// 数组成员类型
-    TypeInfo componentType();
+//    ClassInfo enumClass();
 
     //************* 辅助方法 **************
 

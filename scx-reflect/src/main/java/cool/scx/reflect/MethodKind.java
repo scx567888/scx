@@ -1,10 +1,10 @@
 package cool.scx.reflect;
 
-/// 方法类型
+/// 方法的种类
 ///
 /// @author scx567888
 /// @version 0.0.1
-public enum MethodType {
+public enum MethodKind {
 
     /// 普通方法
     NORMAL,
