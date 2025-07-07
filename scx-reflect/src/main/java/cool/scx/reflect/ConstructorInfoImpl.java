@@ -1,16 +1,15 @@
-package cool.scx.reflect.impl;
-
-import cool.scx.reflect.AccessModifier;
-import cool.scx.reflect.ClassInfo;
-import cool.scx.reflect.ConstructorInfo;
-import cool.scx.reflect.ParameterInfo;
+package cool.scx.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 
-import static cool.scx.reflect.impl.ReflectHelper._findAccessModifier;
-import static cool.scx.reflect.impl.ReflectHelper._findParameters;
+import static cool.scx.reflect.ReflectHelper._findAccessModifier;
+import static cool.scx.reflect.ReflectHelper._findParameters;
 
+/// 构造函数 信息
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ConstructorInfoImpl implements ConstructorInfo {
 
     private final Constructor<?> rawConstructor;
@@ -22,10 +21,10 @@ public final class ConstructorInfoImpl implements ConstructorInfo {
     ConstructorInfoImpl(Constructor<?> constructor, ClassInfo declaringClass) {
         this.rawConstructor = constructor;
         this.declaringClass = declaringClass;
-        var accessFlags = constructor.accessFlags();
+        var accessFlags = this.rawConstructor.accessFlags();
         this.accessModifier = _findAccessModifier(accessFlags);
         this.parameters = _findParameters(this.rawConstructor, this);
-        this.annotations = constructor.getDeclaredAnnotations();
+        this.annotations = this.rawConstructor.getDeclaredAnnotations();
     }
 
     @Override

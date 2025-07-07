@@ -7,7 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ConstructorInfo extends ExecutableInfo {
+public sealed interface ConstructorInfo extends ExecutableInfo permits ConstructorInfoImpl {
 
     /// 获取原始的 构造函数
     Constructor<?> rawConstructor();
