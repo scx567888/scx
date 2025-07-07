@@ -1,12 +1,10 @@
-package cool.scx.reflect.impl;
-
-import cool.scx.reflect.TypeInfo;
+package cool.scx.reflect;
 
 import java.lang.reflect.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class TypeFactory {
+public final class ScxReflect {
 
     static final Map<Type, TypeInfo> TYPE_CACHE = new ConcurrentHashMap<>();
 
