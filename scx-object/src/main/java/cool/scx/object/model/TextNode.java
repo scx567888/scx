@@ -1,4 +1,11 @@
 package cool.scx.object.model;
 
-public interface TextNode extends ValueNode {
+public class TextNode implements ValueNode {
+
+    private final String _value;
+
+    public TextNode(String v) {
+        this._value = v;
+    }
+
 }

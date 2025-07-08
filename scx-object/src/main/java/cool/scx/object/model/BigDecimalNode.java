@@ -1,5 +1,13 @@
 package cool.scx.object.model;
 
-public interface BigDecimalNode extends NumericNode {
+import java.math.BigDecimal;
 
+public class BigDecimalNode implements NumericNode {
+
+    private final BigDecimal _value;
+
+    public BigDecimalNode(BigDecimal v) {
+        this._value = v;
+    }
+    
 }
