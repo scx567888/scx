@@ -12,8 +12,8 @@ public class ObjectNode implements ContainerNode, Iterable<Map.Entry<String, Nod
         this._children = new LinkedHashMap<>();
     }
 
-    public void put(String name, Node node) {
-        this._children.put(name, node);
+    public Node put(String name, Node node) {
+        return this._children.put(name, node);
     }
 
     public Node get(String name) {
