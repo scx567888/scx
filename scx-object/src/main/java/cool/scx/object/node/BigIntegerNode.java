@@ -1,4 +1,4 @@
-package cool.scx.object.model;
+package cool.scx.object.node;
 
 import java.math.BigInteger;
 
