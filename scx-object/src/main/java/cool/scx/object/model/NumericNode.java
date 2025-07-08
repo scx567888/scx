@@ -1,5 +1,7 @@
 package cool.scx.object.model;
 
-public interface NumericNode extends ValueNode {
-    
+public sealed interface NumericNode extends ValueNode permits IntNode, LongNode, BigIntegerNode, FloatNode, DoubleNode, BigDecimalNode {
+
+    Number numberValue();
+
 }
