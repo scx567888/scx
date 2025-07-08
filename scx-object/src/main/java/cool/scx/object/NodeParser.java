@@ -5,18 +5,18 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import cool.scx.object.model.*;
+import cool.scx.object.node.*;
 
 import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.StringWriter;
 
 /// json 解析器 目前 基于 jackson
-public class ScxJsonParser {
+public class NodeParser {
 
     private final JsonFactory jsonFactory;
 
-    public ScxJsonParser(JsonFactory jsonFactory) {
+    public NodeParser(JsonFactory jsonFactory) {
         this.jsonFactory = jsonFactory;
     }
 
