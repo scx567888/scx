@@ -16,5 +16,5 @@ public final class IntNode implements NumericNode {
     public Number numberValue() {
         return _value;
     }
-    
+
 }

@@ -11,5 +11,5 @@ public class TextNode implements ValueNode {
     public String value() {
         return _value;
     }
-    
+
 }

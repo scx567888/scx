@@ -18,5 +18,5 @@ public final class BigDecimalNode implements NumericNode {
     public Number numberValue() {
         return _value;
     }
-    
+
 }
