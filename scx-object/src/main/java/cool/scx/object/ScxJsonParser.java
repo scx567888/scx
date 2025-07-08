@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import cool.scx.object.model.*;
 
+import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -31,6 +33,10 @@ public class ScxJsonParser {
         var stringWriter = new StringWriter();
         var generator = jsonFactory.createGenerator(stringWriter);
         try (generator) {
+            // XML 特殊处理
+            if (generator instanceof ToXmlGenerator x) {
+                x.setNextName(QName.valueOf("Root"));
+            }
             writeNode(generator, node);
         }
         return stringWriter.toString();
@@ -44,7 +50,12 @@ public class ScxJsonParser {
                     var fieldName = parser.currentName();
                     parser.nextToken();
                     var childNode = parseNode(parser);
-                    objectNode.put(fieldName, childNode);
+                    var oldNode = objectNode.get(fieldName);
+                    if (oldNode != null) {
+                        handleDuplicateField(fieldName, objectNode, oldNode, childNode);
+                    } else {
+                        objectNode.put(fieldName, childNode);
+                    }
                 }
                 yield objectNode;
             }
@@ -103,6 +114,19 @@ public class ScxJsonParser {
             case BooleanNode booleanNode -> generator.writeBoolean(booleanNode.value());
             case NullNode _ -> generator.writeNull();
             default -> throw new IOException("Unsupported Node Type: " + node.getClass().getName());
+        }
+    }
+
+    /// 重复字段 (一般只在 XML 中才会出现)
+    private void handleDuplicateField(String fieldName, ObjectNode objectNode, Node oldNode, Node newNode) {
+        //我们默认尝试转换成 数组 
+        if (oldNode instanceof ArrayNode a) {
+            a.add(newNode);
+        } else {
+            var arrayNode = new ArrayNode();
+            arrayNode.add(oldNode);
+            arrayNode.add(newNode);
+            objectNode.put(fieldName, arrayNode);
         }
     }
 
