@@ -1,6 +1,6 @@
 package cool.scx.object.model;
 
-public class DoubleNode implements NumericNode {
+public final class DoubleNode implements NumericNode {
 
     private final double _value;
 
@@ -8,4 +8,13 @@ public class DoubleNode implements NumericNode {
         this._value = v;
     }
 
+    public double value() {
+        return _value;
+    }
+
+    @Override
+    public Number numberValue() {
+        return _value;
+    }
+    
 }
