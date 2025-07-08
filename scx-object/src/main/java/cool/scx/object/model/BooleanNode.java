@@ -11,4 +11,8 @@ public class BooleanNode implements ValueNode {
         this._value = v;
     }
 
+    public boolean value() {
+        return _value;
+    }
+    
 }

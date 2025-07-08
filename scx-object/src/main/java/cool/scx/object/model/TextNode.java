@@ -8,4 +8,8 @@ public class TextNode implements ValueNode {
         this._value = v;
     }
 
+    public String value() {
+        return _value;
+    }
+    
 }
