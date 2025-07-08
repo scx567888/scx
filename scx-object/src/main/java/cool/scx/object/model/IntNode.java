@@ -14,7 +14,7 @@ public final class IntNode implements NumericNode {
 
     @Override
     public Number numberValue() {
-        return value();
+        return _value;
     }
     
 }
