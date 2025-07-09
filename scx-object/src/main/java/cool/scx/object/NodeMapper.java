@@ -192,7 +192,7 @@ public class NodeMapper {
     public ObjectNode beanValueToTree(Object value, ClassInfo classInfo, NodeMapper mapper) {
         var objectNode = new ObjectNode();
         var allFields = classInfo.allFields();
-        for (var fieldInfo :  allFields) {
+        for (var fieldInfo : allFields) {
             //只处理 public 非静态字段
             if (fieldInfo.accessModifier() != AccessModifier.PUBLIC || fieldInfo.isStatic()) {
                 continue;
@@ -201,7 +201,7 @@ public class NodeMapper {
                 var fieldValue = fieldInfo.get(value);
                 var node = mapper.valueToNode(fieldValue);
                 //因为 allFields 是按照 子类 -> 父类 -> 父类的父类
-                //这其中可能出现 重名字段 所以我们 putIfAbsent 以保证子类的同名字段可以覆盖父类的
+                //这其中可能出现 重名字段 所以我们 putIfAbsent 以防止父类同名字段覆盖子类
                 objectNode.putIfAbsent(fieldInfo.name(), node);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);

@@ -16,6 +16,10 @@ public class ObjectNode implements ContainerNode, Iterable<Map.Entry<String, Nod
         return this._children.put(name, node);
     }
 
+    public Node putIfAbsent(String name, Node node) {
+        return this._children.putIfAbsent(name, node);
+    }
+
     public Node get(String name) {
         return this._children.get(name);
     }
