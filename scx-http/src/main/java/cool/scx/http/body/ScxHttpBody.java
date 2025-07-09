@@ -1,7 +1,5 @@
 package cool.scx.http.body;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.media.event_stream.ClientEventStream;
 import cool.scx.http.media.form_params.FormParams;
@@ -9,6 +7,8 @@ import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.media.object.ObjectReader;
 import cool.scx.http.media.path.PathReader;
 import cool.scx.http.media.string.StringReader;
+import cool.scx.object.node.Node;
+import cool.scx.reflect.TypeReference;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -56,7 +56,7 @@ public interface ScxHttpBody {
         return as(MULTI_PART_READER);
     }
 
-    default JsonNode asTree() throws BodyReadException, BodyAlreadyConsumedException {
+    default Node asTree() throws BodyReadException, BodyAlreadyConsumedException {
         return as(TREE_READER);
     }
 

@@ -1,6 +1,5 @@
 package cool.scx.http.sender;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
 import cool.scx.http.media.event_stream.ServerEventStream;
@@ -14,6 +13,7 @@ import cool.scx.http.media.object.ObjectWriter;
 import cool.scx.http.media.path.PathWriter;
 import cool.scx.http.media.string.StringWriter;
 import cool.scx.http.media.tree.TreeWriter;
+import cool.scx.object.node.Node;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -63,7 +63,7 @@ public interface ScxHttpSender<T> {
         return send(new MultiPartWriter(multiPart));
     }
 
-    default T send(JsonNode jsonNode) throws BodyAlreadySentException, HttpSendException {
+    default T send(Node jsonNode) throws BodyAlreadySentException, HttpSendException {
         return send(new TreeWriter(jsonNode));
     }
 
