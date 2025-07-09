@@ -3,7 +3,7 @@ package cool.scx.object.node;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public sealed interface ValueNode extends Node permits BooleanNode, NullNode, NumericNode, TextNode {
+public sealed interface ValueNode extends Node permits BooleanNode, NumericNode, TextNode {
 
     int asInt();
 
