@@ -9,7 +9,7 @@ import cool.scx.reflect.TypeReference;
 
 import java.io.IOException;
 
-public class ScxObject {
+public final class ScxObject {
 
     private static final NodeCodec JSON_CODEC = new NodeCodec(new JsonFactory());
 
