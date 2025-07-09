@@ -1,4 +1,4 @@
-package cool.scx.code.test;
+package cool.scx.codec.test;
 
 public class CodecTest {
 
