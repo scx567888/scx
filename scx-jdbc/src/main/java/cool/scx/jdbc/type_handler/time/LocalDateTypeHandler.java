@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.time.LocalDate;
 
-import static cool.scx.common.constant.ScxDateTimeFormatter.yyyy_MM_dd;
+import static cool.scx.common.constant.DateTimeFormatters.yyyy_MM_dd;
 
 /// 为不支持 LocalDate 的数据库添加 string 类型的兼容支持
 ///
