@@ -1,13 +1,12 @@
 package cool.scx.object;
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import cool.scx.object.node.Node;
 import cool.scx.reflect.ScxReflect;
 import cool.scx.reflect.TypeInfo;
 import cool.scx.reflect.TypeReference;
-
-import java.io.IOException;
 
 public final class ScxObject {
 
@@ -17,19 +16,19 @@ public final class ScxObject {
 
     private static final NodeMapper NODE_MAPPER = new NodeMapper();
 
-    public static Node fromJson(String json) throws IOException {
+    public static Node fromJson(String json) throws JsonProcessingException {
         return JSON_CODEC.parse(json);
     }
 
-    public static String toJson(Node node) throws IOException {
+    public static String toJson(Node node) throws JsonProcessingException {
         return JSON_CODEC.serializeAsString(node);
     }
 
-    public static Node fromXML(String xml) throws IOException {
+    public static Node fromXml(String xml) throws JsonProcessingException {
         return XML_CODEC.parse(xml);
     }
 
-    public static String toXML(Node node) throws IOException {
+    public static String toXml(Node node) throws JsonProcessingException {
         return XML_CODEC.serializeAsString(node);
     }
 
@@ -46,40 +45,40 @@ public final class ScxObject {
         return nodeToValue(node, type);
     }
 
-    public static <T> T fromJson(String json, TypeInfo type) throws IOException {
+    public static <T> T fromJson(String json, TypeInfo type) throws JsonProcessingException {
         var node = fromJson(json);
         return nodeToValue(node, type);
     }
 
-    public static <T> T fromJson(String json, Class<T> type) throws IOException {
+    public static <T> T fromJson(String json, Class<T> type) throws JsonProcessingException {
         return fromJson(json, ScxReflect.getType(type));
     }
 
-    public static <T> T fromJson(String json, TypeReference<T> type) throws IOException {
+    public static <T> T fromJson(String json, TypeReference<T> type) throws JsonProcessingException {
         return fromJson(json, ScxReflect.getType(type));
     }
 
-    public static String toJson(Object object) throws IOException {
+    public static String toJson(Object object) throws JsonProcessingException {
         var node = valueToNode(object);
         return toJson(node);
     }
 
-    public static <T> T fromXML(String xml, TypeInfo type) throws IOException {
-        var node = fromXML(xml);
+    public static <T> T fromXml(String xml, TypeInfo type) throws JsonProcessingException {
+        var node = fromXml(xml);
         return nodeToValue(node, type);
     }
 
-    public static <T> T fromXML(String xml, Class<T> type) throws IOException {
-        return fromXML(xml, ScxReflect.getType(type));
+    public static <T> T fromXml(String xml, Class<T> type) throws JsonProcessingException {
+        return fromXml(xml, ScxReflect.getType(type));
     }
 
-    public static <T> T fromXML(String xml, TypeReference<T> type) throws IOException {
-        return fromXML(xml, ScxReflect.getType(type));
+    public static <T> T fromXml(String xml, TypeReference<T> type) throws JsonProcessingException {
+        return fromXml(xml, ScxReflect.getType(type));
     }
 
-    public static String toXML(Object object) throws IOException {
+    public static String toXml(Object object) throws JsonProcessingException {
         var node = valueToNode(object);
-        return toXML(node);
+        return toXml(node);
     }
 
     public static <T> T convertValue(Object value, TypeReference<T> type) {
