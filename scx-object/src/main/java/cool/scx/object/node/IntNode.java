@@ -60,4 +60,9 @@ public final class IntNode implements NumericNode {
         return _value != 0;
     }
 
+    @Override
+    public String toString() {
+        return asText();
+    }
+
 }
