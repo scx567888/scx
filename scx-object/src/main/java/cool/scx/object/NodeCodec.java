@@ -11,17 +11,27 @@ import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.StringWriter;
 
-/// json 解析器 目前 基于 jackson
-public class NodeParser {
+/// Node 编解码器
+/// 目前 基于 jackson
+public class NodeCodec {
 
     private final JsonFactory jsonFactory;
 
-    public NodeParser(JsonFactory jsonFactory) {
+    public NodeCodec(JsonFactory jsonFactory) {
         this.jsonFactory = jsonFactory;
     }
 
-    public Node readTree(String json) throws IOException {
-        var parser = jsonFactory.createParser(json);
+    public Node parse(String s) throws IOException {
+        return parse(jsonFactory.createParser(s));
+    }
+
+    public String serializeAsString(Node node) throws IOException {
+        var writer = new StringWriter();
+        serialize(jsonFactory.createGenerator(writer), node);
+        return writer.toString();
+    }
+
+    private Node parse(JsonParser parser) throws IOException {
         try (parser) {
             // 推进到 第一个有意义的 token
             parser.nextToken();
@@ -29,9 +39,7 @@ public class NodeParser {
         }
     }
 
-    public String writeTreeToString(Node node) throws IOException {
-        var stringWriter = new StringWriter();
-        var generator = jsonFactory.createGenerator(stringWriter);
+    private void serialize(JsonGenerator generator, Node node) throws IOException {
         try (generator) {
             // XML 特殊处理
             if (generator instanceof ToXmlGenerator x) {
@@ -39,7 +47,6 @@ public class NodeParser {
             }
             writeNode(generator, node);
         }
-        return stringWriter.toString();
     }
 
     private Node parseNode(JsonParser parser) throws IOException {
