@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cool.scx</groupId>
+        <artifactId>scx</artifactId>
+        <version>3.8.7</version>
+    </parent>
+
+    <artifactId>scx-object</artifactId>
+    <packaging>jar</packaging>
+
+    <name>SCX Object</name>
+    <url>https://github.com/scx567888/scx</url>
+    <description>
+        SCX Object
+    </description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-functional</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-collections</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-reflect</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+
+        <!-- Jackson 数据类型拓展包 针对 (jsr310)[https://jcp.org/en/jsr/detail?id=310] -->
+        <!-- 添加了对新的时间和日期Api (LocalDateTime、DateTimeFormatter) 等的支持 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
+        <!-- Jackson XML 兼容包 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+
+        <!-- TestNG 测试包 -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+</project>
