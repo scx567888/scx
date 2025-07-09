@@ -13,7 +13,7 @@ import java.io.StringWriter;
 
 /// Node 编解码器
 /// 目前 基于 jackson
-public class NodeCodec {
+public final class NodeCodec {
 
     private final JsonFactory jsonFactory;
 
