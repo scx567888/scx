@@ -1,15 +1,13 @@
 package cool.scx.object;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import cool.scx.object.node.*;
 
 import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.UncheckedIOException;
 
 /// Node 编解码器
 /// 目前 基于 jackson
@@ -21,32 +19,34 @@ public final class NodeCodec {
         this.jsonFactory = jsonFactory;
     }
 
-    public Node parse(String s) throws IOException {
-        return parse(jsonFactory.createParser(s));
-    }
-
-    public String serializeAsString(Node node) throws IOException {
-        var writer = new StringWriter();
-        serialize(jsonFactory.createGenerator(writer), node);
-        return writer.toString();
-    }
-
-    private Node parse(JsonParser parser) throws IOException {
-        try (parser) {
+    public Node parse(String s) throws JsonProcessingException {
+        try (var parser = jsonFactory.createParser(s)) {
             // 推进到 第一个有意义的 token
             parser.nextToken();
             return parseNode(parser);
+        } catch (JsonProcessingException e) {
+            throw e;
+        } catch (IOException e) {
+            //理论上永远不可能发生
+            throw new UncheckedIOException(e);
         }
     }
 
-    private void serialize(JsonGenerator generator, Node node) throws IOException {
-        try (generator) {
+    public String serializeAsString(Node node) throws JsonProcessingException {
+        var writer = new StringWriter();
+        try (var generator = jsonFactory.createGenerator(writer)) {
             // XML 特殊处理
             if (generator instanceof ToXmlGenerator x) {
                 x.setNextName(QName.valueOf("Root"));
             }
             writeNode(generator, node);
+        } catch (JsonProcessingException e) {
+            throw e;
+        } catch (IOException e) {
+            //理论上永远不可能发生
+            throw new UncheckedIOException(e);
         }
+        return writer.toString();
     }
 
     private Node parseNode(JsonParser parser) throws IOException {
