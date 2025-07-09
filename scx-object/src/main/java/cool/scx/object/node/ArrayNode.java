@@ -32,6 +32,10 @@ public final class ArrayNode implements ContainerNode, Iterable<Node> {
         return this._children.remove(index);
     }
 
+    public int size() {
+        return this._children.size();
+    }
+
     @Override
     public Iterator<Node> iterator() {
         return _children.iterator();
