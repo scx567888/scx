@@ -79,7 +79,7 @@ public final class ScxObject {
 
     public static String toXML(Object object) throws IOException {
         var node = valueToNode(object);
-        return toJson(node);
+        return toXML(node);
     }
 
     public static <T> T convertValue(Object value, TypeReference<T> type) {
