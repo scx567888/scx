@@ -3,16 +3,19 @@ package cool.scx.object;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
+import cool.scx.object.NodeCodecOptions.DuplicateFieldPolicy;
 import cool.scx.object.node.Node;
 import cool.scx.reflect.ScxReflect;
 import cool.scx.reflect.TypeInfo;
 import cool.scx.reflect.TypeReference;
 
+import static cool.scx.object.NodeCodecOptions.DuplicateFieldPolicy.*;
+
 public final class ScxObject {
 
-    private static final NodeCodec JSON_CODEC = new NodeCodec(new JsonFactory());
+    private static final NodeCodec JSON_CODEC = new NodeCodec(new JsonFactory(), new NodeCodecOptions().duplicateFieldPolicy(COVER));
 
-    private static final NodeCodec XML_CODEC = new NodeCodec(new XmlFactory());
+    private static final NodeCodec XML_CODEC = new NodeCodec(new XmlFactory(), new NodeCodecOptions().duplicateFieldPolicy(MERGE));
 
     private static final NodeMapper NODE_MAPPER = new NodeMapper();
 

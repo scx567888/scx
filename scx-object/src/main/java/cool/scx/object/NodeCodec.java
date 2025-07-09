@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import cool.scx.object.node.*;
 
-import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UncheckedIOException;
@@ -14,9 +13,11 @@ import java.io.UncheckedIOException;
 public final class NodeCodec {
 
     private final JsonFactory jsonFactory;
+    private final NodeCodecOptions options;
 
-    public NodeCodec(JsonFactory jsonFactory) {
+    public NodeCodec(JsonFactory jsonFactory, NodeCodecOptions options) {
         this.jsonFactory = jsonFactory;
+        this.options = options;
     }
 
     public Node parse(String s) throws JsonProcessingException {
@@ -37,7 +38,7 @@ public final class NodeCodec {
         try (var generator = jsonFactory.createGenerator(writer)) {
             // XML 特殊处理
             if (generator instanceof ToXmlGenerator x) {
-                x.setNextName(QName.valueOf("Root"));
+                x.setNextName(options.xmlRootTagName());
             }
             writeNode(generator, node);
         } catch (JsonProcessingException e) {
@@ -126,14 +127,28 @@ public final class NodeCodec {
 
     /// 重复字段 (一般只在 XML 中才会出现)
     private void handleDuplicateField(String fieldName, ObjectNode objectNode, Node oldNode, Node newNode) {
-        //我们默认尝试转换成 数组 
-        if (oldNode instanceof ArrayNode a) {
-            a.add(newNode);
-        } else {
-            var arrayNode = new ArrayNode();
-            arrayNode.add(oldNode);
-            arrayNode.add(newNode);
-            objectNode.put(fieldName, arrayNode);
+        var duplicateFieldPolicy = options.duplicateFieldPolicy();
+        switch (duplicateFieldPolicy) {
+            case COVER -> {
+                objectNode.put(fieldName, newNode);
+            }
+            case IGNORE -> {
+                // 什么都不做 
+            }
+            case THROW -> {
+                throw new IllegalStateException("检测到重复 Field");
+            }
+            case MERGE -> {
+                //我们默认尝试转换成 数组 
+                if (oldNode instanceof ArrayNode a) {
+                    a.add(newNode);
+                } else {
+                    var arrayNode = new ArrayNode();
+                    arrayNode.add(oldNode);
+                    arrayNode.add(newNode);
+                    objectNode.put(fieldName, arrayNode);
+                }
+            }
         }
     }
 
