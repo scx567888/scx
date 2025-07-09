@@ -1,5 +1,5 @@
 package cool.scx.object.node;
 
-public interface ContainerNode extends Node {
+public sealed interface ContainerNode extends Node permits ArrayNode, ObjectNode {
 
 }
