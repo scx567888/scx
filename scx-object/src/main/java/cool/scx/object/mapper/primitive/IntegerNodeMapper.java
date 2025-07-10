@@ -1,5 +1,6 @@
 package cool.scx.object.mapper.primitive;
 
+import cool.scx.object.mapper.NodeMapperSelector;
 import cool.scx.object.node.IntNode;
 import cool.scx.object.node.Node;
 import cool.scx.object.node.NullNode;
@@ -12,7 +13,7 @@ public class IntegerNodeMapper extends PrimitiveNodeMapper<Integer> {
     }
 
     @Override
-    public Node toNode(Integer value) {
+    public Node toNode(Integer value, NodeMapperSelector selector) {
         return new IntNode(value);
     }
 

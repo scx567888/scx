@@ -1,5 +1,6 @@
 package cool.scx.object.mapper.primitive;
 
+import cool.scx.object.mapper.NodeMapperSelector;
 import cool.scx.object.node.FloatNode;
 import cool.scx.object.node.Node;
 import cool.scx.object.node.NullNode;
@@ -12,7 +13,7 @@ public class FloatNodeMapper extends PrimitiveNodeMapper<Float> {
     }
 
     @Override
-    public Node toNode(Float value) {
+    public Node toNode(Float value, NodeMapperSelector selector) {
         return new FloatNode(value);
     }
 

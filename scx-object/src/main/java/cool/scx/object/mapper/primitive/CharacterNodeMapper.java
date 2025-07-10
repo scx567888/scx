@@ -1,5 +1,6 @@
 package cool.scx.object.mapper.primitive;
 
+import cool.scx.object.mapper.NodeMapperSelector;
 import cool.scx.object.node.Node;
 import cool.scx.object.node.NullNode;
 import cool.scx.object.node.TextNode;
@@ -11,7 +12,7 @@ public class CharacterNodeMapper extends PrimitiveNodeMapper<Character> {
     }
 
     @Override
-    public Node toNode(Character value) {
+    public Node toNode(Character value, NodeMapperSelector selector) {
         return new TextNode(String.valueOf((char) value));
     }
 

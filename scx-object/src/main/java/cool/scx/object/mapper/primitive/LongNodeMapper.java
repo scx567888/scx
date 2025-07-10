@@ -1,5 +1,6 @@
 package cool.scx.object.mapper.primitive;
 
+import cool.scx.object.mapper.NodeMapperSelector;
 import cool.scx.object.node.LongNode;
 import cool.scx.object.node.Node;
 import cool.scx.object.node.NullNode;
@@ -12,7 +13,7 @@ public class LongNodeMapper extends PrimitiveNodeMapper<Long> {
     }
 
     @Override
-    public Node toNode(Long value) {
+    public Node toNode(Long value, NodeMapperSelector selector) {
         return new LongNode(value);
     }
 

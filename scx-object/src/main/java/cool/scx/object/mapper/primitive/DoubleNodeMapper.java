@@ -1,5 +1,6 @@
 package cool.scx.object.mapper.primitive;
 
+import cool.scx.object.mapper.NodeMapperSelector;
 import cool.scx.object.node.DoubleNode;
 import cool.scx.object.node.Node;
 import cool.scx.object.node.NullNode;
@@ -12,7 +13,7 @@ public class DoubleNodeMapper extends PrimitiveNodeMapper<Double> {
     }
 
     @Override
-    public Node toNode(Double value) {
+    public Node toNode(Double value, NodeMapperSelector selector) {
         return new DoubleNode(value);
     }
 
