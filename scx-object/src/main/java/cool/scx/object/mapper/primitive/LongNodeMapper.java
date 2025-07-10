@@ -1,6 +1,9 @@
 package cool.scx.object.mapper.primitive;
 
-import cool.scx.object.node.*;
+import cool.scx.object.node.LongNode;
+import cool.scx.object.node.Node;
+import cool.scx.object.node.NullNode;
+import cool.scx.object.node.ValueNode;
 
 public class LongNodeMapper extends PrimitiveNodeMapper<Long> {
 

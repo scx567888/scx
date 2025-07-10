@@ -19,11 +19,11 @@ public class ByteNodeMapper extends PrimitiveNodeMapper<Byte> {
     @Override
     public Byte fromNode0(Node node) {
         //1, 处理 null
-        if (node== NullNode.NULL){
+        if (node == NullNode.NULL) {
             return null;
         }
         //2, 只处理值类型
-        if (node instanceof ValueNode valueNode){
+        if (node instanceof ValueNode valueNode) {
             return (byte) valueNode.asInt();
         }
         //3, 非值类型无法转换直接报错 

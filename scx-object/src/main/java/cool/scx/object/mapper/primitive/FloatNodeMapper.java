@@ -19,11 +19,11 @@ public class FloatNodeMapper extends PrimitiveNodeMapper<Float> {
     @Override
     public Float fromNode0(Node node) {
         //1, 处理 null
-        if (node== NullNode.NULL){
+        if (node == NullNode.NULL) {
             return null;
         }
         //2, 只处理值类型
-        if (node instanceof ValueNode valueNode){
+        if (node instanceof ValueNode valueNode) {
             return valueNode.asFloat();
         }
         //3, 非值类型无法转换直接报错 
