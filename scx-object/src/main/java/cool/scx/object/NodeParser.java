@@ -59,7 +59,7 @@ public class NodeParser {
         var objectNode = new ObjectNode();
         var fieldCount = 0;
         while (parser.nextToken() != JsonToken.END_OBJECT) {
-            if (fieldCount > options.maxFieldCount()) {
+            if (fieldCount >= options.maxFieldCount()) {
                 throw new JsonParseException(parser, "对象字段数超过限制: 最大 " + options.maxFieldCount());
             }
             var fieldName = parser.currentName();
@@ -80,7 +80,7 @@ public class NodeParser {
         var arrayNode = new ArrayNode();
         var arraySize = 0;
         while (parser.nextToken() != JsonToken.END_ARRAY) {
-            if (arraySize > options.maxArraySize()) {
+            if (arraySize >= options.maxArraySize()) {
                 throw new JsonParseException(parser, "数组长度超过限制: 最大 " + options.maxArraySize());
             }
             var childNode = parseNode(parser, nestingDepth);
