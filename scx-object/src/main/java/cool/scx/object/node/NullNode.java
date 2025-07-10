@@ -8,5 +8,5 @@ public final class NullNode implements Node {
     public String toString() {
         return "null";
     }
-    
+
 }

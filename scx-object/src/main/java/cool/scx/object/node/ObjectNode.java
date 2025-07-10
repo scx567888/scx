@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public final class ObjectNode implements ContainerNode, Iterable<Map.Entry<String, Node>> {
+public final class ObjectNode implements Node, Iterable<Map.Entry<String, Node>> {
 
     private final Map<String, Node> _children;
 

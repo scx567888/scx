@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public final class ArrayNode implements ContainerNode, Iterable<Node> {
+public final class ArrayNode implements Node, Iterable<Node> {
 
     private final List<Node> _children;
 
