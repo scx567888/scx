@@ -20,9 +20,9 @@ public class NodeParserOptions {
     public NodeParserOptions() {
         this.duplicateFieldPolicy = DuplicateFieldPolicy.COVER;
         this.maxNestingDepth = 200;
-        this.maxArraySize = 20000;
+        this.maxArraySize = 10 * 10000; 
         this.maxFieldCount = 5000;
-        this.maxStringLength = 2000 * 10000;// 2千万
+        this.maxStringLength = 2000 * 10000;
         this.maxFieldNameLength = 50000;
         this.maxNumberLength = 1000;
     }
