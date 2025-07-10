@@ -9,16 +9,13 @@ public class StringNodeMapper implements NodeMapper<String> {
 
     @Override
     public Node toNode(String value) {
-        if (value == null) {
-            return NullNode.NULL;
-        }
         return new TextNode(value);
     }
 
     @Override
     public String fromNode(Node node) {
         //1, 处理 null
-        if (node == null || node == NullNode.NULL) {
+        if (node == NullNode.NULL) {
             return null;
         }
         //2, 只处理值类型
