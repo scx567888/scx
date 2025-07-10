@@ -49,7 +49,7 @@ public class NodeParser {
         var currentToken = parser.currentToken();
         var nextNestingDepth = currentToken == START_OBJECT || currentToken == START_ARRAY ? nestingDepth + 1 : nestingDepth;
         if (nextNestingDepth > options.maxNestingDepth()) {
-            throw new JsonParseException(parser, "嵌套深度超过限制 : 最大 " + options.maxNestingDepth());
+            throw new JsonParseException(parser, "嵌套深度超过限制: 最大 " + options.maxNestingDepth());
         }
         return switch (currentToken) {
             case START_OBJECT -> parseObject(parser, nextNestingDepth);
@@ -129,7 +129,7 @@ public class NodeParser {
         };
     }
 
-    /// 重复字段 (一般只在 XML 中才会出现)
+    /// 处理重复字段 (一般只在 XML 中才会出现)
     private void handleDuplicateField(JsonParser parser, String fieldName, ObjectNode parentNode, Node oldChildNode, Node newChildNode) throws JsonParseException {
         var duplicateFieldPolicy = options.duplicateFieldPolicy();
         switch (duplicateFieldPolicy) {
