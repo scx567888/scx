@@ -34,6 +34,11 @@ public final class ObjectNode implements ContainerNode, Iterable<Map.Entry<Strin
     }
 
     @Override
+    public String toString() {
+        return _children.toString();
+    }
+
+    @Override
     public boolean equals(Object object) {
         if (object instanceof ObjectNode objectNode) {
             return _children.equals(objectNode._children);

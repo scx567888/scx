@@ -78,5 +78,5 @@ public final class BigIntegerNode implements NumericNode {
     public int hashCode() {
         return Objects.hashCode(_value);
     }
-    
+
 }
