@@ -32,7 +32,7 @@ public class NodeParser {
             if (firstToken == null) {
                 throw new JsonParseException("异常输入 !!!");
             }
-            var node = parseNode(parser);
+            var node = parseNode(parser, 0);
             var trailingToken = parser.nextToken();
             if (trailingToken != null) {
                 throw new JsonParseException("异常结束 !!!");
@@ -41,22 +41,25 @@ public class NodeParser {
         }
     }
 
-    private Node parseNode(JsonParser parser) throws IOException {
+    private Node parseNode(JsonParser parser, int depth) throws IOException {
+        if (depth > options.maxDepth()) {
+            throw new JsonParseException("深度超过限制:" + depth);
+        }
         var currentToken = parser.currentToken();
         if (currentToken == JsonToken.START_OBJECT) {
-            return parseObject(parser);
+            return parseObject(parser, depth + 1);
         } else if (currentToken == JsonToken.START_ARRAY) {
-            return parseArray(parser);
+            return parseArray(parser, depth + 1);
         }
         return parseScalar(parser);
     }
 
-    private Node parseObject(JsonParser parser) throws IOException {
+    private Node parseObject(JsonParser parser, int depth) throws IOException {
         var objectNode = new ObjectNode();
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             var fieldName = parser.currentName();
             parser.nextToken();
-            var childNode = parseNode(parser);
+            var childNode = parseNode(parser, depth);
             var oldChildNode = objectNode.get(fieldName);
             if (oldChildNode == null) {
                 objectNode.put(fieldName, childNode);
@@ -67,10 +70,10 @@ public class NodeParser {
         return objectNode;
     }
 
-    private Node parseArray(JsonParser parser) throws IOException {
+    private Node parseArray(JsonParser parser, int depth) throws IOException {
         var arrayNode = new ArrayNode();
         while (parser.nextToken() != JsonToken.END_ARRAY) {
-            var childNode = parseNode(parser);
+            var childNode = parseNode(parser, depth);
             arrayNode.add(childNode);
         }
         return arrayNode;
