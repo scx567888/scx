@@ -3,11 +3,18 @@ package cool.scx.object;
 public class NodeParserOptions {
 
     private DuplicateFieldPolicy duplicateFieldPolicy;
-    private int maxDepth;
+    // 最大嵌套深度
+    private int maxNestingDepth;
+    // 最大数组长度
+    private int maxArraySize;
+    // 最大字段数量
+    private int maxFieldCount;
 
     public NodeParserOptions() {
         this.duplicateFieldPolicy = DuplicateFieldPolicy.COVER;
-        this.maxDepth = 100;
+        this.maxNestingDepth = 100;
+        this.maxArraySize = 20000;
+        this.maxFieldCount = 5000;
     }
 
     public DuplicateFieldPolicy duplicateFieldPolicy() {
@@ -21,16 +28,40 @@ public class NodeParserOptions {
         this.duplicateFieldPolicy = duplicateFieldPolicy;
         return this;
     }
-    
-    public int maxDepth() {
-        return maxDepth;
+
+    public int maxNestingDepth() {
+        return maxNestingDepth;
     }
-    
-    public NodeParserOptions maxDepth(int maxDepth) {
-        if (maxDepth < 0) {
-            throw new IllegalArgumentException("maxDepth is negative");
+
+    public NodeParserOptions maxNestingDepth(int maxNestingDepth) {
+        if (maxNestingDepth < 0) {
+            throw new IllegalArgumentException("maxNestingDepth cannot < 0");
         }
-        this.maxDepth = maxDepth;
+        this.maxNestingDepth = maxNestingDepth;
+        return this;
+    }
+
+    public int maxArraySize() {
+        return maxArraySize;
+    }
+
+    public NodeParserOptions maxArraySize(int maxArraySize) {
+        if (maxArraySize < 0) {
+            throw new IllegalArgumentException("maxArraySize cannot < 0");
+        }
+        this.maxArraySize = maxArraySize;
+        return this;
+    }
+
+    public int maxFieldCount() {
+        return maxFieldCount;
+    }
+
+    public NodeParserOptions maxFieldCount(int maxFieldCount) {
+        if (maxFieldCount < 0) {
+            throw new IllegalArgumentException("maxFieldCount cannot < 0");
+        }
+        this.maxFieldCount = maxFieldCount;
         return this;
     }
 
