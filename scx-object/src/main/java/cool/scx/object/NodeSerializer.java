@@ -12,7 +12,7 @@ import java.io.StringWriter;
 import java.io.UncheckedIOException;
 
 /// 此序列化器基于递归下降方式进行序列化, 以保证代码的简洁和可维护性.
-/// 但 Node 实际上允许自引用, 也就是说存在递归导致栈溢出的风险.
+/// 但 Node 实际上允许自引用, 也就是说存在无限递归导致栈溢出的风险.
 /// 因此, 我们通过 NodeSerializerOptions.maxNestingDepth 来间接限制递归深度,
 /// 避免超过 JVM 栈限制 (一般超过 3500 层为危险值)
 public class NodeSerializer {
