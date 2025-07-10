@@ -2,7 +2,7 @@ package cool.scx.object;
 
 public class NodeParserOptions {
 
-    //重复字段策略
+    // 重复字段策略
     private DuplicateFieldPolicy duplicateFieldPolicy;
     // 最大嵌套深度
     private int maxNestingDepth;
@@ -14,14 +14,17 @@ public class NodeParserOptions {
     private int maxStringLength;
     // 最大字段名称长度
     private int maxFieldNameLength;
+    // 最大数字长度
+    private int maxNumberLength;
 
     public NodeParserOptions() {
         this.duplicateFieldPolicy = DuplicateFieldPolicy.COVER;
-        this.maxNestingDepth = 100;
+        this.maxNestingDepth = 200;
         this.maxArraySize = 20000;
         this.maxFieldCount = 5000;
         this.maxStringLength = 2000 * 10000;// 2千万
         this.maxFieldNameLength = 50000;
+        this.maxNumberLength = 1000;
     }
 
     public DuplicateFieldPolicy duplicateFieldPolicy() {
@@ -93,6 +96,18 @@ public class NodeParserOptions {
             throw new IllegalArgumentException("maxFieldNameLength cannot < 0");
         }
         this.maxFieldNameLength = maxFieldNameLength;
+        return this;
+    }
+
+    public int maxNumberLength() {
+        return maxNumberLength;
+    }
+
+    public NodeParserOptions maxNumberLength(int maxNumberLength) {
+        if (maxNumberLength < 0) {
+            throw new IllegalArgumentException("maxNumberLength cannot < 0");
+        }
+        this.maxNumberLength = maxNumberLength;
         return this;
     }
 

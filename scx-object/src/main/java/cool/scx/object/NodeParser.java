@@ -17,6 +17,13 @@ public class NodeParser {
     public NodeParser(JsonFactory jsonFactory, NodeParserOptions options) {
         this.jsonFactory = jsonFactory;
         this.options = options;
+        //有很多的 安全限制 jackson 已经覆盖了 我们直接使用
+        this.jsonFactory.setStreamReadConstraints(StreamReadConstraints.builder()
+                .maxNestingDepth(options.maxNestingDepth())
+                .maxStringLength(options.maxStringLength())
+                .maxNumberLength(options.maxNumberLength())
+                .maxNameLength(options.maxFieldNameLength())
+                .build());
     }
 
     public Node parse(String json) throws JsonProcessingException {
@@ -36,7 +43,7 @@ public class NodeParser {
             if (firstToken == null) {
                 throw new JsonParseException(parser, "未检测到任何有效内容");
             }
-            var node = parseNode(parser, 0);
+            var node = parseNode(parser);
             var trailingToken = parser.nextToken();
             if (trailingToken != null) {
                 throw new JsonParseException(parser, "检测到多余内容");
@@ -45,20 +52,16 @@ public class NodeParser {
         }
     }
 
-    private Node parseNode(JsonParser parser, int nestingDepth) throws IOException {
+    private Node parseNode(JsonParser parser) throws IOException {
         var currentToken = parser.currentToken();
-        var nextNestingDepth = currentToken == START_OBJECT || currentToken == START_ARRAY ? nestingDepth + 1 : nestingDepth;
-        if (nextNestingDepth > options.maxNestingDepth()) {
-            throw new JsonParseException(parser, "嵌套深度超过限制: 最大 " + options.maxNestingDepth());
-        }
         return switch (currentToken) {
-            case START_OBJECT -> parseObject(parser, nextNestingDepth);
-            case START_ARRAY -> parseArray(parser, nextNestingDepth);
+            case START_OBJECT -> parseObject(parser);
+            case START_ARRAY -> parseArray(parser);
             default -> parseScalar(parser);
         };
     }
 
-    private Node parseObject(JsonParser parser, int nestingDepth) throws IOException {
+    private Node parseObject(JsonParser parser) throws IOException {
         var objectNode = new ObjectNode();
         var fieldCount = 0;
         while (parser.nextToken() != JsonToken.END_OBJECT) {
@@ -67,7 +70,7 @@ public class NodeParser {
             }
             var fieldName = parser.currentName();
             parser.nextToken();
-            var childNode = parseNode(parser, nestingDepth);
+            var childNode = parseNode(parser);
             var oldChildNode = objectNode.get(fieldName);
             if (oldChildNode == null) {
                 objectNode.put(fieldName, childNode);
@@ -79,14 +82,14 @@ public class NodeParser {
         return objectNode;
     }
 
-    private Node parseArray(JsonParser parser, int nestingDepth) throws IOException {
+    private Node parseArray(JsonParser parser) throws IOException {
         var arrayNode = new ArrayNode();
         var arraySize = 0;
         while (parser.nextToken() != JsonToken.END_ARRAY) {
             if (arraySize >= options.maxArraySize()) {
                 throw new JsonParseException(parser, "数组长度超过限制: 最大 " + options.maxArraySize());
             }
-            var childNode = parseNode(parser, nestingDepth);
+            var childNode = parseNode(parser);
             arrayNode.add(childNode);
             arraySize = arraySize + 1;
         }
