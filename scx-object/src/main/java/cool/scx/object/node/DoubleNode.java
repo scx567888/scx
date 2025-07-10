@@ -65,4 +65,17 @@ public final class DoubleNode implements NumericNode {
         return asText();
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof DoubleNode doubleNode) {
+            return Double.compare(_value, doubleNode._value) == 0;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Double.hashCode(_value);
+    }
+
 }

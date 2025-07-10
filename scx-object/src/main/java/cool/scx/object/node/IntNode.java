@@ -65,4 +65,17 @@ public final class IntNode implements NumericNode {
         return asText();
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof IntNode intNode) {
+            return _value == intNode._value;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(_value);
+    }
+
 }

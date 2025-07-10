@@ -65,4 +65,17 @@ public final class FloatNode implements NumericNode {
         return asText();
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof FloatNode floatNode) {
+            return Float.compare(_value, floatNode._value) == 0;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Float.hashCode(_value);
+    }
+
 }

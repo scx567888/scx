@@ -67,4 +67,17 @@ public final class BooleanNode implements ValueNode {
         return asText();
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof BooleanNode booleanNode) {
+            return _value == booleanNode._value;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Boolean.hashCode(_value);
+    }
+
 }

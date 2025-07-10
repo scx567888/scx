@@ -65,4 +65,17 @@ public final class LongNode implements NumericNode {
         return asText();
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof LongNode longNode) {
+            return _value == longNode._value;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(_value);
+    }
+
 }
