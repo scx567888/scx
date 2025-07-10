@@ -2,6 +2,7 @@ package cool.scx.object;
 
 public class NodeParserOptions {
 
+    //重复字段策略
     private DuplicateFieldPolicy duplicateFieldPolicy;
     // 最大嵌套深度
     private int maxNestingDepth;
