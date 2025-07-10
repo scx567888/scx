@@ -1,9 +1,6 @@
 package cool.scx.object;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.*;
 import cool.scx.object.node.*;
 
 import java.io.IOException;
@@ -29,11 +26,18 @@ public class NodeParser {
         }
     }
 
-
     private Node parseAndClose(JsonParser parser) throws IOException {
         try (parser) {
-            parser.nextToken();
-            return parseNode(parser);
+            var firstToken = parser.nextToken();
+            if (firstToken == null) {
+                throw new JsonParseException("异常输入 !!!");
+            }
+            var node = parseNode(parser);
+            var trailingToken = parser.nextToken();
+            if (trailingToken != null) {
+                throw new JsonParseException("异常结束 !!!");
+            }
+            return node;
         }
     }
 
@@ -53,11 +57,11 @@ public class NodeParser {
             var fieldName = parser.currentName();
             parser.nextToken();
             var childNode = parseNode(parser);
-            var oldChiledNode = objectNode.get(fieldName);
-            if (oldChiledNode == null) {
+            var oldChildNode = objectNode.get(fieldName);
+            if (oldChildNode == null) {
                 objectNode.put(fieldName, childNode);
             } else {
-                handleDuplicateField(fieldName, objectNode, oldChiledNode, childNode);
+                handleDuplicateField(fieldName, objectNode, oldChildNode, childNode);
             }
         }
         return objectNode;
