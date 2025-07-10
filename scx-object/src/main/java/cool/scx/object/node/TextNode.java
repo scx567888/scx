@@ -9,6 +9,9 @@ public final class TextNode implements ValueNode {
     private final String _value;
 
     public TextNode(String v) {
+        if (v == null) {
+            throw new NullPointerException("TextNode value cannot be null; use NullNode.NULL");
+        }
         this._value = v;
     }
 
