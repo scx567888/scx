@@ -2,6 +2,7 @@ package cool.scx.object.node;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 
 public final class TextNode implements ValueNode {
 
@@ -58,6 +59,19 @@ public final class TextNode implements ValueNode {
     @Override
     public String toString() {
         return asText();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof TextNode textNode) {
+            return Objects.equals(_value, textNode._value);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(_value);
     }
 
 }
