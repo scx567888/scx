@@ -6,9 +6,10 @@ import cool.scx.object.node.*;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-import static com.fasterxml.jackson.core.JsonToken.START_ARRAY;
-import static com.fasterxml.jackson.core.JsonToken.START_OBJECT;
-
+/// 此解析器基于递归下降方式进行解析, 以保证代码的简洁和可维护性.
+/// 但递归解析存在栈溢出的风险, 特别是在嵌套层数较大时.
+/// 因此, 我们通过 NodeParserOptions.maxNestingDepth 来间接限制递归深度,
+/// 避免超过 JVM 栈限制 (一般超过 3500 层为危险值)
 public class NodeParser {
 
     private final JsonFactory jsonFactory;

@@ -19,8 +19,8 @@ public class NodeParserOptions {
 
     public NodeParserOptions() {
         this.duplicateFieldPolicy = DuplicateFieldPolicy.COVER;
-        this.maxNestingDepth = 200;
-        this.maxArraySize = 10 * 10000; 
+        this.maxNestingDepth = 200;//默认 200 既不会轻易栈溢出, 也足够 99.99% 的情况
+        this.maxArraySize = 10 * 10000;
         this.maxFieldCount = 5000;
         this.maxStringLength = 2000 * 10000;
         this.maxFieldNameLength = 50000;
