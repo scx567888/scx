@@ -3,36 +3,47 @@ package cool.scx.object;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
-import cool.scx.object.NodeCodecOptions.DuplicateFieldPolicy;
 import cool.scx.object.node.Node;
 import cool.scx.reflect.ScxReflect;
 import cool.scx.reflect.TypeInfo;
 import cool.scx.reflect.TypeReference;
 
-import static cool.scx.object.NodeCodecOptions.DuplicateFieldPolicy.*;
+import static cool.scx.object.NodeParserOptions.DuplicateFieldPolicy.COVER;
+import static cool.scx.object.NodeParserOptions.DuplicateFieldPolicy.MERGE;
 
 public final class ScxObject {
 
-    private static final NodeCodec JSON_CODEC = new NodeCodec(new JsonFactory(), new NodeCodecOptions().duplicateFieldPolicy(COVER));
-
-    private static final NodeCodec XML_CODEC = new NodeCodec(new XmlFactory(), new NodeCodecOptions().duplicateFieldPolicy(MERGE));
+    private static final NodeParser JSON_PARSER;
+    private static final NodeParser XML_PARSER;
+    private static final NodeSerializer JSON_SERIALIZER;
+    private static final NodeSerializer XML_SERIALIZER;
 
     private static final NodeMapper NODE_MAPPER = new NodeMapper();
 
-    public static Node fromJson(String json) throws JsonProcessingException {
-        return JSON_CODEC.parse(json);
+    static {
+        var jsonFactory = new JsonFactory();
+
+        var xmlFactory = new XmlFactory();
+        JSON_PARSER = new NodeParser(jsonFactory, new NodeParserOptions().duplicateFieldPolicy(COVER));
+        XML_PARSER = new NodeParser(xmlFactory, new NodeParserOptions().duplicateFieldPolicy(MERGE));
+        JSON_SERIALIZER = new NodeSerializer(jsonFactory, new NodeSerializerOptions());
+        XML_SERIALIZER = new NodeSerializer(xmlFactory, new NodeSerializerOptions());
     }
 
-    public static String toJson(Node node) throws JsonProcessingException {
-        return JSON_CODEC.serializeAsString(node);
+    public static Node fromJson(String json) throws JsonProcessingException {
+        return JSON_PARSER.parse(json);
     }
 
     public static Node fromXml(String xml) throws JsonProcessingException {
-        return XML_CODEC.parse(xml);
+        return XML_PARSER.parse(xml);
+    }
+
+    public static String toJson(Node node) throws JsonProcessingException {
+        return JSON_SERIALIZER.serializeAsString(node);
     }
 
     public static String toXml(Node node) throws JsonProcessingException {
-        return XML_CODEC.serializeAsString(node);
+        return XML_SERIALIZER.serializeAsString(node);
     }
 
     public static Node valueToNode(Object value) {
