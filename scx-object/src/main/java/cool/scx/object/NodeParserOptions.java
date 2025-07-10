@@ -10,12 +10,18 @@ public class NodeParserOptions {
     private int maxArraySize;
     // 最大字段数量
     private int maxFieldCount;
+    // 最大字符串长度
+    private int maxStringLength;
+    // 最大字段名称长度
+    private int maxFieldNameLength;
 
     public NodeParserOptions() {
         this.duplicateFieldPolicy = DuplicateFieldPolicy.COVER;
         this.maxNestingDepth = 100;
         this.maxArraySize = 20000;
         this.maxFieldCount = 5000;
+        this.maxStringLength = 2000 * 10000;// 2千万
+        this.maxFieldNameLength = 50000;
     }
 
     public DuplicateFieldPolicy duplicateFieldPolicy() {
@@ -63,6 +69,30 @@ public class NodeParserOptions {
             throw new IllegalArgumentException("maxFieldCount cannot < 0");
         }
         this.maxFieldCount = maxFieldCount;
+        return this;
+    }
+
+    public int maxStringLength() {
+        return maxStringLength;
+    }
+
+    public NodeParserOptions maxStringLength(int maxStringLength) {
+        if (maxStringLength < 0) {
+            throw new IllegalArgumentException("maxStringLength cannot < 0");
+        }
+        this.maxStringLength = maxStringLength;
+        return this;
+    }
+
+    public int maxFieldNameLength() {
+        return maxFieldNameLength;
+    }
+
+    public NodeParserOptions maxFieldNameLength(int maxFieldNameLength) {
+        if (maxFieldNameLength < 0) {
+            throw new IllegalArgumentException("maxFieldNameLength cannot < 0");
+        }
+        this.maxFieldNameLength = maxFieldNameLength;
         return this;
     }
 
