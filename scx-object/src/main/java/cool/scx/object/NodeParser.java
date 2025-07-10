@@ -6,6 +6,9 @@ import cool.scx.object.node.*;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
+import static com.fasterxml.jackson.core.JsonToken.START_ARRAY;
+import static com.fasterxml.jackson.core.JsonToken.START_OBJECT;
+
 public class NodeParser {
 
     private final JsonFactory jsonFactory;
@@ -43,16 +46,16 @@ public class NodeParser {
     }
 
     private Node parseNode(JsonParser parser, int nestingDepth) throws IOException {
-        if (nestingDepth > options.maxNestingDepth()) {
+        var currentToken = parser.currentToken();
+        var nextNestingDepth = currentToken == START_OBJECT || currentToken == START_ARRAY ? nestingDepth + 1 : nestingDepth;
+        if (nextNestingDepth > options.maxNestingDepth()) {
             throw new JsonParseException(parser, "嵌套深度超过限制 : 最大 " + options.maxNestingDepth());
         }
-        var currentToken = parser.currentToken();
-        if (currentToken == JsonToken.START_OBJECT) {
-            return parseObject(parser, nestingDepth + 1);
-        } else if (currentToken == JsonToken.START_ARRAY) {
-            return parseArray(parser, nestingDepth + 1);
-        }
-        return parseScalar(parser);
+        return switch (currentToken) {
+            case START_OBJECT -> parseObject(parser, nextNestingDepth);
+            case START_ARRAY -> parseArray(parser, nextNestingDepth);
+            default -> parseScalar(parser);
+        };
     }
 
     private Node parseObject(JsonParser parser, int nestingDepth) throws IOException {
