@@ -35,5 +35,5 @@ public class NodeSerializerOptions {
         this.maxNestingDepth = maxNestingDepth;
         return this;
     }
-    
+
 }
