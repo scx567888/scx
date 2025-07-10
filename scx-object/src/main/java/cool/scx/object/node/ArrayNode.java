@@ -3,6 +3,7 @@ package cool.scx.object.node;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public final class ArrayNode implements ContainerNode, Iterable<Node> {
 
@@ -41,4 +42,17 @@ public final class ArrayNode implements ContainerNode, Iterable<Node> {
         return _children.iterator();
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof ArrayNode arrayNode) {
+            return _children.equals(arrayNode._children);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return _children.hashCode();
+    }
+    
 }

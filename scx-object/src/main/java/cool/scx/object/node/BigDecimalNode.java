@@ -2,6 +2,7 @@ package cool.scx.object.node;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 
 public final class BigDecimalNode implements NumericNode {
 
@@ -65,4 +66,17 @@ public final class BigDecimalNode implements NumericNode {
         return asText();
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof BigDecimalNode bigDecimalNode) {
+            return Objects.equals(_value, bigDecimalNode._value);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(_value);
+    }
+    
 }
