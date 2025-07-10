@@ -1,6 +1,9 @@
 package cool.scx.object;
 
-import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.StreamWriteConstraints;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import cool.scx.object.node.*;
 
@@ -8,6 +11,10 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UncheckedIOException;
 
+/// 此序列化器基于递归下降方式进行序列化, 以保证代码的简洁和可维护性.
+/// 但 Node 实际上允许自引用, 也就是说存在递归导致栈溢出的风险.
+/// 因此, 我们通过 NodeSerializerOptions.maxNestingDepth 来间接限制递归深度,
+/// 避免超过 JVM 栈限制 (一般超过 3500 层为危险值)
 public class NodeSerializer {
 
     private final JsonFactory jsonFactory;
@@ -18,7 +25,7 @@ public class NodeSerializer {
         this.options = options;
         //有很多的 安全限制 jackson 已经覆盖了 我们直接使用
         this.jsonFactory.setStreamWriteConstraints(StreamWriteConstraints.builder()
-                .maxNestingDepth(1)
+                .maxNestingDepth(options.maxNestingDepth())
                 .build());
     }
 
@@ -47,32 +54,38 @@ public class NodeSerializer {
 
     private void writeNode(JsonGenerator generator, Node node) throws IOException {
         switch (node) {
-            case ObjectNode objectNode -> {
-                generator.writeStartObject();
-                for (var e : objectNode) {
-                    generator.writeFieldName(e.getKey());
-                    writeNode(generator, e.getValue());
-                }
-                generator.writeEndObject();
-            }
-            case ArrayNode arrayNode -> {
-                generator.writeStartArray();
-                for (var item : arrayNode) {
-                    writeNode(generator, item);
-                }
-                generator.writeEndArray();
-            }
+            case ObjectNode objectNode -> writeObject(generator, objectNode);
+            case ArrayNode arrayNode -> writeArray(generator, arrayNode);
+            default -> writeScalar(generator, node);
+        }
+    }
+
+    private void writeObject(JsonGenerator generator, ObjectNode objectNode) throws IOException {
+        generator.writeStartObject();
+        for (var e : objectNode) {
+            generator.writeFieldName(e.getKey());
+            writeNode(generator, e.getValue());
+        }
+        generator.writeEndObject();
+    }
+
+    private void writeArray(JsonGenerator generator, ArrayNode arrayNode) throws IOException {
+        generator.writeStartArray();
+        for (var item : arrayNode) {
+            writeNode(generator, item);
+        }
+        generator.writeEndArray();
+    }
+
+    private void writeScalar(JsonGenerator generator, Node node) throws IOException {
+        switch (node) {
             case TextNode textNode -> generator.writeString(textNode.value());
-            case NumericNode numericNode -> {
-                switch (numericNode) {
-                    case IntNode intNode -> generator.writeNumber(intNode.value());
-                    case LongNode longNode -> generator.writeNumber(longNode.value());
-                    case BigIntegerNode bigIntegerNode -> generator.writeNumber(bigIntegerNode.value());
-                    case FloatNode floatNode -> generator.writeNumber(floatNode.value());
-                    case DoubleNode doubleNode -> generator.writeNumber(doubleNode.value());
-                    case BigDecimalNode bigDecimalNode -> generator.writeNumber(bigDecimalNode.value());
-                }
-            }
+            case IntNode intNode -> generator.writeNumber(intNode.value());
+            case LongNode longNode -> generator.writeNumber(longNode.value());
+            case FloatNode floatNode -> generator.writeNumber(floatNode.value());
+            case DoubleNode doubleNode -> generator.writeNumber(doubleNode.value());
+            case BigIntegerNode bigIntegerNode -> generator.writeNumber(bigIntegerNode.value());
+            case BigDecimalNode bigDecimalNode -> generator.writeNumber(bigDecimalNode.value());
             case BooleanNode booleanNode -> generator.writeBoolean(booleanNode.value());
             case NullNode _ -> generator.writeNull();
             default -> throw new IOException("Unsupported Node Type: " + node.getClass().getName());
