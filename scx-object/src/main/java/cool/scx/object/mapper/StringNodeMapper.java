@@ -8,7 +8,7 @@ import cool.scx.object.node.ValueNode;
 public class StringNodeMapper implements NodeMapper<String> {
 
     @Override
-    public Node toNode(String value) {
+    public Node toNode(String value, NodeMapperSelector selector) {
         return new TextNode(value);
     }
 
