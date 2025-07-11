@@ -1,5 +1,5 @@
 package cool.scx.object.node;
 
-public interface Node {
+public sealed interface Node permits ArrayNode, ObjectNode, ValueNode, NullNode {
 
 }
