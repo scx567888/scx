@@ -13,11 +13,12 @@ public final class FromUploadParameterHandlerBuilder implements ParameterHandler
 
     @Override
     public ParameterHandler tryBuild(ParameterInfo parameter) {
-        var isArray = parameter.type().isCollectionLikeType() || parameter.type().isArrayType();
-        var rawType = isArray ? parameter.type().getContentType().getRawClass() : parameter.type().getRawClass();
-        if (rawType != MultiPartPart.class) {
-            return null;
-        }
+        //todo scx-object 的引入破坏了原有逻辑 需要重新检查
+//        var isArray = parameter.type().isCollectionLikeType() || parameter.type().isArrayType();
+//        var rawType = isArray ? parameter.type().getContentType().getRawClass() : parameter.type().getRawClass();
+//        if (rawType != MultiPartPart.class) {
+//            return null;
+//        }
         return new FromUploadParameterHandler(parameter);
     }
 
