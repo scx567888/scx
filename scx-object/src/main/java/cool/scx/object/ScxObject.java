@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import cool.scx.object.mapper.NodeMapperSelector;
+import cool.scx.object.merger.NodeMerger;
 import cool.scx.object.node.Node;
 import cool.scx.object.parser.NodeParser;
 import cool.scx.object.parser.NodeParserOptions;
@@ -23,6 +24,7 @@ public final class ScxObject {
     private static final NodeSerializer JSON_SERIALIZER;
     private static final NodeSerializer XML_SERIALIZER;
 
+    private static final NodeMerger NODE_MERGER;
     private static final NodeMapperSelector NODE_MAPPER_SELECTOR;
 
     static {
@@ -33,6 +35,7 @@ public final class ScxObject {
         XML_PARSER = new NodeParser(xmlFactory, new NodeParserOptions().duplicateFieldPolicy(MERGE));
         JSON_SERIALIZER = new NodeSerializer(jsonFactory, new NodeSerializerOptions());
         XML_SERIALIZER = new NodeSerializer(xmlFactory, new NodeSerializerOptions());
+        NODE_MERGER = new NodeMerger();
         NODE_MAPPER_SELECTOR = new NodeMapperSelector();
     }
 
@@ -107,6 +110,10 @@ public final class ScxObject {
 
     public static <T> T convertValue(Object value, Class<T> type) {
         return convertValue(value, ScxReflect.getType(type));
+    }
+
+    public static void merge(Node target, Node source) {
+        NODE_MERGER.merge(target, source);
     }
 
 }
