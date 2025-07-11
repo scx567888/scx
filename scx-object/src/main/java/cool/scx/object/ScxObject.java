@@ -3,13 +3,18 @@ package cool.scx.object;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
+import cool.scx.object.mapper.NodeMapperSelector;
 import cool.scx.object.node.Node;
+import cool.scx.object.parser.NodeParser;
+import cool.scx.object.parser.NodeParserOptions;
+import cool.scx.object.serializer.NodeSerializer;
+import cool.scx.object.serializer.NodeSerializerOptions;
 import cool.scx.reflect.ScxReflect;
 import cool.scx.reflect.TypeInfo;
 import cool.scx.reflect.TypeReference;
 
-import static cool.scx.object.NodeParserOptions.DuplicateFieldPolicy.COVER;
-import static cool.scx.object.NodeParserOptions.DuplicateFieldPolicy.MERGE;
+import static cool.scx.object.parser.NodeParserOptions.DuplicateFieldPolicy.COVER;
+import static cool.scx.object.parser.NodeParserOptions.DuplicateFieldPolicy.MERGE;
 
 public final class ScxObject {
 
@@ -18,7 +23,7 @@ public final class ScxObject {
     private static final NodeSerializer JSON_SERIALIZER;
     private static final NodeSerializer XML_SERIALIZER;
 
-    private static final NodeMapper NODE_MAPPER = new NodeMapper();
+    private static final NodeMapperSelector NODE_MAPPER_SELECTOR;
 
     static {
         var jsonFactory = new JsonFactory();
@@ -28,6 +33,7 @@ public final class ScxObject {
         XML_PARSER = new NodeParser(xmlFactory, new NodeParserOptions().duplicateFieldPolicy(MERGE));
         JSON_SERIALIZER = new NodeSerializer(jsonFactory, new NodeSerializerOptions());
         XML_SERIALIZER = new NodeSerializer(xmlFactory, new NodeSerializerOptions());
+        NODE_MAPPER_SELECTOR = new NodeMapperSelector();
     }
 
     public static Node fromJson(String json) throws JsonProcessingException {
@@ -47,11 +53,11 @@ public final class ScxObject {
     }
 
     public static Node valueToNode(Object value) {
-        return NODE_MAPPER.valueToNode(value);
+        return NODE_MAPPER_SELECTOR.toNode(value);
     }
 
     public static <T> T nodeToValue(Node node, TypeInfo type) {
-        return NODE_MAPPER.nodeToValue(node, type);
+        return NODE_MAPPER_SELECTOR.fromNode(node, type);
     }
 
     public static <T> T convertValue(Object value, TypeInfo type) {
