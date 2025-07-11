@@ -1,4 +1,4 @@
-package cool.scx.object;
+package cool.scx.object.parser;
 
 import com.fasterxml.jackson.core.*;
 import cool.scx.object.node.*;

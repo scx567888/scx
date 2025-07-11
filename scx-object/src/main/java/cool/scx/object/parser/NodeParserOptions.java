@@ -1,4 +1,4 @@
-package cool.scx.object;
+package cool.scx.object.parser;
 
 public class NodeParserOptions {
 
