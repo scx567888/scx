@@ -1,8 +1,8 @@
 package cool.scx.jdbc.result_handler.bean_builder;
 
 import cool.scx.reflect.ClassInfo;
-import cool.scx.reflect.ClassInfoFactory;
 import cool.scx.reflect.ConstructorInfo;
+import cool.scx.reflect.ScxReflect;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -20,7 +20,8 @@ final class NormalBeanBuilder<T> extends BeanBuilder<T> {
     private final FieldSetter[] fieldSetters;
 
     public NormalBeanBuilder(Class<T> type, Function<Field, String> columnNameMapping) {
-        this.constructor = checkDefaultConstructor(ClassInfoFactory.getClassInfo(type));
+        //todo 强转有问题
+        this.constructor = checkDefaultConstructor((ClassInfo) ScxReflect.getType(type));
         this.constructor.setAccessible(true);
         this.fieldSetters = FieldSetter.ofArray(type, columnNameMapping);
     }
