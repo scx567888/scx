@@ -1,6 +1,7 @@
 package cool.scx.object.mapper.primitive;
 
 import cool.scx.object.mapper.NodeMapper;
+import cool.scx.object.mapper.NodeMapperSelector;
 import cool.scx.object.node.Node;
 
 /// 处理原始类型 因为原始类型 不能为空 (必须有一个值) 所以使用此类支持 默认值处理
@@ -21,7 +22,7 @@ abstract class PrimitiveNodeMapper<T> implements NodeMapper<T> {
     }
 
     @Override
-    public final T fromNode(Node node) {
+    public final T fromNode(Node node, NodeMapperSelector selector) {
         T object = fromNode0(node);
         // 基类不允许为空 所以我们在检测到基类为空时 返回默认值
         if (isPrimitive && object == null) {
