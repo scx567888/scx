@@ -46,13 +46,14 @@ public class NodeMapperSelector {
 
         //常用类型
         registerNodeMapper(String.class, new StringNodeMapper());
+        registerNodeMapper(Node.class, new NodeNodeMapper());
 
 
         //大数字类型
         registerNodeMapper(BigInteger.class, new BigIntegerNodeMapper());
         registerNodeMapper(BigDecimal.class, new BigDecimalNodeMapper());
 
-        
+
         //基本类型数组类型
         registerNodeMapper(byte[].class, new ByteArrayNodeMapper());
         registerNodeMapper(short[].class, new ShortArrayNodeMapper());
