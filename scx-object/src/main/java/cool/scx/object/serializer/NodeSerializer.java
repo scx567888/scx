@@ -1,4 +1,4 @@
-package cool.scx.object;
+package cool.scx.object.serializer;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;

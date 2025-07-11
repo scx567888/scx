@@ -1,4 +1,4 @@
-package cool.scx.object;
+package cool.scx.object.serializer;
 
 import javax.xml.namespace.QName;
 
@@ -17,11 +17,12 @@ public class NodeSerializerOptions {
         return xmlRootTagName;
     }
 
-    public void xmlRootTagName(QName xmlRootTagName) {
+    public NodeSerializerOptions xmlRootTagName(QName xmlRootTagName) {
         if (xmlRootTagName == null) {
             throw new NullPointerException("xmlRootTagName is null");
         }
         this.xmlRootTagName = xmlRootTagName;
+        return this;
     }
 
     public int maxNestingDepth() {
