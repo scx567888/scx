@@ -3,7 +3,7 @@ package cool.scx.data.jdbc.mapping;
 import cool.scx.data.jdbc.annotation.Column;
 import cool.scx.reflect.FieldInfo;
 
-import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
+import static cool.scx.common.constant.AnnotationValues.getRealValue;
 
 /// AnnotationConfigColumn
 ///
@@ -27,7 +27,8 @@ public class AnnotationConfigColumn implements EntityColumn {
         this.javaField.setAccessible(true);
         var column = javaField.findAnnotation(Column.class);
         var defaultColumnName = javaField.name();
-        var defaultDataType = new AnnotationConfigDataType(this.javaField.type());
+        //todo 有问题
+        var defaultDataType = new AnnotationConfigDataType(this.javaField.rawField().getType());
         if (column != null) {
             var _columnName = getRealValue(column.columnName());
             var _defaultValue = getRealValue(column.defaultValue());
