@@ -6,9 +6,9 @@ import cool.scx.object.node.Node;
 import cool.scx.object.node.NullNode;
 import cool.scx.object.node.ValueNode;
 
-public class IntegerNodeMapper extends PrimitiveNodeMapper<Integer> {
+public class IntNodeMapper extends PrimitiveNodeMapper<Integer> {
 
-    public IntegerNodeMapper(boolean isPrimitive) {
+    public IntNodeMapper(boolean isPrimitive) {
         super(isPrimitive, 0);
     }
 

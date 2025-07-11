@@ -1,10 +1,12 @@
 package cool.scx.object.mapper.primitive;
 
 import cool.scx.object.mapper.NodeMapperSelector;
-import cool.scx.object.node.BooleanNode;
 import cool.scx.object.node.Node;
 import cool.scx.object.node.NullNode;
 import cool.scx.object.node.ValueNode;
+
+import static cool.scx.object.node.BooleanNode.FALSE;
+import static cool.scx.object.node.BooleanNode.TRUE;
 
 public class BooleanNodeMapper extends PrimitiveNodeMapper<Boolean> {
 
@@ -14,7 +16,7 @@ public class BooleanNodeMapper extends PrimitiveNodeMapper<Boolean> {
 
     @Override
     public Node toNode(Boolean value, NodeMapperSelector selector) {
-        return value ? BooleanNode.TRUE : BooleanNode.FALSE;
+        return value ? TRUE : FALSE;
     }
 
     @Override

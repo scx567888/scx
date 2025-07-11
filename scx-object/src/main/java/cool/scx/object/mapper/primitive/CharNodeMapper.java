@@ -5,9 +5,9 @@ import cool.scx.object.node.Node;
 import cool.scx.object.node.NullNode;
 import cool.scx.object.node.TextNode;
 
-public class CharacterNodeMapper extends PrimitiveNodeMapper<Character> {
+public class CharNodeMapper extends PrimitiveNodeMapper<Character> {
 
-    public CharacterNodeMapper(boolean isPrimitive) {
+    public CharNodeMapper(boolean isPrimitive) {
         super(isPrimitive, (char) 0);
     }
 
