@@ -1,6 +1,5 @@
 package cool.scx.app;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.app.annotation.Scheduled;
@@ -12,8 +11,6 @@ import cool.scx.bean.BeanFactory;
 import cool.scx.bean.BeanFactoryImpl;
 import cool.scx.bean.resolver.AutowiredAnnotationResolver;
 import cool.scx.common.util.ClassUtils;
-import cool.scx.common.util.ConsoleUtils;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.StringUtils;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
@@ -28,8 +25,11 @@ import cool.scx.logging.ScxLoggerConfig;
 import cool.scx.logging.ScxLogging;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
-import cool.scx.reflect.ClassInfoFactory;
-import cool.scx.reflect.MethodType;
+import cool.scx.object.ScxObject;
+import cool.scx.reflect.ClassInfo;
+import cool.scx.reflect.ScxReflect;
+import cool.scx.reflect.TypeInfo;
+import cool.scx.reflect.TypeReference;
 import cool.scx.scheduling.ScxScheduling;
 import cool.scx.web.annotation.ScxRoute;
 import cool.scx.web.annotation.ScxWebSocketRoute;
@@ -51,6 +51,7 @@ import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static java.lang.System.Logger.Level.*;
 import static java.util.Objects.requireNonNull;
 
+//todo scx-object 的引入破坏了原有逻辑 需要重新检查
 /// ScxHelper
 ///
 /// @author scx567888
@@ -118,11 +119,12 @@ public final class ScxAppHelper {
 
     @SuppressWarnings("unchecked")
     public static <Entity extends BaseModel> Class<Entity> findBaseModelServiceEntityClass(Class<?> baseModelServiceClass) {
-        var superClass = ClassInfoFactory.getClassInfo(baseModelServiceClass).findSuperType(BaseModelService.class);
+        var classInfo =(ClassInfo) ScxReflect.getType(baseModelServiceClass);
+        var superClass = classInfo.findSuperType(BaseModelService.class);
         if (superClass != null) {
-            var boundType = superClass.type().getBindings().getBoundType(0);
+            var boundType = superClass.bindings().get(BaseModelService.class.getTypeParameters()[0]);
             if (boundType != null) {
-                return (Class<Entity>) boundType.getRawClass();
+                return (Class<Entity>) ((ClassInfo)boundType).rawClass();
             } else {
                 throw new IllegalArgumentException(baseModelServiceClass.getName() + " : 必须设置泛型参数 !!!");
             }
@@ -147,7 +149,7 @@ public final class ScxAppHelper {
                     *******************************************************
                     """;
             System.err.printf((errMessage) + System.lineSeparator(), port);
-            var result = ConsoleUtils.readLine().trim();
+            var result = System.console().readLine().trim();
             if ("Y".equalsIgnoreCase(result)) {
                 return true;
             } else if ("N".equalsIgnoreCase(result)) {
@@ -204,7 +206,7 @@ public final class ScxAppHelper {
         var beanDefinitionNames = beanFactory.getBeanNames();
         for (var beanDefinitionName : beanDefinitionNames) {
             var bean = beanFactory.getBean(beanDefinitionName);
-            var classInfo = ClassInfoFactory.getClassInfo(bean.getClass());
+            var classInfo =(ClassInfo) ScxReflect.getType(bean.getClass());
             for (var method : classInfo.methods()) {
                 if (method.accessModifier() != PUBLIC) {
                     continue;
@@ -223,7 +225,7 @@ public final class ScxAppHelper {
                         );
                         break;
                     }
-                    if (method.methodType() == MethodType.STATIC) {
+                    if (method.isStatic()) {
                         ScxScheduling.cron()
                                 .expression(scheduled.cron())
                                 .start(c -> {
@@ -265,7 +267,7 @@ public final class ScxAppHelper {
                     **************************************************************
                     """;
             System.err.println(errMessage);
-            var result = ConsoleUtils.readLine().trim();
+            var result = System.console().readLine().trim();
             if ("Y".equalsIgnoreCase(result)) {
                 var ignoreMessage = """
                         *******************************************
@@ -323,7 +325,7 @@ public final class ScxAppHelper {
                     var level = toLevel(logger.get("level"));
                     var type = toType(logger.get("type"));
                     var storedDirectory = StringUtils.notBlank(logger.get("stored-directory")) ? scxEnvironment.getPathByAppRoot(logger.get("stored-directory")) : null;
-                    var stackTrace = ObjectUtils.convertValue(logger.get("stack-trace"), Boolean.class);
+                    var stackTrace = ScxObject.convertValue(logger.get("stack-trace"), Boolean.class);
                     var config = new ScxLoggerConfig();
                     config.setLevel(level);
                     if (type == LoggingType.CONSOLE || type == LoggingType.BOTH) {
