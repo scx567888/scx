@@ -8,6 +8,6 @@ public interface NodeMapper<T> {
     Node toNode(T value, NodeMapperSelector selector);
 
     /// Node 转换为 值, node 永不为 null
-    T fromNode(Node node);
+    T fromNode(Node node, NodeMapperSelector selector);
 
 }
