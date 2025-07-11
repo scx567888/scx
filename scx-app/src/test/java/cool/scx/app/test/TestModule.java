@@ -14,7 +14,6 @@ import cool.scx.app.test.like.LikeService;
 import cool.scx.app.test.like.Order;
 import cool.scx.app.test.person.Person;
 import cool.scx.app.test.person.PersonService;
-import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.NetUtils;
 import cool.scx.common.util.RandomUtils;
@@ -31,8 +30,8 @@ import cool.scx.scheduling.ScxScheduling;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.net.Inet4Address;
-import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
@@ -41,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static cool.scx.common.constant.CharPools.NUMBER_AND_LETTER;
 import static cool.scx.data.field_policy.FieldPolicyBuilder.*;
 import static cool.scx.data.query.BuildControl.USE_EXPRESSION;
 import static cool.scx.data.query.QueryBuilder.*;
@@ -49,7 +49,7 @@ import static org.testng.AssertJUnit.assertEquals;
 
 public class TestModule extends ScxAppModule {
 
-    public static void main(String[] args) throws SocketException {
+    public static void main(String[] args) throws IOException {
         runModule();
         test0();
         test1();
@@ -98,7 +98,7 @@ public class TestModule extends ScxAppModule {
                 var l = new ArrayList<Car>();
                 for (int i = 0; i < 99; i = i + 1) {
                     var c = new Car();
-                    c.name = RandomUtils.randomString(10) + "🤣";
+                    c.name = RandomUtils.randomString(10, NUMBER_AND_LETTER) + "🤣";
                     c.color = CarColor.values()[RandomUtils.randomInt(4)];
                     c.owner = new CarOwner("Jack", i, new String[]{"123456789", "666666666"});
                     c.tags = new String[]{"fast", "beautiful", "small", "big"};
@@ -112,7 +112,7 @@ public class TestModule extends ScxAppModule {
                 StopWatch.start("save2");
                 for (int i = 0; i < 99; i = i + 1) {
                     var c = new Car();
-                    c.name = RandomUtils.randomString(10) + "😢";
+                    c.name = RandomUtils.randomString(10, NUMBER_AND_LETTER) + "😢";
                     c.color = CarColor.values()[RandomUtils.randomInt(4)];
                     c.owner = new CarOwner("David", i, new String[]{"987654321"});
                     carService1.add(c);
@@ -166,8 +166,8 @@ public class TestModule extends ScxAppModule {
     }
 
     @Test
-    public static void test1() throws SocketException {
-        ScxExceptionHelper.wrap(() -> FileUtils.write(ScxAppContext.getTempPath("test.txt"), "内容2内容2内容2内容2😂😂😂!!!".getBytes(StandardCharsets.UTF_8)));
+    public static void test1() throws IOException {
+        FileUtils.write(ScxAppContext.getTempPath("test.txt"), "内容2内容2内容2内容2😂😂😂!!!".getBytes(StandardCharsets.UTF_8));
         var ip = Arrays.stream(NetUtils.getLocalIPAddress()).filter(i -> i instanceof Inet4Address).toList().getFirst();
         var logger = System.getLogger(TestModule.class.getName());
         //测试 URIBuilder
