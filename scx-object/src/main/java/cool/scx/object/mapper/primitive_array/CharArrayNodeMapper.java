@@ -1,4 +1,4 @@
-package cool.scx.object.mapper.array;
+package cool.scx.object.mapper.primitive_array;
 
 import cool.scx.object.mapper.NodeMapper;
 import cool.scx.object.mapper.NodeMapperSelector;
@@ -6,6 +6,7 @@ import cool.scx.object.node.ArrayNode;
 import cool.scx.object.node.Node;
 import cool.scx.object.node.TextNode;
 
+//todo 待优化
 public class CharArrayNodeMapper implements NodeMapper<char[]> {
 
     @Override
@@ -21,4 +22,5 @@ public class CharArrayNodeMapper implements NodeMapper<char[]> {
     public char[] fromNode(Node node, NodeMapperSelector selector) {
         return null;
     }
+
 }

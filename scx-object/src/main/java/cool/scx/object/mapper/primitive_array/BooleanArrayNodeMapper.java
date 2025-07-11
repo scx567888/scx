@@ -1,4 +1,4 @@
-package cool.scx.object.mapper.array;
+package cool.scx.object.mapper.primitive_array;
 
 import cool.scx.object.mapper.NodeMapper;
 import cool.scx.object.mapper.NodeMapperSelector;
@@ -8,6 +8,7 @@ import cool.scx.object.node.Node;
 import static cool.scx.object.node.BooleanNode.FALSE;
 import static cool.scx.object.node.BooleanNode.TRUE;
 
+//todo 待优化
 public class BooleanArrayNodeMapper implements NodeMapper<boolean[]> {
 
     @Override

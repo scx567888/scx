@@ -1,4 +1,4 @@
-package cool.scx.object.mapper.array;
+package cool.scx.object.mapper.primitive_array;
 
 import cool.scx.object.mapper.NodeMapper;
 import cool.scx.object.mapper.NodeMapperSelector;
@@ -6,6 +6,7 @@ import cool.scx.object.node.ArrayNode;
 import cool.scx.object.node.LongNode;
 import cool.scx.object.node.Node;
 
+//todo 待优化
 public class LongArrayNodeMapper implements NodeMapper<long[]> {
 
     @Override
