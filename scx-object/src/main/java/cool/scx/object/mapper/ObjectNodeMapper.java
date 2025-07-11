@@ -17,7 +17,9 @@ public class ObjectNodeMapper implements NodeMapper<Object> {
     private final FieldInfo[] fields;
 
     public ObjectNodeMapper(ClassInfo classInfo) {
+        //todo record 类型需要特殊处理, 因为 record 默认 field 都是 私有的 
         this.classInfo = classInfo;
+        //todo 写入时 忽略 final 字段 ?
         this.fields = initFields(this.classInfo);
     }
 
@@ -51,6 +53,7 @@ public class ObjectNodeMapper implements NodeMapper<Object> {
     }
 
     public Object newInstance() {
+        //todo record 应该 使用构造参数直接 new 出来 而不是 这么 new
         try {
             return classInfo.defaultConstructor().newInstance();
         } catch (IllegalAccessException e) {
