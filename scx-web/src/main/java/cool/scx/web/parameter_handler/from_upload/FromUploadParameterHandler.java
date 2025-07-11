@@ -1,6 +1,7 @@
 package cool.scx.web.parameter_handler.from_upload;
 
 import cool.scx.http.media.multi_part.MultiPartPart;
+import cool.scx.object.ScxObject;
 import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.annotation.FromUpload;
 import cool.scx.web.parameter_handler.ParameterHandler;
@@ -9,8 +10,9 @@ import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 
 import java.util.Collection;
 
-import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
-import static cool.scx.common.util.ObjectUtils.convertValue;
+
+import static cool.scx.common.constant.AnnotationValues.getRealValue;
+import static cool.scx.object.ScxObject.convertValue;
 import static java.util.Collections.addAll;
 
 /// 处理 FileUpload 类型参数
@@ -37,8 +39,11 @@ public final class FromUploadParameterHandler implements ParameterHandler {
             }
             required = fromUpload.required();
         }
-        this.isCollection = parameter.type().isCollectionLikeType();
-        this.isArray = parameter.type().isArrayType();
+        //todo scx-object 的引入破坏了原有逻辑 需要重新检查
+//        this.isCollection = parameter.type().isCollectionLikeType();
+//        this.isArray = parameter.type().isArrayType();
+        this.isCollection = false;
+        this.isArray = false;
     }
 
     /// 从 RoutingContext 查找 对应名称的 上传对象 为空会返回 null
@@ -59,7 +64,8 @@ public final class FromUploadParameterHandler implements ParameterHandler {
         //为空的时候做两个处理 即必填则报错 非必填则返回 null
         if (v.length == 0) {
             if (required) {
-                throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + value + "] , 参数来源 [FromUpload] , 参数类型 [" + parameter.type() + "]");
+                //todo scx-object 的引入破坏了原有逻辑 需要重新检查
+                throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + value + "] , 参数来源 [FromUpload] , 参数类型 [" + parameter.parameterType().toString() + "]");
             }
             return null;
         }
@@ -70,7 +76,8 @@ public final class FromUploadParameterHandler implements ParameterHandler {
         if (isCollection) {
             //这里我们无法确定具体的类型 所以使用 ObjectUtils 帮我们创建一个
             @SuppressWarnings("unchecked")
-            var list = (Collection<Object>) convertValue(new Object[]{}, parameter.type());
+            //todo scx-object 的引入破坏了原有逻辑 需要重新检查
+            var list = (Collection<Object>) ScxObject.convertValue(new Object[]{}, parameter.parameterType());
             addAll(list, v);
             return list;
         } else {
