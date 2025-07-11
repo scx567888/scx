@@ -14,6 +14,9 @@ import cool.scx.reflect.ScxReflect;
 import cool.scx.reflect.TypeInfo;
 import cool.scx.reflect.TypeReference;
 
+import java.io.File;
+import java.io.IOException;
+
 import static cool.scx.object.parser.NodeParserOptions.DuplicateFieldPolicy.COVER;
 import static cool.scx.object.parser.NodeParserOptions.DuplicateFieldPolicy.MERGE;
 
@@ -45,6 +48,14 @@ public final class ScxObject {
 
     public static Node fromXml(String xml) throws JsonProcessingException {
         return XML_PARSER.parse(xml);
+    }
+
+    public static Node fromJson(File file) throws IOException {
+        return JSON_PARSER.parse(file);
+    }
+
+    public static Node fromXml(File file) throws IOException {
+        return XML_PARSER.parse(file);
     }
 
     public static String toJson(Node node) throws JsonProcessingException {

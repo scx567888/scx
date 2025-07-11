@@ -18,5 +18,5 @@ public class LocalDateTimeNodeMapper implements NodeMapper<LocalDateTime> {
     public LocalDateTime fromNode(Node node, NodeMapperSelector selector) {
         return null;
     }
-    
+
 }

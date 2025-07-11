@@ -3,6 +3,7 @@ package cool.scx.object.parser;
 import com.fasterxml.jackson.core.*;
 import cool.scx.object.node.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
@@ -36,6 +37,10 @@ public class NodeParser {
             // 理论上永远不会发生
             throw new UncheckedIOException(e);
         }
+    }
+
+    public Node parse(File file) throws IOException {
+        return parseAndClose(jsonFactory.createParser(file));
     }
 
     private Node parseAndClose(JsonParser parser) throws IOException {

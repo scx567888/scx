@@ -14,5 +14,5 @@ public class NodeNodeMapper implements NodeMapper<Node> {
     public Node fromNode(Node node, NodeMapperSelector selector) {
         return node;
     }
-    
+
 }
