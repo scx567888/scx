@@ -1,6 +1,6 @@
 package cool.scx.config;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import cool.scx.object.node.Node;
 
 /// ScxConfigValueHandler
 ///
@@ -9,6 +9,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 @FunctionalInterface
 public interface ScxConfigValueHandler<T> {
 
-    T handle(String keyPath, JsonNode rawValue);
+    T handle(String keyPath, Node rawValue);
 
 }

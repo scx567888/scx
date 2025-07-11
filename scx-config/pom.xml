@@ -21,14 +21,30 @@
     <dependencies>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>cool.scx</groupId>
             <artifactId>scx-ansi</artifactId>
-            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-reflect</artifactId>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>scx-io</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-object</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-crypto</artifactId>
             <version>${project.version}</version>
         </dependency>
 
