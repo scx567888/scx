@@ -1,9 +1,8 @@
 package cool.scx.config.source;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import cool.scx.common.jackson.JsonNodeHelper;
 import cool.scx.config.ScxConfigSource;
+import cool.scx.object.jackson.JsonNodeHelper;
+import cool.scx.object.node.ObjectNode;
 
 /// MultiConfigSource
 ///
@@ -20,7 +19,7 @@ public class MultiConfigSource extends AbstractConfigSource {
     }
 
     public static ObjectNode loadFromSources(ScxConfigSource... sources) {
-        var configMapping = JsonNodeFactory.instance.objectNode();
+        var configMapping = new ObjectNode();
         for (var scxConfigSource : sources) {
             JsonNodeHelper.merge(configMapping, scxConfigSource.configMapping());
         }

@@ -1,7 +1,7 @@
 package cool.scx.config.source;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import cool.scx.config.ScxConfigSource;
+import cool.scx.object.node.ObjectNode;
 
 import java.util.function.BiConsumer;
 

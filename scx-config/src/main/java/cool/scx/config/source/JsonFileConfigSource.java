@@ -1,11 +1,10 @@
 package cool.scx.config.source;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import cool.scx.ansi.Ansi;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.io.file.FileWatcher;
+import cool.scx.object.ScxObject;
+import cool.scx.object.node.ObjectNode;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,7 +33,7 @@ public final class JsonFileConfigSource extends AbstractConfigSource {
             if (Files.notExists(jsonPath)) {
                 throw new JsonConfigFileMissingException();
             }
-            var rawMap = ObjectUtils.jsonMapper().readTree(jsonPath.toFile());
+            var rawMap = ScxObject.fromJson(jsonPath.toFile());
             if (rawMap instanceof ObjectNode objectNode) {
                 Ansi.ansi().brightBlue("Y 已加载配置文件 : " + jsonPath).println();
                 return objectNode;
@@ -51,7 +50,7 @@ public final class JsonFileConfigSource extends AbstractConfigSource {
                         Ansi.ansi().red("N 配置文件必须为 Object 格式!!! 请确保配置文件格式正确 : " + jsonPath).println();
                 default -> e.printStackTrace();
             }
-            return JsonNodeFactory.instance.objectNode();
+            return new ObjectNode();
         }
     }
 
