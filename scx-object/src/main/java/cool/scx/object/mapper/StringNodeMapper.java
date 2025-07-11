@@ -13,7 +13,7 @@ public class StringNodeMapper implements NodeMapper<String> {
     }
 
     @Override
-    public String fromNode(Node node) {
+    public String fromNode(Node node, NodeMapperSelector selector) {
         //1, 处理 null
         if (node == NullNode.NULL) {
             return null;
