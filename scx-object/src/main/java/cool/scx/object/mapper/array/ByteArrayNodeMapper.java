@@ -18,7 +18,7 @@ public class ByteArrayNodeMapper implements NodeMapper<byte[]> {
     }
 
     @Override
-    public byte[] fromNode(Node node) {
+    public byte[] fromNode(Node node, NodeMapperSelector selector) {
         return null;
     }
 

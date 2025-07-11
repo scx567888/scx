@@ -18,7 +18,7 @@ public class LongArrayNodeMapper implements NodeMapper<long[]> {
     }
 
     @Override
-    public long[] fromNode(Node node) {
+    public long[] fromNode(Node node, NodeMapperSelector selector) {
         return null;
     }
 

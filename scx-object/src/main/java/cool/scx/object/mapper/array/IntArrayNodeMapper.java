@@ -18,7 +18,7 @@ public class IntArrayNodeMapper implements NodeMapper<int[]> {
     }
 
     @Override
-    public int[] fromNode(Node node) {
+    public int[] fromNode(Node node, NodeMapperSelector selector) {
         return null;
     }
 

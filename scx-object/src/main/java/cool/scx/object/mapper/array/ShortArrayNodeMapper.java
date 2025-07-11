@@ -18,7 +18,7 @@ public class ShortArrayNodeMapper implements NodeMapper<short[]> {
     }
 
     @Override
-    public short[] fromNode(Node node) {
+    public short[] fromNode(Node node, NodeMapperSelector selector) {
         return null;
     }
 

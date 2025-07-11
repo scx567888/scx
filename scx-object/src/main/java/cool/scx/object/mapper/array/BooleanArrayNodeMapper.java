@@ -20,7 +20,7 @@ public class BooleanArrayNodeMapper implements NodeMapper<boolean[]> {
     }
 
     @Override
-    public boolean[] fromNode(Node node) {
+    public boolean[] fromNode(Node node, NodeMapperSelector selector) {
         return null;
     }
 

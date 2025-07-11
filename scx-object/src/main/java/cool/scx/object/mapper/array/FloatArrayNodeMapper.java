@@ -18,7 +18,7 @@ public class FloatArrayNodeMapper implements NodeMapper<float[]> {
     }
 
     @Override
-    public float[] fromNode(Node node) {
+    public float[] fromNode(Node node, NodeMapperSelector selector) {
         return null;
     }
 

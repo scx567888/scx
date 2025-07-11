@@ -18,7 +18,7 @@ public class DoubleArrayNodeMapper implements NodeMapper<double[]> {
     }
 
     @Override
-    public double[] fromNode(Node node) {
+    public double[] fromNode(Node node, NodeMapperSelector selector) {
         return null;
     }
 

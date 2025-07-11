@@ -18,7 +18,7 @@ public class CharArrayNodeMapper implements NodeMapper<char[]> {
     }
 
     @Override
-    public char[] fromNode(Node node) {
+    public char[] fromNode(Node node, NodeMapperSelector selector) {
         return null;
     }
 }
