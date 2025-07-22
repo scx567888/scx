@@ -235,7 +235,7 @@
         <scx-timer.version>1.0.0</scx-timer.version>
         <scx-tcp.version>4.0.0</scx-tcp.version>
         <jackson.version>2.19.1</jackson.version>
-        <hikaricp.version>6.2.1</hikaricp.version>
+        <hikaricp.version>6.3.1</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
