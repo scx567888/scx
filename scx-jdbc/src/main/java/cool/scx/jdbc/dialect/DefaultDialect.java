@@ -6,7 +6,6 @@ import cool.scx.jdbc.type_handler.TypeHandlerSelector;
 import cool.scx.reflect.TypeInfo;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Type;
 import java.sql.Driver;
 import java.sql.Statement;
 

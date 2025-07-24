@@ -1,7 +1,6 @@
 package cool.scx.jdbc.type_handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.object.ScxObject;
 import cool.scx.reflect.ScxReflect;
 import cool.scx.reflect.TypeInfo;

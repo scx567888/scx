@@ -1,6 +1,5 @@
 package cool.scx.http.sender;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
 import cool.scx.http.media.event_stream.ServerEventStream;

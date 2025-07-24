@@ -3,7 +3,6 @@ package cool.scx.jdbc.mysql.test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.common.util.FileUtils;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.mysql.test.bean.Student;
 import cool.scx.jdbc.mysql.test.bean.StudentRecord;
@@ -102,7 +101,7 @@ public class SQLRunnerForMySQLTest {
         System.out.println("查询 使用 BeanList 第一条内容: " + ScxObject.toJson(query.get(0)));
         List<Map<String, Object>> query1 = sqlRunner.query(sql("select * from `t1`"), ofMapList());
         System.out.println("查询 使用 MapList 总条数: " + query1.size());
-        System.out.println("查询 使用 MapList 第一条内容: " + ScxObject.toJson(query1.get(0) ));
+        System.out.println("查询 使用 MapList 第一条内容: " + ScxObject.toJson(query1.get(0)));
     }
 
     @Test

@@ -24,7 +24,7 @@
             <groupId>cool.scx</groupId>
             <artifactId>scx-reflect</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>cool.scx</groupId>
             <artifactId>scx-common</artifactId>

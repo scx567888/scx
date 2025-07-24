@@ -39,7 +39,7 @@ public final class FromUploadParameterHandler implements ParameterHandler {
             }
             required = fromUpload.required();
         }
-        this.isCollection =checkIsCollection(parameter.parameterType());
+        this.isCollection = checkIsCollection(parameter.parameterType());
         this.isArray = checkIsArray(parameter.parameterType());
     }
 
