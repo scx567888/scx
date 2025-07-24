@@ -35,8 +35,8 @@ public final class RequestInfo {
         this.routingContext = ctx;
         this.cachedMultiPart = cachedMultiPart;
         this.contentType = ctx.request().contentType();
-        this.pathParams =(ObjectNode) valueToNode(ctx.pathParams().toMultiValueMap());
-        this.query =(ObjectNode) valueToNode(ctx.request().query().toMultiValueMap());
+        this.pathParams = (ObjectNode) valueToNode(ctx.pathParams().toMultiValueMap());
+        this.query = (ObjectNode) valueToNode(ctx.request().query().toMultiValueMap());
         this.bodyInit = false;
     }
 

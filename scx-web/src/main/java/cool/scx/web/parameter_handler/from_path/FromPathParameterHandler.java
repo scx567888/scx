@@ -1,6 +1,5 @@
 package cool.scx.web.parameter_handler.from_path;
 
-import com.fasterxml.jackson.databind.JavaType;
 import cool.scx.reflect.ParameterInfo;
 import cool.scx.reflect.TypeInfo;
 import cool.scx.web.annotation.FromPath;

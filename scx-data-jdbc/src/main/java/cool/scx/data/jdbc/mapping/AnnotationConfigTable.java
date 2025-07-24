@@ -61,7 +61,7 @@ public class AnnotationConfigTable<Entity> implements EntityTable<Entity> {
 
     private static AnnotationConfigColumn[] initAllColumns(Class<?> clazz) {
         // todo 这里强转可能有问题
-        var classInfo =(ClassInfo) ScxReflect.typeOf(clazz);
+        var classInfo = (ClassInfo) ScxReflect.typeOf(clazz);
         var fields = classInfo.classKind() == RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
         var list = Stream.of(fields)
                 .filter(field -> field.findAnnotation(NoColumn.class) == null)

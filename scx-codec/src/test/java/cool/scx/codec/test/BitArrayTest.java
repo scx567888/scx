@@ -1,4 +1,4 @@
-package cool.scx.code.test;
+package cool.scx.codec.test;
 
 import cool.scx.codec.bit_array.BitArray;
 import cool.scx.codec.bit_array.BitArrayView;

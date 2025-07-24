@@ -41,7 +41,7 @@ final class FieldSetter {
 
     static FieldSetter[] ofArray(Class<?> type, Function<Field, String> columnNameMapping) {
         //todo 这里可能有问题
-        var classInfo = (ClassInfo)ScxReflect.typeOf(type);
+        var classInfo = (ClassInfo) ScxReflect.typeOf(type);
         var fields = classInfo.classKind() == RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
         var fieldSetters = new FieldSetter[fields.length];
         for (int i = 0; i < fields.length; i = i + 1) {

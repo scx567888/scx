@@ -88,7 +88,7 @@ public final class RouteRegistrar {
 
     private static List<MethodInfo> filterMethod(Object object) {
         // todo 这里强转可能有问题
-        return Arrays.stream(((ClassInfo)ScxReflect.typeOf(object.getClass())).allMethods()).filter(m -> m.accessModifier() == PUBLIC && isRoute(m)).toList();
+        return Arrays.stream(((ClassInfo) ScxReflect.typeOf(object.getClass())).allMethods()).filter(m -> m.accessModifier() == PUBLIC && isRoute(m)).toList();
     }
 
     /// 初始化 ScxMappingClassList

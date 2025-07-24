@@ -11,7 +11,6 @@ import cool.scx.bean.BeanFactory;
 import cool.scx.bean.BeanFactoryImpl;
 import cool.scx.bean.resolver.AutowiredAnnotationResolver;
 import cool.scx.common.util.ClassUtils;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.StringUtils;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
@@ -119,7 +118,7 @@ public final class ScxAppHelper {
     @SuppressWarnings("unchecked")
     public static <Entity extends BaseModel> Class<Entity> findBaseModelServiceEntityClass(Class<?> baseModelServiceClass) {
         // todo 这里强转可能有问题
-        var superClass = ((ClassInfo)ScxReflect.typeOf(baseModelServiceClass)).findSuperType(BaseModelService.class);
+        var superClass = ((ClassInfo) ScxReflect.typeOf(baseModelServiceClass)).findSuperType(BaseModelService.class);
         if (superClass != null) {
             var boundType = superClass.bindings().get(0);
             if (boundType != null) {
@@ -206,7 +205,7 @@ public final class ScxAppHelper {
         for (var beanDefinitionName : beanDefinitionNames) {
             var bean = beanFactory.getBean(beanDefinitionName);
             // todo 这里强转可能有问题
-            var classInfo =(ClassInfo) ScxReflect.typeOf(bean.getClass());
+            var classInfo = (ClassInfo) ScxReflect.typeOf(bean.getClass());
             for (var method : classInfo.methods()) {
                 if (method.accessModifier() != PUBLIC) {
                     continue;

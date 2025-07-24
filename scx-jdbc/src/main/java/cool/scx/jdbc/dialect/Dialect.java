@@ -8,7 +8,6 @@ import cool.scx.jdbc.type_handler.TypeHandler;
 import cool.scx.reflect.TypeInfo;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Type;
 import java.sql.Driver;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -52,7 +51,7 @@ public interface Dialect {
 
     /// 查找
     <T> TypeHandler<T> findTypeHandler(Class<?> type);
-    
+
     <T> TypeHandler<T> findTypeHandler(TypeInfo type);
 
     /// 方言数据类型 转换为 标准数据类型
