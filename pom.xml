@@ -42,7 +42,6 @@
     </scm>
 
     <modules>
-        <module>scx-ansi</module>
         <module>scx-app</module>
         <module>scx-bean</module>
         <module>scx-codec</module>
@@ -135,6 +134,12 @@
                 <groupId>cool.scx</groupId>
                 <artifactId>scx-tcp</artifactId>
                 <version>${scx-tcp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-ansi</artifactId>
+                <version>${scx-ansi.version}</version>
             </dependency>
 
             <dependency>
@@ -234,6 +239,7 @@
         <scx-logging.version>4.0.0</scx-logging.version>
         <scx-timer.version>1.0.0</scx-timer.version>
         <scx-tcp.version>4.0.0</scx-tcp.version>
+        <scx-ansi.version>4.1.0</scx-ansi.version>
         <jackson.version>2.19.1</jackson.version>
         <hikaricp.version>6.2.1</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
