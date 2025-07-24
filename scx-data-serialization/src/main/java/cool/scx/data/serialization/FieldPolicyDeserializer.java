@@ -1,109 +1,101 @@
 package cool.scx.data.serialization;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.field_policy.*;
+import cool.scx.object.ScxObject;
+import cool.scx.object.node.ArrayNode;
+import cool.scx.object.node.Node;
+import cool.scx.object.node.ObjectNode;
+import cool.scx.object.node.ValueNode;
+import cool.scx.reflect.TypeReference;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static cool.scx.common.util.ObjectUtils.convertValue;
+import static cool.scx.object.ScxObject.convertValue;
 
-/// FieldPolicyDeserializer
-///
-/// @author scx567888
-/// @version 0.0.1
 public class FieldPolicyDeserializer {
 
     public static FieldPolicy deserializeFieldPolicyFromJson(String json) throws DeserializationException {
         try {
-            var v = ObjectUtils.jsonMapper().readTree(json);
-            return deserializeFieldPolicy(v);
-        } catch (JsonProcessingException e) {
+            var node = ScxObject.fromJson(json);
+            return deserializeFieldPolicy(node);
+        } catch (Exception e) {
             throw new DeserializationException(e);
         }
     }
 
-    public static FieldPolicy deserializeFieldPolicy(JsonNode v) throws DeserializationException {
-        if (v == null || v.isNull()) {
-            throw new DeserializationException("FieldPolicy node is null");
-        }
-        if (!v.isObject()) {
-            throw new DeserializationException("FieldPolicy node is not an object: " + v);
-        }
-        var typeNode = v.get("@type");
-        if (typeNode == null || !"FieldPolicy".equals(typeNode.asText())) {
-            throw new DeserializationException("Unknown or missing @type for FieldPolicy: " + v);
+    public static FieldPolicy deserializeFieldPolicy(Node v) throws DeserializationException {
+        if (v == null || v.isNull() || !(v instanceof ObjectNode objNode)) {
+            throw new DeserializationException("FieldPolicy node is null or not an object");
         }
 
-        //filterMode 不允许为空
-        var filterModeNode = v.get("filterMode");
-
-        if (filterModeNode == null || filterModeNode.isNull()) {
-            throw new DeserializationException("FilterMode node is null");
+        var typeNode = objNode.get("@type");
+        if (!(typeNode instanceof ValueNode vn) || !"FieldPolicy".equals(vn.asText())) {
+            throw new DeserializationException("Unknown or missing @type for FieldPolicy");
         }
 
+        var filterModeNode = objNode.get("filterMode");
+        if (!(filterModeNode instanceof Node)) {
+            throw new DeserializationException("filterMode is missing or null");
+        }
         var filterMode = convertValue(filterModeNode, FilterMode.class);
 
-        // 创建一个 FieldPolicy 实例
         var policy = new FieldPolicyImpl(filterMode);
 
-        var fieldNamesNode = v.get("fieldNames");
-
-        if (fieldNamesNode == null || !fieldNamesNode.isArray()) {
-            throw new DeserializationException("FieldNames node is null or not an array: " + v);
+        var fieldNamesNode = objNode.get("fieldNames");
+        if (!(fieldNamesNode instanceof ArrayNode arrayNode)) {
+            throw new DeserializationException("fieldNames is null or not an array");
         }
 
         List<String> fieldNames = new ArrayList<>();
-        for (var fn : fieldNamesNode) {
-            fieldNames.add(fn.asText());
+        for (Node fn : arrayNode) {
+            if (!(fn instanceof ValueNode vNode)) {
+                throw new DeserializationException("Each fieldName must be a ValueNode");
+            }
+            fieldNames.add(vNode.asText());
         }
+
         if (filterMode == FilterMode.INCLUDED) {
             policy.include(fieldNames.toArray(String[]::new));
         } else if (filterMode == FilterMode.EXCLUDED) {
             policy.exclude(fieldNames.toArray(String[]::new));
         }
 
-        var virtualFieldsNode = v.get("virtualFields");
-        if (virtualFieldsNode == null || !virtualFieldsNode.isArray()) {
-            throw new DeserializationException("VirtualFields node is null or not an array: " + v);
+        var virtualFieldsNode = objNode.get("virtualFields");
+        if (!(virtualFieldsNode instanceof ArrayNode vfArray)) {
+            throw new DeserializationException("virtualFields is null or not an array");
         }
 
         var virtualFields = new ArrayList<VirtualField>();
-        for (var jsonNode : virtualFieldsNode) {
-            virtualFields.add(deserializeVirtualField(jsonNode));
+        for (Node vfNode : vfArray) {
+            virtualFields.add(deserializeVirtualField(vfNode));
         }
         policy.virtualFields(virtualFields.toArray(VirtualField[]::new));
 
-        var assignFieldsNode = v.get("assignFields");
-        if (assignFieldsNode == null || !assignFieldsNode.isArray()) {
-            throw new DeserializationException("AssignFields node is null or not an array: " + v);
+        var assignFieldsNode = objNode.get("assignFields");
+        if (!(assignFieldsNode instanceof ArrayNode afArray)) {
+            throw new DeserializationException("assignFields is null or not an array");
         }
+
         var assignFields = new ArrayList<AssignField>();
-        for (var jsonNode : assignFieldsNode) {
-            assignFields.add(deserializeAssignField(jsonNode));
+        for (Node afNode : afArray) {
+            assignFields.add(deserializeAssignField(afNode));
         }
         policy.assignFields(assignFields.toArray(AssignField[]::new));
 
-
-        var ignoreNullNode = v.get("ignoreNull");
-        if (ignoreNullNode == null || ignoreNullNode.isNull()) {
-            throw new DeserializationException("IgnoreNull node is null: " + v);
+        var ignoreNullNode = objNode.get("ignoreNull");
+        if (!(ignoreNullNode instanceof ValueNode ignoreVN)) {
+            throw new DeserializationException("ignoreNull is missing or invalid");
         }
-        var ignoreNull = ignoreNullNode.asBoolean(true);
-        policy.ignoreNull(ignoreNull);
+        policy.ignoreNull(ignoreVN.asBoolean());
 
-
-        var ignoreNullsNode = v.get("ignoreNulls");
-        if (ignoreNullsNode == null || !ignoreNullsNode.isObject()) {
-            throw new DeserializationException("IgnoreNulls node is null or not an map: " + v);
+        var ignoreNullsNode = objNode.get("ignoreNulls");
+        if (!(ignoreNullsNode instanceof ObjectNode ignoreMapNode)) {
+            throw new DeserializationException("ignoreNulls is not an object");
         }
 
-        var ignoreNulls = convertValue(ignoreNullsNode, new TypeReference<Map<String, Boolean>>() {});
-
+        Map<String, Boolean> ignoreNulls = convertValue(ignoreMapNode, new TypeReference<>() {});
         for (var e : ignoreNulls.entrySet()) {
             policy.ignoreNull(e.getKey(), e.getValue());
         }
@@ -111,50 +103,44 @@ public class FieldPolicyDeserializer {
         return policy;
     }
 
-    private static VirtualField deserializeVirtualField(JsonNode node) throws DeserializationException {
-        if (node == null || node.isNull()) {
-            throw new DeserializationException("VirtualField node is null");
+    private static VirtualField deserializeVirtualField(Node node) throws DeserializationException {
+        if (node == null || node.isNull() || !(node instanceof ObjectNode objNode)) {
+            throw new DeserializationException("VirtualField must be an ObjectNode");
         }
-        //检查类型
-        var typeNode = node.get("@type");
-        if (typeNode == null || !"VirtualField".equals(typeNode.asText())) {
-            throw new DeserializationException("Unknown or missing @type for VirtualField: " + node);
+
+        var typeNode = objNode.get("@type");
+        if (!(typeNode instanceof ValueNode vn) || !"VirtualField".equals(vn.asText())) {
+            throw new DeserializationException("Invalid or missing @type for VirtualField");
         }
-        //这两个都不允许为空
-        var virtualFieldNameNode = node.get("virtualFieldName");
-        var expressionNode = node.get("expression");
-        if (virtualFieldNameNode == null || !virtualFieldNameNode.isTextual()) {
-            throw new DeserializationException("VirtualFieldName node is null or not a string: " + node);
+
+        var nameNode = objNode.get("virtualFieldName");
+        var exprNode = objNode.get("expression");
+
+        if (!(nameNode instanceof ValueNode nameVN) || !(exprNode instanceof ValueNode exprVN)) {
+            throw new DeserializationException("virtualFieldName or expression is invalid in VirtualField");
         }
-        if (expressionNode == null || !expressionNode.isTextual()) {
-            throw new DeserializationException("Expression node is null or not a string: " + node);
-        }
-        var virtualFieldName = virtualFieldNameNode.asText();
-        var expression = expressionNode.asText();
-        return new VirtualField(virtualFieldName, expression);
+
+        return new VirtualField(nameVN.asText(), exprVN.asText());
     }
 
-    private static AssignField deserializeAssignField(JsonNode node) throws DeserializationException {
-        if (node == null || node.isNull()) {
-            throw new DeserializationException("AssignField node is null");
+    private static AssignField deserializeAssignField(Node node) throws DeserializationException {
+        if (node == null || node.isNull() || !(node instanceof ObjectNode objNode)) {
+            throw new DeserializationException("AssignField must be an ObjectNode");
         }
-        //检查类型
-        var typeNode = node.get("@type");
-        if (typeNode == null || !"AssignField".equals(typeNode.asText())) {
-            throw new DeserializationException("Unknown or missing @type for AssignField: " + node);
+
+        var typeNode = objNode.get("@type");
+        if (!(typeNode instanceof ValueNode vn) || !"AssignField".equals(vn.asText())) {
+            throw new DeserializationException("Invalid or missing @type for AssignField");
         }
-        //这两个也不允许为空
-        var fieldNameNode = node.get("fieldName");
-        var expressionNode = node.get("expression");
-        if (fieldNameNode == null || !fieldNameNode.isTextual()) {
-            throw new DeserializationException("AssignFieldName node is null or not a string: " + node);
+
+        var fieldNameNode = objNode.get("fieldName");
+        var exprNode = objNode.get("expression");
+
+        if (!(fieldNameNode instanceof ValueNode fnVN) || !(exprNode instanceof ValueNode exprVN)) {
+            throw new DeserializationException("fieldName or expression is invalid in AssignField");
         }
-        if (expressionNode == null || !expressionNode.isTextual()) {
-            throw new DeserializationException("Expression node is null or not a string: " + node);
-        }
-        var fieldName = fieldNameNode.asText();
-        var expression = expressionNode.asText();
-        return new AssignField(fieldName, expression);
+
+        return new AssignField(fnVN.asText(), exprVN.asText());
     }
 
 }
