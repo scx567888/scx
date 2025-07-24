@@ -19,7 +19,8 @@ public final class FromContextParameterHandlerBuilder implements ParameterHandle
 
     @Override
     public ParameterHandler tryBuild(ParameterInfo parameter) {
-        var rawClass = parameter.type().getRawClass();
+        // todo 这里可能有问题
+        var rawClass = parameter.parameterType().rawClass();
         if (rawClass == RoutingContext.class) {
             return RequestInfo::routingContext;
         }

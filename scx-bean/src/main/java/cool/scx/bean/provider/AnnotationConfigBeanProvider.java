@@ -7,9 +7,10 @@ import cool.scx.bean.exception.BeanCreationException;
 import cool.scx.bean.exception.IllegalBeanClassException;
 import cool.scx.bean.exception.NoSuchConstructorException;
 import cool.scx.bean.exception.NoUniqueConstructorException;
-import cool.scx.reflect.ClassInfoFactory;
+import cool.scx.reflect.ClassInfo;
 import cool.scx.reflect.ConstructorInfo;
 import cool.scx.reflect.ParameterInfo;
+import cool.scx.reflect.ScxReflect;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
 import static cool.scx.bean.dependency.CircularDependencyChecker.endDependencyCheck;
 import static cool.scx.bean.dependency.CircularDependencyChecker.startDependencyCheck;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
-import static cool.scx.reflect.ClassType.*;
+import static cool.scx.reflect.ClassKind.*;
 
 /// 注解配置的 BeanProvider, 根据 class 进行反射
 ///
@@ -36,18 +37,24 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
     }
 
     public static void checkClass(Class<?> beanClass) throws IllegalBeanClassException {
-        var classInfo = ClassInfoFactory.getClassInfo(beanClass);
-        var classType = classInfo.classType();
-        if (classType == CONCRETE) {
+        var typeInfo = ScxReflect.typeOf(beanClass);
+        ClassInfo classInfo;
+        if (typeInfo instanceof ClassInfo c) {
+            classInfo = c;
+        } else {
+            throw new IllegalBeanClassException("beanClass " + beanClass.getName() + " 不支持非普通类 ");
+        }
+        var classType = classInfo.classKind();
+        if (classType == CLASS) {
             if (classInfo.isMemberClass() && !classInfo.isStatic()) {
                 throw new IllegalBeanClassException("beanClass " + beanClass.getName() + " 不支持非静态的成员类 ");
+            }
+            if (classInfo.isAbstract()) {
+                throw new IllegalBeanClassException("beanClass " + beanClass.getName() + " is an abstract class");
             }
         }
         if (classType == INTERFACE) {
             throw new IllegalBeanClassException("beanClass " + beanClass.getName() + " is an interface");
-        }
-        if (classType == ABSTRACT_CLASS) {
-            throw new IllegalBeanClassException("beanClass " + beanClass.getName() + " is an abstract class");
         }
         if (classType == ANNOTATION) {
             throw new IllegalBeanClassException("beanClass " + beanClass.getName() + " is an annotation");
@@ -59,8 +66,9 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
 
     /// 查找构造函数
     public static ConstructorInfo findPreferredConstructor(Class<?> beanClass) throws NoSuchConstructorException, NoUniqueConstructorException {
+        // 这里之前已经检查过 beanClass 了 这里直接强转
+        var classInfo = (ClassInfo) ScxReflect.typeOf(beanClass);
         // 我们只使用 public 的 构造函数
-        var classInfo = ClassInfoFactory.getClassInfo(beanClass);
         var publicConstructors = new ArrayList<ConstructorInfo>();
         for (var constructor : classInfo.constructors()) {
             if (constructor.accessModifier() == PUBLIC) {
@@ -111,7 +119,7 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
         var builder = new StringBuilder();
         for (var constructor : constructors) {
             builder.append("  - ")
-                    .append(constructor.constructor().toGenericString())
+                    .append(constructor.rawConstructor().toGenericString())
                     .append("\n");
         }
         return builder.toString();

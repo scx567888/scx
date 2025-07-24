@@ -5,6 +5,7 @@ import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.RequestInfo;
 
 import static cool.scx.common.exception.ScxExceptionHelper.ignore;
+import static cool.scx.common.util.ObjectUtils.constructType;
 import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.getValueFromBody;
 import static cool.scx.web.parameter_handler.from_path.FromPathParameterHandler.getValueFromPath;
 import static cool.scx.web.parameter_handler.from_query.FromQueryParameterHandler.getValueFromQuery;
@@ -23,7 +24,7 @@ public final class LastParameterHandler implements ParameterHandler {
 
     @Override
     public Object handle(RequestInfo requestInfo) throws Exception {
-        var javaType = parameter.type();
+        var javaType = constructType(parameter.rawParameter().getParameterizedType());
         var name = parameter.name();
         //------ 这里针对没有注解的参数进行赋值猜测 ---------------
         //  从 body 里进行猜测 先尝试 根据参数名称进行转换

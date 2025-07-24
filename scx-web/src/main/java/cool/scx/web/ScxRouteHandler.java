@@ -44,7 +44,7 @@ public final class ScxRouteHandler implements Route, ScxConsumer<RoutingContext,
         this.clazz = instance.getClass();
         this.method = method;
         this.method.setAccessible(true);
-        this.isVoid = method.returnType().getRawClass() == void.class;
+        this.isVoid = method.returnType().rawClass() == void.class;
         this.instance = instance;
         //根据注解初始化值
         var clazzAnnotation = clazz.getAnnotation(ScxRoute.class);

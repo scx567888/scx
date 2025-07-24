@@ -3,6 +3,7 @@ package cool.scx.web.parameter_handler.from_body;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.jackson.JsonNodeHelper;
+import cool.scx.common.util.ObjectUtils;
 import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.annotation.FromBody;
 import cool.scx.web.parameter_handler.ParameterHandler;
@@ -13,8 +14,7 @@ import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 import java.io.IOException;
 
 import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
-import static cool.scx.common.util.ObjectUtils.Options;
-import static cool.scx.common.util.ObjectUtils.jsonMapper;
+import static cool.scx.common.util.ObjectUtils.*;
 
 /// FromBodyParameterHandler
 ///
@@ -79,7 +79,8 @@ public final class FromBodyParameterHandler implements ParameterHandler {
 
     @Override
     public Object handle(RequestInfo requestInfo) throws Exception {
-        return getValueFromBody(value, fromBody.useAllBody(), fromBody.required(), parameter.type(), requestInfo);
+        // todo 这里可能有问题
+        return getValueFromBody(value, fromBody.useAllBody(), fromBody.required(), constructType(parameter.rawParameter().getParameterizedType()), requestInfo);
     }
 
 }

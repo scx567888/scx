@@ -1,15 +1,16 @@
 package cool.scx.jdbc.result_handler.bean_builder;
 
 import cool.scx.jdbc.type_handler.TypeHandler;
-import cool.scx.reflect.ClassInfoFactory;
+import cool.scx.reflect.ClassInfo;
 import cool.scx.reflect.FieldInfo;
+import cool.scx.reflect.ScxReflect;
 
 import java.lang.reflect.Field;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static cool.scx.reflect.AccessModifier.PUBLIC;
-import static cool.scx.reflect.ClassType.RECORD;
+import static cool.scx.reflect.ClassKind.RECORD;
 
 /// FieldSetter
 ///
@@ -30,7 +31,7 @@ final class FieldSetter {
 
     static FieldSetter of(FieldInfo field, Function<Field, String> columnNameMapping) {
         field.setAccessible(true);
-        var columnName = columnNameMapping.apply(field.field());
+        var columnName = columnNameMapping.apply(field.rawField());
         //若 columnNameMapping 提供空值, 则回退到 field.getName()
         if (columnName == null) {
             columnName = field.name();
@@ -39,8 +40,9 @@ final class FieldSetter {
     }
 
     static FieldSetter[] ofArray(Class<?> type, Function<Field, String> columnNameMapping) {
-        var classInfo = ClassInfoFactory.getClassInfo(type);
-        var fields = classInfo.classType() == RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
+        //todo 这里可能有问题
+        var classInfo = (ClassInfo)ScxReflect.typeOf(type);
+        var fields = classInfo.classKind() == RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
         var fieldSetters = new FieldSetter[fields.length];
         for (int i = 0; i < fields.length; i = i + 1) {
             fieldSetters[i] = of(fields[i], columnNameMapping);

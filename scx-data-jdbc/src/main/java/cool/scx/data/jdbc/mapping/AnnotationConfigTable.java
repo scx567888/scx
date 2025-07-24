@@ -3,8 +3,9 @@ package cool.scx.data.jdbc.mapping;
 import cool.scx.collections.multi_map.MultiMap;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.data.jdbc.annotation.NoColumn;
-import cool.scx.reflect.ClassInfoFactory;
+import cool.scx.reflect.ClassInfo;
 import cool.scx.reflect.FieldInfo;
+import cool.scx.reflect.ScxReflect;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
 
 import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
-import static cool.scx.reflect.ClassType.RECORD;
+import static cool.scx.reflect.ClassKind.RECORD;
 
 /// AnnotationConfigTable
 ///
@@ -59,8 +60,9 @@ public class AnnotationConfigTable<Entity> implements EntityTable<Entity> {
     }
 
     private static AnnotationConfigColumn[] initAllColumns(Class<?> clazz) {
-        var classInfo = ClassInfoFactory.getClassInfo(clazz);
-        var fields = classInfo.classType() == RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
+        // todo 这里强转可能有问题
+        var classInfo =(ClassInfo) ScxReflect.typeOf(clazz);
+        var fields = classInfo.classKind() == RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
         var list = Stream.of(fields)
                 .filter(field -> field.findAnnotation(NoColumn.class) == null)
                 .map(AnnotationConfigColumn::new)

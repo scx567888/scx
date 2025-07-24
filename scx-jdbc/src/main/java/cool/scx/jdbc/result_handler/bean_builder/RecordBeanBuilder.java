@@ -1,9 +1,9 @@
 package cool.scx.jdbc.result_handler.bean_builder;
 
 import cool.scx.reflect.ClassInfo;
-import cool.scx.reflect.ClassInfoFactory;
 import cool.scx.reflect.ConstructorInfo;
 import cool.scx.reflect.ParameterInfo;
+import cool.scx.reflect.ScxReflect;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +23,8 @@ final class RecordBeanBuilder<T> extends BeanBuilder<T> {
     private final FieldSetter[] fieldSetters;
 
     public RecordBeanBuilder(Class<T> type, Function<Field, String> columnNameMapping) {
-        this.constructor = checkRecordConstructor(ClassInfoFactory.getClassInfo(type));
+        //todo 这里强转可能有问题
+        this.constructor = checkRecordConstructor((ClassInfo) ScxReflect.typeOf(type));
         this.constructor.setAccessible(true);
         this.fieldSetters = sortFieldSetters(this.constructor.parameters(), FieldSetter.ofArray(type, columnNameMapping));
     }

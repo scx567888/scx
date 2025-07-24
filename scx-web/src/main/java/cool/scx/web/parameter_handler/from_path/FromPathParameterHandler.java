@@ -9,6 +9,7 @@ import cool.scx.web.parameter_handler.exception.ParamConvertException;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 
 import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
+import static cool.scx.common.util.ObjectUtils.constructType;
 import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.readValue;
 
 /// FromPathParameterHandler
@@ -50,7 +51,8 @@ public final class FromPathParameterHandler implements ParameterHandler {
 
     @Override
     public Object handle(RequestInfo requestInfo) throws Exception {
-        return getValueFromPath(value, fromPath.merge(), fromPath.required(), parameter.type(), requestInfo);
+        //todo 这里可能有问题
+        return getValueFromPath(value, fromPath.merge(), fromPath.required(), constructType(parameter.rawParameter().getParameterizedType()), requestInfo);
     }
 
 }

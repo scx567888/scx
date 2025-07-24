@@ -37,17 +37,17 @@ public class AutowiredAnnotationResolver implements BeanResolver {
 
     @Override
     public Object resolveConstructorArgument(ParameterInfo parameter) {
-        var annotations = parameter.allAnnotations();
+        var annotations = parameter.annotations();
         // 构造参数和 fieldValue 规则略有不同, 没有任何其他注解 强制注入
         if (annotations.length == 0) {
-            return beanFactory.getBean(parameter.parameter().getType());
+            return beanFactory.getBean(parameter.rawParameter().getType());
         }
-        return resolveValue(parameter, parameter.parameter().getType());
+        return resolveValue(parameter, parameter.rawParameter().getType());
     }
 
     @Override
     public Object resolveFieldValue(FieldInfo fieldInfo) {
-        return resolveValue(fieldInfo, fieldInfo.field().getType());
+        return resolveValue(fieldInfo, fieldInfo.rawField().getType());
     }
 
 }

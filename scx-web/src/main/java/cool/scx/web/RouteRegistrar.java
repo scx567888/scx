@@ -4,8 +4,9 @@ import cool.scx.collections.multi_map.MultiMap;
 import cool.scx.common.util.ClassUtils;
 import cool.scx.http.routing.PathMatcherImpl;
 import cool.scx.http.routing.Router;
-import cool.scx.reflect.ClassInfoFactory;
+import cool.scx.reflect.ClassInfo;
 import cool.scx.reflect.MethodInfo;
+import cool.scx.reflect.ScxReflect;
 import cool.scx.web.annotation.NoScxRoute;
 import cool.scx.web.annotation.ScxRoute;
 
@@ -86,7 +87,8 @@ public final class RouteRegistrar {
     }
 
     private static List<MethodInfo> filterMethod(Object object) {
-        return Arrays.stream(ClassInfoFactory.getClassInfo(object.getClass()).allMethods()).filter(m -> m.accessModifier() == PUBLIC && isRoute(m)).toList();
+        // todo 这里强转可能有问题
+        return Arrays.stream(((ClassInfo)ScxReflect.typeOf(object.getClass())).allMethods()).filter(m -> m.accessModifier() == PUBLIC && isRoute(m)).toList();
     }
 
     /// 初始化 ScxMappingClassList
@@ -112,7 +114,7 @@ public final class RouteRegistrar {
     }
 
     public static ScxRoute findScxRoute(MethodInfo method) {
-        var annotations = method.allAnnotations();
+        var annotations = method.annotations();
         for (var a : annotations) {
             if (a instanceof ScxRoute s) {
                 return s;
