@@ -1,6 +1,6 @@
 package cool.scx.web.exception_handler;
 
-import cool.scx.common.exception.ScxExceptionHelper;
+import cool.scx.common.util.ExceptionUtils;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
@@ -73,11 +73,11 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         String info = null;
         //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
         if (useDevelopmentErrorPage) {
-            var cause = ScxExceptionHelper.getRootCause(scxHttpException.getCause());
+            var cause = scxHttpException.getCause();
             if (cause == null) {
                 info = scxHttpException.getMessage();
             } else {
-                info = ScxExceptionHelper.getStackTraceString(cause);
+                info = ExceptionUtils.getStackTraceString(cause);
             }
         }
         sendToClient(scxHttpException.status(), info, routingContext);

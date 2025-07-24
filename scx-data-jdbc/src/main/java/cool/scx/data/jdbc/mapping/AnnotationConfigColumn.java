@@ -3,7 +3,7 @@ package cool.scx.data.jdbc.mapping;
 import cool.scx.data.jdbc.annotation.Column;
 import cool.scx.reflect.FieldInfo;
 
-import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
+import static cool.scx.common.constant.AnnotationValues.getRealValue;
 
 /// AnnotationConfigColumn
 ///

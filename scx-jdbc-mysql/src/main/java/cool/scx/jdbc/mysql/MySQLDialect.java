@@ -10,6 +10,7 @@ import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
 import cool.scx.jdbc.type_handler.TypeHandler;
 import cool.scx.jdbc.type_handler.TypeHandlerSelector;
+import cool.scx.reflect.TypeInfo;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
@@ -106,7 +107,12 @@ public class MySQLDialect implements Dialect {
     }
 
     @Override
-    public <T> TypeHandler<T> findTypeHandler(Type type) {
+    public <T> TypeHandler<T> findTypeHandler(Class<?> type) {
+        return typeHandlerSelector.findTypeHandler(type);
+    }
+
+    @Override
+    public <T> TypeHandler<T> findTypeHandler(TypeInfo type) {
         return typeHandlerSelector.findTypeHandler(type);
     }
 

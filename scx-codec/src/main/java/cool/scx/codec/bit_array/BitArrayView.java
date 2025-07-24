@@ -1,4 +1,4 @@
-package cool.scx.common.bit_array;
+package cool.scx.codec.bit_array;
 
 /// 一个 BitArray 视图
 ///

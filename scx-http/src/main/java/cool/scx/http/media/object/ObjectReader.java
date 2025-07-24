@@ -1,19 +1,18 @@
 package cool.scx.http.media.object;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.media.tree.TreeReader;
+import cool.scx.object.ScxObject;
+import cool.scx.reflect.ScxReflect;
+import cool.scx.reflect.TypeInfo;
+import cool.scx.reflect.TypeReference;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import static cool.scx.common.util.ObjectUtils.jsonMapper;
-import static cool.scx.common.util.ObjectUtils.xmlMapper;
 import static cool.scx.http.media.string.StringReader.STRING_READER;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
@@ -24,17 +23,17 @@ import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 /// @version 0.0.1
 public class ObjectReader<T> implements MediaReader<T> {
 
-    private final JavaType type;
+    private final TypeInfo type;
 
     public ObjectReader(Class<T> clazz) {
-        this.type = ObjectUtils.constructType(clazz);
+        this.type = ScxReflect.typeOf(clazz);
     }
 
     public ObjectReader(TypeReference<T> clazz) {
-        this.type = ObjectUtils.constructType(clazz);
+        this.type = ScxReflect.typeOf(clazz);
     }
 
-    public ObjectReader(JavaType clazz) {
+    public ObjectReader(TypeInfo clazz) {
         this.type = clazz;
     }
 
@@ -47,7 +46,7 @@ public class ObjectReader<T> implements MediaReader<T> {
         // 尝试 JSON
         if (APPLICATION_JSON.equalsIgnoreParams(contentType)) {
             try {
-                return jsonMapper().readValue(str, type);
+                return ScxObject.fromJson(str, type);
             } catch (JsonProcessingException e) {
                 // 这里既然客户端已经 指定了 contentType 为 JSON 我们却无法转换 说明 客户端发送的 内容格式可能有误 
                 // 所以这里 抛出 客户端错误 BadRequestException
@@ -57,7 +56,7 @@ public class ObjectReader<T> implements MediaReader<T> {
         // 尝试 XML
         if (APPLICATION_XML.equalsIgnoreParams(contentType)) {
             try {
-                return xmlMapper().readValue(str, type);
+                return ScxObject.fromXml(str, type);
             } catch (JsonProcessingException e) {
                 // 同上
                 throw new BadRequestException("XML 格式不正确 !!!", e);
@@ -66,10 +65,10 @@ public class ObjectReader<T> implements MediaReader<T> {
 
         //JSON 和 XML 均不匹配 进行猜测
         try { //先尝试以 JSON 格式进行尝试转换
-            return jsonMapper().readValue(str, type);
+            return ScxObject.fromJson(str, type);
         } catch (Exception exception) {
             try {//再尝试以 XML 的格式进行转换
-                return xmlMapper().readValue(str, type);
+                return ScxObject.fromXml(str, type);
             } catch (JsonProcessingException e) {
                 // JSON 和 XML 均转换失败 直接报错
                 // 这里因为客户端没有指定格式 所以不能抛出 BadRequestException 这种客户端错误 而是应该抛出内部错误

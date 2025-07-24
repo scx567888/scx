@@ -1,6 +1,5 @@
 package cool.scx.web;
 
-import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.common.scope_value.ScxScopedValue;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.URIUtils;
@@ -15,7 +14,7 @@ import cool.scx.web.parameter_handler.ParameterHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
-import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
+import static cool.scx.common.constant.AnnotationValues.getRealValue;
 import static cool.scx.web.RouteRegistrar.findScxRouteOrThrow;
 import static cool.scx.web.ScxWeb.ROUTING_CONTEXT_SCOPED_VALUE;
 import static cool.scx.websocket.routing.WebSocketTypeMatcher.NOT_WEB_SOCKET_HANDSHAKE;
@@ -100,7 +99,7 @@ public final class ScxRouteHandler implements Route, ScxConsumer<RoutingContext,
         } catch (Throwable e) {
             //1, 如果是反射调用时发生异常 则使用反射异常的内部异常 否则使用异常
             //2, 如果是包装类型异常 (ScxWrappedRuntimeException) 则使用其内部的异常
-            throw ScxExceptionHelper.getRootCause(e instanceof InvocationTargetException ? e.getCause() : e);
+            throw e instanceof InvocationTargetException ? e.getCause() : e;
         }
     }
 

@@ -2,6 +2,8 @@ package cool.scx.http.media.multi_part;
 
 import cool.scx.common.util.RandomUtils;
 
+import static cool.scx.common.constant.CharPools.NUMBER_AND_LOWER_LETTER;
+
 /// MultiPart
 ///
 /// @author scx567888
@@ -13,7 +15,7 @@ public interface MultiPart extends Iterable<MultiPartPart> {
     }
 
     static MultiPartWritable of() {
-        return new MultiPartImpl("scx" + RandomUtils.randomString(10));
+        return new MultiPartImpl("scx" + RandomUtils.randomString(10, NUMBER_AND_LOWER_LETTER));
     }
 
     String boundary();

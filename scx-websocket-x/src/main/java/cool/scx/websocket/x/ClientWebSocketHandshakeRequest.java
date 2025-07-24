@@ -1,6 +1,5 @@
 package cool.scx.websocket.x;
 
-import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
@@ -17,6 +16,7 @@ import cool.scx.websocket.ScxClientWebSocketHandshakeRequest;
 import cool.scx.websocket.ScxClientWebSocketHandshakeResponse;
 
 import java.io.IOException;
+import java.util.Base64;
 
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
@@ -81,7 +81,7 @@ public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandsh
         }
 
         //1, 创建 secWebsocketKey
-        var secWebsocketKey = Base64Utils.encodeToString(RandomUtils.randomBytes(16));
+        var secWebsocketKey = Base64.getEncoder().encodeToString(RandomUtils.randomBytes(16));
 
         //2, 创建 请求头
         this.headers.connection(UPGRADE);

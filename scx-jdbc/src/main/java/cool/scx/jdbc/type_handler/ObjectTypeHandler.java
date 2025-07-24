@@ -1,9 +1,10 @@
 package cool.scx.jdbc.type_handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.common.util.ObjectUtils;
+import cool.scx.object.ScxObject;
+import cool.scx.reflect.ScxReflect;
+import cool.scx.reflect.TypeInfo;
 
 import java.lang.reflect.Type;
 import java.sql.PreparedStatement;
@@ -21,18 +22,20 @@ public class ObjectTypeHandler implements TypeHandler<Object> {
 
     private static final System.Logger logger = System.getLogger(ObjectTypeHandler.class.getName());
 
-    private static final ObjectMapper objectMapper = ObjectUtils.jsonMapper(new ObjectUtils.Options().setIgnoreJsonIgnore(true));
-
-    private final JavaType javaType;
+    private final TypeInfo javaType;
 
     public ObjectTypeHandler(Type type) {
-        this.javaType = ObjectUtils.constructType(type);
+        this.javaType = ScxReflect.typeOf(type);
+    }
+
+    public ObjectTypeHandler(TypeInfo type) {
+        this.javaType = type;
     }
 
     @Override
     public void setObject(PreparedStatement ps, int i, Object parameter) throws SQLException {
         try {
-            var json = objectMapper.writeValueAsString(parameter);
+            var json = ScxObject.toJson(parameter);
             ps.setString(i, json);
         } catch (JsonProcessingException e) {
             logger.log(ERROR, "序列化时发生错误 , 已使用 NULL !!!", e);
@@ -47,7 +50,7 @@ public class ObjectTypeHandler implements TypeHandler<Object> {
             return null;
         }
         try {
-            return objectMapper.readValue(json, javaType);
+            return ScxObject.fromJson(json, javaType);
         } catch (JsonProcessingException e) {
             logger.log(ERROR, "反序列化时发生错误 , 已使用 NULL !!!", e);
             return null;

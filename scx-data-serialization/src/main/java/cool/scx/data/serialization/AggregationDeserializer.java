@@ -1,9 +1,9 @@
 package cool.scx.data.serialization;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.aggregation.*;
+import cool.scx.object.ScxObject;
+import cool.scx.object.node.*;
 
 import java.util.ArrayList;
 
@@ -11,112 +11,103 @@ public class AggregationDeserializer {
 
     public static Aggregation deserializeAggregationFromJson(String json) throws DeserializationException {
         try {
-            var v = ObjectUtils.jsonMapper().readTree(json);
-            return deserializeAggregation(v);
-        } catch (JsonProcessingException e) {
+            var node = ScxObject.fromJson(json);
+            return deserializeAggregation(node);
+        } catch (Exception e) {
             throw new DeserializationException(e);
         }
     }
 
-    public static Aggregation deserializeAggregation(JsonNode v) throws DeserializationException {
-        if (v == null || v.isNull()) {
-            throw new DeserializationException("Aggregation object is null or empty");
+    public static Aggregation deserializeAggregation(Node v) throws DeserializationException {
+        if (v == null || v.isNull() || !(v instanceof ObjectNode objNode)) {
+            throw new DeserializationException("Aggregation node is null or not an ObjectNode");
         }
-        if (!v.isObject()) {
-            throw new DeserializationException("Aggregation node is not an object: " + v);
-        }
-        var typeNode = v.get("@type");
-        if (typeNode == null || !"Aggregation".equals(typeNode.asText())) {
+
+        var typeNode = objNode.get("@type");
+        if (!(typeNode instanceof ValueNode vn) || !"Aggregation".equals(vn.asText())) {
             throw new DeserializationException("Unknown or missing @type for Aggregation: " + v);
         }
 
-        var groupBysNode = v.get("groupBys");
-
-        if (groupBysNode == null || !groupBysNode.isArray()) {
-            throw new DeserializationException("groupBys node is not an array: " + v);
+        var groupBysNode = objNode.get("groupBys");
+        if (!(groupBysNode instanceof ArrayNode arrayGroupBys)) {
+            throw new DeserializationException("groupBys node is not an ArrayNode: " + groupBysNode);
         }
 
         var groupByList = new ArrayList<GroupBy>();
-        for (JsonNode gbNode : groupBysNode) {
+        for (Node gbNode : arrayGroupBys) {
             groupByList.add(deserializeGroupBy(gbNode));
         }
-        var groupBys = groupByList.toArray(GroupBy[]::new);
 
-
-        var aggsNode = v.get("aggs");
-        if (aggsNode == null || !aggsNode.isArray()) {
-            throw new DeserializationException("aggs node is not an array: " + v);
+        var aggsNode = objNode.get("aggs");
+        if (!(aggsNode instanceof ArrayNode arrayAggs)) {
+            throw new DeserializationException("aggs node is not an ArrayNode: " + aggsNode);
         }
+
         var aggList = new ArrayList<Agg>();
-        for (JsonNode aggNode : aggsNode) {
+        for (Node aggNode : arrayAggs) {
             aggList.add(deserializeAgg(aggNode));
         }
-        var aggs = aggList.toArray(Agg[]::new);
-        return new AggregationImpl().aggs(aggs).groupBys(groupBys);
+
+        return new AggregationImpl()
+                .aggs(aggList.toArray(Agg[]::new))
+                .groupBys(groupByList.toArray(GroupBy[]::new));
     }
 
-    private static GroupBy deserializeGroupBy(JsonNode node) throws DeserializationException {
-        if (node == null || node.isNull()) {
-            throw new DeserializationException("Invalid JSON for GroupBy");
-        }
-        var typeNode = node.get("@type");
-        if (typeNode == null) {
-            throw new DeserializationException("Unknown or missing @type for GroupBy: " + node);
-        }
-        var type = typeNode.asText();
-        if (type.equals("FieldGroupBy")) {
-            return deserializeFieldGroupBy(node);
-        } else if (type.equals("ExpressionGroupBy")) {
-            return deserializeExpressionGroupBy(node);
+    private static GroupBy deserializeGroupBy(Node node) throws DeserializationException {
+        if (node == null || node.isNull() || !(node instanceof ObjectNode objNode)) {
+            throw new DeserializationException("Invalid GroupBy node");
         }
 
-        throw new DeserializationException("Unknown GroupBy type: " + type);
+        var typeNode = objNode.get("@type");
+        if (!(typeNode instanceof ValueNode vn)) {
+            throw new DeserializationException("Missing or invalid @type in GroupBy node: " + node);
+        }
+
+        var type = vn.asText();
+        return switch (type) {
+            case "FieldGroupBy" -> deserializeFieldGroupBy(objNode);
+            case "ExpressionGroupBy" -> deserializeExpressionGroupBy(objNode);
+            default -> throw new DeserializationException("Unknown GroupBy type: " + type);
+        };
     }
 
-    public static FieldGroupBy deserializeFieldGroupBy(JsonNode node) throws DeserializationException {
-        //不允许为空
+    private static FieldGroupBy deserializeFieldGroupBy(ObjectNode node) throws DeserializationException {
         var fieldNameNode = node.get("fieldName");
-        if (fieldNameNode == null || fieldNameNode.isNull()) {
-            throw new DeserializationException("Invalid JSON for FieldGroupBy");
+        if (!(fieldNameNode instanceof ValueNode vn)) {
+            throw new DeserializationException("Missing or invalid fieldName in FieldGroupBy: " + node);
         }
-        var fieldName = fieldNameNode.asText();
-        return new FieldGroupBy(fieldName);
+        return new FieldGroupBy(vn.asText());
     }
 
-    public static ExpressionGroupBy deserializeExpressionGroupBy(JsonNode node) throws DeserializationException {
+    private static ExpressionGroupBy deserializeExpressionGroupBy(ObjectNode node) throws DeserializationException {
         var aliasNode = node.get("alias");
-        if (aliasNode == null || aliasNode.isNull()) {
-            throw new DeserializationException("Invalid JSON for ExpressionGroupBy");
-        }
         var expressionNode = node.get("expression");
-        if (expressionNode == null || expressionNode.isNull()) {
-            throw new DeserializationException("Invalid JSON for ExpressionGroupBy");
+
+        if (!(aliasNode instanceof ValueNode aliasVN) || !(expressionNode instanceof ValueNode exprVN)) {
+            throw new DeserializationException("Missing or invalid alias/expression in ExpressionGroupBy: " + node);
         }
-        var alias = aliasNode.asText();
-        var expression = expressionNode.asText();
-        return new ExpressionGroupBy(alias, expression);
+
+        return new ExpressionGroupBy(aliasVN.asText(), exprVN.asText());
     }
 
-    private static Agg deserializeAgg(JsonNode node) throws DeserializationException {
-        if (node == null || node.isNull()) {
-            throw new DeserializationException("Invalid JSON for Agg");
+    private static Agg deserializeAgg(Node node) throws DeserializationException {
+        if (node == null || node.isNull() || !(node instanceof ObjectNode objNode)) {
+            throw new DeserializationException("Invalid Agg node: " + node);
         }
-        var typeNode = node.get("@type");
-        if (typeNode == null || !"Agg".equals(typeNode.asText())) {
+
+        var typeNode = objNode.get("@type");
+        if (!(typeNode instanceof ValueNode vn) || !"Agg".equals(vn.asText())) {
             throw new DeserializationException("Unknown or missing @type for Agg: " + node);
         }
-        //这两个都不允许为空
-        var aliasNode = node.get("alias");
-        if (aliasNode == null || !aliasNode.isTextual()) {
-            throw new DeserializationException("Invalid JSON for Agg");
-        }
-        var expressionNode = node.get("expression");
-        if (expressionNode == null || !expressionNode.isTextual()) {
-            throw new DeserializationException("Invalid JSON for Agg");
-        }
-        var alias = aliasNode.asText();
-        var expression = expressionNode.asText();
-        return new Agg(alias, expression);
-    }
 
+        var aliasNode = objNode.get("alias");
+        var expressionNode = objNode.get("expression");
+
+        if (!(aliasNode instanceof ValueNode aliasVN) || !(expressionNode instanceof ValueNode exprVN)) {
+            throw new DeserializationException("Missing or invalid alias/expression in Agg: " + node);
+        }
+
+        return new Agg(aliasVN.asText(), exprVN.asText());
+    }
+    
 }

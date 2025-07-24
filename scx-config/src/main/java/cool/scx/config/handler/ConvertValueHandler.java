@@ -1,10 +1,11 @@
 package cool.scx.config.handler;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.config.ScxConfigValueHandler;
+import cool.scx.object.ScxObject;
+import cool.scx.object.node.Node;
+import cool.scx.reflect.ScxReflect;
+import cool.scx.reflect.TypeInfo;
+import cool.scx.reflect.TypeReference;
 
 /// ConvertValueHandler
 ///
@@ -12,24 +13,24 @@ import cool.scx.config.ScxConfigValueHandler;
 /// @version 0.0.1
 public final class ConvertValueHandler<T> implements ScxConfigValueHandler<T> {
 
-    private final JavaType javaType;
+    private final TypeInfo javaType;
 
-    private ConvertValueHandler(JavaType javaType) {
+    private ConvertValueHandler(TypeInfo javaType) {
         this.javaType = javaType;
     }
 
     public static <H> ConvertValueHandler<H> of(Class<H> tClass) {
-        return new ConvertValueHandler<>(ObjectUtils.constructType(tClass));
+        return new ConvertValueHandler<>(ScxReflect.typeOf(tClass));
     }
 
     public static <H> ConvertValueHandler<H> of(TypeReference<H> tTypeReference) {
-        return new ConvertValueHandler<>(ObjectUtils.constructType(tTypeReference));
+        return new ConvertValueHandler<>(ScxReflect.typeOf(tTypeReference));
     }
 
     @Override
-    public T handle(String keyPath, JsonNode rawValue) {
+    public T handle(String keyPath, Node rawValue) {
         if (rawValue != null) {
-            return ObjectUtils.convertValue(rawValue, this.javaType, new ObjectUtils.Options().setIgnoreJsonIgnore(true));
+            return ScxObject.nodeToValue(rawValue, this.javaType);
         }
         return null;
     }

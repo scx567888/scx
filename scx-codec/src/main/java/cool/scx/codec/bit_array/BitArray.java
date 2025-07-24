@@ -1,8 +1,8 @@
-package cool.scx.common.bit_array;
+package cool.scx.codec.bit_array;
 
 import java.util.Arrays;
 
-import static cool.scx.common.bit_array.BitArrayHelper.*;
+import static cool.scx.codec.bit_array.BitArrayHelper.*;
 
 /// 基于 byte 数组的实现 优点是相比较 [java.util.BitSet] 在数组方面会快一点
 ///

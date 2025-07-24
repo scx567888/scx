@@ -1,10 +1,10 @@
 package cool.scx.config;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.common.jackson.JsonNodeHelper;
 import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
 import cool.scx.config.source.MultiConfigSource;
+import cool.scx.object.NodeHelper;
+import cool.scx.object.node.Node;
 
 /// 配置文件类
 ///
@@ -21,8 +21,8 @@ public final class ScxConfig extends MultiConfigSource {
     ///
     /// @param keyPath keyPath
     /// @return a T object.
-    public JsonNode get(String keyPath) {
-        return JsonNodeHelper.get(configMapping, keyPath);
+    public Node get(String keyPath) {
+        return NodeHelper.get(configMapping, keyPath);
     }
 
     public <T> T get(String keyPath, ScxConfigValueHandler<T> handler) {

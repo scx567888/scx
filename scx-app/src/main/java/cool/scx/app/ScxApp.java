@@ -3,6 +3,7 @@ package cool.scx.app;
 import cool.scx.ansi.Ansi;
 import cool.scx.app.eventbus.EventBus;
 import cool.scx.bean.BeanFactory;
+import cool.scx.collections.ScxCollections;
 import cool.scx.common.scope_value.ScxScopedValue;
 import cool.scx.common.util.$;
 import cool.scx.common.util.FileUtils;
@@ -42,7 +43,7 @@ import java.util.concurrent.Executors;
 import static cool.scx.app.ScxAppContext.GLOBAL_SCX;
 import static cool.scx.app.ScxAppHelper.*;
 import static cool.scx.app.enumeration.ScxAppFeature.*;
-import static cool.scx.common.exception.ScxExceptionHelper.ignore;
+import static cool.scx.common.util.ExceptionUtils.ignore;
 import static cool.scx.common.util.NetUtils.getLocalIPAddress;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.WARNING;
@@ -165,7 +166,7 @@ public final class ScxApp {
         //5, 打印基本信息
         if (this.scxFeatureConfig.get(SHOW_START_UP_INFO)) {
             var routes = this.scxHttpRouter.getRoutes();
-            var entries = $.countingBy(routes, Route::typeMatcher);
+            var entries = ScxCollections.countingBy(routes, Route::typeMatcher);
             var a = entries.get(TypeMatcher.any());
             var b = entries.get(WebSocketTypeMatcher.NOT_WEB_SOCKET_HANDSHAKE);
             var c = entries.get(WebSocketTypeMatcher.WEB_SOCKET_HANDSHAKE);

@@ -1,19 +1,20 @@
 package cool.scx.web.parameter_handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import cool.scx.collections.multi_map.MultiMap;
 import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.media.multi_part.MultiPartPartImpl;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
+import cool.scx.object.ScxObject;
+import cool.scx.object.node.Node;
+import cool.scx.object.node.ObjectNode;
+import cool.scx.object.node.TextNode;
 
 import java.io.IOException;
 
-import static cool.scx.common.util.ObjectUtils.jsonMapper;
-import static cool.scx.common.util.ObjectUtils.xmlMapper;
 import static cool.scx.http.media_type.MediaType.*;
+import static cool.scx.object.ScxObject.valueToNode;
 
 /// 封装 RoutingContext 的参数 防止反复取值造成性能损失
 ///
@@ -23,10 +24,10 @@ public final class RequestInfo {
 
     private final RoutingContext routingContext;
     private final ScxMediaType contentType;
-    private final JsonNode pathParams;
-    private final JsonNode query;
+    private final ObjectNode pathParams;
+    private final ObjectNode query;
     private final boolean cachedMultiPart;
-    private JsonNode body;
+    private Node body;
     private MultiMap<String, MultiPartPart> uploadFiles;
     private boolean bodyInit;
 
@@ -34,8 +35,8 @@ public final class RequestInfo {
         this.routingContext = ctx;
         this.cachedMultiPart = cachedMultiPart;
         this.contentType = ctx.request().contentType();
-        this.pathParams = jsonMapper().convertValue(ctx.pathParams().toMultiValueMap(), JsonNode.class);
-        this.query = jsonMapper().convertValue(ctx.request().query().toMultiValueMap(), JsonNode.class);
+        this.pathParams =(ObjectNode) valueToNode(ctx.pathParams().toMultiValueMap());
+        this.query =(ObjectNode) valueToNode(ctx.request().query().toMultiValueMap());
         this.bodyInit = false;
     }
 
@@ -43,12 +44,12 @@ public final class RequestInfo {
     ///
     /// @param str a
     /// @return a
-    public static JsonNode tryReadOrTextNode(String str) {
+    public static Node tryReadOrTextNode(String str) {
         try { //先尝试以 json 格式进行尝试转换
-            return jsonMapper().readTree(str);
+            return ScxObject.fromJson(str);
         } catch (Exception exception) {
             try {//再尝试以 xml 的格式进行转换
-                return xmlMapper().readTree(str);
+                return ScxObject.fromXml(str);
             } catch (JsonProcessingException e) {
                 // json 和 xml 均转换失败 直接存储 为 string
                 return new TextNode(str);
@@ -69,7 +70,7 @@ public final class RequestInfo {
         }
         if (APPLICATION_X_WWW_FORM_URLENCODED.equalsIgnoreParams(contentType)) {
             var formParams = ctx.request().body().asFormParams();
-            this.body = jsonMapper().convertValue(formParams.toMultiValueMap(), JsonNode.class);
+            this.body = valueToNode(formParams.toMultiValueMap());
             return;
         }
         if (MULTIPART_FORM_DATA.equalsIgnoreParams(contentType)) {
@@ -91,7 +92,7 @@ public final class RequestInfo {
                     throw new RuntimeException(e);
                 }
             }
-            this.body = jsonMapper().convertValue(m.toMultiValueMap(), JsonNode.class);
+            this.body = valueToNode(m.toMultiValueMap());
             this.uploadFiles = f;
             return;
         }
@@ -99,15 +100,15 @@ public final class RequestInfo {
         this.body = string != null ? tryReadOrTextNode(string) : null;
     }
 
-    public JsonNode pathParams() {
+    public ObjectNode pathParams() {
         return pathParams;
     }
 
-    public JsonNode query() {
+    public ObjectNode query() {
         return query;
     }
 
-    public JsonNode body() {
+    public Node body() {
         if (!bodyInit) {
             initBody(this.routingContext, this.contentType);
         }

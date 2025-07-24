@@ -1,8 +1,7 @@
 package cool.scx.config.source;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import cool.scx.common.jackson.JsonNodeHelper;
+import cool.scx.object.NodeHelper;
+import cool.scx.object.node.ObjectNode;
 
 import java.util.Map;
 
@@ -17,8 +16,8 @@ public final class MapConfigSource extends AbstractConfigSource {
     }
 
     public static ObjectNode loadFromMap(Map<String, Object> map) {
-        var configMapping = JsonNodeFactory.instance.objectNode();
-        map.forEach((k, v) -> JsonNodeHelper.set(configMapping, k, v));
+        var configMapping = new ObjectNode();
+        map.forEach((k, v) -> NodeHelper.set(configMapping, k, v));
         return configMapping;
     }
 

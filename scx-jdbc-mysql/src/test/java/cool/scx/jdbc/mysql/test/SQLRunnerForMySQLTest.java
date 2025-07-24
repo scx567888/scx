@@ -1,7 +1,7 @@
 package cool.scx.jdbc.mysql.test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysql.cj.jdbc.MysqlDataSource;
-import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.jdbc.JDBCContext;
@@ -13,6 +13,7 @@ import cool.scx.jdbc.sql.SQLRunner;
 import cool.scx.jdbc.sql.UpdateResult;
 import cool.scx.logging.ScxLoggerConfig;
 import cool.scx.logging.ScxLogging;
+import cool.scx.object.ScxObject;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -38,7 +39,7 @@ public class SQLRunnerForMySQLTest {
         ScxLogging.setConfig("ScxSpy", new ScxLoggerConfig().setLevel(DEBUG));
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JsonProcessingException {
         beforeTest();
         test1();
         test2();
@@ -95,13 +96,13 @@ public class SQLRunnerForMySQLTest {
     }
 
     @Test
-    public static void test3() {
+    public static void test3() throws JsonProcessingException {
         List<Student> query = sqlRunner.query(sql("select * from " + tableName), ofBeanList(Student.class));
         System.out.println("查询 使用 BeanList 总条数: " + query.size());
-        System.out.println("查询 使用 BeanList 第一条内容: " + ObjectUtils.toJson(query.get(0), ""));
+        System.out.println("查询 使用 BeanList 第一条内容: " + ScxObject.toJson(query.get(0)));
         List<Map<String, Object>> query1 = sqlRunner.query(sql("select * from `t1`"), ofMapList());
         System.out.println("查询 使用 MapList 总条数: " + query1.size());
-        System.out.println("查询 使用 MapList 第一条内容: " + ObjectUtils.toJson(query1.get(0), ""));
+        System.out.println("查询 使用 MapList 第一条内容: " + ScxObject.toJson(query1.get(0) ));
     }
 
     @Test
@@ -121,7 +122,7 @@ public class SQLRunnerForMySQLTest {
                 sqlRunner.update(sql(sql, m));
             });
         } catch (Exception e) {
-            System.err.println("成功捕获到异常 : " + ScxExceptionHelper.getRootCause(e));
+            System.err.println("成功捕获到异常 : " + e);
         }
         List<StudentRecord> query2 = sqlRunner.query(sql("select * from " + tableName), ofBeanList(StudentRecord.class));
         System.out.println("回滚后总条数: " + query2.size());

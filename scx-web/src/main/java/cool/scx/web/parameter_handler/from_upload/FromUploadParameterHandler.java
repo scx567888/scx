@@ -1,7 +1,9 @@
 package cool.scx.web.parameter_handler.from_upload;
 
 import cool.scx.http.media.multi_part.MultiPartPart;
+import cool.scx.reflect.ArrayTypeInfo;
 import cool.scx.reflect.ParameterInfo;
+import cool.scx.reflect.TypeInfo;
 import cool.scx.web.annotation.FromUpload;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.RequestInfo;
@@ -9,8 +11,8 @@ import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 
 import java.util.Collection;
 
-import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
-import static cool.scx.common.util.ObjectUtils.convertValue;
+import static cool.scx.common.constant.AnnotationValues.getRealValue;
+import static cool.scx.object.ScxObject.convertValue;
 import static java.util.Collections.addAll;
 
 /// 处理 FileUpload 类型参数
@@ -37,20 +39,18 @@ public final class FromUploadParameterHandler implements ParameterHandler {
             }
             required = fromUpload.required();
         }
-        this.isCollection =checkIsCollection(parameter);
-        this.isArray = checkIsArray(parameter);
+        this.isCollection =checkIsCollection(parameter.parameterType());
+        this.isArray = checkIsArray(parameter.parameterType());
     }
 
     // todo 这个正确吗?
-    public static boolean checkIsCollection(ParameterInfo parameter) {
-        var c = parameter.parameterType().rawClass();
-        return Collection.class.isAssignableFrom(c);
+    public static boolean checkIsCollection(TypeInfo typeInfo) {
+        return Collection.class.isAssignableFrom(typeInfo.rawClass());
     }
 
     // todo 这个正确吗?
-    public static boolean checkIsArray(ParameterInfo parameter) {
-        var c = parameter.parameterType().rawClass();
-        return c.isArray();
+    public static boolean checkIsArray(TypeInfo typeInfo) {
+        return typeInfo instanceof ArrayTypeInfo;
     }
 
     /// 从 RoutingContext 查找 对应名称的 上传对象 为空会返回 null
@@ -82,7 +82,7 @@ public final class FromUploadParameterHandler implements ParameterHandler {
         if (isCollection) {
             //这里我们无法确定具体的类型 所以使用 ObjectUtils 帮我们创建一个
             @SuppressWarnings("unchecked")
-            var list = (Collection<Object>) convertValue(new Object[]{}, parameter.rawParameter().getParameterizedType());// todo 这里正确吗? 
+            var list = (Collection<Object>) convertValue(new Object[]{}, parameter.parameterType());// todo 这里正确吗? 
             addAll(list, v);
             return list;
         } else {

@@ -1,8 +1,7 @@
 package cool.scx.config.source;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import cool.scx.common.jackson.JsonNodeHelper;
+import cool.scx.object.NodeHelper;
+import cool.scx.object.node.ObjectNode;
 
 /// ArgsConfigSource
 ///
@@ -15,12 +14,12 @@ public final class ArgsConfigSource extends AbstractConfigSource {
     }
 
     public static ObjectNode loadFromArgs(String... args) {
-        var configMapping = JsonNodeFactory.instance.objectNode();
+        var configMapping = new ObjectNode();
         for (var arg : args) {
             if (arg.startsWith("--")) {
                 var strings = arg.substring(2).split("=");
                 if (strings.length == 2) {
-                    JsonNodeHelper.set(configMapping, strings[0], strings[1]);
+                    NodeHelper.set(configMapping, strings[0], strings[1]);
                 }
             }
         }

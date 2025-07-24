@@ -4,7 +4,7 @@ import cool.scx.bean.BeanFactory;
 import cool.scx.bean.annotation.Autowired;
 import cool.scx.bean.exception.NoSuchBeanException;
 import cool.scx.bean.exception.NoUniqueBeanException;
-import cool.scx.common.constant.AnnotationValueHelper;
+import cool.scx.common.constant.AnnotationValues;
 import cool.scx.reflect.AnnotatedElementInfo;
 import cool.scx.reflect.FieldInfo;
 import cool.scx.reflect.ParameterInfo;
@@ -27,7 +27,7 @@ public class AutowiredAnnotationResolver implements BeanResolver {
         if (autowired == null) {
             return null;
         }
-        var name = AnnotationValueHelper.getRealValue(autowired.value());
+        var name = AnnotationValues.getRealValue(autowired.value());
         if (name != null) {
             return beanFactory.getBean(name, clazz);
         } else {

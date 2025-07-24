@@ -1,5 +1,6 @@
 package cool.scx.websocket.x.test;
 
+import cool.scx.common.constant.CharPools;
 import cool.scx.common.util.$;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.x.HttpServer;
@@ -37,7 +38,7 @@ public class WebSocketServerTest {
                 // 使用执行器
 //                 var scxEventWebSocket = ScxEventWebSocket.of(wsRequest.webSocket(), Executors.newVirtualThreadPerTaskExecutor());
                 var scxEventWebSocket = ScxEventWebSocket.of(wsRequest.webSocket());
-                var s = RandomUtils.randomString(10);
+                var s = RandomUtils.randomString(10, CharPools.NUMBER_AND_LOWER_LETTER);
                 eventWebSockets.add(s);
                 scxEventWebSocket.onClose((code, reason) -> {
                     eventWebSockets.remove(s);
