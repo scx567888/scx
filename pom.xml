@@ -56,6 +56,7 @@
         <module>scx-jdbc</module>
         <module>scx-jdbc-spy</module>
         <module>scx-jdbc-mysql</module>
+        <module>scx-object</module>
         <module>scx-scheduling</module>
         <module>scx-web</module>
         <module>scx-websocket</module>
