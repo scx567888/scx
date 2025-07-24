@@ -3,6 +3,7 @@ package cool.scx.data.serialization;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.query.*;
+import cool.scx.object.ScxObject;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -18,7 +19,7 @@ public class QuerySerializer {
     public static String serializeQueryToJson(Query query) throws SerializationException {
         var v = serializeQuery(query);
         try {
-            return ObjectUtils.jsonMapper().writeValueAsString(v);
+            return ScxObject.toJson(v);
         } catch (JsonProcessingException e) {
             throw new SerializationException(e);
         }

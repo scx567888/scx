@@ -5,6 +5,7 @@ import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.field_policy.AssignField;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.field_policy.VirtualField;
+import cool.scx.object.ScxObject;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,7 +20,7 @@ public class FieldPolicySerializer {
     public static String serializeFieldPolicyToJson(FieldPolicy fieldPolicy) throws SerializationException {
         var m = serializeFieldPolicy(fieldPolicy);
         try {
-            return ObjectUtils.jsonMapper().writeValueAsString(m);
+            return ScxObject.toJson(m);
         } catch (JsonProcessingException e) {
             throw new SerializationException(e);
         }

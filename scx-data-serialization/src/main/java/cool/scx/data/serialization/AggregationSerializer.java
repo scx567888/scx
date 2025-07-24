@@ -3,6 +3,7 @@ package cool.scx.data.serialization;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.aggregation.*;
+import cool.scx.object.ScxObject;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -14,7 +15,7 @@ public class AggregationSerializer {
     public static String serializeAggregationToJson(Aggregation aggregation) throws SerializationException {
         var v = serializeAggregation(aggregation);
         try {
-            return ObjectUtils.jsonMapper().writeValueAsString(v);
+            return ScxObject.toJson(v);
         } catch (JsonProcessingException e) {
             throw new SerializationException(e);
         }
