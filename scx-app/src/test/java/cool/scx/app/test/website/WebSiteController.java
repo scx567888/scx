@@ -5,7 +5,6 @@ import cool.scx.app.test.car.CarService;
 import cool.scx.app.test.person.Person;
 import cool.scx.app.test.person.PersonService;
 import cool.scx.bean.annotation.Autowired;
-import cool.scx.common.constant.CharPools;
 import cool.scx.common.util.ExceptionUtils;
 import cool.scx.common.util.HashUtils;
 import cool.scx.common.util.RandomUtils;
@@ -30,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.zip.ZipOutputStream;
 
+import static cool.scx.common.constant.CharPools.NUMBER_AND_LETTER;
 import static cool.scx.common.constant.DateTimeFormatters.yyyy_MM_dd_HH_mm_ss;
 
 /// 简单测试
@@ -177,7 +177,7 @@ public class WebSiteController {
     /// @return a [java.lang.String] object
     @ScxRoute(methods = HttpMethod.GET)
     public String getRandomCode() {
-        return RandomUtils.randomString(9999, CharPools.NUMBER_AND_LOWER_LETTER);
+        return RandomUtils.randomString(9999, NUMBER_AND_LETTER);
     }
 
     /// 测试!!!
@@ -244,13 +244,11 @@ public class WebSiteController {
         var in = new PipedInputStream();
         var out = new PipedOutputStream(in);
 
-        new Thread(() -> {
+        new Thread(() -> ExceptionUtils.ignore(() -> {
             try (var zos = new ZipOutputStream(out)) {
                 zipBuilder.writeToZipOutputStream(zos);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
-        }).start();
+        })).start();
 
         return Download.of(in, "测试压缩包.zip");
 
