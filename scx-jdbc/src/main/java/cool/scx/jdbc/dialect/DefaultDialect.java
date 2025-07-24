@@ -3,6 +3,7 @@ package cool.scx.jdbc.dialect;
 import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.type_handler.TypeHandler;
 import cool.scx.jdbc.type_handler.TypeHandlerSelector;
+import cool.scx.reflect.TypeInfo;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
@@ -49,7 +50,12 @@ public final class DefaultDialect implements Dialect {
     }
 
     @Override
-    public <T> TypeHandler<T> findTypeHandler(Type type) {
+    public <T> TypeHandler<T> findTypeHandler(Class<?> type) {
+        return typeHandlerSelector.findTypeHandler(type);
+    }
+
+    @Override
+    public <T> TypeHandler<T> findTypeHandler(TypeInfo type) {
         return typeHandlerSelector.findTypeHandler(type);
     }
 

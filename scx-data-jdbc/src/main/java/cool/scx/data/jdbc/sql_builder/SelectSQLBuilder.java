@@ -1,5 +1,6 @@
 package cool.scx.data.jdbc.sql_builder;
 
+import cool.scx.common.constant.CharPools;
 import cool.scx.data.LockMode;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.mapping.EntityTable;
@@ -130,7 +131,7 @@ public class SelectSQLBuilder {
     }
 
     private String getRandomTableName() {
-        return dialect.quoteIdentifier(table.name() + "_" + randomString(6));
+        return dialect.quoteIdentifier(table.name() + "_" + randomString(6, CharPools.NUMBER_AND_LOWER_LETTER));
     }
 
     private String getWhereClause(String whereClause) {

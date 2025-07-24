@@ -1,7 +1,9 @@
 package cool.scx.web.vo;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.http.routing.RoutingContext;
+import cool.scx.object.ScxObject;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -63,11 +65,19 @@ public abstract class Result implements BaseVo {
     public abstract Body<?> body();
 
     public String toXml(String defaultValue) {
-        return ObjectUtils.toXml(body(), defaultValue);
+        try {
+            return ScxObject.toXml(body());
+        } catch (JsonProcessingException e) {
+            return defaultValue;
+        }
     }
 
     public String toJson(String defaultValue) {
-        return ObjectUtils.toJson(body(), defaultValue);
+        try {
+            return ScxObject.toJson(body());
+        } catch (JsonProcessingException e) {
+            return  defaultValue;
+        }
     }
 
     public record Body<T>(String message, T data) {

@@ -12,7 +12,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static cool.scx.common.exception.ScxExceptionHelper.ignore;
+import static cool.scx.common.util.ExceptionUtils.ignore;
 import static cool.scx.common.util.NetUtils.getLocalIPAddress;
 
 /// ScxOptions

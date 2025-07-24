@@ -5,6 +5,7 @@ import cool.scx.jdbc.SchemaHelper;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
 import cool.scx.jdbc.type_handler.TypeHandler;
+import cool.scx.reflect.TypeInfo;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
@@ -50,7 +51,9 @@ public interface Dialect {
     //************************* 类型处理相关 *************************
 
     /// 查找
-    <T> TypeHandler<T> findTypeHandler(Type type);
+    <T> TypeHandler<T> findTypeHandler(Class<?> type);
+    
+    <T> TypeHandler<T> findTypeHandler(TypeInfo type);
 
     /// 方言数据类型 转换为 标准数据类型
     ///

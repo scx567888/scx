@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
+import static cool.scx.common.constant.AnnotationValues.getRealValue;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static cool.scx.reflect.ClassKind.RECORD;
 

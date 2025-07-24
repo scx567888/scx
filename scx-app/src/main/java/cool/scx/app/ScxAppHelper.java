@@ -1,6 +1,5 @@
 package cool.scx.app;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.app.annotation.Scheduled;
@@ -12,7 +11,6 @@ import cool.scx.bean.BeanFactory;
 import cool.scx.bean.BeanFactoryImpl;
 import cool.scx.bean.resolver.AutowiredAnnotationResolver;
 import cool.scx.common.util.ClassUtils;
-import cool.scx.common.util.ConsoleUtils;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.StringUtils;
 import cool.scx.config.ScxConfig;
@@ -28,8 +26,10 @@ import cool.scx.logging.ScxLoggerConfig;
 import cool.scx.logging.ScxLogging;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
+import cool.scx.object.ScxObject;
 import cool.scx.reflect.ClassInfo;
 import cool.scx.reflect.ScxReflect;
+import cool.scx.reflect.TypeReference;
 import cool.scx.scheduling.ScxScheduling;
 import cool.scx.web.annotation.ScxRoute;
 import cool.scx.web.annotation.ScxWebSocketRoute;
@@ -148,7 +148,7 @@ public final class ScxAppHelper {
                     *******************************************************
                     """;
             System.err.printf((errMessage) + System.lineSeparator(), port);
-            var result = ConsoleUtils.readLine().trim();
+            var result = System.console().readLine().trim();
             if ("Y".equalsIgnoreCase(result)) {
                 return true;
             } else if ("N".equalsIgnoreCase(result)) {
@@ -267,7 +267,7 @@ public final class ScxAppHelper {
                     **************************************************************
                     """;
             System.err.println(errMessage);
-            var result = ConsoleUtils.readLine().trim();
+            var result = System.console().readLine().trim();
             if ("Y".equalsIgnoreCase(result)) {
                 var ignoreMessage = """
                         *******************************************
@@ -325,7 +325,7 @@ public final class ScxAppHelper {
                     var level = toLevel(logger.get("level"));
                     var type = toType(logger.get("type"));
                     var storedDirectory = StringUtils.notBlank(logger.get("stored-directory")) ? scxEnvironment.getPathByAppRoot(logger.get("stored-directory")) : null;
-                    var stackTrace = ObjectUtils.convertValue(logger.get("stack-trace"), Boolean.class);
+                    var stackTrace = ScxObject.convertValue(logger.get("stack-trace"), Boolean.class);
                     var config = new ScxLoggerConfig();
                     config.setLevel(level);
                     if (type == LoggingType.CONSOLE || type == LoggingType.BOTH) {

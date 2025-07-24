@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static cool.scx.common.constant.AnnotationValue.NULL;
+import static cool.scx.common.constant.AnnotationValues.NULL;
 
 /// 路由注解 默认会在方法上进行继承 如果想在子类禁用 请使用 NoScxRoute
 ///

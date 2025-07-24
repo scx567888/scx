@@ -1,14 +1,13 @@
 package cool.scx.jdbc.type_handler;
 
-import com.fasterxml.jackson.databind.JavaType;
 import cool.scx.jdbc.type_handler.math.BigDecimalTypeHandler;
 import cool.scx.jdbc.type_handler.math.BigIntegerTypeHandler;
 import cool.scx.jdbc.type_handler.primitive.*;
 import cool.scx.jdbc.type_handler.time.*;
+import cool.scx.reflect.TypeInfo;
 
 import java.io.InputStream;
 import java.io.Reader;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.*;
@@ -19,13 +18,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import static cool.scx.common.util.ClassUtils.getEnumClass;
 import static cool.scx.common.util.ClassUtils.isEnum;
 
+/// todo 这个类需要大改造
 /// TypeHandlerSelector
 ///
 /// @author scx567888
 /// @version 0.0.1
 public final class TypeHandlerSelector {
 
-    private final Map<Type, TypeHandler<?>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
+    // 同时缓存 Class 和 TypeInfo
+    private final Map<Object, TypeHandler<?>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
 
     public TypeHandlerSelector() {
         // 基本类型
@@ -83,23 +84,41 @@ public final class TypeHandlerSelector {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> TypeHandler<T> findTypeHandler(Type type) {
-        return (TypeHandler<T>) TYPE_HANDLER_MAP.computeIfAbsent(type, this::createTypeHandler);
+    public <T> TypeHandler<T> findTypeHandler(Class<?> type) {
+        var typeHandler = (TypeHandler<T>) TYPE_HANDLER_MAP.get(type);
+        if (typeHandler != null) {
+            return typeHandler;
+        }
+        var typeHandler1 = (TypeHandler<T>) this.createTypeHandler(type);
+        TYPE_HANDLER_MAP.put(type, typeHandler1);
+        return typeHandler1;
     }
 
-    private TypeHandler<?> createTypeHandler(Type type) {
-        if (type instanceof Class<?> clazz) {
-            //普通 class 直接创建 失败后回退到 ObjectTypeHandler
-            var c = createTypeHandler0(clazz);
-            if (c != null) {
-                return c;
-            }
-        } else if (type instanceof JavaType javaType) {
-            //JavaType 先尝试使用 getRawClass 进行创建 失败后回退到 ObjectTypeHandler
-            var c = createTypeHandler0(javaType.getRawClass());
-            if (c != null) {
-                return c;
-            }
+    @SuppressWarnings("unchecked")
+    public <T> TypeHandler<T> findTypeHandler(TypeInfo typeInfo) {
+        var typeHandler = (TypeHandler<T>) TYPE_HANDLER_MAP.get(typeInfo);
+        if (typeHandler != null) {
+            return typeHandler;
+        }
+        var typeHandler1 = (TypeHandler<T>) this.createTypeHandler(typeInfo);
+        TYPE_HANDLER_MAP.put(typeInfo, typeHandler1);
+        return typeHandler1;
+    }
+
+    private TypeHandler<?> createTypeHandler(Class<?> type) {
+        //普通 class 直接创建 失败后回退到 ObjectTypeHandler
+        var c = createTypeHandler0(type);
+        if (c != null) {
+            return c;
+        }
+        return new ObjectTypeHandler(type);
+    }
+
+    private TypeHandler<?> createTypeHandler(TypeInfo type) {
+        //JavaType 先尝试使用 getRawClass 进行创建 失败后回退到 ObjectTypeHandler
+        var c = createTypeHandler0(type.rawClass());
+        if (c != null) {
+            return c;
         }
         return new ObjectTypeHandler(type);
     }
