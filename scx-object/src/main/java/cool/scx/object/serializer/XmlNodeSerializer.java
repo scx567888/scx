@@ -1,0 +1,105 @@
+package cool.scx.object.serializer;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.StreamWriteConstraints;
+import com.fasterxml.jackson.dataformat.xml.XmlFactory;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import cool.scx.object.node.*;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.UncheckedIOException;
+
+/// 此序列化器基于递归下降方式进行序列化, 以保证代码的简洁和可维护性.
+/// 但 Node 实际上允许自引用, 也就是说存在无限递归导致栈溢出的风险.
+/// 因此, 我们通过 NodeSerializerOptions.maxNestingDepth 来间接限制递归深度,
+/// 避免超过 JVM 栈限制 (一般超过 3500 层为危险值)
+///
+/// @author scx567888
+/// @version 0.0.1
+public final class XmlNodeSerializer {
+
+    private final XmlFactory xmlFactory;
+    private final XmlNodeSerializerOptions options;
+
+    public XmlNodeSerializer(XmlFactory xmlFactory, XmlNodeSerializerOptions options) {
+        this.xmlFactory = xmlFactory;
+        this.options = options;
+        //有很多的 安全限制 jackson 已经覆盖了 我们直接使用
+        this.xmlFactory.setStreamWriteConstraints(StreamWriteConstraints.builder()
+                .maxNestingDepth(options.maxNestingDepth())
+                .build());
+    }
+
+    public String serializeAsString(Node node) throws JsonProcessingException {
+        var writer = new StringWriter();
+        try {
+            serializeAndClose(xmlFactory.createGenerator(writer), node);
+        } catch (JsonProcessingException e) {
+            throw e;
+        } catch (IOException e) {
+            // 在 StringWriter 中, IOException 理论上永远不会发生
+            throw new UncheckedIOException(e);
+        }
+        return writer.toString();
+    }
+
+    private void serializeAndClose(ToXmlGenerator generator, Node node) throws IOException {
+        try (generator) {
+            // Xml 需要根节点
+            generator.setNextName(options.xmlRootTagName());
+            // 顶级数组需要特殊处理
+            var isRootArray = node instanceof ArrayNode;
+            if (isRootArray) {
+                generator.writeStartObject();
+                generator.writeFieldName("item");
+            }
+            writeNode(generator, node);
+            // 顶级数组需要特殊处理
+            if (isRootArray) {
+                generator.writeEndObject();
+            }
+        }
+    }
+
+    private void writeNode(ToXmlGenerator generator, Node node) throws IOException {
+        switch (node) {
+            case ObjectNode objectNode -> writeObject(generator, objectNode);
+            case ArrayNode arrayNode -> writeArray(generator, arrayNode);
+            default -> writeScalar(generator, node);
+        }
+    }
+
+    private void writeObject(ToXmlGenerator generator, ObjectNode objectNode) throws IOException {
+        generator.writeStartObject();
+        for (var e : objectNode) {
+            generator.writeFieldName(e.getKey());
+            writeNode(generator, e.getValue());
+        }
+        generator.writeEndObject();
+    }
+
+    private void writeArray(ToXmlGenerator generator, ArrayNode arrayNode) throws IOException {
+        generator.writeStartArray();
+        for (var item : arrayNode) {
+            writeNode(generator, item);
+        }
+        generator.writeEndArray();
+    }
+
+    private void writeScalar(ToXmlGenerator generator, Node node) throws IOException {
+        switch (node) {
+            case TextNode textNode -> generator.writeString(textNode.value());
+            case IntNode intNode -> generator.writeNumber(intNode.value());
+            case LongNode longNode -> generator.writeNumber(longNode.value());
+            case FloatNode floatNode -> generator.writeNumber(floatNode.value());
+            case DoubleNode doubleNode -> generator.writeNumber(doubleNode.value());
+            case BigIntegerNode bigIntegerNode -> generator.writeNumber(bigIntegerNode.value());
+            case BigDecimalNode bigDecimalNode -> generator.writeNumber(bigDecimalNode.value());
+            case BooleanNode booleanNode -> generator.writeBoolean(booleanNode.value());
+            case NullNode _ -> generator.writeNull();
+            default -> throw new IOException("Unsupported Node Type: " + node.getClass().getName());
+        }
+    }
+
+}
