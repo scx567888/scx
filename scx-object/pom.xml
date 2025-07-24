@@ -33,6 +33,7 @@
         <dependency>
             <groupId>cool.scx</groupId>
             <artifactId>scx-common</artifactId>
+            <version>4.0.1</version>
         </dependency>
 
         <dependency>
