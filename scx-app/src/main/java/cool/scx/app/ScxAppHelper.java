@@ -28,8 +28,8 @@ import cool.scx.logging.ScxLoggerConfig;
 import cool.scx.logging.ScxLogging;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
-import cool.scx.reflect.ClassInfoFactory;
-import cool.scx.reflect.MethodType;
+import cool.scx.reflect.ClassInfo;
+import cool.scx.reflect.ScxReflect;
 import cool.scx.scheduling.ScxScheduling;
 import cool.scx.web.annotation.ScxRoute;
 import cool.scx.web.annotation.ScxWebSocketRoute;
@@ -118,11 +118,12 @@ public final class ScxAppHelper {
 
     @SuppressWarnings("unchecked")
     public static <Entity extends BaseModel> Class<Entity> findBaseModelServiceEntityClass(Class<?> baseModelServiceClass) {
-        var superClass = ClassInfoFactory.getClassInfo(baseModelServiceClass).findSuperType(BaseModelService.class);
+        // todo 这里强转可能有问题
+        var superClass = ((ClassInfo)ScxReflect.typeOf(baseModelServiceClass)).findSuperType(BaseModelService.class);
         if (superClass != null) {
-            var boundType = superClass.type().getBindings().getBoundType(0);
+            var boundType = superClass.bindings().get(0);
             if (boundType != null) {
-                return (Class<Entity>) boundType.getRawClass();
+                return (Class<Entity>) boundType.rawClass();
             } else {
                 throw new IllegalArgumentException(baseModelServiceClass.getName() + " : 必须设置泛型参数 !!!");
             }
@@ -204,7 +205,8 @@ public final class ScxAppHelper {
         var beanDefinitionNames = beanFactory.getBeanNames();
         for (var beanDefinitionName : beanDefinitionNames) {
             var bean = beanFactory.getBean(beanDefinitionName);
-            var classInfo = ClassInfoFactory.getClassInfo(bean.getClass());
+            // todo 这里强转可能有问题
+            var classInfo =(ClassInfo) ScxReflect.typeOf(bean.getClass());
             for (var method : classInfo.methods()) {
                 if (method.accessModifier() != PUBLIC) {
                     continue;
@@ -223,7 +225,7 @@ public final class ScxAppHelper {
                         );
                         break;
                     }
-                    if (method.methodType() == MethodType.STATIC) {
+                    if (method.isStatic()) {
                         ScxScheduling.cron()
                                 .expression(scheduled.cron())
                                 .start(c -> {

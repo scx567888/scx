@@ -8,6 +8,7 @@ import cool.scx.reflect.AnnotatedElementInfo;
 import cool.scx.reflect.FieldInfo;
 import cool.scx.reflect.ParameterInfo;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 
 /// 处理 Value 注解
@@ -22,7 +23,7 @@ public class ValueAnnotationResolver implements BeanResolver {
         this.map = map;
     }
 
-    public Object resolveValue(AnnotatedElementInfo annotatedElementInfo, JavaType javaType) throws MissingValueException {
+    public Object resolveValue(AnnotatedElementInfo annotatedElementInfo, Type javaType) throws MissingValueException {
         var annotation = annotatedElementInfo.findAnnotation(Value.class);
         if (annotation == null) {
             return null;
@@ -36,12 +37,12 @@ public class ValueAnnotationResolver implements BeanResolver {
 
     @Override
     public Object resolveConstructorArgument(ParameterInfo parameterInfo) {
-        return resolveValue(parameterInfo, parameterInfo.type());
+        return resolveValue(parameterInfo, parameterInfo.rawParameter().getParameterizedType());
     }
 
     @Override
     public Object resolveFieldValue(FieldInfo fieldInfo) {
-        return resolveValue(fieldInfo, fieldInfo.type());
+        return resolveValue(fieldInfo, fieldInfo.rawField().getGenericType());
     }
 
 }

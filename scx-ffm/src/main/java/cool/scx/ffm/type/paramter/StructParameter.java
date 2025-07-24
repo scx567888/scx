@@ -2,8 +2,9 @@ package cool.scx.ffm.type.paramter;
 
 import cool.scx.ffm.type.struct.Struct;
 import cool.scx.reflect.AccessModifier;
-import cool.scx.reflect.ClassInfoFactory;
+import cool.scx.reflect.ClassInfo;
 import cool.scx.reflect.FieldInfo;
+import cool.scx.reflect.ScxReflect;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemoryLayout;
@@ -31,7 +32,7 @@ public class StructParameter implements Parameter {
 
     public StructParameter(Struct value) {
         this.value = value;
-        var classInfo = ClassInfoFactory.getClassInfo(this.value.getClass());
+        var classInfo = (ClassInfo) ScxReflect.typeOf(this.value.getClass());
         this.fieldMap = new HashMap<>();
         //1, 寻找 public 的 fields
         var field = Arrays.stream(classInfo.fields()).filter(c -> c.accessModifier() == AccessModifier.PUBLIC).toList();
@@ -40,7 +41,7 @@ public class StructParameter implements Parameter {
         var memoryLayouts = new MemoryLayout[field.size()];
         for (int i = 0; i < field.size(); i = i + 1) {
             var f = field.get(i);
-            var memoryLayout = getMemoryLayout(f.type().getRawClass());
+            var memoryLayout = getMemoryLayout(f.fieldType().rawClass());
             memoryLayouts[i] = memoryLayout.withName(f.name());
         }
 

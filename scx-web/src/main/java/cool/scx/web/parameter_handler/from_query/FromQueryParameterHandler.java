@@ -9,6 +9,7 @@ import cool.scx.web.parameter_handler.exception.ParamConvertException;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 
 import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
+import static cool.scx.common.util.ObjectUtils.constructType;
 import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.readValue;
 
 /// FromQueryParameterHandler
@@ -50,7 +51,7 @@ public final class FromQueryParameterHandler implements ParameterHandler {
 
     @Override
     public Object handle(RequestInfo requestInfo) throws Exception {
-        return getValueFromQuery(value, fromQuery.merge(), fromQuery.required(), parameter.type(), requestInfo);
+        return getValueFromQuery(value, fromQuery.merge(), fromQuery.required(), constructType(parameter.rawParameter().getParameterizedType()), requestInfo);
     }
 
 }

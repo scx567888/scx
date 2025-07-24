@@ -3,8 +3,9 @@ package cool.scx.bean.provider;
 import cool.scx.bean.BeanFactory;
 import cool.scx.bean.dependency.DependencyContext;
 import cool.scx.bean.exception.BeanCreationException;
-import cool.scx.reflect.ClassInfoFactory;
+import cool.scx.reflect.ClassInfo;
 import cool.scx.reflect.FieldInfo;
+import cool.scx.reflect.ScxReflect;
 
 import static cool.scx.bean.dependency.CircularDependencyChecker.*;
 import static cool.scx.bean.provider.InjectingBeanProvider.BeanStatus.*;
@@ -93,7 +94,8 @@ public class InjectingBeanProvider implements BeanProvider {
     }
 
     private void injectField(Object bean, BeanFactory beanFactory) throws BeanCreationException {
-        var classInfo = ClassInfoFactory.getClassInfo(beanClass());
+        // todo 这里是否能强转 ?
+        var classInfo = (ClassInfo) ScxReflect.typeOf(beanClass());
         var fieldInfos = classInfo.allFields();
 
         for (var fieldInfo : fieldInfos) {

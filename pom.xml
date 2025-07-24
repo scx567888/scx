@@ -57,7 +57,6 @@
         <module>scx-jdbc</module>
         <module>scx-jdbc-spy</module>
         <module>scx-jdbc-mysql</module>
-        <module>scx-reflect</module>
         <module>scx-scheduling</module>
         <module>scx-web</module>
         <module>scx-websocket</module>
@@ -140,6 +139,12 @@
                 <groupId>cool.scx</groupId>
                 <artifactId>scx-ansi</artifactId>
                 <version>${scx-ansi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-reflect</artifactId>
+                <version>${scx-reflect.version}</version>
             </dependency>
 
             <dependency>
@@ -240,6 +245,7 @@
         <scx-timer.version>1.0.0</scx-timer.version>
         <scx-tcp.version>4.0.0</scx-tcp.version>
         <scx-ansi.version>4.1.0</scx-ansi.version>
+        <scx-reflect.version>4.1.0</scx-reflect.version>
         <jackson.version>2.19.1</jackson.version>
         <hikaricp.version>6.2.1</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>

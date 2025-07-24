@@ -37,8 +37,20 @@ public final class FromUploadParameterHandler implements ParameterHandler {
             }
             required = fromUpload.required();
         }
-        this.isCollection = parameter.type().isCollectionLikeType();
-        this.isArray = parameter.type().isArrayType();
+        this.isCollection =checkIsCollection(parameter);
+        this.isArray = checkIsArray(parameter);
+    }
+
+    // todo 这个正确吗?
+    public static boolean checkIsCollection(ParameterInfo parameter) {
+        var c = parameter.parameterType().rawClass();
+        return Collection.class.isAssignableFrom(c);
+    }
+
+    // todo 这个正确吗?
+    public static boolean checkIsArray(ParameterInfo parameter) {
+        var c = parameter.parameterType().rawClass();
+        return c.isArray();
     }
 
     /// 从 RoutingContext 查找 对应名称的 上传对象 为空会返回 null
@@ -59,7 +71,7 @@ public final class FromUploadParameterHandler implements ParameterHandler {
         //为空的时候做两个处理 即必填则报错 非必填则返回 null
         if (v.length == 0) {
             if (required) {
-                throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + value + "] , 参数来源 [FromUpload] , 参数类型 [" + parameter.type() + "]");
+                throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + value + "] , 参数来源 [FromUpload] , 参数类型 [" + parameter.parameterType() + "]");
             }
             return null;
         }
@@ -70,7 +82,7 @@ public final class FromUploadParameterHandler implements ParameterHandler {
         if (isCollection) {
             //这里我们无法确定具体的类型 所以使用 ObjectUtils 帮我们创建一个
             @SuppressWarnings("unchecked")
-            var list = (Collection<Object>) convertValue(new Object[]{}, parameter.type());
+            var list = (Collection<Object>) convertValue(new Object[]{}, parameter.rawParameter().getParameterizedType());// todo 这里正确吗? 
             addAll(list, v);
             return list;
         } else {
