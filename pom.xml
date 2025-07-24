@@ -253,7 +253,7 @@
         <scx-ansi.version>4.1.0</scx-ansi.version>
         <scx-reflect.version>4.1.0</scx-reflect.version>
         <jackson.version>2.19.2</jackson.version>
-        <hikaricp.version>6.2.1</hikaricp.version>
+        <hikaricp.version>6.3.2</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
