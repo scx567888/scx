@@ -14,6 +14,7 @@ import cool.scx.http.media.object.ObjectWriter;
 import cool.scx.http.media.path.PathWriter;
 import cool.scx.http.media.string.StringWriter;
 import cool.scx.http.media.tree.TreeWriter;
+import cool.scx.object.node.Node;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -63,8 +64,8 @@ public interface ScxHttpSender<T> {
         return send(new MultiPartWriter(multiPart));
     }
 
-    default T send(JsonNode jsonNode) throws BodyAlreadySentException, HttpSendException {
-        return send(new TreeWriter(jsonNode));
+    default T send(Node node) throws BodyAlreadySentException, HttpSendException {
+        return send(new TreeWriter(node));
     }
 
     default T send(Object object) throws BodyAlreadySentException, HttpSendException {

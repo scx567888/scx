@@ -9,11 +9,11 @@ import cool.scx.http.media.tree.TreeWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static cool.scx.common.util.ObjectUtils.toJson;
-import static cool.scx.common.util.ObjectUtils.toXml;
 import static cool.scx.http.media.tree.TreeHelper.trySetContentType;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
+import static cool.scx.object.ScxObject.toJson;
+import static cool.scx.object.ScxObject.toXml;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// ObjectWriter  逻辑参考 {@link TreeWriter}

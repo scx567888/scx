@@ -1,13 +1,14 @@
 package cool.scx.http.error_handler;
 
-import cool.scx.common.exception.ScxExceptionHelper;
-import cool.scx.common.util.ObjectUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import cool.scx.common.util.ExceptionUtils;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.headers.accept.Accept;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.status.ScxHttpStatus;
+import cool.scx.object.ScxObject;
 
 import java.lang.System.Logger;
 import java.util.Map;
@@ -69,7 +70,12 @@ public class DefaultHttpServerErrorHandler implements ScxHttpServerErrorHandler 
                     .status(status)
                     .send(htmlStr);
         } else {
-            var jsonStr = ObjectUtils.toJson(Map.of("status", status.code(), "title", reasonPhrase, "info", info), "");
+            String jsonStr;
+            try {
+                jsonStr = ScxObject.toJson(Map.of("status", status.code(), "title", reasonPhrase, "info", info));
+            } catch (JsonProcessingException e) {
+                jsonStr = "";
+            }
             request.response()
                     .contentType(ScxMediaType.of(APPLICATION_JSON).charset(UTF_8))
                     .status(status)
@@ -81,11 +87,11 @@ public class DefaultHttpServerErrorHandler implements ScxHttpServerErrorHandler 
         String info = null;
         //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
         if (useDevelopmentErrorPage) {
-            var cause = ScxExceptionHelper.getRootCause(scxHttpException.getCause());
+            var cause = scxHttpException.getCause();
             if (cause == null) {
                 info = scxHttpException.getMessage();
             } else {
-                info = ScxExceptionHelper.getStackTraceString(cause);
+                info = ExceptionUtils.getStackTraceString(cause);
             }
         }
         sendToClient(scxHttpException.status(), info, request);
@@ -93,14 +99,13 @@ public class DefaultHttpServerErrorHandler implements ScxHttpServerErrorHandler 
 
     @Override
     public void accept(Throwable throwable, ScxHttpServerRequest request, ErrorPhase errorPhase) {
-        var e = ScxExceptionHelper.getRootCause(throwable);
         // Http 异常无需打印
-        if (e instanceof ScxHttpException h) {
+        if (throwable instanceof ScxHttpException h) {
             this.handleScxHttpException(h, request);
         } else {
             // 其余异常包装为 500 异常, 同时需要打印
-            LOGGER.log(ERROR, getErrorPhaseStr(errorPhase) + " 发生异常 !!!", e);
-            this.handleScxHttpException(new InternalServerErrorException(e), request);
+            LOGGER.log(ERROR, getErrorPhaseStr(errorPhase) + " 发生异常 !!!", throwable);
+            this.handleScxHttpException(new InternalServerErrorException(throwable), request);
         }
     }
 
