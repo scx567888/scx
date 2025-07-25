@@ -1,6 +1,5 @@
 package cool.scx.http.error_handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ExceptionUtils;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.exception.InternalServerErrorException;
@@ -70,12 +69,7 @@ public class DefaultHttpServerErrorHandler implements ScxHttpServerErrorHandler 
                     .status(status)
                     .send(htmlStr);
         } else {
-            String jsonStr;
-            try {
-                jsonStr = ScxObject.toJson(Map.of("status", status.code(), "title", reasonPhrase, "info", info));
-            } catch (JsonProcessingException e) {
-                jsonStr = "";
-            }
+            var jsonStr = ScxObject.toJson(Map.of("status", status.code(), "title", reasonPhrase, "info", info));
             request.response()
                     .contentType(ScxMediaType.of(APPLICATION_JSON).charset(UTF_8))
                     .status(status)

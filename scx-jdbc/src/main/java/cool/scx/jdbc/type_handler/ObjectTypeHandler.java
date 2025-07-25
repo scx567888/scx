@@ -1,7 +1,9 @@
 package cool.scx.jdbc.type_handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.object.ScxObject;
+import cool.scx.object.mapping.NodeMappingException;
+import cool.scx.object.parser.NodeParseException;
+import cool.scx.object.serializer.NodeSerializeException;
 import cool.scx.reflect.ScxReflect;
 import cool.scx.reflect.TypeInfo;
 
@@ -36,7 +38,7 @@ public class ObjectTypeHandler implements TypeHandler<Object> {
         try {
             var json = ScxObject.toJson(parameter);
             ps.setString(i, json);
-        } catch (JsonProcessingException e) {
+        } catch (NodeMappingException | NodeSerializeException e) {
             logger.log(ERROR, "序列化时发生错误 , 已使用 NULL !!!", e);
             ps.setNull(i, Types.NULL);
         }
@@ -50,7 +52,7 @@ public class ObjectTypeHandler implements TypeHandler<Object> {
         }
         try {
             return ScxObject.fromJson(json, javaType);
-        } catch (JsonProcessingException e) {
+        } catch (NodeMappingException | NodeParseException e) {
             logger.log(ERROR, "反序列化时发生错误 , 已使用 NULL !!!", e);
             return null;
         }
