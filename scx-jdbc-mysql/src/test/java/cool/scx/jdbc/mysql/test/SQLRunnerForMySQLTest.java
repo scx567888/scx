@@ -1,6 +1,5 @@
 package cool.scx.jdbc.mysql.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.common.util.FileUtils;
 import cool.scx.jdbc.JDBCContext;
@@ -38,7 +37,7 @@ public class SQLRunnerForMySQLTest {
         ScxLogging.setConfig("ScxSpy", new ScxLoggerConfig().setLevel(DEBUG));
     }
 
-    public static void main(String[] args) throws JsonProcessingException {
+    public static void main(String[] args) {
         beforeTest();
         test1();
         test2();
@@ -95,7 +94,7 @@ public class SQLRunnerForMySQLTest {
     }
 
     @Test
-    public static void test3() throws JsonProcessingException {
+    public static void test3() {
         List<Student> query = sqlRunner.query(sql("select * from " + tableName), ofBeanList(Student.class));
         System.out.println("查询 使用 BeanList 总条数: " + query.size());
         System.out.println("查询 使用 BeanList 第一条内容: " + ScxObject.toJson(query.get(0)));

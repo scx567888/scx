@@ -1,6 +1,5 @@
 package cool.scx.jdbc.mysql.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.jdbc.meta_data.DataSourceMetaData;
 import cool.scx.jdbc.mysql.MySQLDialect;
 import org.testng.annotations.Test;

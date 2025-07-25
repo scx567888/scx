@@ -1,8 +1,9 @@
 package cool.scx.data.serialization;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.data.aggregation.*;
 import cool.scx.object.ScxObject;
+import cool.scx.object.mapping.NodeMappingException;
+import cool.scx.object.serializer.NodeSerializeException;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -15,7 +16,7 @@ public class AggregationSerializer {
         var v = serializeAggregation(aggregation);
         try {
             return ScxObject.toJson(v);
-        } catch (JsonProcessingException e) {
+        } catch (NodeMappingException | NodeSerializeException e) {
             throw new SerializationException(e);
         }
     }
