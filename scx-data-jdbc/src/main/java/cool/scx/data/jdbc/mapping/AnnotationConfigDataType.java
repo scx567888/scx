@@ -2,6 +2,7 @@ package cool.scx.data.jdbc.mapping;
 
 import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.mapping.DataType;
+import org.w3c.dom.TypeInfo;
 
 import java.lang.reflect.Type;
 
@@ -30,7 +31,7 @@ public class AnnotationConfigDataType implements DataType {
         this.length = _length;
     }
 
-    public AnnotationConfigDataType(Type javaType) {
+    public AnnotationConfigDataType(TypeInfo javaType) {
         this.jdbcType = getDataTypeByJavaType(javaType);
         this.name = this.jdbcType.name();
         this.length = this.jdbcType == VARCHAR ? DEFAULT_VARCHAR_LENGTH : null;
