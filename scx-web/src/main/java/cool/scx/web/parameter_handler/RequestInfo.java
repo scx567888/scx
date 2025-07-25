@@ -1,6 +1,5 @@
 package cool.scx.web.parameter_handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.collections.multi_map.MultiMap;
 import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.media.multi_part.MultiPartPartImpl;
@@ -10,6 +9,7 @@ import cool.scx.object.ScxObject;
 import cool.scx.object.node.Node;
 import cool.scx.object.node.ObjectNode;
 import cool.scx.object.node.TextNode;
+import cool.scx.object.parser.NodeParseException;
 
 import java.io.IOException;
 
@@ -47,10 +47,10 @@ public final class RequestInfo {
     public static Node tryReadOrTextNode(String str) {
         try { //先尝试以 json 格式进行尝试转换
             return ScxObject.fromJson(str);
-        } catch (Exception exception) {
+        } catch (NodeParseException exception) {
             try {//再尝试以 xml 的格式进行转换
                 return ScxObject.fromXml(str);
-            } catch (JsonProcessingException e) {
+            } catch (NodeParseException e) {
                 // json 和 xml 均转换失败 直接存储 为 string
                 return new TextNode(str);
             }

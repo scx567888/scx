@@ -1,6 +1,5 @@
 package cool.scx.config.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.source.ArgsConfigSource;
@@ -10,12 +9,12 @@ import org.testng.annotations.Test;
 
 public class ScxConfigTest {
 
-    public static void main(String[] args) throws JsonProcessingException {
+    public static void main(String[] args) {
         test1();
     }
 
     @Test
-    public static void test1() throws JsonProcessingException {
+    public static void test1() {
         var scxEnvironment = new ScxEnvironment(ScxConfigTest.class);
         var jsonPath = scxEnvironment.getPathByAppRoot("AppRoot:scx-config.json");
         var scxConfig = new ScxConfig(JsonFileConfigSource.of(jsonPath), ArgsConfigSource.of("--scx.port=8888"));

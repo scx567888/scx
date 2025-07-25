@@ -28,7 +28,7 @@ public class AnnotationConfigColumn implements EntityColumn {
         var column = javaField.findAnnotation(Column.class);
         var defaultColumnName = javaField.name();
         // todo 这里可能有问题
-        var defaultDataType = new AnnotationConfigDataType(this.javaField.rawField().getGenericType());
+        var defaultDataType = new AnnotationConfigDataType(this.javaField.fieldType());
         if (column != null) {
             var _columnName = getRealValue(column.columnName());
             var _defaultValue = getRealValue(column.defaultValue());

@@ -56,7 +56,6 @@ public abstract class BeanBuilder<T> {
         if (lastDialect != dialect) {
             lastDialect = dialect;
             for (var fieldSetter : fieldSetters()) {
-                // todo 这里可能有问题
                 var typeHandler = lastDialect.findTypeHandler(fieldSetter.fieldInfo().fieldType());
                 fieldSetter.bindTypeHandler(typeHandler);
             }

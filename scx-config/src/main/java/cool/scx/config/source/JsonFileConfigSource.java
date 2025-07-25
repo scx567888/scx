@@ -1,10 +1,10 @@
 package cool.scx.config.source;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.ansi.Ansi;
 import cool.scx.io.file.FileWatcher;
 import cool.scx.object.ScxObject;
 import cool.scx.object.node.ObjectNode;
+import cool.scx.object.parser.NodeParseException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -44,7 +44,7 @@ public final class JsonFileConfigSource extends AbstractConfigSource {
             switch (e) {
                 case JsonConfigFileMissingException _ ->
                         Ansi.ansi().red("N 配置文件已丢失!!! 请确保配置文件存在 : " + jsonPath).println();
-                case JsonProcessingException _ ->
+                case NodeParseException _ ->
                         Ansi.ansi().red("N 配置文件已损坏!!! 请确保配置文件格式正确 : " + jsonPath).println();
                 case JsonConfigFileNotObjectException _ ->
                         Ansi.ansi().red("N 配置文件必须为 Object 格式!!! 请确保配置文件格式正确 : " + jsonPath).println();

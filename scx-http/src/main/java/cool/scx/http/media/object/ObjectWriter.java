@@ -1,10 +1,11 @@
 package cool.scx.http.media.object;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.tree.TreeWriter;
+import cool.scx.object.mapping.NodeMappingException;
+import cool.scx.object.serializer.NodeSerializeException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -44,7 +45,7 @@ public class ObjectWriter implements MediaWriter {
                 //这里 表示用户设置的 类型 既不是 JSON 也不是 XML 我们无法处理 抛出异常
                 throw new IllegalArgumentException("Unsupported media type: " + contentType);
             }
-        } catch (JsonProcessingException e) {
+        } catch (NodeMappingException | NodeSerializeException e) {
             //这里表示用户的 jsonNode 无法被转换为字符串 (比如递归引用) 这里抛出异常
             throw new IllegalArgumentException(e);
         }

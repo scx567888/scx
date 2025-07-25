@@ -1,6 +1,5 @@
 package cool.scx.jdbc.mysql.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.jdbc.meta_data.DataSourceMetaData;
 import cool.scx.jdbc.mysql.MySQLDialect;
 import org.testng.annotations.Test;
@@ -10,17 +9,17 @@ import java.sql.SQLException;
 
 public class MetaDataTest {
 
-    public static void main(String[] args) throws SQLException, JsonProcessingException {
+    public static void main(String[] args) throws SQLException {
         test1();
     }
 
     @Test
-    public static void test1() throws SQLException, JsonProcessingException {
+    public static void test1() throws SQLException {
         test1_1(SQLRunnerForMySQLTest.dataSource);
         test1_2(SQLRunnerForMySQLTest.dataSource);
     }
 
-    public static void test1_1(DataSource dataSource) throws SQLException, JsonProcessingException {
+    public static void test1_1(DataSource dataSource) throws SQLException {
         System.out.println("完全内省 !!!");
         var dialect = new MySQLDialect();
         try (var con = dataSource.getConnection()) {
@@ -51,7 +50,7 @@ public class MetaDataTest {
     }
 
 
-    public static void test1_2(DataSource dataSource) throws SQLException, JsonProcessingException {
+    public static void test1_2(DataSource dataSource) throws SQLException {
         System.out.println("按需内省 !!!");
         var dialect = new MySQLDialect();
         try (var con = dataSource.getConnection()) {

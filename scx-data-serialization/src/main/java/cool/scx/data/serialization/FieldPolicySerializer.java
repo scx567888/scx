@@ -1,10 +1,11 @@
 package cool.scx.data.serialization;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.data.field_policy.AssignField;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.field_policy.VirtualField;
 import cool.scx.object.ScxObject;
+import cool.scx.object.mapping.NodeMappingException;
+import cool.scx.object.serializer.NodeSerializeException;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -20,7 +21,7 @@ public class FieldPolicySerializer {
         var m = serializeFieldPolicy(fieldPolicy);
         try {
             return ScxObject.toJson(m);
-        } catch (JsonProcessingException e) {
+        } catch (NodeMappingException | NodeSerializeException e) {
             throw new SerializationException(e);
         }
     }
