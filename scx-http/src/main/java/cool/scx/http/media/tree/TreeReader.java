@@ -1,6 +1,5 @@
 package cool.scx.http.media.tree;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;

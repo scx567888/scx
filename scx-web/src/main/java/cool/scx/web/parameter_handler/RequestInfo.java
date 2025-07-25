@@ -1,6 +1,5 @@
 package cool.scx.web.parameter_handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.collections.multi_map.MultiMap;
 import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.media.multi_part.MultiPartPartImpl;
