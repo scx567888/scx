@@ -232,7 +232,7 @@
         <scx-bytes.version>4.0.0</scx-bytes.version>
         <scx-logging.version>4.0.0</scx-logging.version>
         <scx-timer.version>1.0.0</scx-timer.version>
-        <scx-tcp.version>4.0.0</scx-tcp.version>
+        <scx-tcp.version>4.0.1</scx-tcp.version>
         <scx-common.version>4.0.1</scx-common.version>
         <scx-ansi.version>4.1.0</scx-ansi.version>
         <scx-reflect.version>4.1.2</scx-reflect.version>
