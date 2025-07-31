@@ -19,7 +19,7 @@ import static cool.scx.jdbc.dialect.DefaultDialect.DEFAULT_DIALECT;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ResultHandler<T, E extends Throwable> {
+public interface ResultHandler<T, X extends Throwable> {
 
     static ResultHandler<Map<String, Object>, RuntimeException> ofMap() {
         return MapHandler.INSTANCE;
@@ -77,31 +77,31 @@ public interface ResultHandler<T, E extends Throwable> {
         return new BeanListHandler<>(beanBuilder);
     }
 
-    static <C, E extends Throwable> ResultHandler<Void, E> ofBeanConsumer(Class<C> clazz, ConsumerX<C, E> consumer) {
+    static <C, X extends Throwable> ResultHandler<Void, X> ofBeanConsumer(Class<C> clazz, ConsumerX<C, X> consumer) {
         return new BeanConsumerHandler<>(BeanBuilder.of(clazz), consumer);
     }
 
-    static <C, E extends Throwable> ResultHandler<Void, E> ofBeanConsumer(Class<C> clazz, Function<Field, String> columnNameMapping, ConsumerX<C, E> consumer) {
+    static <C, X extends Throwable> ResultHandler<Void, X> ofBeanConsumer(Class<C> clazz, Function<Field, String> columnNameMapping, ConsumerX<C, X> consumer) {
         return new BeanConsumerHandler<>(BeanBuilder.of(clazz, columnNameMapping), consumer);
     }
 
-    static <C, E extends Throwable> ResultHandler<Void, E> ofBeanConsumer(BeanBuilder<C> beanBuilder, ConsumerX<C, E> consumer) {
+    static <C, X extends Throwable> ResultHandler<Void, X> ofBeanConsumer(BeanBuilder<C> beanBuilder, ConsumerX<C, X> consumer) {
         return new BeanConsumerHandler<>(beanBuilder, consumer);
     }
 
-    static <E extends Throwable> ResultHandler<Void, E> ofMapConsumer(ConsumerX<Map<String, Object>, E> consumer) {
+    static <X extends Throwable> ResultHandler<Void, X> ofMapConsumer(ConsumerX<Map<String, Object>, X> consumer) {
         return new MapConsumerHandler<>(MapBuilder.of(), consumer);
     }
 
-    static <E extends Throwable> ResultHandler<Void, E> ofMapConsumer(MapBuilder mapBuilder, ConsumerX<Map<String, Object>, E> consumer) {
+    static <X extends Throwable> ResultHandler<Void, X> ofMapConsumer(MapBuilder mapBuilder, ConsumerX<Map<String, Object>, X> consumer) {
         return new MapConsumerHandler<>(mapBuilder, consumer);
     }
 
-    static <E extends Throwable> ResultHandler<Void, E> ofMapConsumer(Supplier<Map<String, Object>> mapSupplier, ConsumerX<Map<String, Object>, E> consumer) {
+    static <X extends Throwable> ResultHandler<Void, X> ofMapConsumer(Supplier<Map<String, Object>> mapSupplier, ConsumerX<Map<String, Object>, X> consumer) {
         return new MapConsumerHandler<>(MapBuilder.of(mapSupplier), consumer);
     }
 
-    static <E extends Throwable> ResultHandler<Void, E> ofMapConsumer(Function<String, String> fieldNameMapping, ConsumerX<Map<String, Object>, E> consumer) {
+    static <X extends Throwable> ResultHandler<Void, X> ofMapConsumer(Function<String, String> fieldNameMapping, ConsumerX<Map<String, Object>, X> consumer) {
         return new MapConsumerHandler<>(MapBuilder.of(fieldNameMapping), consumer);
     }
 
@@ -113,9 +113,9 @@ public interface ResultHandler<T, E extends Throwable> {
         return new SingleValueHandler<>(columnIndex, clazz);
     }
 
-    T apply(ResultSet rs, Dialect dialect) throws SQLException, E;
+    T apply(ResultSet rs, Dialect dialect) throws SQLException, X;
 
-    default T apply(ResultSet rs) throws SQLException, E {
+    default T apply(ResultSet rs) throws SQLException, X {
         return apply(rs, DEFAULT_DIALECT);
     }
 

@@ -22,7 +22,7 @@ public class JDBCTransactionManager implements TransactionManager<JDBCTransactio
     }
 
     @Override
-    public <T, E extends Throwable> T withTransaction(FunctionX<JDBCTransactionContext, T, E> handler) throws DataAccessException, E {
+    public <T, X extends Throwable> T withTransaction(FunctionX<JDBCTransactionContext, T, X> handler) throws DataAccessException, X {
         try {
             return jdbcContext.sqlRunner().withTransaction((con) -> {
                 return handler.apply(new JDBCTransactionContext(con));
@@ -33,7 +33,7 @@ public class JDBCTransactionManager implements TransactionManager<JDBCTransactio
     }
 
     @Override
-    public <E extends Throwable> void withTransaction(ConsumerX<JDBCTransactionContext, E> handler) throws DataAccessException, E {
+    public <X extends Throwable> void withTransaction(ConsumerX<JDBCTransactionContext, X> handler) throws DataAccessException, X {
         try {
             jdbcContext.sqlRunner().withTransaction((con) -> {
                 handler.accept(new JDBCTransactionContext(con));
@@ -44,7 +44,7 @@ public class JDBCTransactionManager implements TransactionManager<JDBCTransactio
     }
 
     @Override
-    public <T, E extends Throwable> T autoTransaction(CallableX<T, E> handler) throws DataAccessException, E {
+    public <T, X extends Throwable> T autoTransaction(CallableX<T, X> handler) throws DataAccessException, X {
         try {
             return jdbcContext.sqlRunner().autoTransaction(handler);
         } catch (SQLRunnerException e) {
@@ -53,7 +53,7 @@ public class JDBCTransactionManager implements TransactionManager<JDBCTransactio
     }
 
     @Override
-    public <E extends Throwable> void autoTransaction(RunnableX<E> handler) throws DataAccessException, E {
+    public <X extends Throwable> void autoTransaction(RunnableX<X> handler) throws DataAccessException, X {
         try {
             jdbcContext.sqlRunner().autoTransaction(handler);
         } catch (SQLRunnerException e) {
@@ -62,7 +62,7 @@ public class JDBCTransactionManager implements TransactionManager<JDBCTransactio
     }
 
     @Override
-    public <T, E extends Throwable> T autoContext(CallableX<T, E> handler) throws DataAccessException, E {
+    public <T, X extends Throwable> T autoContext(CallableX<T, X> handler) throws DataAccessException, X {
         try {
             return jdbcContext.sqlRunner().autoContext(handler);
         } catch (SQLRunnerException e) {
@@ -71,7 +71,7 @@ public class JDBCTransactionManager implements TransactionManager<JDBCTransactio
     }
 
     @Override
-    public <E extends Throwable> void autoContext(RunnableX<E> handler) throws DataAccessException, E {
+    public <X extends Throwable> void autoContext(RunnableX<X> handler) throws DataAccessException, X {
         try {
             jdbcContext.sqlRunner().autoContext(handler);
         } catch (SQLRunnerException e) {

@@ -45,7 +45,7 @@ public class JDBCAggregator implements Aggregator {
     }
 
     @Override
-    public <T, E extends Throwable> void forEach(ConsumerX<T, E> resultConsumer, Class<T> resultType) throws DataAccessException, E {
+    public <T, X extends Throwable> void forEach(ConsumerX<T, X> resultConsumer, Class<T> resultType) throws DataAccessException, X {
         try {
             repository.sqlRunner.query(repository.buildAggregateSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofBeanConsumer(resultType, repository.beanColumnNameMapping, resultConsumer));
         } catch (SQLRunnerException e) {
@@ -54,7 +54,7 @@ public class JDBCAggregator implements Aggregator {
     }
 
     @Override
-    public <E extends Throwable> void forEach(ConsumerX<Map<String, Object>, E> resultConsumer) throws DataAccessException, E {
+    public <X extends Throwable> void forEach(ConsumerX<Map<String, Object>, X> resultConsumer) throws DataAccessException, X {
         try {
             repository.sqlRunner.query(repository.buildAggregateSQL(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery), ofMapConsumer(repository.mapBuilder, resultConsumer));
         } catch (SQLRunnerException e) {

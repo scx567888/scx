@@ -14,11 +14,11 @@ import static cool.scx.jdbc.result_handler.MapHandler.createColumnLabelIndex;
 ///
 /// @author scx567888
 /// @version 0.0.1
-record MapConsumerHandler<E extends Throwable>(MapBuilder mapBuilder,
-                                               ConsumerX<Map<String, Object>, E> consumer) implements ResultHandler<Void, E> {
+record MapConsumerHandler<X extends Throwable>(MapBuilder mapBuilder,
+                                               ConsumerX<Map<String, Object>, X> consumer) implements ResultHandler<Void, X> {
 
     @Override
-    public Void apply(ResultSet rs, Dialect dialect) throws SQLException, E {
+    public Void apply(ResultSet rs, Dialect dialect) throws SQLException, X {
         var columnLabelIndex = createColumnLabelIndex(rs);
         while (rs.next()) {
             var map = mapBuilder.createMap(rs, columnLabelIndex);

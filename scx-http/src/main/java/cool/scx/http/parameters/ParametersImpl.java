@@ -91,12 +91,12 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
     }
 
     @Override
-    public <E extends Throwable> void forEach(BiConsumerX<? super K, V, E> action) throws E {
+    public <X extends Throwable> void forEach(BiConsumerX<? super K, V, X> action) throws X {
         map.forEach(action);
     }
 
     @Override
-    public <E extends Throwable> void forEachParameter(BiConsumerX<? super K, List<V>, E> action) throws E {
+    public <X extends Throwable> void forEachParameter(BiConsumerX<? super K, List<V>, X> action) throws X {
         map.forEachEntry(action);
     }
 

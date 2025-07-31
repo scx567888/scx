@@ -96,12 +96,12 @@ public class Http1Headers implements ScxHttpHeadersWritable {
     }
 
     @Override
-    public <E extends Throwable> void forEach(BiConsumerX<? super ScxHttpHeaderName, String, E> action) throws E {
+    public <X extends Throwable> void forEach(BiConsumerX<? super ScxHttpHeaderName, String, X> action) throws X {
         h.forEach(action);
     }
 
     @Override
-    public <E extends Throwable> void forEachParameter(BiConsumerX<? super ScxHttpHeaderName, List<String>, E> action) throws E {
+    public <X extends Throwable> void forEachParameter(BiConsumerX<? super ScxHttpHeaderName, List<String>, X> action) throws X {
         h.forEachParameter(action);
     }
 

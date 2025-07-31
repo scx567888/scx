@@ -118,19 +118,19 @@ public final class ScxAppContext {
         return scx().sqlRunner();
     }
 
-    public static <E extends Throwable> void autoTransaction(RunnableX<E> handler) throws E, DataAccessException {
+    public static <X extends Throwable> void autoTransaction(RunnableX<X> handler) throws X, DataAccessException {
         jdbcTransactionManager().autoTransaction(handler);
     }
 
-    public static <T, E extends Throwable> T autoTransaction(CallableX<T, E> handler) throws E, DataAccessException {
+    public static <T, X extends Throwable> T autoTransaction(CallableX<T, X> handler) throws X, DataAccessException {
         return jdbcTransactionManager().autoTransaction(handler);
     }
 
-    public static <T, E extends Throwable> T withTransaction(FunctionX<JDBCTransactionContext, T, E> handler) throws DataAccessException, E {
+    public static <T, X extends Throwable> T withTransaction(FunctionX<JDBCTransactionContext, T, X> handler) throws DataAccessException, X {
         return jdbcTransactionManager().withTransaction(handler);
     }
 
-    public static <E extends Throwable> void withTransaction(ConsumerX<JDBCTransactionContext, E> handler) throws DataAccessException, E {
+    public static <X extends Throwable> void withTransaction(ConsumerX<JDBCTransactionContext, X> handler) throws DataAccessException, X {
         jdbcTransactionManager().withTransaction(handler);
     }
 

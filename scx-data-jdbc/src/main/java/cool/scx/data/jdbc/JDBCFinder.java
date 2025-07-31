@@ -60,7 +60,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public <E extends Throwable> void forEach(ConsumerX<Entity, E> entityConsumer) throws DataAccessException, E {
+    public <X extends Throwable> void forEach(ConsumerX<Entity, X> entityConsumer) throws DataAccessException, X {
         try {
             repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanConsumer(repository.beanBuilder, entityConsumer));
         } catch (SQLRunnerException e) {
@@ -69,7 +69,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public <T, E extends Throwable> void forEach(ConsumerX<T, E> entityConsumer, Class<T> resultType) throws DataAccessException, E {
+    public <T, X extends Throwable> void forEach(ConsumerX<T, X> entityConsumer, Class<T> resultType) throws DataAccessException, X {
         try {
             repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanConsumer(resultType, repository.beanColumnNameMapping, entityConsumer));
         } catch (SQLRunnerException e) {
@@ -78,7 +78,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public <E extends Throwable> void forEachMap(ConsumerX<Map<String, Object>, E> entityConsumer) throws DataAccessException, E {
+    public <X extends Throwable> void forEachMap(ConsumerX<Map<String, Object>, X> entityConsumer) throws DataAccessException, X {
         try {
             repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofMapConsumer(repository.mapBuilder, entityConsumer));
         } catch (SQLRunnerException e) {

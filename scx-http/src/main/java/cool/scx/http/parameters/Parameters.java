@@ -43,8 +43,8 @@ public interface Parameters<K, V> extends Iterable<ParameterEntry<K, V>> {
 
     Map<K, V> toMap();
 
-    <E extends Throwable> void forEach(BiConsumerX<? super K, V, E> action) throws E;
+    <X extends Throwable> void forEach(BiConsumerX<? super K, V, X> action) throws X;
 
-    <E extends Throwable> void forEachParameter(BiConsumerX<? super K, List<V>, E> action) throws E;
+    <X extends Throwable> void forEachParameter(BiConsumerX<? super K, List<V>, X> action) throws X;
 
 }
