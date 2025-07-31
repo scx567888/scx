@@ -93,8 +93,8 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
-                <artifactId>scx-functional</artifactId>
-                <version>${scx-functional.version}</version>
+                <artifactId>scx-function</artifactId>
+                <version>${scx-function.version}</version>
             </dependency>
 
             <dependency>
@@ -226,7 +226,7 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <scx-functional.version>4.0.1</scx-functional.version>
+        <scx-function.version>0.0.1</scx-function.version>
         <scx-data.version>4.0.1</scx-data.version>
         <scx-collections.version>4.0.1</scx-collections.version>
         <scx-bytes.version>4.0.0</scx-bytes.version>
