@@ -1,7 +1,6 @@
 package cool.scx.http.x;
 
 import cool.scx.function.ConsumerX;
-import cool.scx.functional.ScxConsumer;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
