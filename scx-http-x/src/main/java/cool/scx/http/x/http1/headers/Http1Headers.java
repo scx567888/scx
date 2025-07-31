@@ -1,7 +1,6 @@
 package cool.scx.http.x.http1.headers;
 
 import cool.scx.function.BiConsumerX;
-import cool.scx.functional.ScxBiConsumer;
 import cool.scx.http.headers.ScxHttpHeaderName;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
