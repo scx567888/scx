@@ -228,7 +228,7 @@
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <scx-functional.version>4.0.1</scx-functional.version>
         <scx-data.version>4.0.1</scx-data.version>
-        <scx-collections.version>4.0.1</scx-collections.version>
+        <scx-collections.version>4.0.2</scx-collections.version>
         <scx-bytes.version>4.0.0</scx-bytes.version>
         <scx-logging.version>4.0.0</scx-logging.version>
         <scx-timer.version>1.0.0</scx-timer.version>
