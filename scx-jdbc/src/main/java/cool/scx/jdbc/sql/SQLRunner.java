@@ -95,7 +95,7 @@ public final class SQLRunner {
         return con;
     }
 
-    public <T, E extends Throwable> T query(Connection con, SQL sql, ResultHandler<T, E> resultHandler) throws SQLException, E {
+    public <T, X extends Throwable> T query(Connection con, SQL sql, ResultHandler<T, X> resultHandler) throws SQLException, X {
         try (var preparedStatement = con.prepareStatement(sql.sql(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)) {
             fillParams(sql, preparedStatement, jdbcContext.dialect());
             jdbcContext.dialect().beforeExecuteQuery(preparedStatement);
@@ -135,7 +135,7 @@ public final class SQLRunner {
     }
 
     /// query (自动管理连接)
-    public <T, E extends Throwable> T query(SQL sql, ResultHandler<T, E> resultHandler) throws SQLRunnerException, E {
+    public <T, X extends Throwable> T query(SQL sql, ResultHandler<T, X> resultHandler) throws SQLRunnerException, X {
         try {
             // 我们根据 CONNECTION_SCOPE_VALUE 来判断是否处于 autoTransaction 中
             if (CONNECTION_SCOPE_VALUE.isBound()) {
@@ -211,7 +211,7 @@ public final class SQLRunner {
     }
 
     /// 自动处理事务并在产生异常时进行自动回滚
-    public <T, E extends Throwable> T autoTransaction(CallableX<T, E> handler) throws E, SQLRunnerException {
+    public <T, X extends Throwable> T autoTransaction(CallableX<T, X> handler) throws X, SQLRunnerException {
         try (var con = getConnection(false)) {
             return ScxScopedValue.where(CONNECTION_SCOPE_VALUE, con).call(() -> {
                 T result;
@@ -254,7 +254,7 @@ public final class SQLRunner {
     }
 
     /// 自动处理事务并在产生异常时进行自动回滚
-    public <E extends Throwable> void autoTransaction(RunnableX<E> handler) throws E, SQLRunnerException {
+    public <X extends Throwable> void autoTransaction(RunnableX<X> handler) throws X, SQLRunnerException {
         autoTransaction(() -> {
             handler.run();
             return null;
@@ -262,7 +262,7 @@ public final class SQLRunner {
     }
 
     /// 需要用户手动提交事务
-    public <T, E extends Throwable> T withTransaction(FunctionX<Connection, T, E> handler) throws SQLRunnerException, E {
+    public <T, X extends Throwable> T withTransaction(FunctionX<Connection, T, X> handler) throws SQLRunnerException, X {
         try (var con = getConnection(false)) {
             return ScxScopedValue.where(CONNECTION_SCOPE_VALUE, con).call(() -> handler.apply(con));
         } catch (SQLException e) {
@@ -270,7 +270,7 @@ public final class SQLRunner {
         }
     }
 
-    public <E extends Throwable> void withTransaction(ConsumerX<Connection, E> handler) throws SQLRunnerException, E {
+    public <X extends Throwable> void withTransaction(ConsumerX<Connection, X> handler) throws SQLRunnerException, X {
         withTransaction((con) -> {
             handler.accept(con);
             return null;
@@ -278,11 +278,11 @@ public final class SQLRunner {
     }
 
     /// 更改上下文
-    public <T, E extends Throwable> T autoContext(CallableX<T, E> handler) throws SQLRunnerException, E {
+    public <T, X extends Throwable> T autoContext(CallableX<T, X> handler) throws SQLRunnerException, X {
         return ScxScopedValue.where(SQL_RUNNER_SCOPE_VALUE, this).call(handler);
     }
 
-    public <E extends Throwable> void autoContext(RunnableX<E> handler) throws SQLRunnerException, E {
+    public <X extends Throwable> void autoContext(RunnableX<X> handler) throws SQLRunnerException, X {
         autoContext(() -> {
             handler.run();
             return null;

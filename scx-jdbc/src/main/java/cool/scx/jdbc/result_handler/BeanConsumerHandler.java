@@ -11,11 +11,11 @@ import java.sql.SQLException;
 ///
 /// @author scx567888
 /// @version 0.0.1
-record BeanConsumerHandler<T, E extends Throwable>(BeanBuilder<T> beanBuilder,
-                                                   ConsumerX<T, E> consumer) implements ResultHandler<Void, E> {
+record BeanConsumerHandler<T, X extends Throwable>(BeanBuilder<T> beanBuilder,
+                                                   ConsumerX<T, X> consumer) implements ResultHandler<Void, X> {
 
     @Override
-    public Void apply(ResultSet rs, Dialect dialect) throws SQLException, E {
+    public Void apply(ResultSet rs, Dialect dialect) throws SQLException, X {
         beanBuilder.bindDialect(dialect);
         var indexInfo = beanBuilder.getIndexInfo(rs.getMetaData());
         while (rs.next()) {
