@@ -13,7 +13,7 @@ import cool.scx.jdbc.sql.SQL;
 
 import java.util.ArrayList;
 
-import static cool.scx.collections.ArrayUtils.concat;
+import static cool.scx.common.util.ArrayUtils.concat;
 import static cool.scx.common.util.StringUtils.notEmpty;
 
 public class AggregateSQLBuilder {

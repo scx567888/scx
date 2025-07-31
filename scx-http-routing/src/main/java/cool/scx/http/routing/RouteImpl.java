@@ -1,6 +1,6 @@
 package cool.scx.http.routing;
 
-import cool.scx.functional.ScxConsumer;
+import cool.scx.function.ConsumerX;
 import cool.scx.http.method.HttpMethod;
 
 import java.util.HashSet;
@@ -18,7 +18,7 @@ class RouteImpl implements RouteWritable {
     private PathMatcher pathMatcher;
     private MethodMatcher methodMatcher;
     private int order;
-    private ScxConsumer<RoutingContext, ?> handler;
+    private ConsumerX<RoutingContext, ?> handler;
 
     public RouteImpl() {
         this.path = null;
@@ -64,7 +64,7 @@ class RouteImpl implements RouteWritable {
     }
 
     @Override
-    public RouteImpl handler(ScxConsumer<RoutingContext, ?> handler) {
+    public RouteImpl handler(ConsumerX<RoutingContext, ?> handler) {
         this.handler = handler;
         return this;
     }
@@ -100,7 +100,7 @@ class RouteImpl implements RouteWritable {
     }
 
     @Override
-    public ScxConsumer<RoutingContext, ?> handler() {
+    public ConsumerX<RoutingContext, ?> handler() {
         return handler;
     }
 

@@ -1,6 +1,6 @@
 package cool.scx.http.test;
 
-import cool.scx.collections.ArrayUtils;
+import cool.scx.common.util.ArrayUtils;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.media.multi_part.MultiPartPart;

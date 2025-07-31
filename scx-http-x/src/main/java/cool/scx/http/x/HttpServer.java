@@ -1,5 +1,6 @@
 package cool.scx.http.x;
 
+import cool.scx.function.ConsumerX;
 import cool.scx.functional.ScxConsumer;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerRequest;
@@ -29,7 +30,7 @@ public class HttpServer implements ScxHttpServer {
 
     private final HttpServerOptions options;
     private final ScxTCPServer tcpServer;
-    private ScxConsumer<ScxHttpServerRequest, ?> requestHandler;
+    private ConsumerX<ScxHttpServerRequest, ?> requestHandler;
     private ScxHttpServerErrorHandler errorHandler;
 
     public HttpServer(HttpServerOptions options) {
@@ -88,7 +89,7 @@ public class HttpServer implements ScxHttpServer {
     }
 
     @Override
-    public ScxHttpServer onRequest(ScxConsumer<ScxHttpServerRequest, ?> requestHandler) {
+    public ScxHttpServer onRequest(ConsumerX<ScxHttpServerRequest, ?> requestHandler) {
         this.requestHandler = requestHandler;
         return this;
     }

@@ -1,6 +1,6 @@
 package cool.scx.http.routing.handler;
 
-import cool.scx.functional.ScxConsumer;
+import cool.scx.function.ConsumerX;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.routing.RoutingContext;
 
@@ -20,7 +20,7 @@ import static cool.scx.http.routing.handler.StaticHelper.sendStatic;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class StaticHandler implements ScxConsumer<RoutingContext, Throwable> {
+public class StaticHandler implements ConsumerX<RoutingContext, Throwable> {
 
     private final Path root;
 

@@ -2,7 +2,7 @@ package cool.scx.http.x.http2.hpack;
 
 import cool.scx.codec.bit_array.BitArray;
 import cool.scx.codec.huffman.HuffmanCodec;
-import cool.scx.collections.ArrayUtils;
+import cool.scx.common.util.ArrayUtils;
 
 //todo 实现不正确
 public class HPACKHuffmanCodec {

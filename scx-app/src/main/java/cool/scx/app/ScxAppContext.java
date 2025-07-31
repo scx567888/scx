@@ -10,6 +10,10 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.data.exception.DataAccessException;
 import cool.scx.data.jdbc.JDBCTransactionContext;
 import cool.scx.data.jdbc.JDBCTransactionManager;
+import cool.scx.function.CallableX;
+import cool.scx.function.ConsumerX;
+import cool.scx.function.FunctionX;
+import cool.scx.function.RunnableX;
 import cool.scx.functional.ScxCallable;
 import cool.scx.functional.ScxConsumer;
 import cool.scx.functional.ScxFunction;
@@ -114,19 +118,19 @@ public final class ScxAppContext {
         return scx().sqlRunner();
     }
 
-    public static <E extends Throwable> void autoTransaction(ScxRunnable<E> handler) throws E, DataAccessException {
+    public static <E extends Throwable> void autoTransaction(RunnableX<E> handler) throws E, DataAccessException {
         jdbcTransactionManager().autoTransaction(handler);
     }
 
-    public static <T, E extends Throwable> T autoTransaction(ScxCallable<T, E> handler) throws E, DataAccessException {
+    public static <T, E extends Throwable> T autoTransaction(CallableX<T, E> handler) throws E, DataAccessException {
         return jdbcTransactionManager().autoTransaction(handler);
     }
 
-    public static <T, E extends Throwable> T withTransaction(ScxFunction<JDBCTransactionContext, T, E> handler) throws DataAccessException, E {
+    public static <T, E extends Throwable> T withTransaction(FunctionX<JDBCTransactionContext, T, E> handler) throws DataAccessException, E {
         return jdbcTransactionManager().withTransaction(handler);
     }
 
-    public static <E extends Throwable> void withTransaction(ScxConsumer<JDBCTransactionContext, E> handler) throws DataAccessException, E {
+    public static <E extends Throwable> void withTransaction(ConsumerX<JDBCTransactionContext, E> handler) throws DataAccessException, E {
         jdbcTransactionManager().withTransaction(handler);
     }
 

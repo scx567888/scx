@@ -1,6 +1,6 @@
 package cool.scx.http.routing;
 
-import cool.scx.functional.ScxConsumer;
+import cool.scx.function.ConsumerX;
 import cool.scx.http.method.HttpMethod;
 
 /// RouteWritable
@@ -19,6 +19,6 @@ public interface RouteWritable extends Route {
 
     RouteWritable order(int order);
 
-    RouteWritable handler(ScxConsumer<RoutingContext, ?> handler);
+    RouteWritable handler(ConsumerX<RoutingContext, ?> handler);
 
 }

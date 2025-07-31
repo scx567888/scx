@@ -25,6 +25,11 @@
             <artifactId>scx-common</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-collections</artifactId>
+        </dependency>
+
         <!-- TestNG 测试包 -->
         <dependency>
             <groupId>org.testng</groupId>

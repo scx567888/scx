@@ -4,8 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static cool.scx.collections.ArrayUtils.toPrimitive;
-import static cool.scx.collections.ArrayUtils.toWrapper;
+import static cool.scx.common.util.ArrayUtils.toPrimitive;
+import static cool.scx.common.util.ArrayUtils.toWrapper;
 
 
 /// ByteObjectArrayTypeHandler
