@@ -1,10 +1,10 @@
 package cool.scx.jdbc.sql;
 
 import cool.scx.common.scope_value.ScxScopedValue;
-import cool.scx.functional.ScxCallable;
-import cool.scx.functional.ScxConsumer;
-import cool.scx.functional.ScxFunction;
-import cool.scx.functional.ScxRunnable;
+import cool.scx.function.CallableX;
+import cool.scx.function.ConsumerX;
+import cool.scx.function.FunctionX;
+import cool.scx.function.RunnableX;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.result_handler.ResultHandler;
@@ -211,7 +211,7 @@ public final class SQLRunner {
     }
 
     /// 自动处理事务并在产生异常时进行自动回滚
-    public <T, E extends Throwable> T autoTransaction(ScxCallable<T, E> handler) throws E, SQLRunnerException {
+    public <T, E extends Throwable> T autoTransaction(CallableX<T, E> handler) throws E, SQLRunnerException {
         try (var con = getConnection(false)) {
             return ScxScopedValue.where(CONNECTION_SCOPE_VALUE, con).call(() -> {
                 T result;
@@ -254,7 +254,7 @@ public final class SQLRunner {
     }
 
     /// 自动处理事务并在产生异常时进行自动回滚
-    public <E extends Throwable> void autoTransaction(ScxRunnable<E> handler) throws E, SQLRunnerException {
+    public <E extends Throwable> void autoTransaction(RunnableX<E> handler) throws E, SQLRunnerException {
         autoTransaction(() -> {
             handler.run();
             return null;
@@ -262,7 +262,7 @@ public final class SQLRunner {
     }
 
     /// 需要用户手动提交事务
-    public <T, E extends Throwable> T withTransaction(ScxFunction<Connection, T, E> handler) throws SQLRunnerException, E {
+    public <T, E extends Throwable> T withTransaction(FunctionX<Connection, T, E> handler) throws SQLRunnerException, E {
         try (var con = getConnection(false)) {
             return ScxScopedValue.where(CONNECTION_SCOPE_VALUE, con).call(() -> handler.apply(con));
         } catch (SQLException e) {
@@ -270,7 +270,7 @@ public final class SQLRunner {
         }
     }
 
-    public <E extends Throwable> void withTransaction(ScxConsumer<Connection, E> handler) throws SQLRunnerException, E {
+    public <E extends Throwable> void withTransaction(ConsumerX<Connection, E> handler) throws SQLRunnerException, E {
         withTransaction((con) -> {
             handler.accept(con);
             return null;
@@ -278,11 +278,11 @@ public final class SQLRunner {
     }
 
     /// 更改上下文
-    public <T, E extends Throwable> T autoContext(ScxCallable<T, E> handler) throws SQLRunnerException, E {
+    public <T, E extends Throwable> T autoContext(CallableX<T, E> handler) throws SQLRunnerException, E {
         return ScxScopedValue.where(SQL_RUNNER_SCOPE_VALUE, this).call(handler);
     }
 
-    public <E extends Throwable> void autoContext(ScxRunnable<E> handler) throws SQLRunnerException, E {
+    public <E extends Throwable> void autoContext(RunnableX<E> handler) throws SQLRunnerException, E {
         autoContext(() -> {
             handler.run();
             return null;

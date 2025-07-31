@@ -5,7 +5,7 @@ import cool.scx.data.LockMode;
 import cool.scx.data.exception.DataAccessException;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.query.Query;
-import cool.scx.functional.ScxConsumer;
+import cool.scx.function.ConsumerX;
 import cool.scx.jdbc.sql.SQLRunnerException;
 
 import java.util.List;
@@ -60,7 +60,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public <E extends Throwable> void forEach(ScxConsumer<Entity, E> entityConsumer) throws DataAccessException, E {
+    public <E extends Throwable> void forEach(ConsumerX<Entity, E> entityConsumer) throws DataAccessException, E {
         try {
             repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanConsumer(repository.beanBuilder, entityConsumer));
         } catch (SQLRunnerException e) {
@@ -69,7 +69,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public <T, E extends Throwable> void forEach(ScxConsumer<T, E> entityConsumer, Class<T> resultType) throws DataAccessException, E {
+    public <T, E extends Throwable> void forEach(ConsumerX<T, E> entityConsumer, Class<T> resultType) throws DataAccessException, E {
         try {
             repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanConsumer(resultType, repository.beanColumnNameMapping, entityConsumer));
         } catch (SQLRunnerException e) {
@@ -78,7 +78,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public <E extends Throwable> void forEachMap(ScxConsumer<Map<String, Object>, E> entityConsumer) throws DataAccessException, E {
+    public <E extends Throwable> void forEachMap(ConsumerX<Map<String, Object>, E> entityConsumer) throws DataAccessException, E {
         try {
             repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofMapConsumer(repository.mapBuilder, entityConsumer));
         } catch (SQLRunnerException e) {

@@ -2,6 +2,7 @@ package cool.scx.http.x.http1;
 
 import cool.scx.bytes.ByteReader;
 import cool.scx.bytes.supplier.InputStreamByteSupplier;
+import cool.scx.function.ConsumerX;
 import cool.scx.functional.ScxConsumer;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.error_handler.ErrorPhase;
@@ -39,7 +40,7 @@ public class Http1ServerConnection {
 
     public final ScxTCPSocket tcpSocket;
     public final HttpServerOptions options;
-    public final ScxConsumer<ScxHttpServerRequest, ?> requestHandler;
+    public final ConsumerX<ScxHttpServerRequest, ?> requestHandler;
     public final ScxHttpServerErrorHandler errorHandler;
 
     public final ByteReader dataReader;
@@ -47,7 +48,7 @@ public class Http1ServerConnection {
 
     private boolean running;
 
-    public Http1ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, ScxConsumer<ScxHttpServerRequest, ?> requestHandler, ScxHttpServerErrorHandler errorHandler) {
+    public Http1ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, ConsumerX<ScxHttpServerRequest, ?> requestHandler, ScxHttpServerErrorHandler errorHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;

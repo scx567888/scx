@@ -3,7 +3,7 @@ package cool.scx.web;
 import cool.scx.common.scope_value.ScxScopedValue;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.URIUtils;
-import cool.scx.functional.ScxConsumer;
+import cool.scx.function.ConsumerX;
 import cool.scx.http.method.HttpMethod;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.routing.*;
@@ -23,7 +23,7 @@ import static cool.scx.websocket.routing.WebSocketTypeMatcher.NOT_WEB_SOCKET_HAN
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ScxRouteHandler implements Route, ScxConsumer<RoutingContext, Throwable> {
+public final class ScxRouteHandler implements Route, ConsumerX<RoutingContext, Throwable> {
 
     public final MethodInfo method;
     public final boolean isVoid;
@@ -134,7 +134,7 @@ public final class ScxRouteHandler implements Route, ScxConsumer<RoutingContext,
     }
 
     @Override
-    public ScxConsumer<RoutingContext, Throwable> handler() {
+    public ConsumerX<RoutingContext, Throwable> handler() {
         return this;
     }
 

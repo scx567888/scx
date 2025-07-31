@@ -26,6 +26,11 @@
         </dependency>
 
         <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-collections</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>scx-jdbc</artifactId>
             <version>${project.version}</version>

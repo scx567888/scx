@@ -10,7 +10,7 @@ import cool.scx.data.query.Query;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sql.SQL;
 
-import static cool.scx.collections.ArrayUtils.concat;
+import static cool.scx.common.util.ArrayUtils.concat;
 import static cool.scx.common.util.RandomUtils.randomString;
 import static cool.scx.common.util.StringUtils.notEmpty;
 import static cool.scx.data.LockMode.EXCLUSIVE;

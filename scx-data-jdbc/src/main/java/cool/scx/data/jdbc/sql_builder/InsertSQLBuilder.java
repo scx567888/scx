@@ -10,7 +10,7 @@ import cool.scx.jdbc.sql.SQL;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static cool.scx.collections.ArrayUtils.concat;
+import static cool.scx.common.util.ArrayUtils.concat;
 import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.*;
 import static cool.scx.jdbc.sql.SQL.sql;
 
