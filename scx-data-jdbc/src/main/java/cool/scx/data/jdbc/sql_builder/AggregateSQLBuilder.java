@@ -71,8 +71,8 @@ public class AggregateSQLBuilder {
             throw new IllegalArgumentException("Select 子句错误 : 待查询的数据列 不能为空 !!!");
         }
         var sql = "SELECT " + String.join(", ", selectColumns) + " FROM " + getTableName() +
-                getWhereClause(whereClause) + getGroupByColumns(groupByColumns) +
-                getHavingClause(havingClause) + getOrderByClause(orderByClauses);
+                  getWhereClause(whereClause) + getGroupByColumns(groupByColumns) +
+                  getHavingClause(havingClause) + getOrderByClause(orderByClauses);
         return dialect.applyLimit(sql, offset, limit);
     }
 

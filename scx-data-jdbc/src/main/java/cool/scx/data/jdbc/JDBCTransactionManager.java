@@ -6,10 +6,6 @@ import cool.scx.function.CallableX;
 import cool.scx.function.ConsumerX;
 import cool.scx.function.FunctionX;
 import cool.scx.function.RunnableX;
-import cool.scx.function.CallableX;
-import cool.scx.function.ConsumerX;
-import cool.scx.function.FunctionX;
-import cool.scx.function.RunnableX;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.sql.SQLRunnerException;
 
