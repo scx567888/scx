@@ -114,11 +114,16 @@ public final class RouteRegistrar {
     }
 
     public static ScxRoute findScxRoute(MethodInfo method) {
-        //todo 这里我们允许继承 查找
-        var annotations = method.annotations();
-        for (var a : annotations) {
-            if (a instanceof ScxRoute s) {
-                return s;
+        var annotations = method.findAnnotation(ScxRoute.class);
+        if (annotations != null) {
+            return annotations;
+        }
+        // 这里我们允许继承 查找
+        var methodInfos = method.allSuperMethods();
+        for (var m : methodInfos) {
+            var annotation = m.findAnnotation(ScxRoute.class);
+            if (annotation != null) {
+                return annotation;
             }
         }
         return null;

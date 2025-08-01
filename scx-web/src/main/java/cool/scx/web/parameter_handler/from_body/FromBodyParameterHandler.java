@@ -15,6 +15,7 @@ import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 import java.io.IOException;
 
 import static cool.scx.common.constant.AnnotationValues.getRealValue;
+import static cool.scx.object.ScxObject.convertValue;
 import static cool.scx.web.parameter_handler.from_upload.FromUploadParameterHandler.checkIsArray;
 import static cool.scx.web.parameter_handler.from_upload.FromUploadParameterHandler.checkIsCollection;
 
@@ -50,7 +51,7 @@ public final class FromBodyParameterHandler implements ParameterHandler {
         }
         Object o;
         try {
-            o = readValue(tempValue, javaType);
+            o = convertValue(tempValue, javaType);
         } catch (Exception e) {
             throw new ParamConvertException("参数类型转换异常 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType + "] , 详细错误信息 : " + e.getMessage());
         }
@@ -58,25 +59,6 @@ public final class FromBodyParameterHandler implements ParameterHandler {
             throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType + "]");
         }
         return o;
-    }
-
-    public static <T> T readValue(Node jsonNode, TypeInfo type) throws IOException {
-        //这里我们做一下数组的兼容 保证无论参数是数组还是type是数组都可以正确读取
-        if (jsonNode instanceof ArrayNode arrayNode) {
-            if (checkIsCollection(type) || checkIsArray(type)) {
-                return ScxObject.convertValue(arrayNode, type);
-            } else {
-                return ScxObject.convertValue(arrayNode.get(0), type);
-            }
-        } else {
-            if (checkIsCollection(type) || checkIsArray(type)) {
-                var arrayNode = new ArrayNode();
-                arrayNode.add(jsonNode);
-                return ScxObject.convertValue(arrayNode, type);
-            } else {
-                return ScxObject.convertValue(jsonNode, type);
-            }
-        }
     }
 
     @Override

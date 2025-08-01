@@ -9,7 +9,7 @@ import cool.scx.web.parameter_handler.exception.ParamConvertException;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 
 import static cool.scx.common.constant.AnnotationValues.getRealValue;
-import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.readValue;
+import static cool.scx.object.ScxObject.convertValue;
 
 /// FromPathParameterHandler
 ///
@@ -38,7 +38,7 @@ public final class FromPathParameterHandler implements ParameterHandler {
         }
         Object o;
         try {
-            o = readValue(tempValue, javaType);
+            o = convertValue(tempValue, javaType);
         } catch (Exception e) {
             throw new ParamConvertException("参数类型转换异常 !!! 参数名称 [" + name + "] , 参数来源 [FromPath, merge=" + merge + "] , 参数类型 [" + javaType + "] , 详细错误信息 : " + e.getMessage());
         }
