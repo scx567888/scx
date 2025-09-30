@@ -2,7 +2,7 @@ package cool.scx.http.x.http1;
 
 import cool.scx.bytes.ByteReader;
 import cool.scx.bytes.supplier.InputStreamByteSupplier;
-import cool.scx.function.ConsumerX;
+import cool.scx.function.Function1Void;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.error_handler.ErrorPhase;
 import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
@@ -39,7 +39,7 @@ public class Http1ServerConnection {
 
     public final ScxTCPSocket tcpSocket;
     public final HttpServerOptions options;
-    public final ConsumerX<ScxHttpServerRequest, ?> requestHandler;
+    public final Function1Void<ScxHttpServerRequest, ?> requestHandler;
     public final ScxHttpServerErrorHandler errorHandler;
 
     public final ByteReader dataReader;
@@ -47,7 +47,7 @@ public class Http1ServerConnection {
 
     private boolean running;
 
-    public Http1ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, ConsumerX<ScxHttpServerRequest, ?> requestHandler, ScxHttpServerErrorHandler errorHandler) {
+    public Http1ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, Function1Void<ScxHttpServerRequest, ?> requestHandler, ScxHttpServerErrorHandler errorHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;
@@ -98,7 +98,7 @@ public class Http1ServerConnection {
         // 1, 读取 请求行
         var requestLine = readRequestLine(dataReader, options.maxRequestLineSize());
 
-        // 2, 读取 请求头 
+        // 2, 读取 请求头
         var headers = readHeaders(dataReader, options.maxHeaderSize());
 
         // 3, 读取 请求体流
@@ -155,7 +155,7 @@ public class Http1ServerConnection {
 
     private void _callRequestHandler(ScxHttpServerRequest request) throws Throwable {
         if (requestHandler != null) {
-            requestHandler.accept(request);
+            requestHandler.apply(request);
         }
     }
 

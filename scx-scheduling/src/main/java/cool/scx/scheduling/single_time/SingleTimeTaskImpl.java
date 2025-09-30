@@ -1,6 +1,6 @@
 package cool.scx.scheduling.single_time;
 
-import cool.scx.function.ConsumerX;
+import cool.scx.function.Function1Void;
 import cool.scx.scheduling.ExpirationPolicy;
 import cool.scx.scheduling.ScheduleContext;
 import cool.scx.scheduling.ScheduleStatus;
@@ -33,7 +33,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     private Supplier<Instant> startTimeSupplier;
     private ExpirationPolicy expirationPolicy;
     private ScheduledExecutorService executor;
-    private ConsumerX<TaskContext, ?> task;
+    private Function1Void<TaskContext, ?> task;
     private ScheduleContext context;
     private Consumer<Throwable> errorHandler;
 
@@ -66,7 +66,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     }
 
     @Override
-    public SingleTimeTask task(ConsumerX<TaskContext, ?> task) {
+    public SingleTimeTask task(Function1Void<TaskContext, ?> task) {
         this.task = task;
         return this;
     }
@@ -194,7 +194,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     private void run() {
         var l = runCount.incrementAndGet();
         try {
-            task.accept(new TaskContext() {
+            task.apply(new TaskContext() {
 
                 @Override
                 public long currentRunCount() {

@@ -1,6 +1,6 @@
 package cool.scx.http.x.http1.headers;
 
-import cool.scx.function.BiConsumerX;
+import cool.scx.function.Function2Void;
 import cool.scx.http.headers.ScxHttpHeaderName;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
@@ -95,12 +95,12 @@ public class Http1Headers implements ScxHttpHeadersWritable {
     }
 
     @Override
-    public <X extends Throwable> void forEach(BiConsumerX<? super ScxHttpHeaderName, String, X> action) throws X {
+    public <X extends Throwable> void forEach(Function2Void<? super ScxHttpHeaderName, String, X> action) throws X {
         h.forEach(action);
     }
 
     @Override
-    public <X extends Throwable> void forEachParameter(BiConsumerX<? super ScxHttpHeaderName, List<String>, X> action) throws X {
+    public <X extends Throwable> void forEachParameter(Function2Void<? super ScxHttpHeaderName, List<String>, X> action) throws X {
         h.forEachParameter(action);
     }
 

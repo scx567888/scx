@@ -1,6 +1,6 @@
 package cool.scx.http.routing.handler;
 
-import cool.scx.function.ConsumerX;
+import cool.scx.function.Function1Void;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.routing.RoutingContext;
 
@@ -20,7 +20,7 @@ import static cool.scx.http.routing.handler.StaticHelper.sendStatic;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class StaticHandler implements ConsumerX<RoutingContext, Throwable> {
+public class StaticHandler implements Function1Void<RoutingContext, Throwable> {
 
     private final Path root;
 
@@ -29,7 +29,7 @@ public class StaticHandler implements ConsumerX<RoutingContext, Throwable> {
     }
 
     @Override
-    public void accept(RoutingContext routingContext) throws Throwable {
+    public void apply(RoutingContext routingContext) throws Throwable {
         var request = routingContext.request();
 
         if (request.method() != GET && request.method() != HEAD) {
@@ -40,7 +40,7 @@ public class StaticHandler implements ConsumerX<RoutingContext, Throwable> {
         var p = routingContext.pathParams().get("*");
         var filePath = getFilePath(p);
         var notExists = Files.notExists(filePath);
-        //文件不存在 
+        //文件不存在
         if (notExists) {
             routingContext.next();
             return;

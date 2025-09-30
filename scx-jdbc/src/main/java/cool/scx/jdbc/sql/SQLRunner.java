@@ -1,10 +1,10 @@
 package cool.scx.jdbc.sql;
 
-import cool.scx.common.scope_value.ScxScopedValue;
-import cool.scx.function.CallableX;
-import cool.scx.function.ConsumerX;
-import cool.scx.function.FunctionX;
-import cool.scx.function.RunnableX;
+
+import cool.scx.function.Function0;
+import cool.scx.function.Function0Void;
+import cool.scx.function.Function1;
+import cool.scx.function.Function1Void;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.result_handler.ResultHandler;
@@ -26,9 +26,9 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 /// @version 0.0.1
 public final class SQLRunner {
 
-    private static final ScxScopedValue<Connection> CONNECTION_SCOPE_VALUE = ScxScopedValue.newInstance();
+    private static final ScopedValue<Connection> CONNECTION_SCOPE_VALUE = ScopedValue.newInstance();
 
-    private static final ScxScopedValue<SQLRunner> SQL_RUNNER_SCOPE_VALUE = ScxScopedValue.newInstance();
+    private static final ScopedValue<SQLRunner> SQL_RUNNER_SCOPE_VALUE = ScopedValue.newInstance();
 
     private final JDBCContext jdbcContext;
 
@@ -211,13 +211,13 @@ public final class SQLRunner {
     }
 
     /// 自动处理事务并在产生异常时进行自动回滚
-    public <T, X extends Throwable> T autoTransaction(CallableX<T, X> handler) throws X, SQLRunnerException {
+    public <T, X extends Throwable> T autoTransaction(Function0<T, X> handler) throws X, SQLRunnerException {
         try (var con = getConnection(false)) {
-            return ScxScopedValue.where(CONNECTION_SCOPE_VALUE, con).call(() -> {
+            return ScopedValue.where(CONNECTION_SCOPE_VALUE, con).call(() -> {
                 T result;
                 try {
                     //尝试执行业务逻辑
-                    result = handler.call();
+                    result = handler.apply();
                 } catch (Throwable handlerE) {
                     // 业务异常发生, 尝试回滚事务
                     try {
@@ -254,37 +254,37 @@ public final class SQLRunner {
     }
 
     /// 自动处理事务并在产生异常时进行自动回滚
-    public <X extends Throwable> void autoTransaction(RunnableX<X> handler) throws X, SQLRunnerException {
+    public <X extends Throwable> void autoTransaction(Function0Void<X> handler) throws X, SQLRunnerException {
         autoTransaction(() -> {
-            handler.run();
+            handler.apply();
             return null;
         });
     }
 
     /// 需要用户手动提交事务
-    public <T, X extends Throwable> T withTransaction(FunctionX<Connection, T, X> handler) throws SQLRunnerException, X {
+    public <T, X extends Throwable> T withTransaction(Function1<Connection, T, X> handler) throws SQLRunnerException, X {
         try (var con = getConnection(false)) {
-            return ScxScopedValue.where(CONNECTION_SCOPE_VALUE, con).call(() -> handler.apply(con));
+            return ScopedValue.where(CONNECTION_SCOPE_VALUE, con).call(() -> handler.apply(con));
         } catch (SQLException e) {
             throw new SQLRunnerException(e);
         }
     }
 
-    public <X extends Throwable> void withTransaction(ConsumerX<Connection, X> handler) throws SQLRunnerException, X {
+    public <X extends Throwable> void withTransaction(Function1Void<Connection, X> handler) throws SQLRunnerException, X {
         withTransaction((con) -> {
-            handler.accept(con);
+            handler.apply(con);
             return null;
         });
     }
 
     /// 更改上下文
-    public <T, X extends Throwable> T autoContext(CallableX<T, X> handler) throws SQLRunnerException, X {
-        return ScxScopedValue.where(SQL_RUNNER_SCOPE_VALUE, this).call(handler);
+    public <T, X extends Throwable> T autoContext(Function0<T, X> handler) throws SQLRunnerException, X {
+        return ScopedValue.where(SQL_RUNNER_SCOPE_VALUE, this).call(handler::apply);
     }
 
-    public <X extends Throwable> void autoContext(RunnableX<X> handler) throws SQLRunnerException, X {
+    public <X extends Throwable> void autoContext(Function0Void<X> handler) throws SQLRunnerException, X {
         autoContext(() -> {
-            handler.run();
+            handler.apply();
             return null;
         });
     }

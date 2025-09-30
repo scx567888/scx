@@ -2,7 +2,7 @@ package cool.scx.scheduling.cron;
 
 import com.cronutils.model.time.ExecutionTime;
 import com.cronutils.parser.CronParser;
-import cool.scx.function.ConsumerX;
+import cool.scx.function.Function1Void;
 import cool.scx.scheduling.ScheduleContext;
 import cool.scx.scheduling.ScheduleStatus;
 import cool.scx.scheduling.TaskContext;
@@ -39,7 +39,7 @@ public class CronTaskImpl implements CronTask {
     private ExecutionTime executionTime;
     private long maxRunCount;
     private ScheduledExecutorService executor;
-    private ConsumerX<TaskContext, ?> task;
+    private Function1Void<TaskContext, ?> task;
     private ZonedDateTime lastNext;
     private Consumer<Throwable> errorHandler;
     private ScheduleContext context;
@@ -76,7 +76,7 @@ public class CronTaskImpl implements CronTask {
     }
 
     @Override
-    public CronTask task(ConsumerX<TaskContext, ?> task) {
+    public CronTask task(Function1Void<TaskContext, ?> task) {
         this.task = task;
         return this;
     }
@@ -161,7 +161,7 @@ public class CronTaskImpl implements CronTask {
         //直接处理下一次
         scheduleNext();
         try {
-            task.accept(new TaskContext() {
+            task.apply(new TaskContext() {
 
                 @Override
                 public long currentRunCount() {

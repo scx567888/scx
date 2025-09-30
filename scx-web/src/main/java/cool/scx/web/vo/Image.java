@@ -60,7 +60,7 @@ public abstract class Image implements BaseVo {
     }
 
     @Override
-    public final void accept(RoutingContext context) throws BadRequestException {
+    public final void apply(RoutingContext context) throws BadRequestException {
         //设置缓存 减少服务器压力
         context.response()
                 .setHeader(CACHE_CONTROL, "public,immutable,max-age=2628000")

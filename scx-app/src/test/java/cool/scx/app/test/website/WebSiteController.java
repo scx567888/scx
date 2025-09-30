@@ -72,7 +72,7 @@ public class WebSiteController {
             //模拟 转账
             ScxAppContext.autoTransaction(() -> {
 
-                // todo 此处需要支持并发处理 及 同时执行 给 p1 扣钱 和 给 p2 加钱                 
+                // todo 此处需要支持并发处理 及 同时执行 给 p1 扣钱 和 给 p2 加钱
                 //给 p1 扣钱
                 p1.money = p1.money - 50;
                 var p11 = personService.update(p1);
@@ -93,7 +93,7 @@ public class WebSiteController {
             var p21 = personService.get(p2.id);
             sb.append("出错了 回滚后: ").append("p1(").append(p11.money).append(") p2(").append(p21.money).append(")</br>");
         }
-        Html.of(sb.toString()).accept(ctx);
+        Html.of(sb.toString()).apply(ctx);
     }
 
     /// 测试!!!

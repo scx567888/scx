@@ -1,6 +1,6 @@
 package cool.scx.http.parameters;
 
-import cool.scx.function.BiConsumerX;
+import cool.scx.function.Function2Void;
 
 import java.util.List;
 import java.util.Map;
@@ -43,8 +43,8 @@ public interface Parameters<K, V> extends Iterable<ParameterEntry<K, V>> {
 
     Map<K, V> toMap();
 
-    <X extends Throwable> void forEach(BiConsumerX<? super K, V, X> action) throws X;
+    <X extends Throwable> void forEach(Function2Void<? super K, V, X> action) throws X;
 
-    <X extends Throwable> void forEachParameter(BiConsumerX<? super K, List<V>, X> action) throws X;
+    <X extends Throwable> void forEachParameter(Function2Void<? super K, List<V>, X> action) throws X;
 
 }

@@ -1,6 +1,6 @@
 package cool.scx.jdbc.result_handler;
 
-import cool.scx.function.ConsumerX;
+import cool.scx.function.Function1Void;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.result_handler.bean_builder.BeanBuilder;
 import cool.scx.jdbc.result_handler.map_builder.MapBuilder;
@@ -77,31 +77,31 @@ public interface ResultHandler<T, X extends Throwable> {
         return new BeanListHandler<>(beanBuilder);
     }
 
-    static <C, X extends Throwable> ResultHandler<Void, X> ofBeanConsumer(Class<C> clazz, ConsumerX<C, X> consumer) {
+    static <C, X extends Throwable> ResultHandler<Void, X> ofBeanConsumer(Class<C> clazz, Function1Void<C, X> consumer) {
         return new BeanConsumerHandler<>(BeanBuilder.of(clazz), consumer);
     }
 
-    static <C, X extends Throwable> ResultHandler<Void, X> ofBeanConsumer(Class<C> clazz, Function<Field, String> columnNameMapping, ConsumerX<C, X> consumer) {
+    static <C, X extends Throwable> ResultHandler<Void, X> ofBeanConsumer(Class<C> clazz, Function<Field, String> columnNameMapping, Function1Void<C, X> consumer) {
         return new BeanConsumerHandler<>(BeanBuilder.of(clazz, columnNameMapping), consumer);
     }
 
-    static <C, X extends Throwable> ResultHandler<Void, X> ofBeanConsumer(BeanBuilder<C> beanBuilder, ConsumerX<C, X> consumer) {
+    static <C, X extends Throwable> ResultHandler<Void, X> ofBeanConsumer(BeanBuilder<C> beanBuilder, Function1Void<C, X> consumer) {
         return new BeanConsumerHandler<>(beanBuilder, consumer);
     }
 
-    static <X extends Throwable> ResultHandler<Void, X> ofMapConsumer(ConsumerX<Map<String, Object>, X> consumer) {
+    static <X extends Throwable> ResultHandler<Void, X> ofMapConsumer(Function1Void<Map<String, Object>, X> consumer) {
         return new MapConsumerHandler<>(MapBuilder.of(), consumer);
     }
 
-    static <X extends Throwable> ResultHandler<Void, X> ofMapConsumer(MapBuilder mapBuilder, ConsumerX<Map<String, Object>, X> consumer) {
+    static <X extends Throwable> ResultHandler<Void, X> ofMapConsumer(MapBuilder mapBuilder, Function1Void<Map<String, Object>, X> consumer) {
         return new MapConsumerHandler<>(mapBuilder, consumer);
     }
 
-    static <X extends Throwable> ResultHandler<Void, X> ofMapConsumer(Supplier<Map<String, Object>> mapSupplier, ConsumerX<Map<String, Object>, X> consumer) {
+    static <X extends Throwable> ResultHandler<Void, X> ofMapConsumer(Supplier<Map<String, Object>> mapSupplier, Function1Void<Map<String, Object>, X> consumer) {
         return new MapConsumerHandler<>(MapBuilder.of(mapSupplier), consumer);
     }
 
-    static <X extends Throwable> ResultHandler<Void, X> ofMapConsumer(Function<String, String> fieldNameMapping, ConsumerX<Map<String, Object>, X> consumer) {
+    static <X extends Throwable> ResultHandler<Void, X> ofMapConsumer(Function<String, String> fieldNameMapping, Function1Void<Map<String, Object>, X> consumer) {
         return new MapConsumerHandler<>(MapBuilder.of(fieldNameMapping), consumer);
     }
 

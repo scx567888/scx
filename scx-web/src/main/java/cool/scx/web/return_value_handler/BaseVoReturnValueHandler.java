@@ -17,7 +17,7 @@ public final class BaseVoReturnValueHandler implements ReturnValueHandler {
     @Override
     public void handle(Object returnValue, RoutingContext routingContext) throws Exception {
         if (returnValue instanceof BaseVo baseVo) {
-            baseVo.accept(routingContext);
+            baseVo.apply(routingContext);
         } else {
             throw new IllegalArgumentException("参数不是 BaseVo 类型 !!! " + returnValue.getClass());
         }

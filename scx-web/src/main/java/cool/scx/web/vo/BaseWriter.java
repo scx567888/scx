@@ -60,7 +60,7 @@ class BaseWriter implements BaseVo {
     }
 
     @Override
-    public final void accept(RoutingContext context) {
+    public final void apply(RoutingContext context) {
         var response = context.response();
         response.setHeader(CONTENT_DISPOSITION, contentDisposition);
         fillContentType(response, contentType);

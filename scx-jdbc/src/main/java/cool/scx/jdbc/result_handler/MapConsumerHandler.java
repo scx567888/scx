@@ -1,6 +1,6 @@
 package cool.scx.jdbc.result_handler;
 
-import cool.scx.function.ConsumerX;
+import cool.scx.function.Function1Void;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.result_handler.map_builder.MapBuilder;
 
@@ -15,14 +15,14 @@ import static cool.scx.jdbc.result_handler.MapHandler.createColumnLabelIndex;
 /// @author scx567888
 /// @version 0.0.1
 record MapConsumerHandler<X extends Throwable>(MapBuilder mapBuilder,
-                                               ConsumerX<Map<String, Object>, X> consumer) implements ResultHandler<Void, X> {
+                                               Function1Void<Map<String, Object>, X> consumer) implements ResultHandler<Void, X> {
 
     @Override
     public Void apply(ResultSet rs, Dialect dialect) throws SQLException, X {
         var columnLabelIndex = createColumnLabelIndex(rs);
         while (rs.next()) {
             var map = mapBuilder.createMap(rs, columnLabelIndex);
-            consumer.accept(map);
+            consumer.apply(map);
         }
         return null;
     }

@@ -1,9 +1,8 @@
 package cool.scx.web;
 
-import cool.scx.common.scope_value.ScxScopedValue;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.URIUtils;
-import cool.scx.function.ConsumerX;
+import cool.scx.function.Function1Void;
 import cool.scx.http.method.HttpMethod;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.routing.*;
@@ -23,7 +22,7 @@ import static cool.scx.websocket.routing.WebSocketTypeMatcher.NOT_WEB_SOCKET_HAN
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ScxRouteHandler implements Route, ConsumerX<RoutingContext, Throwable> {
+public final class ScxRouteHandler implements Route, Function1Void<RoutingContext, Throwable> {
 
     public final MethodInfo method;
     public final boolean isVoid;
@@ -78,8 +77,11 @@ public final class ScxRouteHandler implements Route, ConsumerX<RoutingContext, T
     }
 
     @Override
-    public void accept(RoutingContext context) throws Throwable {
-        ScxScopedValue.where(ROUTING_CONTEXT_SCOPED_VALUE, context).run(() -> accept0(context));
+    public void apply(RoutingContext context) throws Throwable {
+        ScopedValue.where(ROUTING_CONTEXT_SCOPED_VALUE, context).call(() -> {
+            this.accept0(context);
+            return null;
+        });
     }
 
     public void accept0(RoutingContext context) throws Throwable {
@@ -134,7 +136,7 @@ public final class ScxRouteHandler implements Route, ConsumerX<RoutingContext, T
     }
 
     @Override
-    public ConsumerX<RoutingContext, Throwable> handler() {
+    public Function1Void<RoutingContext, Throwable> handler() {
         return this;
     }
 

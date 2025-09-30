@@ -42,7 +42,7 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public void accept(ScxHttpServerRequest scxHttpRequest) throws Throwable {
+    public void apply(ScxHttpServerRequest scxHttpRequest) throws Throwable {
         new RoutingContextImpl(this, scxHttpRequest).next();
     }
 
