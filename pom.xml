@@ -11,14 +11,21 @@
     </parent>
 
     <artifactId>scx</artifactId>
-    <packaging>pom</packaging>
     <version>3.8.10</version>
+    <packaging>pom</packaging>
 
     <name>SCX</name>
-    <url>https://github.com/scx567888/scx</url>
     <description>
         A simple Web development framework
     </description>
+    <url>https://github.com/scx567888/scx</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/scx567888/scx/blob/master/LICENSE</url>
+        </license>
+    </licenses>
 
     <developers>
         <developer>
@@ -27,13 +34,6 @@
             <email>scx567888@outlook.com</email>
         </developer>
     </developers>
-
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>https://github.com/scx567888/scx/blob/master/LICENSE</url>
-        </license>
-    </licenses>
 
     <scm>
         <connection>scm:git:https://github.com/scx567888/scx.git</connection>
