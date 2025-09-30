@@ -2,7 +2,6 @@ package cool.scx.data.jdbc;
 
 import cool.scx.data.context.TransactionManager;
 import cool.scx.data.exception.DataAccessException;
-
 import cool.scx.function.Function0;
 import cool.scx.function.Function0Void;
 import cool.scx.function.Function1;

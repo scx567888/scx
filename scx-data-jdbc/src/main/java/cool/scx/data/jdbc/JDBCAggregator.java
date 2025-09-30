@@ -4,7 +4,6 @@ import cool.scx.data.Aggregator;
 import cool.scx.data.aggregation.Aggregation;
 import cool.scx.data.exception.DataAccessException;
 import cool.scx.data.query.Query;
-import cool.scx.function.Function0Void;
 import cool.scx.function.Function1Void;
 import cool.scx.jdbc.sql.SQLRunnerException;
 
