@@ -56,7 +56,7 @@ public abstract class Result implements BaseVo {
     }
 
     @Override
-    public void accept(RoutingContext context) {
+    public void apply(RoutingContext context) {
         context.response().send(body());
     }
 

@@ -3,17 +3,16 @@ package cool.scx.app;
 import cool.scx.app.enumeration.ScxAppFeature;
 import cool.scx.app.eventbus.EventBus;
 import cool.scx.bean.BeanFactory;
-import cool.scx.common.scope_value.ScxScopedValue;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.data.exception.DataAccessException;
 import cool.scx.data.jdbc.JDBCTransactionContext;
 import cool.scx.data.jdbc.JDBCTransactionManager;
-import cool.scx.function.CallableX;
-import cool.scx.function.ConsumerX;
-import cool.scx.function.FunctionX;
-import cool.scx.function.RunnableX;
+import cool.scx.function.Function0;
+import cool.scx.function.Function0Void;
+import cool.scx.function.Function1;
+import cool.scx.function.Function1Void;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.sql.SQLRunner;
@@ -31,7 +30,7 @@ public final class ScxAppContext {
     /// 全局唯一的 SCX APP
     /// 为了保证方法使用的简易 我们建议使用静态的方法
     /// 但是其本质上是调用 GLOBAL_UNIQUE_SCX_APP 方法中的实例对象
-    final static ScxScopedValue<ScxApp> GLOBAL_SCX = ScxScopedValue.newInstance();
+    final static ScopedValue<ScxApp> GLOBAL_SCX = ScopedValue.newInstance();
 
     /// 兼容 旧版本 todo 待移除
     private static ScxApp GLOBAL_SCX_0 = null;
@@ -114,19 +113,19 @@ public final class ScxAppContext {
         return scx().sqlRunner();
     }
 
-    public static <X extends Throwable> void autoTransaction(RunnableX<X> handler) throws X, DataAccessException {
+    public static <X extends Throwable> void autoTransaction(Function0Void<X> handler) throws X, DataAccessException {
         jdbcTransactionManager().autoTransaction(handler);
     }
 
-    public static <T, X extends Throwable> T autoTransaction(CallableX<T, X> handler) throws X, DataAccessException {
+    public static <T, X extends Throwable> T autoTransaction(Function0<T, X> handler) throws X, DataAccessException {
         return jdbcTransactionManager().autoTransaction(handler);
     }
 
-    public static <T, X extends Throwable> T withTransaction(FunctionX<JDBCTransactionContext, T, X> handler) throws DataAccessException, X {
+    public static <T, X extends Throwable> T withTransaction(Function1<JDBCTransactionContext, T, X> handler) throws DataAccessException, X {
         return jdbcTransactionManager().withTransaction(handler);
     }
 
-    public static <X extends Throwable> void withTransaction(ConsumerX<JDBCTransactionContext, X> handler) throws DataAccessException, X {
+    public static <X extends Throwable> void withTransaction(Function1Void<JDBCTransactionContext, X> handler) throws DataAccessException, X {
         jdbcTransactionManager().withTransaction(handler);
     }
 

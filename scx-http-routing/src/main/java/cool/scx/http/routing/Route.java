@@ -1,6 +1,6 @@
 package cool.scx.http.routing;
 
-import cool.scx.function.ConsumerX;
+import cool.scx.function.Function1Void;
 import cool.scx.http.method.HttpMethod;
 
 import java.util.Set;
@@ -27,6 +27,6 @@ public interface Route {
 
     int order();
 
-    ConsumerX<RoutingContext, ?> handler();
+    Function1Void<RoutingContext, ?> handler();
 
 }

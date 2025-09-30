@@ -23,7 +23,7 @@ public final class Json implements BaseVo {
     }
 
     @Override
-    public void accept(RoutingContext context) {
+    public void apply(RoutingContext context) {
         context.response()
                 .contentType(ScxMediaType.of(APPLICATION_JSON).charset(UTF_8))
                 .send(data);

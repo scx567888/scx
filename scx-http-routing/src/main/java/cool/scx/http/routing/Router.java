@@ -1,6 +1,6 @@
 package cool.scx.http.routing;
 
-import cool.scx.function.ConsumerX;
+import cool.scx.function.Function1Void;
 import cool.scx.http.ScxHttpServerRequest;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface Router extends ConsumerX<ScxHttpServerRequest, Throwable> {
+public interface Router extends Function1Void<ScxHttpServerRequest, Throwable> {
 
     static Router of() {
         return new RouterImpl();

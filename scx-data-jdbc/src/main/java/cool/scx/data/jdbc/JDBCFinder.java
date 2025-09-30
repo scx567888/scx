@@ -5,7 +5,7 @@ import cool.scx.data.LockMode;
 import cool.scx.data.exception.DataAccessException;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.query.Query;
-import cool.scx.function.ConsumerX;
+import cool.scx.function.Function1Void;
 import cool.scx.jdbc.sql.SQLRunnerException;
 
 import java.util.List;
@@ -60,7 +60,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public <X extends Throwable> void forEach(ConsumerX<Entity, X> entityConsumer) throws DataAccessException, X {
+    public <X extends Throwable> void forEach(Function1Void<Entity, X> entityConsumer) throws DataAccessException, X {
         try {
             repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanConsumer(repository.beanBuilder, entityConsumer));
         } catch (SQLRunnerException e) {
@@ -69,7 +69,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public <T, X extends Throwable> void forEach(ConsumerX<T, X> entityConsumer, Class<T> resultType) throws DataAccessException, X {
+    public <T, X extends Throwable> void forEach(Function1Void<T, X> entityConsumer, Class<T> resultType) throws DataAccessException, X {
         try {
             repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofBeanConsumer(resultType, repository.beanColumnNameMapping, entityConsumer));
         } catch (SQLRunnerException e) {
@@ -78,7 +78,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public <X extends Throwable> void forEachMap(ConsumerX<Map<String, Object>, X> entityConsumer) throws DataAccessException, X {
+    public <X extends Throwable> void forEachMap(Function1Void<Map<String, Object>, X> entityConsumer) throws DataAccessException, X {
         try {
             repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy, lockMode), ofMapConsumer(repository.mapBuilder, entityConsumer));
         } catch (SQLRunnerException e) {

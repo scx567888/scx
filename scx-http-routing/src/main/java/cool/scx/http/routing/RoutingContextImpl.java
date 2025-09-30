@@ -74,7 +74,7 @@ public class RoutingContextImpl implements RoutingContext {
                 continue;
             }
 
-            route.handler().accept(this);
+            route.handler().apply(this);
 
             return;
 

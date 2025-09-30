@@ -1,6 +1,5 @@
 package cool.scx.web;
 
-import cool.scx.common.scope_value.ScxScopedValue;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.routing.Router;
 import cool.scx.http.routing.RoutingContext;
@@ -32,7 +31,7 @@ import java.util.stream.Collectors;
 public final class ScxWeb {
 
     /// 路由上下文 THREAD_LOCAL
-    static final ScxScopedValue<RoutingContext> ROUTING_CONTEXT_SCOPED_VALUE = ScxScopedValue.newInstance();
+    static final ScopedValue<RoutingContext> ROUTING_CONTEXT_SCOPED_VALUE = ScopedValue.newInstance();
 
     private final List<ReturnValueHandler> returnValueHandlers = new ArrayList<>();
     private final LastReturnValueHandler lastReturnValueHandler;

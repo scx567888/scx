@@ -34,7 +34,7 @@ public final class Html implements BaseVo {
     }
 
     @Override
-    public void accept(RoutingContext context) throws Exception {
+    public void apply(RoutingContext context) throws Exception {
         if (usePath) {
             sendHtmlPath(context);
         } else {

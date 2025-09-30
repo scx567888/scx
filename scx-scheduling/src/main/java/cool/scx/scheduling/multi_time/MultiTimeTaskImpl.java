@@ -1,6 +1,6 @@
 package cool.scx.scheduling.multi_time;
 
-import cool.scx.function.ConsumerX;
+import cool.scx.function.Function1Void;
 import cool.scx.scheduling.ExpirationPolicy;
 import cool.scx.scheduling.ScheduleContext;
 import cool.scx.scheduling.ScheduleStatus;
@@ -38,7 +38,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     private long maxRunCount;
     private ExpirationPolicy expirationPolicy;
     private ScheduledExecutorService executor;
-    private ConsumerX<TaskContext, ?> task;
+    private Function1Void<TaskContext, ?> task;
     private ScheduledFuture<?> scheduledFuture;
     private Consumer<Throwable> errorHandler;
     private ScheduleContext context;
@@ -95,7 +95,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     }
 
     @Override
-    public MultiTimeTask task(ConsumerX<TaskContext, ?> task) {
+    public MultiTimeTask task(Function1Void<TaskContext, ?> task) {
         this.task = task;
         return this;
     }
@@ -129,7 +129,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
             return doStart(between.toNanos());
         }
 
-        //以下处理过期情况 
+        //以下处理过期情况
         //1, 忽略策略
         if (expirationPolicy == IMMEDIATE_IGNORE || expirationPolicy == BACKTRACKING_IGNORE) {
             //1, 计算过期次数和最近的开始时间
@@ -222,14 +222,14 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
         var l = runCount.incrementAndGet();
         //判断是否 达到最大次数 停止运行并取消任务
         if (maxRunCount != -1 && l > maxRunCount) {
-            //todo 这里 scheduledFuture 可能为空吗 ? 
+            //todo 这里 scheduledFuture 可能为空吗 ?
             if (scheduledFuture != null) {
                 scheduledFuture.cancel(false);
             }
             return;
         }
         try {
-            task.accept(new TaskContext() {
+            task.apply(new TaskContext() {
 
                 @Override
                 public long currentRunCount() {

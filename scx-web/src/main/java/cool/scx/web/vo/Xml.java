@@ -23,7 +23,7 @@ public final class Xml implements BaseVo {
     }
 
     @Override
-    public void accept(RoutingContext context) {
+    public void apply(RoutingContext context) {
         context.response()
                 .contentType(ScxMediaType.of(APPLICATION_XML).charset(UTF_8))
                 .send(data);

@@ -1,7 +1,7 @@
 package cool.scx.http.parameters;
 
 import cool.scx.collections.multi_map.MultiMap;
-import cool.scx.function.BiConsumerX;
+import cool.scx.function.Function2Void;
 
 import java.util.*;
 
@@ -91,12 +91,12 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
     }
 
     @Override
-    public <X extends Throwable> void forEach(BiConsumerX<? super K, V, X> action) throws X {
+    public <X extends Throwable> void forEach(Function2Void<? super K, V, X> action) throws X {
         map.forEach(action);
     }
 
     @Override
-    public <X extends Throwable> void forEachParameter(BiConsumerX<? super K, List<V>, X> action) throws X {
+    public <X extends Throwable> void forEachParameter(Function2Void<? super K, List<V>, X> action) throws X {
         map.forEachEntry(action);
     }
 
