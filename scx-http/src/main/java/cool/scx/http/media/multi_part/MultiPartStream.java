@@ -2,7 +2,6 @@ package cool.scx.http.media.multi_part;
 
 import cool.scx.io.ByteInput;
 import cool.scx.io.DefaultByteInput;
-import cool.scx.io.supplier.BoundaryByteSupplier;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.io.x.io_stream.ByteReaderInputStream;
@@ -78,14 +77,14 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
             //消费掉上一个分块的内容
             consumeInputStream(lastPart.inputStream());
             // inputStream 中并不会消耗 最后的 \r\n, 但是接下来的判断我们也不需要 所以这里 跳过最后的 \r\n
-            linkedByteReader.skip(2);
+            linkedByteReader.skipFully(2);
             //置空 防止重复消费
             lastPart = null;
         }
 
         // 下面的操作不会移动指针 所以我们可以 重复调用 hasNext
         // 向后查看
-        var peek = linkedByteReader.peek(boundaryBytes.length + 2);
+        var peek = linkedByteReader.peekFully(boundaryBytes.length + 2);
 
         // 这种情况只可能发生在流已经提前结束了
         if (peek.length != boundaryBytes.length + 2) {
@@ -123,7 +122,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         }
 
         // 跳过起始的 --boundary\r\n
-        linkedByteReader.skip(boundaryBytes.length + 2);
+        linkedByteReader.skipFully(boundaryBytes.length + 2);
 
         var part = new MultiPartPartImpl();
 
