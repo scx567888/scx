@@ -8,8 +8,8 @@ import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.media_type.FileFormat;
 import cool.scx.http.media_type.ScxMediaType;
-import cool.scx.io.IOHelper;
-import cool.scx.io.io_stream.StreamClosedException;
+import cool.scx.io.x.IOHelper;
+import cool.scx.io.x.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;

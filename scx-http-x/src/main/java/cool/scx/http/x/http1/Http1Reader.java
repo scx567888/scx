@@ -18,8 +18,8 @@ import cool.scx.http.x.http1.request_line.InvalidHttpVersion;
 import cool.scx.http.x.http1.status_line.Http1StatusLine;
 import cool.scx.http.x.http1.status_line.InvalidHttpStatusException;
 import cool.scx.http.x.http1.status_line.InvalidHttpStatusLineException;
-import cool.scx.io.io_stream.ByteReaderInputStream;
-import cool.scx.io.io_stream.NullCheckedInputStream;
+import cool.scx.io.x.io_stream.ByteReaderInputStream;
+import cool.scx.io.x.io_stream.NullCheckedInputStream;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -109,7 +109,7 @@ final class Http1Reader {
         } catch (NoMoreDataException | ByteSupplierException e) {
             throw new CloseConnectionException("读取 StatusLine 时发生异常 !!!", e.getCause());
         } catch (NoMatchFoundException e) {
-            // 在指定长度内未匹配到 这里抛出响应行过大异常, 包装到 RuntimeException 中 因为这其中的异常一般都会由用户来处理 
+            // 在指定长度内未匹配到 这里抛出响应行过大异常, 包装到 RuntimeException 中 因为这其中的异常一般都会由用户来处理
             throw new RuntimeException("响应行过大 !!!");
         } catch (InvalidHttpStatusLineException | InvalidHttpStatusException | InvalidHttpVersion e) {
             // 解析异常我们全部包装到 RuntimeException 中

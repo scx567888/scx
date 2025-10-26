@@ -11,8 +11,8 @@ import cool.scx.http.status.ScxHttpStatus;
 import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.status_line.Http1StatusLine;
-import cool.scx.io.io_stream.CheckedOutputStream;
-import cool.scx.io.io_stream.StreamClosedException;
+import cool.scx.io.x.io_stream.CheckedOutputStream;
+import cool.scx.io.x.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.OutputStream;

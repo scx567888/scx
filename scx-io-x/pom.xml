@@ -9,21 +9,16 @@
         <version>3.8.11</version>
     </parent>
 
-    <artifactId>scx-config</artifactId>
+    <artifactId>scx-io-x</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX Config</name>
+    <name>SCX IO X</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX Config
+        SCX IO X
     </description>
 
     <dependencies>
-
-        <dependency>
-            <groupId>cool.scx</groupId>
-            <artifactId>scx-ansi</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>cool.scx</groupId>
@@ -32,23 +27,10 @@
 
         <dependency>
             <groupId>cool.scx</groupId>
-            <artifactId>scx-object</artifactId>
+            <artifactId>scx-bytes</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-io-x</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- 轻量级的加密解密工具包 , 用于简化一些密码校验及敏感数据加密的操作 -->
-        <dependency>
-            <groupId>org.jasypt</groupId>
-            <artifactId>jasypt</artifactId>
-        </dependency>
-
-        <!-- ****************** 以下为测试依赖 ****************** -->
-
+        <!-- TestNG 测试包 -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

@@ -4,8 +4,8 @@ import cool.scx.bytes.ByteReader;
 import cool.scx.bytes.supplier.BoundaryByteSupplier;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.io.io_stream.ByteReaderInputStream;
-import cool.scx.io.io_stream.StreamClosedException;
+import cool.scx.io.x.io_stream.ByteReaderInputStream;
+import cool.scx.io.x.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static cool.scx.io.IOHelper.inputStreamToByteReader;
+import static cool.scx.io.x.IOHelper.inputStreamToByteReader;
 
 /// MultiPartStream
 ///
@@ -72,7 +72,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
 
     @Override
     public boolean hasNext() {
-        // 用户可能并没有消耗掉上一个分块就调用了 hasNext 这里我们替他消费 
+        // 用户可能并没有消耗掉上一个分块就调用了 hasNext 这里我们替他消费
         if (lastPart != null) {
             //消费掉上一个分块的内容
             consumeInputStream(lastPart.inputStream());
@@ -82,7 +82,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
             lastPart = null;
         }
 
-        // 下面的操作不会移动指针 所以我们可以 重复调用 hasNext 
+        // 下面的操作不会移动指针 所以我们可以 重复调用 hasNext
         // 向后查看
         var peek = linkedByteReader.peek(boundaryBytes.length + 2);
 

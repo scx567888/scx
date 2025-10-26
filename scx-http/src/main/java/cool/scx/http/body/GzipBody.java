@@ -4,7 +4,7 @@ import cool.scx.http.exception.UnsupportedMediaTypeException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.content_encoding.ScxContentEncoding;
 import cool.scx.http.media.MediaReader;
-import cool.scx.io.io_stream.StreamClosedException;
+import cool.scx.io.x.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;

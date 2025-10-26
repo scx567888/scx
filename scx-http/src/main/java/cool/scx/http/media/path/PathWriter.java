@@ -4,14 +4,14 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media_type.FileFormat;
-import cool.scx.io.IOHelper;
+import cool.scx.io.x.IOHelper;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 
 import static cool.scx.http.media_type.MediaType.APPLICATION_OCTET_STREAM;
-import static cool.scx.io.IOHelper.writeFileToOut;
+import static cool.scx.io.x.IOHelper.writeFileToOut;
 
 /// PathWriter
 ///
@@ -40,7 +40,7 @@ public class PathWriter implements MediaWriter {
 
     @Override
     public long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
-        // 这里如果用户没有指定格式的话 我们尝试猜测一下 
+        // 这里如果用户没有指定格式的话 我们尝试猜测一下
         if (responseHeaders.contentType() == null) {
             var fileFormat = FileFormat.findByFileName(path.toString());
             if (fileFormat == null) { //没找到就使用 二进制流

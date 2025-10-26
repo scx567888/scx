@@ -11,7 +11,7 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.headers.upgrade.ScxUpgrade;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.io.io_stream.StreamClosedException;
+import cool.scx.io.x.io_stream.StreamClosedException;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
