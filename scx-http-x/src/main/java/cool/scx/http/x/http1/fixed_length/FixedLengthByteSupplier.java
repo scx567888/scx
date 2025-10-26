@@ -1,17 +1,17 @@
 package cool.scx.http.x.http1.fixed_length;
 
-import cool.scx.bytes.ByteChunk;
-import cool.scx.bytes.IByteReader;
-import cool.scx.bytes.consumer.ByteChunkByteConsumer;
-import cool.scx.bytes.exception.NoMoreDataException;
-import cool.scx.bytes.supplier.ByteSupplier;
+import cool.scx.io.ByteChunk;
+import cool.scx.io.ByteInput;
+import cool.scx.io.consumer.ByteChunkByteConsumer;
+import cool.scx.io.exception.NoMoreDataException;
+import cool.scx.io.supplier.ByteSupplier;
 
 public class FixedLengthByteSupplier implements ByteSupplier {
 
-    private final IByteReader dataReader;
+    private final ByteInput dataReader;
     private long remaining;
 
-    public FixedLengthByteSupplier(IByteReader dataReader, long maxLength) {
+    public FixedLengthByteSupplier(ByteInput dataReader, long maxLength) {
         this.dataReader = dataReader;
         this.remaining = maxLength;
     }
@@ -24,7 +24,7 @@ public class FixedLengthByteSupplier implements ByteSupplier {
         try {
             // 这里我们直接引用 原始 dataReader 中的 bytes, 避免了数组的多次拷贝
             var consumer = new ByteChunkByteConsumer();
-            dataReader.read(consumer, remaining, 1);// 我们只尝试拉取一次
+            dataReader.read(consumer, remaining);// 我们只尝试拉取一次
             var byteChunk = consumer.byteChunk();
             remaining -= byteChunk.length;
             return byteChunk;

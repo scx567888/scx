@@ -27,7 +27,7 @@
 
         <dependency>
             <groupId>cool.scx</groupId>
-            <artifactId>scx-bytes</artifactId>
+            <artifactId>scx-io</artifactId>
         </dependency>
 
         <!-- TestNG 测试包 -->

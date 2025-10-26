@@ -1,7 +1,8 @@
 package cool.scx.http.x.http2;
 
-import cool.scx.bytes.ByteReader;
-import cool.scx.bytes.supplier.BufferedInputStreamByteSupplier;
+import cool.scx.io.ByteInput;
+import cool.scx.io.DefaultByteInput;
+import cool.scx.io.supplier.BufferedInputStreamByteSupplier;
 import cool.scx.function.Function1Void;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
@@ -26,7 +27,7 @@ public class Http2ServerConnection {
     private final HttpServerOptions options;
     private final Function1Void<ScxHttpServerRequest, ?> requestHandler;
     private final ScxHttpServerErrorHandler errorHandler;
-    private final ByteReader dataReader;
+    private final ByteInput dataReader;
     private final OutputStream dataWriter;
     private final HPACKDecoder hpackDecoder;
     private State state;
@@ -36,7 +37,7 @@ public class Http2ServerConnection {
         this.options = options;
         this.requestHandler = requestHandler;
         this.errorHandler = errorHandler;
-        this.dataReader = new ByteReader(new BufferedInputStreamByteSupplier(this.tcpSocket.inputStream()));
+        this.dataReader = new DefaultByteInput(new BufferedInputStreamByteSupplier(this.tcpSocket.inputStream()));
         this.dataWriter = this.tcpSocket.outputStream();
         this.hpackDecoder = new HPACKDecoder();
     }

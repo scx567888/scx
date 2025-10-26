@@ -1,7 +1,8 @@
 package cool.scx.http.media.multi_part;
 
-import cool.scx.bytes.ByteReader;
-import cool.scx.bytes.supplier.BoundaryByteSupplier;
+import cool.scx.io.ByteInput;
+import cool.scx.io.DefaultByteInput;
+import cool.scx.io.supplier.BoundaryByteSupplier;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.io.x.io_stream.ByteReaderInputStream;
@@ -25,7 +26,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
     private final String boundary; // xxx
     private final byte[] boundaryBytes; // --xxx
     private final byte[] boundaryStartBytes; // \r\b--xxx
-    private final ByteReader linkedByteReader;
+    private final ByteInput linkedByteReader;
     private MultiPartPart lastPart;
 
     public MultiPartStream(InputStream inputStream, String boundary) {
@@ -57,7 +58,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
     public InputStream readContent() {
         // 内容 的终结符是 \r\n--boundary
         // 所以我们创建一个以 \r\n--boundary 结尾的分割符 输入流
-        return new ByteReaderInputStream(new ByteReader(new BoundaryByteSupplier(linkedByteReader, boundaryStartBytes)));
+        return new ByteReaderInputStream(new DefaultByteInput(new BoundaryByteSupplier(linkedByteReader, boundaryStartBytes)));
     }
 
     @Override

@@ -1,7 +1,13 @@
 package cool.scx.io.x.io_stream;
 
-import cool.scx.bytes.ByteReader;
-import cool.scx.bytes.supplier.ByteSupplier;
+import cool.scx.io.ByteInput;
+import cool.scx.io.DefaultByteInput;
+import cool.scx.io.adapter.ByteInputInputStream;
+import cool.scx.io.consumer.FillByteArrayByteConsumer;
+import cool.scx.io.consumer.OutputStreamByteConsumer;
+import cool.scx.io.exception.NoMoreDataException;
+import cool.scx.io.exception.ScxIOException;
+import cool.scx.io.supplier.ByteSupplier;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,35 +18,74 @@ import java.io.OutputStream;
 /// @version 0.0.1
 public class ByteReaderInputStream extends CheckedInputStream {
 
-    private final ByteReader dataReader;
+    private final ByteInput dataReader;
 
-    public ByteReaderInputStream(ByteReader dataReader) {
+    public ByteReaderInputStream(ByteInput dataReader) {
         this.dataReader = dataReader;
     }
 
     public ByteReaderInputStream(ByteSupplier dataSupplier) {
-        this.dataReader = new ByteReader(dataSupplier);
+        this.dataReader = new DefaultByteInput(dataSupplier);
     }
 
     @Override
     public int read() throws IOException {
         ensureOpen();
-        return dataReader.inputStreamRead();
+        try {
+            return this.dataReader.read() & 255;
+        } catch (ScxIOException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IOException ioException) {
+                throw ioException;
+            } else {
+                throw e;
+            }
+        } catch (NoMoreDataException var5) {
+            return -1;
+        }
     }
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
         ensureOpen();
-        return dataReader.inputStreamRead(b, off, len);
+        var consumer = new FillByteArrayByteConsumer(b, off, len);
+
+        try {
+            this.dataReader.read(consumer, (long)len);
+        } catch (ScxIOException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IOException ioException) {
+                throw ioException;
+            }
+
+            throw e;
+        } catch (NoMoreDataException var9) {
+            return -1;
+        }
+
+        return consumer.bytesFilled();
     }
 
     @Override
     public long transferTo(OutputStream out) throws IOException {
         ensureOpen();
-        return dataReader.inputStreamTransferTo(out);
+        var consumer = new OutputStreamByteConsumer(out);
+
+        try {
+            this.dataReader.readAll(consumer);
+        } catch (ScxIOException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IOException ioException) {
+                throw ioException;
+            }
+
+            throw e;
+        }
+
+        return consumer.bytesWritten();
     }
 
-    public ByteReader dataReader() {
+    public ByteInput dataReader() {
         return dataReader;
     }
 
@@ -61,12 +106,32 @@ public class ByteReaderInputStream extends CheckedInputStream {
 
     @Override
     public byte[] readNBytes(int len) throws IOException {
-        return dataReader.inputStreamReadNBytes(len);
+        try {
+            return this.dataReader.readUpTo(len);
+        } catch (ScxIOException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IOException ioException) {
+                throw ioException;
+            } else {
+                throw e;
+            }
+        } catch (NoMoreDataException var6) {
+            return new byte[0];
+        }
     }
 
     @Override
     public byte[] readAllBytes() throws IOException {
-        return dataReader.inputStreamReadNBytes(Integer.MAX_VALUE);
+        try {
+            return this.dataReader.readAll();
+        } catch (ScxIOException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IOException ioException) {
+                throw ioException;
+            } else {
+                throw e;
+            }
+        }
     }
 
     @Override

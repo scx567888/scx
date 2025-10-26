@@ -111,8 +111,8 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
-                <artifactId>scx-bytes</artifactId>
-                <version>${scx-bytes.version}</version>
+                <artifactId>scx-io</artifactId>
+                <version>${scx-io.version}</version>
             </dependency>
 
             <dependency>
@@ -229,7 +229,7 @@
         <scx-function.version>1.0.0</scx-function.version>
         <scx-data.version>4.1.0</scx-data.version>
         <scx-collections.version>4.1.0</scx-collections.version>
-        <scx-bytes.version>4.1.0</scx-bytes.version>
+        <scx-io.version>4.0.0</scx-io.version>
         <scx-logging.version>4.1.0</scx-logging.version>
         <scx-timer.version>2.0.0</scx-timer.version>
         <scx-tcp.version>4.1.0</scx-tcp.version>

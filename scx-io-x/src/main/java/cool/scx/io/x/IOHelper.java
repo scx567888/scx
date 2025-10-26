@@ -1,7 +1,8 @@
 package cool.scx.io.x;
 
-import cool.scx.bytes.ByteReader;
-import cool.scx.bytes.supplier.InputStreamByteSupplier;
+import cool.scx.io.ByteInput;
+import cool.scx.io.DefaultByteInput;
+import cool.scx.io.supplier.InputStreamByteSupplier;
 import cool.scx.io.x.io_stream.ByteReaderInputStream;
 
 import java.io.*;
@@ -17,11 +18,11 @@ import java.nio.file.Path;
 public final class IOHelper {
 
     /// 此方法会尽量脱壳 防止过多的包装层
-    public static ByteReader inputStreamToByteReader(InputStream inputStream) {
+    public static ByteInput inputStreamToByteReader(InputStream inputStream) {
         if (inputStream instanceof ByteReaderInputStream d) {
             return d.dataReader();
         } else {
-            return new ByteReader(new InputStreamByteSupplier(inputStream));
+            return new DefaultByteInput(new InputStreamByteSupplier(inputStream));
         }
     }
 

@@ -1,10 +1,10 @@
 package cool.scx.http.x.http1.chunked;
 
-import cool.scx.bytes.ByteChunk;
-import cool.scx.bytes.ByteReader;
-import cool.scx.bytes.exception.ByteSupplierException;
-import cool.scx.bytes.exception.NoMatchFoundException;
-import cool.scx.bytes.supplier.ByteSupplier;
+import cool.scx.io.ByteChunk;
+import cool.scx.io.ByteInput;
+import cool.scx.io.exception.ScxIOException;
+import cool.scx.io.exception.NoMatchFoundException;
+import cool.scx.io.supplier.ByteSupplier;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.ContentTooLargeException;
 
@@ -14,16 +14,16 @@ import cool.scx.http.exception.ContentTooLargeException;
 /// @version 0.0.1
 public class HttpChunkedByteSupplier implements ByteSupplier {
 
-    private final ByteReader dataReader;
+    private final ByteInput dataReader;
     private final long maxLength;
     private long position;
     private boolean isFinished;
 
-    public HttpChunkedByteSupplier(ByteReader dataReader) {
+    public HttpChunkedByteSupplier(ByteInput dataReader) {
         this(dataReader, Long.MAX_VALUE);
     }
 
-    public HttpChunkedByteSupplier(ByteReader dataReader, long maxLength) {
+    public HttpChunkedByteSupplier(ByteInput dataReader, long maxLength) {
         this.dataReader = dataReader;
         this.maxLength = maxLength;
         this.position = 0;
@@ -31,7 +31,7 @@ public class HttpChunkedByteSupplier implements ByteSupplier {
     }
 
     @Override
-    public ByteChunk get() throws ByteSupplierException {
+    public ByteChunk get() throws ScxIOException {
         if (isFinished) {
             return null;
         }

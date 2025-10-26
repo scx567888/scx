@@ -1,6 +1,6 @@
 package cool.scx.websocket.x;
 
-import cool.scx.bytes.ByteReader;
+import cool.scx.io.ByteInput;
 import cool.scx.websocket.WebSocketOpCode;
 import cool.scx.websocket.exception.WebSocketException;
 
@@ -17,7 +17,7 @@ import static cool.scx.websocket.close_info.WebSocketCloseInfo.TOO_BIG;
 /// @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
 public class WebSocketProtocolFrameHelper {
 
-    public static WebSocketProtocolFrame readFrameHeader(ByteReader reader) {
+    public static WebSocketProtocolFrame readFrameHeader(ByteInput reader) {
         byte[] header = reader.read(2);
 
         var b1 = header[0];
@@ -60,7 +60,7 @@ public class WebSocketProtocolFrameHelper {
         return new WebSocketProtocolFrame(fin, rsv1, rsv2, rsv3, opCode, masked, payloadLength, maskingKey);
     }
 
-    public static WebSocketProtocolFrame readFramePayload(WebSocketProtocolFrame frame, ByteReader reader) {
+    public static WebSocketProtocolFrame readFramePayload(WebSocketProtocolFrame frame, ByteInput reader) {
         var payloadLength = frame.payloadLength();
         var masked = frame.masked();
         var maskingKey = frame.maskingKey();
@@ -125,7 +125,7 @@ public class WebSocketProtocolFrameHelper {
     }
 
     //读取单个帧
-    public static WebSocketProtocolFrame readFrame(ByteReader reader, long maxWebSocketFrameSize) {
+    public static WebSocketProtocolFrame readFrame(ByteInput reader, long maxWebSocketFrameSize) {
         var webSocketFrame = readFrameHeader(reader);
 
         //这里检查 最大帧大小
@@ -136,7 +136,7 @@ public class WebSocketProtocolFrameHelper {
         return readFramePayload(webSocketFrame, reader);
     }
 
-    public static WebSocketProtocolFrame readFrameUntilLast(ByteReader reader, long maxWebSocketFrameSize, long maxWebSocketMessageSize) {
+    public static WebSocketProtocolFrame readFrameUntilLast(ByteInput reader, long maxWebSocketFrameSize, long maxWebSocketMessageSize) {
         var frameList = new ArrayList<WebSocketProtocolFrame>();
         long totalPayloadLength = 0;
 
@@ -144,12 +144,12 @@ public class WebSocketProtocolFrameHelper {
             var webSocketFrame = readFrameHeader(reader);
             var framePayloadLength = webSocketFrame.payloadLength();
 
-            // 检查单个帧大小限制 
+            // 检查单个帧大小限制
             if (framePayloadLength > maxWebSocketFrameSize) {
                 throw new WebSocketException(TOO_BIG.code(), "Frame too big");
             }
 
-            // 检查合并后的消息大小限制 
+            // 检查合并后的消息大小限制
             if (totalPayloadLength + framePayloadLength > maxWebSocketMessageSize) {
                 throw new WebSocketException(TOO_BIG.code(), "Message too big");
             }
