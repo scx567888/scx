@@ -1,8 +1,9 @@
 package cool.scx.websocket.x.test;
 
-import cool.scx.bytes.ByteReader;
-import cool.scx.bytes.exception.NoMoreDataException;
-import cool.scx.bytes.supplier.ByteArrayByteSupplier;
+import cool.scx.io.ByteInput;
+import cool.scx.io.DefaultByteInput;
+import cool.scx.io.exception.NoMoreDataException;
+import cool.scx.io.supplier.ByteArrayByteSupplier;
 import cool.scx.websocket.WebSocketOpCode;
 import cool.scx.websocket.x.WebSocketProtocolFrame;
 import cool.scx.websocket.x.WebSocketProtocolFrameHelper;
@@ -28,7 +29,7 @@ public class WebSocketFrameHelperTest {
                 (byte) 0b0000_0101, // No mask, payload length = 5
                 'H', 'e', 'l', 'l', 'o'
         };
-        var reader = new ByteReader(new ByteArrayByteSupplier(frameData));
+        var reader = new DefaultByteInput(new ByteArrayByteSupplier(frameData));
         var frame = WebSocketProtocolFrameHelper.readFrame(reader, Integer.MAX_VALUE);
 
         assertTrue(frame.fin());
@@ -64,7 +65,7 @@ public class WebSocketFrameHelperTest {
                 (byte) 0b0000_0010, // No mask, payload length = 2
                 'l', 'o'
         };
-        var reader = new ByteReader(new ByteArrayByteSupplier(frameData));
+        var reader = new DefaultByteInput(new ByteArrayByteSupplier(frameData));
         var frame = WebSocketProtocolFrameHelper.readFrameUntilLast(reader, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
         assertTrue(frame.fin());
