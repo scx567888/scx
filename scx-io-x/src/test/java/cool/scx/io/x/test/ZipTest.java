@@ -1,4 +1,4 @@
-package cool.scx.io.test;
+package cool.scx.io.x.test;
 
 import cool.scx.io.x.zip.ZipBuilder;
 import org.testng.Assert;
