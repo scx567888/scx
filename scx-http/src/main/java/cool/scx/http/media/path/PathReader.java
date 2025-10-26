@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
-import static cool.scx.io.IOHelper.readInToFile;
+import static cool.scx.io.x.IOHelper.readInToFile;
 
 /// 将内容写入到文件
 /// todo 这里是否有必要支持 复杂的写入 比如指定文件的偏移量和写入长度 还是保持当前类的简便化 因为 用户可以直接拿到 InputStream 添加复杂的功能是否有意义 ?

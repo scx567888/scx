@@ -6,7 +6,7 @@
     <parent>
         <groupId>cool.scx</groupId>
         <artifactId>scx</artifactId>
-        <version>3.8.10</version>
+        <version>3.8.11</version>
     </parent>
 
     <artifactId>scx-http</artifactId>
@@ -32,7 +32,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-io</artifactId>
+            <artifactId>scx-io-x</artifactId>
             <version>${project.version}</version>
         </dependency>
 

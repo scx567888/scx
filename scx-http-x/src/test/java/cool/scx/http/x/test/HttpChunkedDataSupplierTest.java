@@ -1,8 +1,9 @@
 package cool.scx.http.x.test;
 
-import cool.scx.bytes.ByteReader;
-import cool.scx.bytes.exception.ByteSupplierException;
-import cool.scx.bytes.supplier.ByteArrayByteSupplier;
+import cool.scx.io.ByteInput;
+import cool.scx.io.DefaultByteInput;
+import cool.scx.io.exception.ScxIOException;
+import cool.scx.io.supplier.ByteArrayByteSupplier;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.x.http1.chunked.HttpChunkedByteSupplier;
 import org.testng.Assert;
@@ -10,7 +11,7 @@ import org.testng.annotations.Test;
 
 public class HttpChunkedDataSupplierTest {
 
-    public static void main(String[] args) throws ByteSupplierException {
+    public static void main(String[] args) throws ScxIOException {
         testGet();
         testFail();
         testFail2();
@@ -18,10 +19,10 @@ public class HttpChunkedDataSupplierTest {
     }
 
     @Test
-    public static void testGet() throws ByteSupplierException {
+    public static void testGet() throws ScxIOException {
         // 模拟的复杂分块数据
         byte[] mockData = ("4\r\nWiki\r\n3\r\nHel\r\n7\r\nloWorld\r\n0\r\n\r\n").getBytes();
-        ByteReader byteArrayByteReader = new ByteReader(new ByteArrayByteSupplier(mockData));
+        var byteArrayByteReader = new DefaultByteInput(new ByteArrayByteSupplier(mockData));
 
         // 创建 HttpChunkedDataSupplier 实例
         HttpChunkedByteSupplier supplier = new HttpChunkedByteSupplier(byteArrayByteReader);
@@ -45,10 +46,10 @@ public class HttpChunkedDataSupplierTest {
     }
 
     @Test
-    public static void testFail() throws ByteSupplierException {
+    public static void testFail() throws ScxIOException {
         // 模拟的复杂分块数据
         byte[] mockData = ("4\r\nWiki\r\n3\r\nHel\r\n7\r\nloWorld\r\n0\r\n\r").getBytes();
-        ByteReader byteArrayByteReader = new ByteReader(new ByteArrayByteSupplier(mockData));
+        DefaultByteInput byteArrayByteReader = new DefaultByteInput(new ByteArrayByteSupplier(mockData));
 
         // 创建 HttpChunkedDataSupplier 实例
         HttpChunkedByteSupplier supplier = new HttpChunkedByteSupplier(byteArrayByteReader);
@@ -71,10 +72,10 @@ public class HttpChunkedDataSupplierTest {
     }
 
     @Test
-    public static void testFail2() throws ByteSupplierException {
+    public static void testFail2() throws ScxIOException {
         // 模拟的复杂分块数据
         byte[] mockData = ("4\r\nWiki\r\n3\r\nHel\r\n7\r\nloWorld\r\n0\r\n???\r\n").getBytes();
-        ByteReader byteArrayByteReader = new ByteReader(new ByteArrayByteSupplier(mockData));
+        DefaultByteInput byteArrayByteReader = new DefaultByteInput(new ByteArrayByteSupplier(mockData));
 
         // 创建 HttpChunkedDataSupplier 实例
         HttpChunkedByteSupplier supplier = new HttpChunkedByteSupplier(byteArrayByteReader);
@@ -97,10 +98,10 @@ public class HttpChunkedDataSupplierTest {
     }
 
     @Test
-    public static void testFail3() throws ByteSupplierException {
+    public static void testFail3() throws ScxIOException {
         // 模拟的复杂分块数据
         byte[] mockData = ("4\r\nWiki\r\n?\r\nHel\r\n7\r\nloWorld\r\n0\r\n\r\n").getBytes();
-        ByteReader byteArrayByteReader = new ByteReader(new ByteArrayByteSupplier(mockData));
+        DefaultByteInput byteArrayByteReader = new DefaultByteInput(new ByteArrayByteSupplier(mockData));
 
         // 创建 HttpChunkedDataSupplier 实例
         HttpChunkedByteSupplier supplier = new HttpChunkedByteSupplier(byteArrayByteReader);

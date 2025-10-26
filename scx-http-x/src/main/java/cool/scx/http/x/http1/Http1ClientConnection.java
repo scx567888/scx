@@ -1,7 +1,8 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.bytes.ByteReader;
-import cool.scx.bytes.supplier.InputStreamByteSupplier;
+import cool.scx.io.ByteInput;
+import cool.scx.io.DefaultByteInput;
+import cool.scx.io.supplier.InputStreamByteSupplier;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;
@@ -23,13 +24,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class Http1ClientConnection {
 
     public final ScxTCPSocket tcpSocket;
-    public final ByteReader dataReader;
+    public final ByteInput dataReader;
     public final OutputStream dataWriter;
     public final Http1ClientConnectionOptions options;
 
     public Http1ClientConnection(ScxTCPSocket tcpSocket, HttpClientOptions options) {
         this.tcpSocket = tcpSocket;
-        this.dataReader = new ByteReader(new InputStreamByteSupplier(tcpSocket.inputStream()));
+        this.dataReader = new DefaultByteInput(new InputStreamByteSupplier(tcpSocket.inputStream()));
         this.dataWriter = new NoCloseOutputStream(tcpSocket.outputStream());
         this.options = options.http1ConnectionOptions();
     }

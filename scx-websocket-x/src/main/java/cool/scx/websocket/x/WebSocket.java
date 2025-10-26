@@ -1,7 +1,7 @@
 package cool.scx.websocket.x;
 
-import cool.scx.bytes.ByteReader;
-import cool.scx.bytes.exception.NoMoreDataException;
+import cool.scx.io.ByteInput;
+import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.tcp.ScxTCPSocket;
 import cool.scx.websocket.ScxWebSocket;
@@ -25,7 +25,7 @@ import static cool.scx.websocket.x.WebSocketProtocolFrameHelper.writeFrame;
 public class WebSocket implements ScxWebSocket {
 
     private final ScxTCPSocket tcpSocket;
-    private final ByteReader reader;
+    private final ByteInput reader;
     private final OutputStream writer;
     private final WebSocketOptions options;
     //为了防止底层的 OutputStream 被乱序写入 此处需要加锁
@@ -35,7 +35,7 @@ public class WebSocket implements ScxWebSocket {
     //限制只发送一次 close 帧
     protected boolean closeSent;
 
-    public WebSocket(ScxTCPSocket tcpSocket, ByteReader reader, OutputStream writer, WebSocketOptions options, boolean isClient) {
+    public WebSocket(ScxTCPSocket tcpSocket, ByteInput reader, OutputStream writer, WebSocketOptions options, boolean isClient) {
         this.tcpSocket = tcpSocket;
         this.reader = reader;
         this.writer = writer;

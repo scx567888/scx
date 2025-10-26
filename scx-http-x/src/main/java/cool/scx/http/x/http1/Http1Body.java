@@ -5,7 +5,7 @@ import cool.scx.http.body.BodyReadException;
 import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.x.http1.headers.Http1Headers;
-import cool.scx.io.io_stream.StreamClosedException;
+import cool.scx.io.x.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;

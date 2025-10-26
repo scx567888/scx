@@ -1,6 +1,6 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.io.io_stream.CheckedOutputStream;
+import cool.scx.io.x.io_stream.CheckedOutputStream;
 
 import java.io.IOException;
 

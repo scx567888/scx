@@ -1,7 +1,8 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.bytes.ByteReader;
-import cool.scx.bytes.supplier.InputStreamByteSupplier;
+import cool.scx.io.ByteInput;
+import cool.scx.io.DefaultByteInput;
+import cool.scx.io.supplier.InputStreamByteSupplier;
 import cool.scx.function.Function1Void;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.error_handler.ErrorPhase;
@@ -11,7 +12,7 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.HttpServerOptions;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.io.io_stream.NullCheckedInputStream;
+import cool.scx.io.x.io_stream.NullCheckedInputStream;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class Http1ServerConnection {
     public final Function1Void<ScxHttpServerRequest, ?> requestHandler;
     public final ScxHttpServerErrorHandler errorHandler;
 
-    public final ByteReader dataReader;
+    public final ByteInput dataReader;
     public final OutputStream dataWriter;
 
     private boolean running;
@@ -52,7 +53,7 @@ public class Http1ServerConnection {
         this.options = options;
         this.requestHandler = requestHandler;
         this.errorHandler = errorHandler;
-        this.dataReader = new ByteReader(new InputStreamByteSupplier(this.tcpSocket.inputStream()));
+        this.dataReader = new DefaultByteInput(new InputStreamByteSupplier(this.tcpSocket.inputStream()));
         this.dataWriter = this.tcpSocket.outputStream();
         this.running = true;
     }

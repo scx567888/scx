@@ -3,7 +3,7 @@ package cool.scx.http.media.input_stream;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
-import cool.scx.io.io_stream.NullCheckedInputStream;
+import cool.scx.io.x.io_stream.NullCheckedInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;

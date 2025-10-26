@@ -1,11 +1,11 @@
 package cool.scx.http.media.multi_part;
 
-import cool.scx.bytes.ByteReader;
-import cool.scx.bytes.supplier.BoundaryByteSupplier;
+import cool.scx.io.ByteInput;
+import cool.scx.io.DefaultByteInput;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.io.io_stream.ByteReaderInputStream;
-import cool.scx.io.io_stream.StreamClosedException;
+import cool.scx.io.x.io_stream.ByteReaderInputStream;
+import cool.scx.io.x.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static cool.scx.io.IOHelper.inputStreamToByteReader;
+import static cool.scx.io.x.IOHelper.inputStreamToByteReader;
 
 /// MultiPartStream
 ///
@@ -25,7 +25,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
     private final String boundary; // xxx
     private final byte[] boundaryBytes; // --xxx
     private final byte[] boundaryStartBytes; // \r\b--xxx
-    private final ByteReader linkedByteReader;
+    private final ByteInput linkedByteReader;
     private MultiPartPart lastPart;
 
     public MultiPartStream(InputStream inputStream, String boundary) {
@@ -57,7 +57,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
     public InputStream readContent() {
         // 内容 的终结符是 \r\n--boundary
         // 所以我们创建一个以 \r\n--boundary 结尾的分割符 输入流
-        return new ByteReaderInputStream(new ByteReader(new BoundaryByteSupplier(linkedByteReader, boundaryStartBytes)));
+        return new ByteReaderInputStream(new DefaultByteInput(new BoundaryByteSupplier(linkedByteReader, boundaryStartBytes)));
     }
 
     @Override
@@ -72,19 +72,19 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
 
     @Override
     public boolean hasNext() {
-        // 用户可能并没有消耗掉上一个分块就调用了 hasNext 这里我们替他消费 
+        // 用户可能并没有消耗掉上一个分块就调用了 hasNext 这里我们替他消费
         if (lastPart != null) {
             //消费掉上一个分块的内容
             consumeInputStream(lastPart.inputStream());
             // inputStream 中并不会消耗 最后的 \r\n, 但是接下来的判断我们也不需要 所以这里 跳过最后的 \r\n
-            linkedByteReader.skip(2);
+            linkedByteReader.skipFully(2);
             //置空 防止重复消费
             lastPart = null;
         }
 
-        // 下面的操作不会移动指针 所以我们可以 重复调用 hasNext 
+        // 下面的操作不会移动指针 所以我们可以 重复调用 hasNext
         // 向后查看
-        var peek = linkedByteReader.peek(boundaryBytes.length + 2);
+        var peek = linkedByteReader.peekFully(boundaryBytes.length + 2);
 
         // 这种情况只可能发生在流已经提前结束了
         if (peek.length != boundaryBytes.length + 2) {
@@ -122,7 +122,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         }
 
         // 跳过起始的 --boundary\r\n
-        linkedByteReader.skip(boundaryBytes.length + 2);
+        linkedByteReader.skipFully(boundaryBytes.length + 2);
 
         var part = new MultiPartPartImpl();
 

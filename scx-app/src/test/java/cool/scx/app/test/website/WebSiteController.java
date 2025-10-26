@@ -13,7 +13,7 @@ import cool.scx.http.media_type.FileFormat;
 import cool.scx.http.method.HttpMethod;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.http.x.ScxHttpClientHelper;
-import cool.scx.io.zip.ZipBuilder;
+import cool.scx.io.x.zip.ZipBuilder;
 import cool.scx.web.HttpHelper;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.annotation.FromQuery;
