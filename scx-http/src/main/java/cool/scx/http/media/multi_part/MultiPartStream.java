@@ -28,11 +28,11 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
     private final ByteInput linkedByteReader;
     private MultiPartPart lastPart;
 
-    public MultiPartStream(InputStream inputStream, String boundary) {
+    public MultiPartStream(ByteInput byteInput, String boundary) {
         this.boundary = boundary;
         this.boundaryBytes = ("--" + boundary).getBytes();
         this.boundaryStartBytes = ("\r\n--" + boundary).getBytes();
-        this.linkedByteReader = ByteInputAdapter.inputStreamToByteInput(inputStream);
+        this.linkedByteReader = byteInput;
         this.lastPart = null;
     }
 

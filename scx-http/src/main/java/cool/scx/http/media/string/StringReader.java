@@ -2,9 +2,9 @@ package cool.scx.http.media.string;
 
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
+import cool.scx.io.ByteInput;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -41,12 +41,12 @@ public final class StringReader implements MediaReader<String> {
     }
 
     @Override
-    public String read(InputStream inputStream, ScxHttpHeaders headers) throws IOException {
+    public String read(ByteInput byteInput, ScxHttpHeaders headers) throws IOException {
         // 如果用户没有指定编码 我们尝试查找 ContentType 中的编码
         var c = charset != null ? charset : getContentTypeCharsetOrUTF8(headers);
 
-        try (inputStream) {
-            var bytes = inputStream.readAllBytes();
+        try (byteInput) {
+            var bytes = byteInput.readAll();
             return new String(bytes, c);
         }
     }

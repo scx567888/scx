@@ -2,9 +2,10 @@ package cool.scx.http.media.path;
 
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
+import cool.scx.io.ByteInput;
+import cool.scx.io.adapter.ByteInputAdapter;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
@@ -29,9 +30,9 @@ public class PathReader implements MediaReader<Path> {
     }
 
     @Override
-    public Path read(InputStream inputStream, ScxHttpHeaders headers) throws IOException {
-        try (inputStream) {
-            readInToFile(inputStream, path, options);
+    public Path read(ByteInput byteInput, ScxHttpHeaders headers) throws IOException {
+        try (byteInput) {
+            readInToFile(ByteInputAdapter.byteInputToInputStream(byteInput), path, options);
         }
         //这里直接返回 path 方便用户链式调用
         return path;

@@ -16,9 +16,9 @@ public class CacheBody implements ScxHttpBody {
     private final ByteInput dataReader;
     private final ByteInputMark mark;
 
-    public CacheBody(InputStream inputStream, ScxHttpHeaders requestHeaders) {
+    public CacheBody(ByteInput inputStream, ScxHttpHeaders requestHeaders) {
         this.headers = requestHeaders;
-        this.dataReader = ByteInputAdapter.inputStreamToByteInput(inputStream);
+        this.dataReader = inputStream;
         this.mark = this.dataReader.mark();
     }
 
@@ -31,7 +31,7 @@ public class CacheBody implements ScxHttpBody {
     @Override
     public <T> T as(MediaReader<T> t) throws BodyAlreadyConsumedException, BodyReadException {
         try {
-            return t.read(ByteInputAdapter.byteInputToInputStream(byteInput()), headers);
+            return t.read(byteInput(), headers);
         } catch (IOException e) {
             throw new BodyReadException(e);
         } catch (AlreadyClosedException e) {

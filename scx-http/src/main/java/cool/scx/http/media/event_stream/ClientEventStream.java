@@ -16,8 +16,8 @@ public class ClientEventStream {
     private final ByteInput dataReader;
     private final Charset charset;
 
-    public ClientEventStream(InputStream in, Charset charset) {
-        this.dataReader = ByteInputAdapter.inputStreamToByteInput(in);
+    public ClientEventStream(ByteInput byteInput, Charset charset) {
+        this.dataReader = byteInput;
         this.charset = charset;
     }
 

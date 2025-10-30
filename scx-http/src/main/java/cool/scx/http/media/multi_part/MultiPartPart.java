@@ -59,7 +59,7 @@ public interface MultiPartPart extends ScxHttpBody {
     @Override
     default <T> T as(MediaReader<T> t) throws BodyAlreadyConsumedException, BodyReadException {
         try {
-            return t.read(ByteInputAdapter.byteInputToInputStream(byteInput()), headers());
+            return t.read(byteInput(), headers());
         } catch (IOException e) {
             throw new BodyReadException(e);
         } catch (AlreadyClosedException e) {

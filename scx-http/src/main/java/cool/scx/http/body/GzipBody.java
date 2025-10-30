@@ -9,7 +9,6 @@ import cool.scx.io.adapter.ByteInputAdapter;
 import cool.scx.io.exception.AlreadyClosedException;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
 import static cool.scx.http.headers.content_encoding.ContentEncoding.GZIP;
@@ -17,14 +16,14 @@ import static cool.scx.http.headers.content_encoding.ContentEncoding.GZIP;
 public class GzipBody implements ScxHttpBody {
 
     private final ScxHttpHeaders headers;
-    private final InputStream inputStream;
+    private final ByteInput inputStream;
 
-    public GzipBody(InputStream inputStream, ScxHttpHeaders requestHeaders) {
+    public GzipBody(ByteInput byteInput, ScxHttpHeaders requestHeaders) {
         this.headers = requestHeaders;
-        this.inputStream = initInputStream(inputStream, this.headers.contentEncoding());
+        this.inputStream = initInputStream(byteInput, this.headers.contentEncoding());
     }
 
-    public static InputStream initInputStream(InputStream inputStream, ScxContentEncoding contentEncoding) {
+    public static ByteInput initInputStream(ByteInput inputStream, ScxContentEncoding contentEncoding) {
         //已经包装过一次 没必要重复包装
         if (inputStream instanceof GZIPInputStream) {
             return inputStream;
@@ -36,7 +35,7 @@ public class GzipBody implements ScxHttpBody {
         //等于 GZIP 我们尝试包装
         if (contentEncoding == GZIP) {
             try {
-                return new GZIPInputStream(inputStream);
+                return ByteInputAdapter.inputStreamToByteInput(new GZIPInputStream(ByteInputAdapter.byteInputToInputStream(inputStream)));
             } catch (IOException e) {
                 //原始流有可能并不是一个 合法的 gzip 流 我们抛出异常
                 throw new UnsupportedMediaTypeException(e);
@@ -48,7 +47,7 @@ public class GzipBody implements ScxHttpBody {
 
     @Override
     public ByteInput byteInput() {
-        return ByteInputAdapter.inputStreamToByteInput(inputStream);
+        return inputStream;
     }
 
     @Override

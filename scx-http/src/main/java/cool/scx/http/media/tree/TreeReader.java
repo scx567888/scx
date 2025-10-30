@@ -3,6 +3,7 @@ package cool.scx.http.media.tree;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
+import cool.scx.io.ByteInput;
 import cool.scx.object.ScxObject;
 import cool.scx.object.node.Node;
 import cool.scx.object.parser.NodeParseException;
@@ -28,9 +29,9 @@ public class TreeReader implements MediaReader<Node> {
     }
 
     @Override
-    public Node read(InputStream inputStream, ScxHttpHeaders requestHeaders) throws IOException {
+    public Node read(ByteInput byteInput, ScxHttpHeaders requestHeaders) throws IOException {
         // 1, 先读取为字符串
-        var str = STRING_READER.read(inputStream, requestHeaders);
+        var str = STRING_READER.read(byteInput, requestHeaders);
         // 2, 根据不同 contentType 进行处理
         var contentType = requestHeaders.contentType();
         // 尝试 JSON
@@ -38,7 +39,7 @@ public class TreeReader implements MediaReader<Node> {
             try {
                 return ScxObject.fromJson(str);
             } catch (NodeParseException e) {
-                // 这里既然客户端已经 指定了 contentType 为 JSON 我们却无法转换 说明 客户端发送的 内容格式可能有误 
+                // 这里既然客户端已经 指定了 contentType 为 JSON 我们却无法转换 说明 客户端发送的 内容格式可能有误
                 // 所以这里 抛出 客户端错误 BadRequestException
                 throw new BadRequestException("JSON 格式不正确 !!!", e);
             }
@@ -48,7 +49,7 @@ public class TreeReader implements MediaReader<Node> {
             try {
                 return ScxObject.fromXml(str);
             } catch (NodeParseException e) {
-                // 这里既然客户端已经 指定了 contentType 为 XML 我们却无法转换 说明 客户端发送的 内容格式可能有误 
+                // 这里既然客户端已经 指定了 contentType 为 XML 我们却无法转换 说明 客户端发送的 内容格式可能有误
                 // 所以这里 抛出 客户端错误 BadRequestException
                 throw new BadRequestException("XML 格式不正确 !!!", e);
             }
