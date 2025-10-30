@@ -9,6 +9,8 @@ import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.media_type.FileFormat;
 import cool.scx.http.media_type.ScxMediaType;
+import cool.scx.io.ByteInput;
+import cool.scx.io.adapter.ByteInputAdapter;
 import cool.scx.io.exception.AlreadyClosedException;
 
 import java.io.IOException;
@@ -50,14 +52,14 @@ public interface MultiPartPart extends ScxHttpBody {
     Supplier<InputStream> body();
 
     @Override
-    default InputStream inputStream() {
-        return body().get();
+    default ByteInput byteInput() {
+        return ByteInputAdapter.inputStreamToByteInput(body().get());
     }
 
     @Override
     default <T> T as(MediaReader<T> t) throws BodyAlreadyConsumedException, BodyReadException {
         try {
-            return t.read(inputStream(), headers());
+            return t.read(ByteInputAdapter.byteInputToInputStream(byteInput()), headers());
         } catch (IOException e) {
             throw new BodyReadException(e);
         } catch (AlreadyClosedException e) {

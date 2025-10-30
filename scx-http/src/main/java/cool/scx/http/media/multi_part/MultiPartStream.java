@@ -75,7 +75,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         // 用户可能并没有消耗掉上一个分块就调用了 hasNext 这里我们替他消费
         if (lastPart != null) {
             //消费掉上一个分块的内容
-            consumeInputStream(lastPart.inputStream());
+            consumeInputStream(ByteInputAdapter.byteInputToInputStream(lastPart.byteInput()));
             // inputStream 中并不会消耗 最后的 \r\n, 但是接下来的判断我们也不需要 所以这里 跳过最后的 \r\n
             linkedByteReader.skipFully(2);
             //置空 防止重复消费

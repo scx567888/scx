@@ -23,15 +23,15 @@ public class CacheBody implements ScxHttpBody {
     }
 
     @Override
-    public InputStream inputStream() {
+    public ByteInput byteInput() {
         mark.reset();
-        return ByteInputAdapter.byteInputToInputStream(this.dataReader);
+        return this.dataReader;
     }
 
     @Override
     public <T> T as(MediaReader<T> t) throws BodyAlreadyConsumedException, BodyReadException {
         try {
-            return t.read(inputStream(), headers);
+            return t.read(ByteInputAdapter.byteInputToInputStream(byteInput()), headers);
         } catch (IOException e) {
             throw new BodyReadException(e);
         } catch (AlreadyClosedException e) {
