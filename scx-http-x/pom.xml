@@ -42,6 +42,12 @@
             <artifactId>scx-tcp</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-io-x</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- ****************** 以下为测试依赖 ****************** -->
         <dependency>
             <groupId>${project.groupId}</groupId>
