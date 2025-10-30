@@ -5,6 +5,7 @@ import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.media.multi_part.MultiPartPartImpl;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
+import cool.scx.io.exception.ScxIOException;
 import cool.scx.object.ScxObject;
 import cool.scx.object.node.Node;
 import cool.scx.object.node.ObjectNode;
@@ -86,9 +87,10 @@ public final class RequestInfo {
                 }
                 try {
                     //这里我们需要将流式的读取到内存中
-                    var bytes = multiPartPart.inputStream().readAllBytes();
+                    // todo 这里怎么处理 AutoClose ?
+                    var bytes = multiPartPart.byteInput().readAll();
                     f.add(multiPartPart.name(), new MultiPartPartImpl().headers(multiPartPart.headers()).body(bytes));
-                } catch (IOException e) {
+                } catch (ScxIOException e) {
                     throw new RuntimeException(e);
                 }
             }

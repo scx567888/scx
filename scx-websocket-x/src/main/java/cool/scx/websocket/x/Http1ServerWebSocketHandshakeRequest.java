@@ -10,6 +10,7 @@ import cool.scx.http.x.http1.Http1ServerConnection;
 import cool.scx.http.x.http1.Http1ServerRequest;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
+import cool.scx.io.ByteInput;
 import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;
 
 import java.io.InputStream;
@@ -24,8 +25,8 @@ public class Http1ServerWebSocketHandshakeRequest implements ScxServerWebSocketH
     private final Http1ServerRequest _request;
     private final Http1ServerWebSocketHandshakeResponse response;
 
-    public Http1ServerWebSocketHandshakeRequest(Http1ServerConnection connection, Http1RequestLine requestLine, Http1Headers headers, InputStream bodyInputStream, WebSocketOptions webSocketOptions) {
-        this._request = new Http1ServerRequest(connection, requestLine, headers, bodyInputStream);
+    public Http1ServerWebSocketHandshakeRequest(Http1ServerConnection connection, Http1RequestLine requestLine, Http1Headers headers, ByteInput bodyByteInput, WebSocketOptions webSocketOptions) {
+        this._request = new Http1ServerRequest(connection, requestLine, headers, bodyByteInput);
         this.response = new Http1ServerWebSocketHandshakeResponse(connection, this, this._request.response(), webSocketOptions);
         this.webSocketOptions = webSocketOptions;
     }

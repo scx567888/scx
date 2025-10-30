@@ -6,6 +6,7 @@ import cool.scx.http.x.http1.Http1UpgradeHandler;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.headers.upgrade.ScxUpgrade;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
+import cool.scx.io.ByteInput;
 
 import java.io.InputStream;
 
@@ -29,8 +30,8 @@ public class WebSocketUpgradeHandler implements Http1UpgradeHandler {
     }
 
     @Override
-    public ScxHttpServerRequest createScxHttpServerRequest(Http1ServerConnection connection, Http1RequestLine requestLine, Http1Headers headers, InputStream bodyInputStream) {
-        return new Http1ServerWebSocketHandshakeRequest(connection, requestLine, headers, bodyInputStream, webSocketOptions);
+    public ScxHttpServerRequest createScxHttpServerRequest(Http1ServerConnection connection, Http1RequestLine requestLine, Http1Headers headers, ByteInput bodyByteInput) {
+        return new Http1ServerWebSocketHandshakeRequest(connection, requestLine, headers, bodyByteInput, webSocketOptions);
     }
 
 }
