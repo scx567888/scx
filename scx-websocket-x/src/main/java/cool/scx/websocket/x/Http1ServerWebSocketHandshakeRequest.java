@@ -13,8 +13,6 @@ import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.io.ByteInput;
 import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;
 
-import java.io.InputStream;
-
 /// 基于 http1 的 websocket 握手请求
 ///
 /// @author scx567888

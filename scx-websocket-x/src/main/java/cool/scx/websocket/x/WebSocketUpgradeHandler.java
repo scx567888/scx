@@ -8,8 +8,6 @@ import cool.scx.http.x.http1.headers.upgrade.ScxUpgrade;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.io.ByteInput;
 
-import java.io.InputStream;
-
 import static cool.scx.http.x.http1.headers.upgrade.Upgrade.WEB_SOCKET;
 
 public class WebSocketUpgradeHandler implements Http1UpgradeHandler {
