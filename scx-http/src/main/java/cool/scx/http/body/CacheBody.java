@@ -8,6 +8,7 @@ import cool.scx.io.exception.AlreadyClosedException;
 
 import java.io.IOException;
 
+//todo 如何处理 close ?
 public class CacheBody implements ScxHttpBody {
 
     private final ScxHttpHeaders headers;
