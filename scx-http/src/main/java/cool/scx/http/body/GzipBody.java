@@ -16,26 +16,27 @@ import static cool.scx.http.headers.content_encoding.ContentEncoding.GZIP;
 public class GzipBody implements ScxHttpBody {
 
     private final ScxHttpHeaders headers;
-    private final ByteInput inputStream;
+    private final ByteInput gzipByteInput;
 
     public GzipBody(ByteInput byteInput, ScxHttpHeaders requestHeaders) {
         this.headers = requestHeaders;
-        this.inputStream = initInputStream(byteInput, this.headers.contentEncoding());
+        this.gzipByteInput = intGZIPByteInput(byteInput, this.headers.contentEncoding());
     }
 
-    public static ByteInput initInputStream(ByteInput inputStream, ScxContentEncoding contentEncoding) {
+    public static ByteInput intGZIPByteInput(ByteInput byteInput, ScxContentEncoding contentEncoding) {
+        // todo 这里 检测包装有问题
         //已经包装过一次 没必要重复包装
-        if (inputStream instanceof GZIPInputStream) {
-            return inputStream;
+        if (byteInput instanceof GZIPInputStream) {
+            return byteInput;
         }
         //没有 contentEncoding 直接返回原始流
         if (contentEncoding == null) {
-            return inputStream;
+            return byteInput;
         }
         //等于 GZIP 我们尝试包装
         if (contentEncoding == GZIP) {
             try {
-                return ByteInputAdapter.inputStreamToByteInput(new GZIPInputStream(ByteInputAdapter.byteInputToInputStream(inputStream)));
+                return ByteInputAdapter.inputStreamToByteInput(new GZIPInputStream(ByteInputAdapter.byteInputToInputStream(byteInput)));
             } catch (IOException e) {
                 //原始流有可能并不是一个 合法的 gzip 流 我们抛出异常
                 throw new UnsupportedMediaTypeException(e);
@@ -47,13 +48,13 @@ public class GzipBody implements ScxHttpBody {
 
     @Override
     public ByteInput byteInput() {
-        return inputStream;
+        return gzipByteInput;
     }
 
     @Override
     public <T> T as(MediaReader<T> t) throws BodyReadException, BodyAlreadyConsumedException {
         try {
-            return t.read(inputStream, headers);
+            return t.read(gzipByteInput, headers);
         } catch (IOException e) {
             throw new BodyReadException(e);
         } catch (AlreadyClosedException e) {
