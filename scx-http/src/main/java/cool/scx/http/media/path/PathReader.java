@@ -32,6 +32,7 @@ public class PathReader implements MediaReader<Path> {
     @Override
     public Path read(ByteInput byteInput, ScxHttpHeaders headers) throws IOException {
         try (byteInput) {
+            // todo 应该有更好方式实现
             readInToFile(ByteInputAdapter.byteInputToInputStream(byteInput), path, options);
         }
         //这里直接返回 path 方便用户链式调用
