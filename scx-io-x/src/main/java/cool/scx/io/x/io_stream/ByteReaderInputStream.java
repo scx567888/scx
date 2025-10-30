@@ -1,8 +1,8 @@
 package cool.scx.io.x.io_stream;
 
 import cool.scx.io.ByteInput;
+import cool.scx.io.ByteInputMark;
 import cool.scx.io.DefaultByteInput;
-import cool.scx.io.adapter.ByteInputInputStream;
 import cool.scx.io.consumer.FillByteArrayByteConsumer;
 import cool.scx.io.consumer.OutputStreamByteConsumer;
 import cool.scx.io.exception.NoMoreDataException;
@@ -19,6 +19,7 @@ import java.io.OutputStream;
 public class ByteReaderInputStream extends CheckedInputStream {
 
     private final ByteInput dataReader;
+    private ByteInputMark mark;
 
     public ByteReaderInputStream(ByteInput dataReader) {
         this.dataReader = dataReader;
@@ -51,7 +52,7 @@ public class ByteReaderInputStream extends CheckedInputStream {
         var consumer = new FillByteArrayByteConsumer(b, off, len);
 
         try {
-            this.dataReader.read(consumer, (long)len);
+            this.dataReader.read(consumer, (long) len);
         } catch (ScxIOException e) {
             Throwable cause = e.getCause();
             if (cause instanceof IOException ioException) {
@@ -91,12 +92,14 @@ public class ByteReaderInputStream extends CheckedInputStream {
 
     @Override
     public void mark(int readlimit) {
-        dataReader.mark();
+        this.mark = dataReader.mark();
     }
 
     @Override
     public void reset() throws IOException {
-        dataReader.reset();
+        if (this.mark != null) {
+            this.mark.reset();
+        }
     }
 
     @Override

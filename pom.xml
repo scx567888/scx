@@ -229,7 +229,7 @@
         <scx-function.version>1.0.0</scx-function.version>
         <scx-data.version>4.1.0</scx-data.version>
         <scx-collections.version>4.1.0</scx-collections.version>
-        <scx-io.version>4.0.0</scx-io.version>
+        <scx-io.version>4.0.2</scx-io.version>
         <scx-logging.version>4.1.0</scx-logging.version>
         <scx-timer.version>2.0.0</scx-timer.version>
         <scx-tcp.version>4.1.0</scx-tcp.version>
@@ -239,7 +239,7 @@
         <scx-object.version>2.0.0</scx-object.version>
         <hikaricp.version>7.0.2</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
-        <thumbnailator.version>0.4.20</thumbnailator.version>
+        <thumbnailator.version>0.4.21</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
         <cron-utils.version>9.2.1</cron-utils.version>
         <mysql-connector-j.version>9.2.0</mysql-connector-j.version>
