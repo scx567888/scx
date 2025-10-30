@@ -3,6 +3,7 @@ package cool.scx.http.body;
 import cool.scx.io.ByteInput;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
+import cool.scx.io.ByteInputMark;
 import cool.scx.io.x.io_stream.ByteReaderInputStream;
 import cool.scx.io.x.io_stream.StreamClosedException;
 
@@ -15,16 +16,17 @@ public class CacheBody implements ScxHttpBody {
 
     private final ScxHttpHeaders headers;
     private final ByteInput dataReader;
+    private final ByteInputMark mark;
 
     public CacheBody(InputStream inputStream, ScxHttpHeaders requestHeaders) {
         this.headers = requestHeaders;
         this.dataReader = inputStreamToByteReader(inputStream);
-        this.dataReader.mark();
+        this.mark = this.dataReader.mark();
     }
 
     @Override
     public InputStream inputStream() {
-        this.dataReader.reset();
+        mark.reset();
         return new ByteReaderInputStream(this.dataReader);
     }
 
