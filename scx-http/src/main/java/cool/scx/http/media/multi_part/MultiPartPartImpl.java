@@ -4,7 +4,6 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.io.ByteInput;
 
-import java.io.InputStream;
 import java.util.function.Supplier;
 
 /// MultiPartPartImpl

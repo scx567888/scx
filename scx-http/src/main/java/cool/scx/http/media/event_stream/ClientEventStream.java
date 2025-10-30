@@ -8,14 +8,14 @@ import java.nio.charset.Charset;
 import static cool.scx.http.media.event_stream.EventStreamHelper.LF_BYTES;
 
 // todo 整体待重构
-// todo 这里和 MultiPartStream 一样 没有正确处理 inputStream 的关闭
+// todo 这里和 MultiPartStream 一样 没有正确处理 byteInput 的关闭
 public class ClientEventStream {
 
-    private final ByteInput dataReader;
+    private final ByteInput byteInput;
     private final Charset charset;
 
     public ClientEventStream(ByteInput byteInput, Charset charset) {
-        this.dataReader = byteInput;
+        this.byteInput = byteInput;
         this.charset = charset;
     }
 
@@ -27,7 +27,7 @@ public class ClientEventStream {
         // 解析事件
         while (true) {
 
-            var bytes = dataReader.readUntil(LF_BYTES);
+            var bytes = byteInput.readUntil(LF_BYTES);
 
             var line = new String(bytes, charset);
 
