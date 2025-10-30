@@ -10,7 +10,6 @@ import cool.scx.io.exception.ScxIOException;
 import cool.scx.io.indexer.KMPByteIndexer;
 import cool.scx.io.supplier.BoundaryByteSupplier;
 
-import java.io.InputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -54,10 +53,10 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         return ScxHttpHeaders.ofStrict(headersStr);// 使用严格模式解析
     }
 
-    public InputStream readContent() {
+    public ByteInput readContent() {
         // 内容 的终结符是 \r\n--boundary
         // 所以我们创建一个以 \r\n--boundary 结尾的分割符 输入流
-        return ByteInputAdapter.byteInputToInputStream(new DefaultByteInput(new BoundaryByteSupplier(linkedByteReader, new KMPByteIndexer(boundaryStartBytes),true)));
+        return new DefaultByteInput(new BoundaryByteSupplier(linkedByteReader, new KMPByteIndexer(boundaryStartBytes),true));
     }
 
     @Override

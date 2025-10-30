@@ -67,6 +67,10 @@ public interface MultiPartPartWritable extends MultiPartPart {
         return this;
     }
 
+    default MultiPartPartWritable body(ByteInput os) {
+        return body(() -> os);
+    }
+
     default MultiPartPartWritable body(InputStream os) {
         return body(() -> new DefaultByteInput(new InputStreamByteSupplier(os)));
     }
