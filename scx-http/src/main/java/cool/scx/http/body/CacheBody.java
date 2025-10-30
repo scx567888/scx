@@ -4,28 +4,26 @@ import cool.scx.io.ByteInput;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.io.ByteInputMark;
-import cool.scx.io.adapter.ByteInputAdapter;
 import cool.scx.io.exception.AlreadyClosedException;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 public class CacheBody implements ScxHttpBody {
 
     private final ScxHttpHeaders headers;
-    private final ByteInput dataReader;
+    private final ByteInput byteInput;
     private final ByteInputMark mark;
 
-    public CacheBody(ByteInput inputStream, ScxHttpHeaders requestHeaders) {
+    public CacheBody(ByteInput byteInput, ScxHttpHeaders requestHeaders) {
         this.headers = requestHeaders;
-        this.dataReader = inputStream;
-        this.mark = this.dataReader.mark();
+        this.byteInput = byteInput;
+        this.mark = this.byteInput.mark();
     }
 
     @Override
     public ByteInput byteInput() {
         mark.reset();
-        return this.dataReader;
+        return this.byteInput;
     }
 
     @Override
