@@ -31,9 +31,8 @@
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-io-x</artifactId>
-            <version>${project.version}</version>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-io</artifactId>
         </dependency>
 
         <dependency>

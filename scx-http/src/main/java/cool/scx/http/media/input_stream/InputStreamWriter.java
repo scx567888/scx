@@ -3,7 +3,6 @@ package cool.scx.http.media.input_stream;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
-import cool.scx.io.x.io_stream.NullCheckedInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,11 +22,12 @@ public class InputStreamWriter implements MediaWriter {
 
     @Override
     public long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
-        if (inputStream instanceof NullCheckedInputStream) {
-            return 0;
-        } else {
+        // todo 如何判断一个流是 null
+//        if (inputStream instanceof NullCheckedInputStream) {
+//            return 0;
+//        } else {
             return -1;
-        }
+//        }
     }
 
     @Override

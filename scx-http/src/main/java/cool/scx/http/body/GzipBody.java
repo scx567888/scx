@@ -4,7 +4,7 @@ import cool.scx.http.exception.UnsupportedMediaTypeException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.content_encoding.ScxContentEncoding;
 import cool.scx.http.media.MediaReader;
-import cool.scx.io.x.io_stream.StreamClosedException;
+import cool.scx.io.exception.AlreadyClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +55,7 @@ public class GzipBody implements ScxHttpBody {
             return t.read(inputStream, headers);
         } catch (IOException e) {
             throw new BodyReadException(e);
-        } catch (StreamClosedException e) {
+        } catch (AlreadyClosedException e) {
             throw new BodyAlreadyConsumedException();
         }
     }

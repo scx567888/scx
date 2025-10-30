@@ -4,13 +4,11 @@ import cool.scx.io.ByteInput;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.io.ByteInputMark;
-import cool.scx.io.x.io_stream.ByteReaderInputStream;
-import cool.scx.io.x.io_stream.StreamClosedException;
+import cool.scx.io.adapter.ByteInputAdapter;
+import cool.scx.io.exception.AlreadyClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import static cool.scx.io.x.IOHelper.inputStreamToByteReader;
 
 public class CacheBody implements ScxHttpBody {
 
@@ -20,14 +18,14 @@ public class CacheBody implements ScxHttpBody {
 
     public CacheBody(InputStream inputStream, ScxHttpHeaders requestHeaders) {
         this.headers = requestHeaders;
-        this.dataReader = inputStreamToByteReader(inputStream);
+        this.dataReader = ByteInputAdapter.inputStreamToByteInput(inputStream);
         this.mark = this.dataReader.mark();
     }
 
     @Override
     public InputStream inputStream() {
         mark.reset();
-        return new ByteReaderInputStream(this.dataReader);
+        return ByteInputAdapter.byteInputToInputStream(this.dataReader);
     }
 
     @Override
@@ -36,7 +34,7 @@ public class CacheBody implements ScxHttpBody {
             return t.read(inputStream(), headers);
         } catch (IOException e) {
             throw new BodyReadException(e);
-        } catch (StreamClosedException e) {
+        } catch (AlreadyClosedException e) {
             throw new BodyAlreadyConsumedException();
         }
     }

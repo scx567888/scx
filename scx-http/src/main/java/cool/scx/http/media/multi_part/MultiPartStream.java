@@ -4,18 +4,16 @@ import cool.scx.io.ByteInput;
 import cool.scx.io.DefaultByteInput;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.io.adapter.ByteInputAdapter;
+import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.indexer.KMPByteIndexer;
 import cool.scx.io.supplier.BoundaryByteSupplier;
-import cool.scx.io.x.io_stream.ByteReaderInputStream;
-import cool.scx.io.x.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import static cool.scx.io.x.IOHelper.inputStreamToByteReader;
 
 /// MultiPartStream
 ///
@@ -34,14 +32,14 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         this.boundary = boundary;
         this.boundaryBytes = ("--" + boundary).getBytes();
         this.boundaryStartBytes = ("\r\n--" + boundary).getBytes();
-        this.linkedByteReader = inputStreamToByteReader(inputStream);
+        this.linkedByteReader = ByteInputAdapter.inputStreamToByteInput(inputStream);
         this.lastPart = null;
     }
 
     public static void consumeInputStream(InputStream inputStream) {
         try (inputStream) {
             inputStream.transferTo(OutputStream.nullOutputStream());
-        } catch (StreamClosedException | IOException e) {
+        } catch (AlreadyClosedException | IOException e) {
             // 忽略
         }
     }
@@ -59,7 +57,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
     public InputStream readContent() {
         // 内容 的终结符是 \r\n--boundary
         // 所以我们创建一个以 \r\n--boundary 结尾的分割符 输入流
-        return new ByteReaderInputStream(new DefaultByteInput(new BoundaryByteSupplier(linkedByteReader, new KMPByteIndexer(boundaryStartBytes),true)));
+        return ByteInputAdapter.byteInputToInputStream(new DefaultByteInput(new BoundaryByteSupplier(linkedByteReader, new KMPByteIndexer(boundaryStartBytes),true)));
     }
 
     @Override
