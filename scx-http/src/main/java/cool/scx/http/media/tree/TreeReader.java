@@ -9,7 +9,6 @@ import cool.scx.object.node.Node;
 import cool.scx.object.parser.NodeParseException;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import static cool.scx.http.media.string.StringReader.STRING_READER;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;

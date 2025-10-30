@@ -1,10 +1,8 @@
 package cool.scx.http.media.event_stream;
 
 import cool.scx.io.ByteInput;
-import cool.scx.io.adapter.ByteInputAdapter;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import static cool.scx.http.media.event_stream.EventStreamHelper.LF_BYTES;
