@@ -8,8 +8,7 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.version.HttpVersion;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-
-import java.io.InputStream;
+import cool.scx.io.ByteInput;
 
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
@@ -31,13 +30,13 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
     private final PeerInfo localPeer;
     private final Http1ServerResponse response;
 
-    public Http1ServerRequest(Http1ServerConnection connection, Http1RequestLine requestLine, Http1Headers headers, InputStream bodyInputStream) {
+    public Http1ServerRequest(Http1ServerConnection connection, Http1RequestLine requestLine, Http1Headers headers, ByteInput bodyByteInput) {
         this.connection = connection;
         this.method = requestLine.method();
         this.uri = inferURI(requestLine.requestTarget(), headers, connection.tcpSocket);
         this.version = requestLine.version();
         this.headers = headers;
-        this.body = new Http1Body(bodyInputStream, this.headers);
+        this.body = new Http1Body(bodyByteInput, this.headers);
         this.remotePeer = getRemotePeer(connection.tcpSocket);
         this.localPeer = getLocalPeer(connection.tcpSocket);
         this.response = new Http1ServerResponse(connection, this);

@@ -2,6 +2,7 @@ package cool.scx.http.sender;
 
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
+import cool.scx.http.media.byte_input.ByteInputWriter;
 import cool.scx.http.media.event_stream.ServerEventStream;
 import cool.scx.http.media.event_stream.ServerEventStreamWriter;
 import cool.scx.http.media.form_params.FormParams;
@@ -13,6 +14,7 @@ import cool.scx.http.media.object.ObjectWriter;
 import cool.scx.http.media.path.PathWriter;
 import cool.scx.http.media.string.StringWriter;
 import cool.scx.http.media.tree.TreeWriter;
+import cool.scx.io.ByteInput;
 import cool.scx.object.node.Node;
 
 import java.io.InputStream;
@@ -29,6 +31,10 @@ public interface ScxHttpSender<T> {
 
     default T send() throws HttpSendException, BodyAlreadySentException {
         return send(EMPTY_WRITER);
+    }
+
+    default T send(ByteInput byteInput) throws BodyAlreadySentException, HttpSendException {
+        return send(new ByteInputWriter(byteInput));
     }
 
     default T send(InputStream inputStream) throws BodyAlreadySentException, HttpSendException {

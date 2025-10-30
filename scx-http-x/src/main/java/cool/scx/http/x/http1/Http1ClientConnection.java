@@ -107,7 +107,7 @@ public class Http1ClientConnection {
         var headers = readHeaders(dataReader, options.maxHeaderSize());
 
         //3, 读取响应体 todo 超出最大长度怎么办
-        var bodyInputStream = readBodyInputStream(headers, dataReader, options.maxPayloadSize());
+        var bodyInputStream = readBodyByteInput(headers, dataReader, options.maxPayloadSize());
 
         return new Http1ClientResponse(statusLine, headers, bodyInputStream);
     }

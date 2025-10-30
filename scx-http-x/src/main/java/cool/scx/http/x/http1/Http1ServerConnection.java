@@ -2,6 +2,7 @@ package cool.scx.http.x.http1;
 
 import cool.scx.io.ByteInput;
 import cool.scx.io.DefaultByteInput;
+import cool.scx.io.NullByteInput;
 import cool.scx.io.supplier.InputStreamByteSupplier;
 import cool.scx.function.Function1Void;
 import cool.scx.http.ScxHttpServerRequest;
@@ -88,7 +89,7 @@ public class Http1ServerConnection {
                 // 6, 如果 还是 running 说明需要继续复用当前 tcp 连接,并进行下一次 Request 的读取
                 if (running) {
                     // 7, 用户处理器可能没有消费完请求体 这里我们帮助消费用户未消费的数据
-                    consumeInputStream(request.body().inputStream());
+                    consumeByteInput(request.body().byteInput());
                 }
             }
 
@@ -103,7 +104,7 @@ public class Http1ServerConnection {
         var headers = readHeaders(dataReader, options.maxHeaderSize());
 
         // 3, 读取 请求体流
-        var bodyInputStream = readBodyInputStream(headers, dataReader, options.maxPayloadSize());
+        var bodyInputStream = readBodyByteInput(headers, dataReader, options.maxPayloadSize());
 
         // 4, 在交给用户处理器进行处理之前, 我们需要做一些预处理
 
@@ -123,7 +124,7 @@ public class Http1ServerConnection {
                 }
             } else {
                 //否则交给用户去处理
-                bodyInputStream = new AutoContinueInputStream(bodyInputStream, dataWriter);
+                bodyInputStream = new AutoContinueByteInput(bodyInputStream, dataWriter);
             }
         }
 
@@ -166,7 +167,7 @@ public class Http1ServerConnection {
                 this,
                 new Http1RequestLine(ScxHttpMethod.of("unknown"), ScxURI.of()),
                 new Http1Headers().connection(CLOSE),
-                new NullCheckedInputStream()
+                new NullByteInput()
         );
         handlerException(e, fakeRequest, SYSTEM);
 
