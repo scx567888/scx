@@ -4,7 +4,6 @@ import cool.scx.io.ByteInput;
 import cool.scx.io.DefaultByteInput;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.io.adapter.ByteInputAdapter;
 import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
 import cool.scx.io.indexer.KMPByteIndexer;
@@ -34,9 +33,8 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         this.lastPart = null;
     }
 
-    public static void consumeInputStream(ByteInput byteInput) {
+    public static void consumeByteInput(ByteInput byteInput) {
         try (byteInput) {
-            // todo skipAll 性能有问题
             byteInput.skipAll();
         } catch (AlreadyClosedException | ScxIOException e) {
             // 忽略
@@ -74,7 +72,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         // 用户可能并没有消耗掉上一个分块就调用了 hasNext 这里我们替他消费
         if (lastPart != null) {
             //消费掉上一个分块的内容
-            consumeInputStream(lastPart.byteInput());
+            consumeByteInput(lastPart.byteInput());
             // inputStream 中并不会消耗 最后的 \r\n, 但是接下来的判断我们也不需要 所以这里 跳过最后的 \r\n
             linkedByteReader.skipFully(2);
             //置空 防止重复消费
