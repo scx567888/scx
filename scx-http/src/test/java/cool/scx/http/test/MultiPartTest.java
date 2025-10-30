@@ -7,9 +7,10 @@ import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.media.multi_part.MultiPartWriter;
 import cool.scx.http.media_type.MediaType;
 import cool.scx.http.media_type.ScxMediaType;
+import cool.scx.io.DefaultByteInput;
+import cool.scx.io.supplier.ByteArrayByteSupplier;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -49,7 +50,7 @@ public class MultiPartTest {
         long l = System.nanoTime();
         for (int j = 0; j < 9999; j = j + 1) {
 
-            var s = new ByteArrayInputStream(byteArray);
+            var s = new DefaultByteInput(new ByteArrayByteSupplier(byteArray));
             MultiPart read = MULTI_PART_READER.read(s, ScxHttpHeaders.of().contentType(ScxMediaType.of(MediaType.MULTIPART_FORM_DATA).boundary("wwwwwwwwww")));
 
             for (MultiPartPart multiPartPart : read) {
@@ -62,7 +63,7 @@ public class MultiPartTest {
         long l1 = System.nanoTime();
         for (int j = 0; j < 9999; j = j + 1) {
 
-            var s = new ByteArrayInputStream(byteArray);
+            var s = new DefaultByteInput(new ByteArrayByteSupplier(byteArray));
             MultiPart read = MULTI_PART_READER.read(s, ScxHttpHeaders.of().contentType(ScxMediaType.of(MediaType.MULTIPART_FORM_DATA).boundary("wwwwwwwwww")));
 
             for (MultiPartPart multiPartPart : read) {

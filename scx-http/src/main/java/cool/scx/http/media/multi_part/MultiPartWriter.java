@@ -4,6 +4,7 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media_type.ScxMediaType;
+import cool.scx.io.consumer.OutputStreamByteConsumer;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -51,8 +52,8 @@ public class MultiPartWriter implements MediaWriter {
                 //写入换行符
                 outputStream.write(l);
                 //写入内容
-                try (var i = multiPartPart.inputStream()) {
-                    i.transferTo(outputStream);
+                try (var i = multiPartPart.byteInput()) {
+                    i.readAll(new OutputStreamByteConsumer(outputStream));
                 }
                 //写入换行符
                 outputStream.write(l);

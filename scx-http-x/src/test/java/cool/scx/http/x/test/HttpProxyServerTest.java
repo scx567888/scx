@@ -88,13 +88,13 @@ public class HttpProxyServerTest {
                         .method(request.method())
                         .uri(request.uri())
                         .headers(request.headers())
-                        .send(request.body().inputStream());
+                        .send(request.body().byteInput());
 
                 request.response()
                         .reasonPhrase(response.reasonPhrase())
                         .status(response.status())
                         .headers(response.headers())
-                        .send(response.body().inputStream());
+                        .send(response.body().byteInput());
 
             }
         });

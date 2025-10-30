@@ -3,8 +3,7 @@ package cool.scx.http.media.multi_part;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
-
-import java.io.InputStream;
+import cool.scx.io.ByteInput;
 
 import static cool.scx.http.media_type.MediaType.MULTIPART_FORM_DATA;
 
@@ -33,16 +32,16 @@ public class MultiPartStreamReader implements MediaReader<MultiPart> {
         }
         var boundary = contentType.boundary();
         if (boundary == null) {
-            // 当 Content-Type 已经是 MULTIPART_FORM_DATA 了 ,  boundary 是必须的 所以这里抛出客户端错误 
+            // 当 Content-Type 已经是 MULTIPART_FORM_DATA 了 ,  boundary 是必须的 所以这里抛出客户端错误
             throw new BadRequestException("No boundary found");
         }
         return boundary;
     }
 
     @Override
-    public MultiPart read(InputStream inputStream, ScxHttpHeaders headers) {
+    public MultiPart read(ByteInput byteInput, ScxHttpHeaders headers) {
         var boundary = checkedBoundary(headers);
-        return new MultiPartStream(inputStream, boundary);
+        return new MultiPartStream(byteInput, boundary);
     }
 
 }

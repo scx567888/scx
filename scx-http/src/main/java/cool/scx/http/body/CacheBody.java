@@ -4,39 +4,37 @@ import cool.scx.io.ByteInput;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.io.ByteInputMark;
-import cool.scx.io.x.io_stream.ByteReaderInputStream;
-import cool.scx.io.x.io_stream.StreamClosedException;
+import cool.scx.io.exception.AlreadyClosedException;
 
 import java.io.IOException;
-import java.io.InputStream;
 
-import static cool.scx.io.x.IOHelper.inputStreamToByteReader;
-
+//todo 如何处理 close ?
+// 问题可以看 XTest.java
 public class CacheBody implements ScxHttpBody {
 
     private final ScxHttpHeaders headers;
-    private final ByteInput dataReader;
+    private final ByteInput byteInput;
     private final ByteInputMark mark;
 
-    public CacheBody(InputStream inputStream, ScxHttpHeaders requestHeaders) {
+    public CacheBody(ByteInput byteInput, ScxHttpHeaders requestHeaders) {
         this.headers = requestHeaders;
-        this.dataReader = inputStreamToByteReader(inputStream);
-        this.mark = this.dataReader.mark();
+        this.byteInput = byteInput;
+        this.mark = this.byteInput.mark();
     }
 
     @Override
-    public InputStream inputStream() {
+    public ByteInput byteInput() {
         mark.reset();
-        return new ByteReaderInputStream(this.dataReader);
+        return this.byteInput;
     }
 
     @Override
     public <T> T as(MediaReader<T> t) throws BodyAlreadyConsumedException, BodyReadException {
         try {
-            return t.read(inputStream(), headers);
+            return t.read(byteInput(), headers);
         } catch (IOException e) {
             throw new BodyReadException(e);
-        } catch (StreamClosedException e) {
+        } catch (AlreadyClosedException e) {
             throw new BodyAlreadyConsumedException();
         }
     }

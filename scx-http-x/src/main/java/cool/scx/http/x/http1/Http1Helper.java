@@ -11,11 +11,12 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.headers.upgrade.ScxUpgrade;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.io.x.io_stream.StreamClosedException;
+import cool.scx.io.ByteInput;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
@@ -41,10 +42,10 @@ public final class Http1Helper {
         out.write(CONTINUE_100);
     }
 
-    public static void consumeInputStream(InputStream inputStream) {
-        try (inputStream) {
-            inputStream.transferTo(OutputStream.nullOutputStream());
-        } catch (StreamClosedException | IOException e) {
+    public static void consumeByteInput(ByteInput byteInput) {
+        try (byteInput) {
+            byteInput.skipAll();
+        } catch (AlreadyClosedException | ScxIOException e) {
             // 忽略
         }
     }

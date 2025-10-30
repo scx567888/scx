@@ -2,8 +2,8 @@ package cool.scx.http.media.multi_part;
 
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.io.ByteInput;
 
-import java.io.InputStream;
 import java.util.function.Supplier;
 
 /// MultiPartPartImpl
@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 public class MultiPartPartImpl implements MultiPartPartWritable {
 
     private ScxHttpHeadersWritable headers;
-    private Supplier<InputStream> body;
+    private Supplier<ByteInput> body;
 
     public MultiPartPartImpl() {
         this.headers = ScxHttpHeaders.of();
@@ -26,7 +26,7 @@ public class MultiPartPartImpl implements MultiPartPartWritable {
     }
 
     @Override
-    public MultiPartPartWritable body(Supplier<InputStream> os) {
+    public MultiPartPartWritable body(Supplier<ByteInput> os) {
         body = os;
         return this;
     }
@@ -37,7 +37,7 @@ public class MultiPartPartImpl implements MultiPartPartWritable {
     }
 
     @Override
-    public Supplier<InputStream> body() {
+    public Supplier<ByteInput> body() {
         return body;
     }
 

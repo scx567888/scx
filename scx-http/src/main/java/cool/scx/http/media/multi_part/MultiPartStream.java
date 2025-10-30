@@ -4,18 +4,13 @@ import cool.scx.io.ByteInput;
 import cool.scx.io.DefaultByteInput;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 import cool.scx.io.indexer.KMPByteIndexer;
 import cool.scx.io.supplier.BoundaryByteSupplier;
-import cool.scx.io.x.io_stream.ByteReaderInputStream;
-import cool.scx.io.x.io_stream.StreamClosedException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import static cool.scx.io.x.IOHelper.inputStreamToByteReader;
 
 /// MultiPartStream
 ///
@@ -30,18 +25,18 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
     private final ByteInput linkedByteReader;
     private MultiPartPart lastPart;
 
-    public MultiPartStream(InputStream inputStream, String boundary) {
+    public MultiPartStream(ByteInput byteInput, String boundary) {
         this.boundary = boundary;
         this.boundaryBytes = ("--" + boundary).getBytes();
         this.boundaryStartBytes = ("\r\n--" + boundary).getBytes();
-        this.linkedByteReader = inputStreamToByteReader(inputStream);
+        this.linkedByteReader = byteInput;
         this.lastPart = null;
     }
 
-    public static void consumeInputStream(InputStream inputStream) {
-        try (inputStream) {
-            inputStream.transferTo(OutputStream.nullOutputStream());
-        } catch (StreamClosedException | IOException e) {
+    public static void consumeByteInput(ByteInput byteInput) {
+        try (byteInput) {
+            byteInput.skipAll();
+        } catch (AlreadyClosedException | ScxIOException e) {
             // 忽略
         }
     }
@@ -56,10 +51,10 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         return ScxHttpHeaders.ofStrict(headersStr);// 使用严格模式解析
     }
 
-    public InputStream readContent() {
+    public ByteInput readContent() {
         // 内容 的终结符是 \r\n--boundary
         // 所以我们创建一个以 \r\n--boundary 结尾的分割符 输入流
-        return new ByteReaderInputStream(new DefaultByteInput(new BoundaryByteSupplier(linkedByteReader, new KMPByteIndexer(boundaryStartBytes),true)));
+        return new DefaultByteInput(new BoundaryByteSupplier(linkedByteReader, new KMPByteIndexer(boundaryStartBytes),true));
     }
 
     @Override
@@ -77,7 +72,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
         // 用户可能并没有消耗掉上一个分块就调用了 hasNext 这里我们替他消费
         if (lastPart != null) {
             //消费掉上一个分块的内容
-            consumeInputStream(lastPart.inputStream());
+            consumeByteInput(lastPart.byteInput());
             // inputStream 中并不会消耗 最后的 \r\n, 但是接下来的判断我们也不需要 所以这里 跳过最后的 \r\n
             linkedByteReader.skipFully(2);
             //置空 防止重复消费

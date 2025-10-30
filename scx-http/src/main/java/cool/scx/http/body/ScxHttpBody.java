@@ -7,10 +7,10 @@ import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.media.object.ObjectReader;
 import cool.scx.http.media.path.PathReader;
 import cool.scx.http.media.string.StringReader;
+import cool.scx.io.ByteInput;
 import cool.scx.object.node.Node;
 import cool.scx.reflect.TypeReference;
 
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
@@ -28,7 +28,7 @@ import static cool.scx.http.media.tree.TreeReader.TREE_READER;
 /// @version 0.0.1
 public interface ScxHttpBody {
 
-    InputStream inputStream();
+    ByteInput byteInput();
 
     <T> T as(MediaReader<T> t) throws BodyAlreadyConsumedException, BodyReadException;
 
