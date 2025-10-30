@@ -1,6 +1,8 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.io.ByteInput;
+import cool.scx.io.DefaultByteInput;
+import cool.scx.io.NullByteInput;
 import cool.scx.io.exception.ScxIOException;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
@@ -18,10 +20,7 @@ import cool.scx.http.x.http1.request_line.InvalidHttpVersion;
 import cool.scx.http.x.http1.status_line.Http1StatusLine;
 import cool.scx.http.x.http1.status_line.InvalidHttpStatusException;
 import cool.scx.http.x.http1.status_line.InvalidHttpStatusLineException;
-import cool.scx.io.x.io_stream.ByteReaderInputStream;
-import cool.scx.io.x.io_stream.NullCheckedInputStream;
 
-import java.io.InputStream;
 import java.util.Arrays;
 
 import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
@@ -33,13 +32,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /// 读取 HTTP/1.1 请求或响应内容工具类
 final class Http1Reader {
 
-    public static InputStream readBodyInputStream(Http1Headers headers, ByteInput dataReader, long maxPayloadSize) {
+    public static ByteInput readBodyByteInput(Http1Headers headers, ByteInput dataReader, long maxPayloadSize) {
         // HTTP/1.1 本质上只有两种请求体格式 1, 分块传输 2, 指定长度 (当然也可以没有长度 那就表示没有请求体)
 
         //1, 因为 分块传输的优先级高于 contentLength 所以先判断是否为分块传输
         var transferEncoding = headers.transferEncoding();
         if (transferEncoding == CHUNKED) {
-            return new ByteReaderInputStream(new HttpChunkedByteSupplier(dataReader, maxPayloadSize));
+            return new DefaultByteInput(new HttpChunkedByteSupplier(dataReader, maxPayloadSize));
         }
 
         //2, 判断请求体是不是有 指定长度
@@ -49,11 +48,11 @@ final class Http1Reader {
             if (contentLength > maxPayloadSize) {
                 throw new ContentTooLargeException();
             }
-            return new ByteReaderInputStream(new FixedLengthByteSupplier(dataReader, contentLength));
+            return new DefaultByteInput(new FixedLengthByteSupplier(dataReader, contentLength));
         }
 
         //3, 没有长度的空请求体
-        return new NullCheckedInputStream();
+        return new NullByteInput();
     }
 
     public static Http1Headers readHeaders(ByteInput dataReader, int maxHeaderSize) {
