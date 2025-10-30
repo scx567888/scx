@@ -10,11 +10,9 @@ import cool.scx.http.media.MediaReader;
 import cool.scx.http.media_type.FileFormat;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.io.ByteInput;
-import cool.scx.io.adapter.ByteInputAdapter;
 import cool.scx.io.exception.AlreadyClosedException;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
@@ -49,11 +47,11 @@ public interface MultiPartPart extends ScxHttpBody {
 
     ScxHttpHeaders headers();
 
-    Supplier<InputStream> body();
+    Supplier<ByteInput> body();
 
     @Override
     default ByteInput byteInput() {
-        return ByteInputAdapter.inputStreamToByteInput(body().get());
+        return body().get();
     }
 
     @Override
