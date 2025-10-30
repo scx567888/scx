@@ -11,7 +11,6 @@ import cool.scx.io.ByteInput;
 import cool.scx.object.node.Node;
 import cool.scx.reflect.TypeReference;
 
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
