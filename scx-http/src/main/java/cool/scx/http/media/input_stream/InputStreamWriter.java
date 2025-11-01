@@ -10,7 +10,6 @@ import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /// InputStreamWriter
 ///

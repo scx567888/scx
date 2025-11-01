@@ -6,8 +6,6 @@ import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.io.ByteOutput;
 
-import java.io.OutputStream;
-
 import static cool.scx.http.media_type.MediaType.TEXT_EVENT_STREAM;
 import static java.nio.charset.StandardCharsets.UTF_8;
 

@@ -10,9 +10,6 @@ import cool.scx.io.exception.ScxIOException;
 import cool.scx.object.mapping.NodeMappingException;
 import cool.scx.object.serializer.NodeSerializeException;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import static cool.scx.http.media.tree.TreeHelper.trySetContentType;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.APPLICATION_XML;

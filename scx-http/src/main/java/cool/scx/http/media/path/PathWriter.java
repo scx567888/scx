@@ -1,6 +1,6 @@
 package cool.scx.http.media.path;
 
-import cool.scx.http.IOHelper;
+import cool.scx.http.__.IOHelper;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
@@ -10,10 +10,9 @@ import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Path;
 
-import static cool.scx.http.IOHelper.writeFileToOut;
+import static cool.scx.http.__.IOHelper.writeFileToOut;
 import static cool.scx.http.media_type.MediaType.APPLICATION_OCTET_STREAM;
 
 /// PathWriter

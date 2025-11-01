@@ -6,9 +6,6 @@ import cool.scx.io.ByteOutput;
 import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 /// 写入器 可用于 ServerResponse 和 ClientRequest
 ///
 /// @author scx567888
@@ -26,7 +23,7 @@ public interface MediaWriter {
 
     /// 写入内容
     ///
-    /// @param byteOutput 输入流
+    /// @param byteOutput 输出流
     void write(ByteOutput byteOutput) throws ScxIOException, AlreadyClosedException;
 
 }

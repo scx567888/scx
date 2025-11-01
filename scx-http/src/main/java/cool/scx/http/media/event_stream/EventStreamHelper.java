@@ -3,7 +3,6 @@ package cool.scx.http.media.event_stream;
 import cool.scx.io.ByteOutput;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

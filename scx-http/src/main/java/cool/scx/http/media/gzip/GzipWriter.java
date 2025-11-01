@@ -3,7 +3,6 @@ package cool.scx.http.media.gzip;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
-import cool.scx.io.ByteInput;
 import cool.scx.io.ByteOutput;
 import cool.scx.io.OutputStreamByteOutput;
 import cool.scx.io.adapter.ByteOutputAdapter;
@@ -11,7 +10,6 @@ import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
 
 import static cool.scx.http.headers.content_encoding.ContentEncoding.GZIP;

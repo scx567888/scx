@@ -1,7 +1,7 @@
 package cool.scx.http.media.multi_part;
 
+import cool.scx.http.__.NoCloseByteInput;
 import cool.scx.io.ByteInput;
-import cool.scx.io.DefaultByteInput;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.io.exception.AlreadyClosedException;
@@ -54,7 +54,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart>, Auto
     public ByteInput readContent() {
         // 内容 的终结符是 \r\n--boundary
         // 所以我们创建一个以 \r\n--boundary 结尾的分割符 输入流
-        return new DefaultByteInput(new BoundaryByteSupplier(linkedByteReader, new KMPByteIndexer(boundaryStartBytes),true));
+        return new NoCloseByteInput(new BoundaryByteSupplier(linkedByteReader, new KMPByteIndexer(boundaryStartBytes),true));
     }
 
     @Override

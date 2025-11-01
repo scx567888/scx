@@ -4,7 +4,6 @@ import cool.scx.http.sender.HttpSendException;
 import cool.scx.io.ByteOutput;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import static cool.scx.http.media.event_stream.EventStreamHelper.writeToOutputStream;
 

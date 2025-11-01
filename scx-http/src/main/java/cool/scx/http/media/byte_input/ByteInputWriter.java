@@ -7,12 +7,8 @@ import cool.scx.io.ByteInput;
 import cool.scx.io.ByteOutput;
 import cool.scx.io.NullByteInput;
 import cool.scx.io.consumer.ByteOutputByteConsumer;
-import cool.scx.io.consumer.OutputStreamByteConsumer;
 import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
-
-import java.io.IOException;
-import java.io.OutputStream;
 
 public class ByteInputWriter implements MediaWriter {
 

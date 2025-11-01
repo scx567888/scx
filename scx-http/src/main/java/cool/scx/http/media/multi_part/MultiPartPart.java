@@ -1,6 +1,6 @@
 package cool.scx.http.media.multi_part;
 
-import cool.scx.http.IOHelper;
+import cool.scx.http.__.IOHelper;
 import cool.scx.http.body.BodyAlreadyConsumedException;
 import cool.scx.http.body.BodyReadException;
 import cool.scx.http.body.ScxHttpBody;
@@ -13,7 +13,6 @@ import cool.scx.io.ByteInput;
 import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 

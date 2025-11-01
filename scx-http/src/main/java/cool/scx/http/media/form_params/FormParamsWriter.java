@@ -7,9 +7,6 @@ import cool.scx.io.ByteOutput;
 import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import static cool.scx.http.media_type.MediaType.APPLICATION_X_WWW_FORM_URLENCODED;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
