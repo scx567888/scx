@@ -1,6 +1,7 @@
 package cool.scx.websocket.x;
 
 import cool.scx.io.ByteInput;
+import cool.scx.io.ByteOutput;
 import cool.scx.websocket.WebSocketOpCode;
 import cool.scx.websocket.exception.WebSocketException;
 
@@ -77,7 +78,7 @@ public class WebSocketProtocolFrameHelper {
         return frame.payloadData(payloadData);
     }
 
-    public static void writeFrame(WebSocketProtocolFrame frame, OutputStream out) throws IOException {
+    public static void writeFrame(WebSocketProtocolFrame frame, ByteOutput out) throws IOException {
         // 头部
         int fullOpCode = (frame.fin() ? 0b1000_0000 : 0) |
                 (frame.rsv1() ? 0b0100_0000 : 0) |
@@ -86,21 +87,21 @@ public class WebSocketProtocolFrameHelper {
                 frame.opCode().code();
 
         //写入头部
-        out.write(fullOpCode);
+        out.write((byte) fullOpCode);
 
         var length = frame.payloadLength();
         var masked = frame.masked() ? 0b1000_0000 : 0;
 
         if (length < 126L) {
-            out.write(length | masked);
+            out.write((byte) (length | masked));
         } else if (length < 65536L) {
-            out.write(126 | masked);
-            out.write((length >>> 8) & 0b1111_1111);
-            out.write(length & 0b1111_1111);
+            out.write((byte) (126 | masked));
+            out.write((byte) ((length >>> 8) & 0b1111_1111));
+            out.write((byte) (length & 0b1111_1111));
         } else {
-            out.write(127 | masked);
+            out.write((byte) (127 | masked));
             for (int i = 56; i >= 0; i -= 8) {
-                out.write((length >>> i) & 0b1111_1111);
+                out.write((byte) ((length >>> i) & 0b1111_1111));
             }
         }
 
