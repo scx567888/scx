@@ -14,9 +14,6 @@ import cool.scx.http.x.http1.status_line.Http1StatusLine;
 import cool.scx.io.ByteOutput;
 import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
-import cool.scx.io.x.io_stream.StreamClosedException;
-
-import java.io.IOException;
 
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 import static cool.scx.http.x.http1.Http1Helper.checkResponseHasBody;
