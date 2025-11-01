@@ -3,11 +3,10 @@ package cool.scx.http.body;
 import cool.scx.io.ByteInput;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
-import cool.scx.io.ByteInputMark;
+import cool.scx.io.DefaultByteInput;
 import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
-
-import java.io.IOException;
+import cool.scx.io.supplier.CacheByteSupplier;
 
 //todo 如何处理 close ?
 // 问题可以看 XTest.java
@@ -15,18 +14,18 @@ public class CacheBody implements ScxHttpBody {
 
     private final ScxHttpHeaders headers;
     private final ByteInput byteInput;
-    private final ByteInputMark mark;
+    private final CacheByteSupplier cache;
 
     public CacheBody(ByteInput byteInput, ScxHttpHeaders requestHeaders) {
         this.headers = requestHeaders;
         this.byteInput = byteInput;
-        this.mark = this.byteInput.mark();
+        this.cache = new CacheByteSupplier(byteInput);
     }
 
     @Override
     public ByteInput byteInput() {
-        mark.reset();
-        return this.byteInput;
+        cache.reset();
+        return new DefaultByteInput(cache);
     }
 
     @Override
