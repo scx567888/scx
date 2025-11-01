@@ -1,4 +1,4 @@
-package cool.scx.http;
+package cool.scx.http.__;
 
 import cool.scx.io.ByteOutput;
 
