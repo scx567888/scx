@@ -1,7 +1,5 @@
 package cool.scx.io.x.zip;
 
-import cool.scx.io.x.io_stream.LazyInputStream;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
