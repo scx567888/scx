@@ -3,6 +3,7 @@ package cool.scx.http.x.http1;
 import cool.scx.io.ByteInput;
 import cool.scx.io.ByteOutput;
 import cool.scx.io.DefaultByteInput;
+import cool.scx.io.OutputStreamByteOutput;
 import cool.scx.io.supplier.InputStreamByteSupplier;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
@@ -32,7 +33,7 @@ public class Http1ClientConnection {
     public Http1ClientConnection(ScxTCPSocket tcpSocket, HttpClientOptions options) {
         this.tcpSocket = tcpSocket;
         this.dataReader = new DefaultByteInput(new InputStreamByteSupplier(tcpSocket.inputStream()));
-        this.dataWriter = new NoCloseOutputStream(tcpSocket.outputStream());
+        this.dataWriter = new OutputStreamByteOutput(tcpSocket.outputStream());
         this.options = options.http1ConnectionOptions();
     }
 

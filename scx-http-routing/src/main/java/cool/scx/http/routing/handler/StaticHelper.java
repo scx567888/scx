@@ -1,6 +1,6 @@
 package cool.scx.http.routing.handler;
 
-import cool.scx.http.IOHelper;
+import cool.scx.http.__.IOHelper;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.headers.range.Range;
 import cool.scx.http.media_type.FileFormat;
