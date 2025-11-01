@@ -1,8 +1,6 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.io.ByteInput;
-import cool.scx.io.DefaultByteInput;
-import cool.scx.io.NullByteInput;
+import cool.scx.io.*;
 import cool.scx.io.supplier.InputStreamByteSupplier;
 import cool.scx.function.Function1Void;
 import cool.scx.http.ScxHttpServerRequest;
@@ -45,7 +43,7 @@ public class Http1ServerConnection {
     public final ScxHttpServerErrorHandler errorHandler;
 
     public final ByteInput dataReader;
-    public final OutputStream dataWriter;
+    public final ByteOutput dataWriter;
 
     private boolean running;
 
@@ -55,7 +53,7 @@ public class Http1ServerConnection {
         this.requestHandler = requestHandler;
         this.errorHandler = errorHandler;
         this.dataReader = new DefaultByteInput(new InputStreamByteSupplier(this.tcpSocket.inputStream()));
-        this.dataWriter = this.tcpSocket.outputStream();
+        this.dataWriter = new OutputStreamByteOutput(this.tcpSocket.outputStream());
         this.running = true;
     }
 

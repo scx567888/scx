@@ -3,6 +3,7 @@ package cool.scx.http.x.http1;
 import cool.scx.io.ByteInput;
 import cool.scx.io.ByteInputMark;
 import cool.scx.io.ByteMatchResult;
+import cool.scx.io.ByteOutput;
 import cool.scx.io.consumer.ByteConsumer;
 import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.NoMatchFoundException;
@@ -16,10 +17,10 @@ import java.io.OutputStream;
 public class AutoContinueByteInput implements ByteInput {
 
     private final ByteInput in;
-    private final OutputStream out;
+    private final ByteOutput out;
     private boolean continueSent;
 
-    public AutoContinueByteInput(ByteInput in, OutputStream out) {
+    public AutoContinueByteInput(ByteInput in, ByteOutput out) {
         this.in = in;
         this.out = out;
         this.continueSent = false;

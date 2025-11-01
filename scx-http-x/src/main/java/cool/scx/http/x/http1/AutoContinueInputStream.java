@@ -46,7 +46,8 @@ public class AutoContinueInputStream extends InputStream {
 
     private void trySendContinueResponse() throws IOException {
         if (!continueSent) {
-            sendContinue100(out);
+            // todo
+//            sendContinue100(out);
             continueSent = true;
         }
     }

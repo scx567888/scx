@@ -1,13 +1,14 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.io.ByteInput;
+import cool.scx.io.ByteOutput;
 import cool.scx.io.DefaultByteInput;
 import cool.scx.io.supplier.InputStreamByteSupplier;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.x.HttpClientOptions;
-import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
+import cool.scx.http.x.http1.chunked.HttpChunkedByteOutput;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.tcp.ScxTCPSocket;
@@ -25,7 +26,7 @@ public class Http1ClientConnection {
 
     public final ScxTCPSocket tcpSocket;
     public final ByteInput dataReader;
-    public final OutputStream dataWriter;
+    public final ByteOutput dataWriter;
     public final Http1ClientConnectionOptions options;
 
     public Http1ClientConnection(ScxTCPSocket tcpSocket, HttpClientOptions options) {
@@ -92,7 +93,7 @@ public class Http1ClientConnection {
         // 只有明确表示 分块的时候才使用分块
         var useChunkedTransfer = headers.transferEncoding() == CHUNKED;
 
-        var out = useChunkedTransfer ? new HttpChunkedOutputStream(dataWriter) : dataWriter;
+        var out = useChunkedTransfer ? new HttpChunkedByteOutput(dataWriter) : dataWriter;
 
         writer.write(out);
 

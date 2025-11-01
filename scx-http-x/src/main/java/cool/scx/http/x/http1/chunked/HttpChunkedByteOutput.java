@@ -1,31 +1,40 @@
 package cool.scx.http.x.http1.chunked;
 
+import cool.scx.io.ByteOutput;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
 import static cool.scx.http.x.http1.Http1Helper.CHUNKED_END_BYTES;
 import static cool.scx.http.x.http1.Http1Helper.CRLF_BYTES;
 
-public class HttpChunkedOutputStream extends OutputStream {
+public class HttpChunkedByteOutput implements ByteOutput {
 
     private static final byte[] HEX_DIGITS = {
             '0', '1', '2', '3', '4', '5', '6', '7',
             '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
     };
 
-    private final OutputStream out;
+    private final ByteOutput out;
 
-    public HttpChunkedOutputStream(OutputStream out) {
+    public HttpChunkedByteOutput(ByteOutput out) {
         this.out = out;
     }
 
     @Override
-    public void write(int b) throws IOException {
-        write(new byte[]{(byte) b}, 0, 1);
+    public void write(byte b)  {
+        write(new byte[]{b}, 0, 1);
     }
 
     @Override
-    public void write(byte[] b, int off, int len) throws IOException {
+    public void write(byte[] b) throws ScxIOException, AlreadyClosedException {
+        write(b,0,b.length);
+    }
+
+    @Override
+    public void write(byte[] b, int off, int len)  {
         // 0 长度无需写入
         if (len == 0) {
             return;
@@ -38,19 +47,25 @@ public class HttpChunkedOutputStream extends OutputStream {
     }
 
     @Override
-    public void flush() throws IOException {
+    public void flush()  {
         out.flush();
     }
 
     @Override
-    public void close() throws IOException {
+    public boolean isClosed() {
+        //todo 待处理
+        return false;
+    }
+
+    @Override
+    public void close()  {
         //写入终结分块
         out.write(CHUNKED_END_BYTES);
         out.close();
     }
 
     /// 直接写入十六进制表示的块大小
-    private void writeHexLength(int value) throws IOException {
+    private void writeHexLength(int value)  {
         // 最大值 0xFFFFFFFF（32 位无符号整数）转换为十六进制最多 8 个字符
         var bytes = new byte[8];
         var pos = 8;
@@ -63,7 +78,7 @@ public class HttpChunkedOutputStream extends OutputStream {
         out.write(bytes, pos, 8 - pos);
     }
 
-    public OutputStream outputStream() {
+    public ByteOutput outputStream() {
         return out;
     }
 

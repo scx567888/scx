@@ -12,6 +12,7 @@ import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.headers.upgrade.ScxUpgrade;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.io.ByteInput;
+import cool.scx.io.ByteOutput;
 import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
 import cool.scx.tcp.ScxTCPSocket;
@@ -38,7 +39,7 @@ public final class Http1Helper {
         return requestLine.method() == GET && headers.connection() == UPGRADE ? headers.upgrade() : null;
     }
 
-    public static void sendContinue100(OutputStream out) throws IOException {
+    public static void sendContinue100(ByteOutput out) throws IOException {
         out.write(CONTINUE_100);
     }
 
