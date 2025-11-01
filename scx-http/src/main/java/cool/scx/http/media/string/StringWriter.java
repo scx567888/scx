@@ -4,6 +4,7 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media_type.ScxMediaType;
+import cool.scx.io.ByteOutput;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,7 +35,7 @@ public class StringWriter implements MediaWriter {
 
     @Override
     public long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
-        // 只有在没设置 contentType 的时候我们才主动设置 
+        // 只有在没设置 contentType 的时候我们才主动设置
         if (responseHeaders.contentType() == null) {
             responseHeaders.contentType(ScxMediaType.of(TEXT_PLAIN).charset(charset));
         }
@@ -43,9 +44,9 @@ public class StringWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) throws IOException {
-        try (outputStream) {
-            outputStream.write(bytes);
+    public void write(ByteOutput byteOutput) throws IOException {
+        try (byteOutput) {
+            byteOutput.write(bytes);
         }
     }
 

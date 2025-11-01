@@ -4,6 +4,7 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media_type.ScxMediaType;
+import cool.scx.io.ByteOutput;
 
 import java.io.OutputStream;
 
@@ -28,8 +29,8 @@ public class ServerEventStreamWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) {
-        eventStream = new ServerEventStream(outputStream);
+    public void write(ByteOutput byteOutput) {
+        eventStream = new ServerEventStream(byteOutput);
     }
 
     public ServerEventStream eventStream() {

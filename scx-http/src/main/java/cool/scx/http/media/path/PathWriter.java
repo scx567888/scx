@@ -5,12 +5,13 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media_type.FileFormat;
+import cool.scx.io.ByteOutput;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 
-import static cool.scx.common.util.IOUtils.writeFileToOut;
+import static cool.scx.http.IOHelper.writeFileToOut;
 import static cool.scx.http.media_type.MediaType.APPLICATION_OCTET_STREAM;
 
 /// PathWriter
@@ -53,14 +54,14 @@ public class PathWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) throws IOException {
-        try (outputStream) {
+    public void write(ByteOutput byteOutput) throws IOException {
+        try (byteOutput) {
             //判断一下是不是发送整个文件
             var writeFullFile = offset == 0 && length == fileRealSize;
             if (writeFullFile) {
-                writeFileToOut(path, outputStream);
+                writeFileToOut(path, byteOutput);
             } else {
-                writeFileToOut(path, outputStream, offset, length);
+                writeFileToOut(path, byteOutput, offset, length);
             }
         }
     }

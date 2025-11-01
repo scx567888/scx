@@ -8,6 +8,7 @@ import cool.scx.http.media.multi_part.MultiPartWriter;
 import cool.scx.http.media_type.MediaType;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.io.DefaultByteInput;
+import cool.scx.io.adapter.ByteOutputAdapter;
 import cool.scx.io.supplier.ByteArrayByteSupplier;
 import org.testng.annotations.Test;
 
@@ -40,7 +41,7 @@ public class MultiPartTest {
         var ss = new MultiPartWriter(multipart);
 
         var b = new ByteArrayOutputStream();
-        ss.write(b);
+        ss.write(ByteOutputAdapter.outputStreamToByteOutput(b));
         byte[] byteArray = b.toByteArray();
 
         //复制两遍查看是否会产生错误的读取

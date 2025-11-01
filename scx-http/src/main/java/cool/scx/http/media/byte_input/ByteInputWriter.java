@@ -4,7 +4,9 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.io.ByteInput;
+import cool.scx.io.ByteOutput;
 import cool.scx.io.NullByteInput;
+import cool.scx.io.consumer.ByteOutputByteConsumer;
 import cool.scx.io.consumer.OutputStreamByteConsumer;
 
 import java.io.IOException;
@@ -28,10 +30,10 @@ public class ByteInputWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) throws IOException {
+    public void write(ByteOutput byteOutput) throws IOException {
         // 直接传输的时候 一般表示 整个输入流已经被用尽了 所以这里我们顺便关闭输入流
-        try (byteInput; outputStream) {
-            byteInput.readAll(new OutputStreamByteConsumer(outputStream));
+        try (byteInput; byteOutput) {
+            byteInput.readAll(new ByteOutputByteConsumer(byteOutput));
         }
     }
 

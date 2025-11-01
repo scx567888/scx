@@ -4,6 +4,8 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media_type.ScxMediaType;
+import cool.scx.io.ByteOutput;
+import cool.scx.io.consumer.ByteOutputByteConsumer;
 import cool.scx.io.consumer.OutputStreamByteConsumer;
 
 import java.io.IOException;
@@ -34,31 +36,31 @@ public class MultiPartWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) throws IOException {
+    public void write(ByteOutput byteOutput) throws IOException {
         //头
         var h = ("--" + multiPart.boundary() + "\r\n").getBytes();
         //尾
         var f = ("--" + multiPart.boundary() + "--\r\n").getBytes();
         //换行符
         var l = "\r\n".getBytes();
-        try (outputStream) {
+        try (byteOutput) {
             //发送每个内容
             for (var multiPartPart : multiPart) {
                 //发送头
-                outputStream.write(h);
+                byteOutput.write(h);
                 var headers = multiPartPart.headers().encode();
                 //写入头
-                outputStream.write(headers.getBytes());
+                byteOutput.write(headers.getBytes());
                 //写入换行符
-                outputStream.write(l);
+                byteOutput.write(l);
                 //写入内容
                 try (var i = multiPartPart.byteInput()) {
-                    i.readAll(new OutputStreamByteConsumer(outputStream));
+                    i.readAll(new ByteOutputByteConsumer(byteOutput));
                 }
                 //写入换行符
-                outputStream.write(l);
+                byteOutput.write(l);
             }
-            outputStream.write(f);
+            byteOutput.write(f);
         }
     }
 

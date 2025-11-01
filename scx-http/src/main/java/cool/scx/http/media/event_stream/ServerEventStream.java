@@ -1,6 +1,7 @@
 package cool.scx.http.media.event_stream;
 
 import cool.scx.http.sender.HttpSendException;
+import cool.scx.io.ByteOutput;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,9 +10,9 @@ import static cool.scx.http.media.event_stream.EventStreamHelper.writeToOutputSt
 
 public class ServerEventStream implements AutoCloseable {
 
-    private final OutputStream out;
+    private final ByteOutput out;
 
-    public ServerEventStream(OutputStream out) {
+    public ServerEventStream(ByteOutput out) {
         this.out = out;
     }
 

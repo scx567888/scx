@@ -3,6 +3,10 @@ package cool.scx.http.media.gzip;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.io.ByteInput;
+import cool.scx.io.ByteOutput;
+import cool.scx.io.OutputStreamByteOutput;
+import cool.scx.io.adapter.ByteOutputAdapter;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -21,9 +25,10 @@ public record GzipWriter(MediaWriter mediaWriter) implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) throws IOException {
-        var gzipOutputStream = new GZIPOutputStream(outputStream);
-        mediaWriter.write(gzipOutputStream);
+    public void write(ByteOutput byteOutput) throws IOException {
+        var gzipOutputStream = new GZIPOutputStream(ByteOutputAdapter.byteOutputToOutputStream(byteOutput));
+        var gzipByteOutput = new OutputStreamByteOutput(gzipOutputStream);
+        mediaWriter.write(gzipByteOutput);
     }
 
 }

@@ -3,6 +3,7 @@ package cool.scx.http.media.form_params;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.io.ByteOutput;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,9 +34,9 @@ public class FormParamsWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) throws IOException {
-        try (outputStream) {
-            outputStream.write(bytes);
+    public void write(ByteOutput byteOutput) throws IOException {
+        try (byteOutput) {
+            byteOutput.write(bytes);
         }
     }
 

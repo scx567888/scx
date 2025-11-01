@@ -1,5 +1,7 @@
 package cool.scx.http.media.event_stream;
 
+import cool.scx.io.ByteOutput;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -9,7 +11,7 @@ public class EventStreamHelper {
 
     public static final byte[] LF_BYTES = "\n".getBytes();
 
-    public static void writeToOutputStream(SseEvent sseEvent, OutputStream out) throws IOException {
+    public static void writeToOutputStream(SseEvent sseEvent, ByteOutput out) throws IOException {
         // 获取事件的各个部分
         var event = sseEvent.event();
         var data = sseEvent.data();

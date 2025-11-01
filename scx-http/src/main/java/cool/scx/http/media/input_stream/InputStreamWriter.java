@@ -3,6 +3,8 @@ package cool.scx.http.media.input_stream;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.io.ByteOutput;
+import cool.scx.io.adapter.ByteOutputAdapter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,10 +33,10 @@ public class InputStreamWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) throws IOException {
+    public void write(ByteOutput byteOutput) throws IOException {
         // 直接传输的时候 一般表示 整个输入流已经被用尽了 所以这里我们顺便关闭输入流
-        try (inputStream; outputStream) {
-            inputStream.transferTo(outputStream);
+        try (inputStream; byteOutput) {
+            inputStream.transferTo(ByteOutputAdapter.byteOutputToOutputStream(byteOutput));
         }
     }
 

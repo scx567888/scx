@@ -3,6 +3,7 @@ package cool.scx.http.media.tree;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.io.ByteOutput;
 import cool.scx.object.ScxObject;
 import cool.scx.object.node.Node;
 import cool.scx.object.serializer.NodeSerializeException;
@@ -51,9 +52,9 @@ public class TreeWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) throws IOException {
-        try (outputStream) {
-            outputStream.write(data);
+    public void write(ByteOutput byteOutput) throws IOException {
+        try (byteOutput) {
+            byteOutput.write(data);
         }
     }
 

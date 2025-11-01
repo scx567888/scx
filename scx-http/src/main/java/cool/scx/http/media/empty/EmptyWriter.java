@@ -3,6 +3,7 @@ package cool.scx.http.media.empty;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.io.ByteOutput;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,8 +26,8 @@ public class EmptyWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) throws IOException {
-        try (outputStream) {
+    public void write(ByteOutput byteOutput) throws IOException {
+        try (byteOutput) {
 
         }
     }
