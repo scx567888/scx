@@ -2,6 +2,7 @@ package cool.scx.websocket.x.test;
 
 import cool.scx.io.ByteInput;
 import cool.scx.io.DefaultByteInput;
+import cool.scx.io.OutputStreamByteOutput;
 import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.io.supplier.ByteArrayByteSupplier;
 import cool.scx.websocket.WebSocketOpCode;
@@ -46,7 +47,7 @@ public class WebSocketFrameHelperTest {
     public static void testWriteFrame() throws IOException {
         var frame = WebSocketProtocolFrame.of(true, WebSocketOpCode.TEXT, new byte[]{'H', 'e', 'l', 'l', 'o'});
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        WebSocketProtocolFrameHelper.writeFrame(frame, out);
+        WebSocketProtocolFrameHelper.writeFrame(frame, new OutputStreamByteOutput(out));
         byte[] expectedFrame = {
                 (byte) 0b1000_0001, // FIN + Text frame
                 (byte) 0b0000_0101, // No mask, payload length = 5
