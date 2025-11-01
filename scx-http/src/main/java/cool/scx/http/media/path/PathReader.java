@@ -4,6 +4,8 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.io.ByteInput;
 import cool.scx.io.adapter.ByteInputAdapter;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
 import java.nio.file.OpenOption;
@@ -30,10 +32,12 @@ public class PathReader implements MediaReader<Path> {
     }
 
     @Override
-    public Path read(ByteInput byteInput, ScxHttpHeaders headers) throws IOException {
+    public Path read(ByteInput byteInput, ScxHttpHeaders headers) throws ScxIOException, AlreadyClosedException {
         try (byteInput) {
             // todo 应该有更好方式实现
             readInToFile(ByteInputAdapter.byteInputToInputStream(byteInput), path, options);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         //这里直接返回 path 方便用户链式调用
         return path;

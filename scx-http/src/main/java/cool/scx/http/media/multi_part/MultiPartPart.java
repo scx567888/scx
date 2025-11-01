@@ -11,6 +11,7 @@ import cool.scx.http.media_type.FileFormat;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.io.ByteInput;
 import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -58,7 +59,7 @@ public interface MultiPartPart extends ScxHttpBody {
     default <T> T as(MediaReader<T> t) throws BodyAlreadyConsumedException, BodyReadException {
         try {
             return t.read(byteInput(), headers());
-        } catch (IOException e) {
+        } catch (ScxIOException e) {
             throw new BodyReadException(e);
         } catch (AlreadyClosedException e) {
             throw new BodyAlreadyConsumedException();

@@ -3,7 +3,6 @@ package cool.scx.http.x.http1;
 import cool.scx.io.ByteOutput;
 import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
-import cool.scx.io.x.io_stream.CheckedOutputStream;
 
 import java.io.IOException;
 

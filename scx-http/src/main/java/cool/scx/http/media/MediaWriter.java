@@ -3,6 +3,8 @@ package cool.scx.http.media;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.io.ByteOutput;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,6 +27,6 @@ public interface MediaWriter {
     /// 写入内容
     ///
     /// @param byteOutput 输入流
-    void write(ByteOutput byteOutput) throws IOException;
+    void write(ByteOutput byteOutput) throws ScxIOException, AlreadyClosedException;
 
 }

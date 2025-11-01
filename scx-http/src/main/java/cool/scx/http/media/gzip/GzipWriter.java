@@ -7,6 +7,8 @@ import cool.scx.io.ByteInput;
 import cool.scx.io.ByteOutput;
 import cool.scx.io.OutputStreamByteOutput;
 import cool.scx.io.adapter.ByteOutputAdapter;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,8 +27,13 @@ public record GzipWriter(MediaWriter mediaWriter) implements MediaWriter {
     }
 
     @Override
-    public void write(ByteOutput byteOutput) throws IOException {
-        var gzipOutputStream = new GZIPOutputStream(ByteOutputAdapter.byteOutputToOutputStream(byteOutput));
+    public void write(ByteOutput byteOutput) throws ScxIOException, AlreadyClosedException {
+        GZIPOutputStream gzipOutputStream = null;
+        try {
+            gzipOutputStream = new GZIPOutputStream(ByteOutputAdapter.byteOutputToOutputStream(byteOutput));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         var gzipByteOutput = new OutputStreamByteOutput(gzipOutputStream);
         mediaWriter.write(gzipByteOutput);
     }

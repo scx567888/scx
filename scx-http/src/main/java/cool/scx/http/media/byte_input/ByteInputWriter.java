@@ -8,6 +8,8 @@ import cool.scx.io.ByteOutput;
 import cool.scx.io.NullByteInput;
 import cool.scx.io.consumer.ByteOutputByteConsumer;
 import cool.scx.io.consumer.OutputStreamByteConsumer;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,7 +32,7 @@ public class ByteInputWriter implements MediaWriter {
     }
 
     @Override
-    public void write(ByteOutput byteOutput) throws IOException {
+    public void write(ByteOutput byteOutput) throws ScxIOException, AlreadyClosedException {
         // 直接传输的时候 一般表示 整个输入流已经被用尽了 所以这里我们顺便关闭输入流
         try (byteInput; byteOutput) {
             byteInput.readAll(new ByteOutputByteConsumer(byteOutput));

@@ -12,7 +12,8 @@ import cool.scx.http.x.http1.chunked.HttpChunkedByteOutput;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.status_line.Http1StatusLine;
 import cool.scx.io.ByteOutput;
-import cool.scx.io.x.io_stream.CheckedOutputStream;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 import cool.scx.io.x.io_stream.StreamClosedException;
 
 import java.io.IOException;
@@ -86,9 +87,9 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         var expectedLength = writer.beforeWrite(headers, request.headers());
         try {
             writer.write(outputStream(expectedLength));
-        } catch (IOException e) {
+        } catch (ScxIOException e) {
             throw new HttpSendException("发送 HTTP 响应失败 !!!", e);
-        } catch (StreamClosedException e) {
+        } catch (AlreadyClosedException e) {
             throw new BodyAlreadySentException();
         }
         return null;
@@ -99,25 +100,21 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         if (byteOutput == null) {
             return false;
         }
-        var o = byteOutput instanceof HttpChunkedByteOutput c ? c.outputStream() : byteOutput;
-        if (o instanceof CheckedOutputStream c) {
-            return c.isClosed();
-        }
-        throw new IllegalStateException("unknown type output stream");
+        return byteOutput.isClosed();
     }
 
     public String createReasonPhrase() {
         return reasonPhrase != null ? reasonPhrase : getReasonPhrase(status, "unknown");
     }
 
-    private ByteOutput outputStream(long expectedLength) throws IOException {
+    private ByteOutput outputStream(long expectedLength)  {
         if (byteOutput == null) {
             byteOutput = sendHeaders(expectedLength);
         }
         return byteOutput;
     }
 
-    private ByteOutput sendHeaders(long expectedLength) throws IOException {
+    private ByteOutput sendHeaders(long expectedLength)  {
         // 1, 创建 响应行
         var statusLine = new Http1StatusLine(request.version(), status.code(), createReasonPhrase());
 

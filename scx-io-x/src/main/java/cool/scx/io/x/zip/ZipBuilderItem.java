@@ -1,7 +1,6 @@
 package cool.scx.io.x.zip;
 
 import cool.scx.common.util.URIUtils;
-import cool.scx.io.x.io_stream.NullCheckedInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -33,7 +32,7 @@ public class ZipBuilderItem {
 
     ZipBuilderItem(String zipPath) {
         this.zipPath = URIUtils.addSlashEnd(URIUtils.trimSlash(URIUtils.normalize(zipPath)));
-        this.source = new NullCheckedInputStream();
+        this.source = InputStream.nullInputStream();
     }
 
     ZipBuilderItem(ZipEntry zipEntry, ZipFile zipFile) throws IOException {

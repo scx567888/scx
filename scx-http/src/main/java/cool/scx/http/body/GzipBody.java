@@ -7,6 +7,7 @@ import cool.scx.http.media.MediaReader;
 import cool.scx.io.ByteInput;
 import cool.scx.io.adapter.ByteInputAdapter;
 import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
@@ -55,7 +56,7 @@ public class GzipBody implements ScxHttpBody {
     public <T> T as(MediaReader<T> t) throws BodyReadException, BodyAlreadyConsumedException {
         try {
             return t.read(gzipByteInput, headers);
-        } catch (IOException e) {
+        } catch (ScxIOException e) {
             throw new BodyReadException(e);
         } catch (AlreadyClosedException e) {
             throw new BodyAlreadyConsumedException();

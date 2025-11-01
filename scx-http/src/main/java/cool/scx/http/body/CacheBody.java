@@ -5,6 +5,7 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.io.ByteInputMark;
 import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
 
@@ -32,7 +33,7 @@ public class CacheBody implements ScxHttpBody {
     public <T> T as(MediaReader<T> t) throws BodyAlreadyConsumedException, BodyReadException {
         try {
             return t.read(byteInput(), headers);
-        } catch (IOException e) {
+        } catch (ScxIOException e) {
             throw new BodyReadException(e);
         } catch (AlreadyClosedException e) {
             throw new BodyAlreadyConsumedException();

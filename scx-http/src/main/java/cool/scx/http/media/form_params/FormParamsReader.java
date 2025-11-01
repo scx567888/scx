@@ -3,6 +3,8 @@ package cool.scx.http.media.form_params;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.io.ByteInput;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
 
@@ -21,7 +23,7 @@ public class FormParamsReader implements MediaReader<FormParams> {
     }
 
     @Override
-    public FormParams read(ByteInput byteInput, ScxHttpHeaders headers) throws IOException {
+    public FormParams read(ByteInput byteInput, ScxHttpHeaders headers) throws ScxIOException, AlreadyClosedException {
         // FormParams 本质上就是字符串 所以这里使用 STRING_READER 先进行内容读取
         var str = STRING_READER.read(byteInput, headers);
         return FormParams.of(str);

@@ -2,8 +2,8 @@ package cool.scx.http.media;
 
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.io.ByteInput;
-
-import java.io.IOException;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 /// 读取器 可用于 ServerRequest 和 ClientResponse
 ///
@@ -16,6 +16,6 @@ public interface MediaReader<T> {
     ///
     /// @param byteInput    输入流
     /// @param requestHeaders 请求头 (在客户端状态下是 responseHeaders)
-    T read(ByteInput byteInput, ScxHttpHeaders requestHeaders) throws IOException;
+    T read(ByteInput byteInput, ScxHttpHeaders requestHeaders) throws ScxIOException, AlreadyClosedException;
 
 }

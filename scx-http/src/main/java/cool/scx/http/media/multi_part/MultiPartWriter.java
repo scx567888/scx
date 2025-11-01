@@ -7,6 +7,8 @@ import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.io.ByteOutput;
 import cool.scx.io.consumer.ByteOutputByteConsumer;
 import cool.scx.io.consumer.OutputStreamByteConsumer;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,7 +38,7 @@ public class MultiPartWriter implements MediaWriter {
     }
 
     @Override
-    public void write(ByteOutput byteOutput) throws IOException {
+    public void write(ByteOutput byteOutput) throws ScxIOException, AlreadyClosedException {
         //头
         var h = ("--" + multiPart.boundary() + "\r\n").getBytes();
         //尾

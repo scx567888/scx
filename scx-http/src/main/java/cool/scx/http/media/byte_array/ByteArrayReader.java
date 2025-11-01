@@ -3,6 +3,8 @@ package cool.scx.http.media.byte_array;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.io.ByteInput;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
 
@@ -19,7 +21,7 @@ public final class ByteArrayReader implements MediaReader<byte[]> {
     }
 
     @Override
-    public byte[] read(ByteInput byteInput, ScxHttpHeaders headers) throws IOException {
+    public byte[] read(ByteInput byteInput, ScxHttpHeaders headers) throws ScxIOException, AlreadyClosedException {
         try (byteInput) {
             return byteInput.readAll();
         }

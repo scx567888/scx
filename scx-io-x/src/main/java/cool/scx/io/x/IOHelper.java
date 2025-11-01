@@ -3,7 +3,6 @@ package cool.scx.io.x;
 import cool.scx.io.ByteInput;
 import cool.scx.io.DefaultByteInput;
 import cool.scx.io.supplier.InputStreamByteSupplier;
-import cool.scx.io.x.io_stream.ByteReaderInputStream;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -16,15 +15,6 @@ import java.nio.file.Path;
 /// @author scx567888
 /// @version 0.0.1
 public final class IOHelper {
-
-    /// 此方法会尽量脱壳 防止过多的包装层
-    public static ByteInput inputStreamToByteReader(InputStream inputStream) {
-        if (inputStream instanceof ByteReaderInputStream d) {
-            return d.dataReader();
-        } else {
-            return new DefaultByteInput(new InputStreamByteSupplier(inputStream));
-        }
-    }
 
     public static long getFileSize(Path path) {
         try {

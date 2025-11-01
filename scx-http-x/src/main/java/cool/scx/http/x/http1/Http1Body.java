@@ -6,9 +6,8 @@ import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.io.ByteInput;
-import cool.scx.io.x.io_stream.StreamClosedException;
-
-import java.io.IOException;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 /// ScxHttpBodyImpl
 ///
@@ -20,9 +19,9 @@ public record Http1Body(ByteInput byteInput, Http1Headers headers) implements Sc
     public <T> T as(MediaReader<T> t) throws BodyAlreadyConsumedException {
         try {
             return t.read(byteInput, headers);
-        } catch (IOException e) {
+        } catch (ScxIOException e) {
             throw new BodyReadException(e);
-        } catch (StreamClosedException e) {
+        } catch (AlreadyClosedException e) {
             throw new BodyAlreadyConsumedException();
         }
     }

@@ -5,6 +5,8 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.media.tree.TreeReader;
 import cool.scx.io.ByteInput;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 import cool.scx.object.ScxObject;
 import cool.scx.object.mapping.NodeMappingException;
 import cool.scx.object.parser.NodeParseException;
@@ -39,7 +41,7 @@ public class ObjectReader<T> implements MediaReader<T> {
     }
 
     @Override
-    public T read(ByteInput byteInput, ScxHttpHeaders requestHeaders) throws IOException {
+    public T read(ByteInput byteInput, ScxHttpHeaders requestHeaders) throws ScxIOException, AlreadyClosedException {
         // 1, 先读取为字符串
         var str = STRING_READER.read(byteInput, requestHeaders);
         // 2, 根据不同 contentType 进行处理
