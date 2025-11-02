@@ -12,6 +12,7 @@ import cool.scx.http.x.HttpClientOptions;
 import cool.scx.http.x.http1.chunked.HttpChunkedByteOutput;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
+import cool.scx.io.supplier.NonClosingByteSupplier;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class Http1ClientConnection {
 
     public Http1ClientConnection(ScxTCPSocket tcpSocket, HttpClientOptions options) {
         this.tcpSocket = tcpSocket;
-        this.dataReader = new DefaultByteInput(new InputStreamByteSupplier(tcpSocket.inputStream()));
+        this.dataReader = new DefaultByteInput(new NonClosingByteSupplier(new InputStreamByteSupplier(tcpSocket.inputStream())));
         this.dataWriter = new OutputStreamByteOutput(tcpSocket.outputStream());
         this.options = options.http1ConnectionOptions();
     }

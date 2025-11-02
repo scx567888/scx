@@ -229,7 +229,7 @@
         <scx-function.version>1.0.0</scx-function.version>
         <scx-data.version>4.1.0</scx-data.version>
         <scx-collections.version>4.1.0</scx-collections.version>
-        <scx-io.version>4.0.3</scx-io.version>
+        <scx-io.version>4.0.4</scx-io.version>
         <scx-logging.version>4.1.0</scx-logging.version>
         <scx-timer.version>2.0.0</scx-timer.version>
         <scx-tcp.version>4.1.0</scx-tcp.version>
