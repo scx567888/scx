@@ -166,9 +166,9 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
 
         // todo 这里的 Http1ServerResponseOutputStream 应该根据 contentLength 进行限制
         var baseOutputStream = new Http1ServerResponseOutputStream(connection, closeConnection);
-        //采用分块传输
-        return useChunkedTransfer ? new HttpChunkedByteOutput(baseOutputStream) : baseOutputStream;
 
+        // 判断是否采用分块传输
+        return useChunkedTransfer ? new HttpChunkedByteOutput(baseOutputStream) : baseOutputStream;
     }
 
 }
