@@ -1,15 +1,14 @@
 package cool.scx.http.routing.handler;
 
-import cool.scx.http.__.IOHelper;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.headers.range.Range;
 import cool.scx.http.media_type.FileFormat;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static cool.scx.http.headers.HttpFieldName.ACCEPT_RANGES;
 import static cool.scx.http.headers.HttpFieldName.CONTENT_RANGE;
@@ -22,17 +21,17 @@ import static cool.scx.http.status.HttpStatus.PARTIAL_CONTENT;
 /// @version 0.0.1
 public class StaticHelper {
 
-    public static void sendStatic(Path path, RoutingContext context) {
+    public static void sendStatic(File file, RoutingContext context) throws IOException {
         var request = context.request();
         var response = context.response();
 
         //参数校验
-        var notExists = Files.notExists(path);
+        var notExists = !file.exists();
         if (notExists) {
             throw new NotFoundException();
         }
         //获取文件长度
-        var fileLength = IOHelper.getFileSize(path);
+        var fileLength = file.length();
 
         //1, 通知客户端我们支持 分段加载
         response.headers().set(ACCEPT_RANGES, "bytes");
@@ -42,13 +41,13 @@ public class StaticHelper {
 
         //3, 设置 contentType (只有在未设置的时候才设置)
         if (response.contentType() == null) {
-            var contentType = getMediaTypeByFile(path);
+            var contentType = getMediaTypeByFile(file);
             response.contentType(contentType);
         }
 
         //3, 如果为空 则发送全量数据
         if (rangeStr == null) {
-            response.send(path);
+            response.send(file);
             return;
         }
 
@@ -72,16 +71,16 @@ public class StaticHelper {
             // Content-Length: 1024
             response.contentLength(length);
             //发送
-            response.send(path, start, length);
+            response.send(file, start, length);
         } else {
             // 这里是多个 部分请求 我们暂时不支持 所以全量发送
-            response.send(path);
+            response.send(file);
         }
 
     }
 
-    public static ScxMediaType getMediaTypeByFile(Path path) {
-        var fileFormat = FileFormat.findByFileName(path.getFileName().toString());
+    public static ScxMediaType getMediaTypeByFile(File file) {
+        var fileFormat = FileFormat.findByFileName(file.getName());
         if (fileFormat == null) {
             fileFormat = FileFormat.BIN;
         }
