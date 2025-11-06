@@ -1,6 +1,7 @@
 package cool.scx.web.parameter_handler;
 
 import cool.scx.collections.multi_map.MultiMap;
+import cool.scx.http.body.CacheHttpBody;
 import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.media.multi_part.MultiPartPartImpl;
 import cool.scx.http.media_type.ScxMediaType;
@@ -81,14 +82,16 @@ public final class RequestInfo {
             //文件和非文件
             var multiPart = ctx.request().body().asMultiPart();
             for (var multiPartPart : multiPart) {
+                // todo 这里有大问题
+                CacheHttpBody cacheBody = multiPartPart.asCacheBody();
                 //没有文件名我们就当成 空文件
                 if (multiPartPart.filename() == null) {
-                    m.add(multiPartPart.name(), multiPartPart.asString());
+                    m.add(multiPartPart.name(), cacheBody.asString());
                 }
                 try {
                     //这里我们需要将流式的读取到内存中
                     // todo 这里怎么处理 AutoClose ?
-                    var bytes = multiPartPart.byteInput().readAll();
+                    var bytes = cacheBody.asBytes();
                     f.add(multiPartPart.name(), new MultiPartPartImpl().headers(multiPartPart.headers()).body(bytes));
                 } catch (ScxIOException e) {
                     throw new RuntimeException(e);
