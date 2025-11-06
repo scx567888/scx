@@ -44,8 +44,9 @@ public final class Http1Helper {
     }
 
     public static void consumeByteInput(ByteInput byteInput) {
-        try (byteInput) {
-            byteInput.skipAll();
+        // 因为我们的流 在 close 时会自动排空, 这里直接 close 即可
+        try {
+            byteInput.close();
         } catch (AlreadyClosedException | ScxIOException e) {
             // 忽略
         }
