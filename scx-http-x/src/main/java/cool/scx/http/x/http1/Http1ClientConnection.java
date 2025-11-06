@@ -92,7 +92,11 @@ public class Http1ClientConnection {
 
         var out = useChunkedTransfer ? new HttpChunkedByteOutput(dataWriter) : dataWriter;
 
-        writer.write(out);
+        // 这里需要做一个 close 的中断传递. 防止用户意外关闭底层
+        var noCloseByteOutput = new NoCloseByteOutput(out);
+
+        // 调用处理器
+        writer.write(noCloseByteOutput);
 
         return this;
     }
