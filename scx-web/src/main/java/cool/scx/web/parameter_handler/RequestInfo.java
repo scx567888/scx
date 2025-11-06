@@ -66,7 +66,7 @@ public final class RequestInfo {
         bodyInit = true;
         // 除了 MULTIPART_FORM_DATA 其余全部转为 JsonNode 的形式方便后续使用
         if (APPLICATION_JSON.equalsIgnoreParams(contentType) || APPLICATION_XML.equalsIgnoreParams(contentType)) {
-            this.body = ctx.request().body().asTree();
+            this.body = ctx.request().body().asNode();
             return;
         }
         if (APPLICATION_X_WWW_FORM_URLENCODED.equalsIgnoreParams(contentType)) {

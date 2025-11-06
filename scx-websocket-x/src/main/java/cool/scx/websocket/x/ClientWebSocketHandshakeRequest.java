@@ -20,7 +20,7 @@ import java.util.Base64;
 
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
-import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
+import static cool.scx.http.media.empty.EmptyMediaWriter.EMPTY_MEDIA_WRITER;
 import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 import static cool.scx.http.x.http1.headers.connection.Connection.UPGRADE;
 import static cool.scx.http.x.http1.headers.upgrade.Upgrade.WEB_SOCKET;
@@ -96,7 +96,7 @@ public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandsh
         var connection = new Http1ClientConnection(tcpSocket, httpClient.options());
 
         try {
-            var response = connection.sendRequest(this, EMPTY_WRITER).waitResponse();
+            var response = connection.sendRequest(this, EMPTY_MEDIA_WRITER).waitResponse();
             return new ClientWebSocketHandshakeResponse(connection, response, this.webSocketOptions);
         } catch (IOException e) {
             throw new HttpSendException("发送 WebSocket 握手请求失败 !!!", e);

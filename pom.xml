@@ -49,7 +49,6 @@
         <module>scx-data-jdbc</module>
         <module>scx-http-routing</module>
         <module>scx-http-x</module>
-        <module>scx-io-x</module>
         <module>scx-jdbc</module>
         <module>scx-jdbc-spy</module>
         <module>scx-jdbc-mysql</module>
