@@ -1,7 +1,7 @@
 package cool.scx.config.source;
 
 import cool.scx.ansi.Ansi;
-import cool.scx.io.x.file.FileWatcher;
+import cool.scx.config.helper.FileWatcher;
 import cool.scx.object.ScxObject;
 import cool.scx.object.node.ObjectNode;
 import cool.scx.object.parser.NodeParseException;

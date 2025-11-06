@@ -35,12 +35,6 @@
             <artifactId>scx-object</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-io-x</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- 轻量级的加密解密工具包 , 用于简化一些密码校验及敏感数据加密的操作 -->
         <dependency>
             <groupId>org.jasypt</groupId>

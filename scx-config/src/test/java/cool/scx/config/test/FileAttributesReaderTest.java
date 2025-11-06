@@ -1,6 +1,6 @@
-package cool.scx.io.x.test;
+package cool.scx.config.test;
 
-import cool.scx.io.x.file.FileAttributesReader;
+import cool.scx.config.helper.FileAttributesReader;
 
 import java.io.IOException;
 import java.nio.file.Path;

@@ -1,4 +1,4 @@
-package cool.scx.io.x.file;
+package cool.scx.config.helper;
 
 import java.io.IOException;
 import java.nio.file.*;
