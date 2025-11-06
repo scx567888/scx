@@ -90,13 +90,13 @@ public class Http1ClientConnection {
         // 只有明确表示 分块的时候才使用分块
         var useChunkedTransfer = headers.transferEncoding() == CHUNKED;
 
-        var out = useChunkedTransfer ? new HttpChunkedByteOutput(dataWriter) : dataWriter;
-
         // 这里需要做一个 close 的中断传递. 防止用户意外关闭底层
-        var noCloseByteOutput = new NoCloseByteOutput(out);
+        var noCloseByteOutput = new NoCloseByteOutput(dataWriter);
+
+        var out = useChunkedTransfer ? new HttpChunkedByteOutput(noCloseByteOutput) : noCloseByteOutput;
 
         // 调用处理器
-        writer.write(noCloseByteOutput);
+        writer.write(out);
 
         return this;
     }
