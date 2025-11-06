@@ -1,18 +1,11 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.io.ByteInput;
-import cool.scx.io.DefaultByteInput;
-import cool.scx.io.NullByteInput;
-import cool.scx.io.exception.ScxIOException;
-import cool.scx.io.exception.NoMatchFoundException;
-import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.ContentTooLargeException;
 import cool.scx.http.exception.URITooLongException;
 import cool.scx.http.x.http1.chunked.HttpChunkedByteSupplier;
 import cool.scx.http.x.http1.exception.HttpVersionNotSupportedException;
 import cool.scx.http.x.http1.exception.RequestHeaderFieldsTooLargeException;
-import cool.scx.http.x.http1.fixed_length.FixedLengthByteSupplier;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.http.x.http1.request_line.InvalidHttpRequestLineException;
@@ -20,6 +13,13 @@ import cool.scx.http.x.http1.request_line.InvalidHttpVersion;
 import cool.scx.http.x.http1.status_line.Http1StatusLine;
 import cool.scx.http.x.http1.status_line.InvalidHttpStatusException;
 import cool.scx.http.x.http1.status_line.InvalidHttpStatusLineException;
+import cool.scx.io.ByteInput;
+import cool.scx.io.exception.NoMatchFoundException;
+import cool.scx.io.exception.NoMoreDataException;
+import cool.scx.io.exception.ScxIOException;
+import cool.scx.io.supplier.ByteSupplier;
+import cool.scx.io.supplier.FixedLengthByteSupplier;
+import cool.scx.io.supplier.NullByteSupplier;
 
 import java.util.Arrays;
 
@@ -32,13 +32,16 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /// 读取 HTTP/1.1 请求或响应内容工具类
 final class Http1Reader {
 
-    public static ByteInput readBodyByteInput(Http1Headers headers, ByteInput dataReader, long maxPayloadSize) {
+    /// 这里我们返回的 ByteSupplier 是直接关联了 ByteInput 的 ByteSupplier,
+    /// 也就是说 如果 调用 ByteSupplier 的 close, 会连带关闭 ByteInput 的 close.
+    /// 如果想做到 中断 close 请在上层二次包装.
+    public static ByteSupplier readBodyByteInput(Http1Headers headers, ByteInput byteInput, long maxPayloadSize) {
         // HTTP/1.1 本质上只有两种请求体格式 1, 分块传输 2, 指定长度 (当然也可以没有长度 那就表示没有请求体)
 
         //1, 因为 分块传输的优先级高于 contentLength 所以先判断是否为分块传输
         var transferEncoding = headers.transferEncoding();
         if (transferEncoding == CHUNKED) {
-            return new DefaultByteInput(new HttpChunkedByteSupplier(dataReader, maxPayloadSize));
+            return new HttpChunkedByteSupplier(byteInput, maxPayloadSize);
         }
 
         //2, 判断请求体是不是有 指定长度
@@ -48,25 +51,25 @@ final class Http1Reader {
             if (contentLength > maxPayloadSize) {
                 throw new ContentTooLargeException();
             }
-            return new DefaultByteInput(new FixedLengthByteSupplier(dataReader, contentLength));
+            return new FixedLengthByteSupplier(byteInput, contentLength);
         }
 
         //3, 没有长度的空请求体
-        return new NullByteInput();
+        return new NullByteSupplier(byteInput);
     }
 
-    public static Http1Headers readHeaders(ByteInput dataReader, int maxHeaderSize) {
+    public static Http1Headers readHeaders(ByteInput byteInput, int maxHeaderSize) {
         //尝试读取 headers
         try {
             // 1, 尝试检查空头的情况 , 即请求行后紧跟 \r\n
-            var b = dataReader.peek(2);
+            var b = byteInput.peek(2);
             if (Arrays.equals(b, CRLF_BYTES)) {
-                dataReader.skip(2);
+                byteInput.skip(2);
                 return new Http1Headers();
             }
 
             // 2, 尝试正常读取 , 读取到 第一个 \r\n\r\n 为止
-            var headerBytes = dataReader.readUntil(CRLF_CRLF_BYTES, maxHeaderSize);
+            var headerBytes = byteInput.readUntil(CRLF_CRLF_BYTES, maxHeaderSize);
             var headerStr = new String(headerBytes, UTF_8);
             return parseHeaders(new Http1Headers(), headerStr, true); //使用严格模式解析
         } catch (NoMoreDataException | ScxIOException e) {
@@ -100,9 +103,9 @@ final class Http1Reader {
         }
     }
 
-    public static Http1StatusLine readStatusLine(ByteInput dataReader, int maxStatusLineSize) {
+    public static Http1StatusLine readStatusLine(ByteInput byteInput, int maxStatusLineSize) {
         try {
-            var statusLineBytes = dataReader.readUntil(CRLF_BYTES, maxStatusLineSize);
+            var statusLineBytes = byteInput.readUntil(CRLF_BYTES, maxStatusLineSize);
             var statusLineStr = new String(statusLineBytes);
             return Http1StatusLine.of(statusLineStr);
         } catch (NoMoreDataException | ScxIOException e) {
