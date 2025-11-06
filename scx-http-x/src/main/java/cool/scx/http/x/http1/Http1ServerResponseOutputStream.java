@@ -1,5 +1,6 @@
 package cool.scx.http.x.http1;
 
+import cool.scx.io.ByteChunk;
 import cool.scx.io.ByteOutput;
 import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
@@ -31,15 +32,9 @@ public class Http1ServerResponseOutputStream implements ByteOutput {
     }
 
     @Override
-    public void write(byte[] b)  {
+    public void write(ByteChunk b) throws ScxIOException, AlreadyClosedException {
         ensureOpen();
         connection.dataWriter.write(b);
-    }
-
-    @Override
-    public void write(byte[] b, int off, int len)  {
-        ensureOpen();
-        connection.dataWriter.write(b, off, len);
     }
 
     @Override
