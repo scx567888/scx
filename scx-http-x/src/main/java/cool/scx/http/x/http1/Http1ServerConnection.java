@@ -7,6 +7,7 @@ import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.HttpServerOptions;
+import cool.scx.http.x.http1.auto_continue.AutoContinueByteSupplier;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.io.*;

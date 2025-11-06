@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1;
+package cool.scx.http.x.http1.auto_continue;
 
 import cool.scx.io.ByteChunk;
 import cool.scx.io.ByteOutput;
