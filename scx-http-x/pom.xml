@@ -21,25 +21,19 @@
     <dependencies>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>cool.scx</groupId>
             <artifactId>scx-http</artifactId>
-            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-tcp</artifactId>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>scx-codec</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cool.scx</groupId>
-            <artifactId>scx-reflect</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cool.scx</groupId>
-            <artifactId>scx-tcp</artifactId>
         </dependency>
 
         <dependency>
