@@ -1,10 +1,6 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.io.ByteInput;
-import cool.scx.io.ByteOutput;
-import cool.scx.io.DefaultByteInput;
-import cool.scx.io.OutputStreamByteOutput;
-import cool.scx.io.supplier.InputStreamByteSupplier;
+import cool.scx.io.*;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;
@@ -12,16 +8,15 @@ import cool.scx.http.x.HttpClientOptions;
 import cool.scx.http.x.http1.chunked.HttpChunkedByteOutput;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.io.supplier.NonClosingByteSupplier;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import static cool.scx.http.headers.HttpFieldName.HOST;
 import static cool.scx.http.x.http1.Http1Helper.checkRequestHasBody;
 import static cool.scx.http.x.http1.Http1Reader.*;
 import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
+import static cool.scx.io.supplier.SpecialCloseByteSupplier.noCloseDrain;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Http1ClientConnection {
@@ -33,7 +28,7 @@ public class Http1ClientConnection {
 
     public Http1ClientConnection(ScxTCPSocket tcpSocket, HttpClientOptions options) {
         this.tcpSocket = tcpSocket;
-        this.dataReader = new DefaultByteInput(new NonClosingByteSupplier(new InputStreamByteSupplier(tcpSocket.inputStream())));
+        this.dataReader = ScxIO.createByteInput(tcpSocket.inputStream());
         this.dataWriter = new OutputStreamByteOutput(tcpSocket.outputStream());
         this.options = options.http1ConnectionOptions();
     }
@@ -110,9 +105,12 @@ public class Http1ClientConnection {
         var headers = readHeaders(dataReader, options.maxHeaderSize());
 
         //3, 读取响应体 todo 超出最大长度怎么办
-        var bodyInputStream = readBodyByteInput(headers, dataReader, options.maxPayloadSize());
+        var bodyByteSupplier = readBodyByteInput(headers, dataReader, options.maxPayloadSize());
 
-        return new Http1ClientResponse(statusLine, headers, bodyInputStream);
+        //4, 创建一个 ByteInput, 要求是 1, 要隔离 底层 close, 2, 同时在 close 的时候还要排空流.
+        var bodyByteInput = new DefaultByteInput(noCloseDrain(bodyByteSupplier));
+
+        return new Http1ClientResponse(statusLine, headers, bodyByteInput);
     }
 
 }
