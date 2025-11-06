@@ -1,6 +1,6 @@
-package cool.scx.io.x.test;
+package cool.scx.app.test;
 
-import cool.scx.io.x.zip.ZipBuilder;
+import cool.scx.app.helper.zip.ZipBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

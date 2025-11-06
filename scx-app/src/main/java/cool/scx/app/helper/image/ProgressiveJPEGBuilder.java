@@ -1,4 +1,4 @@
-package cool.scx.io.x.image;
+package cool.scx.app.helper.image;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
