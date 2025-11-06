@@ -9,9 +9,9 @@ import java.io.IOException;
 
 public class Http1ServerResponseOutputStream implements ByteOutput {
 
-    private volatile boolean closed;
     private final Http1ServerConnection connection;
     private final boolean closeConnection;
+    private boolean closed;
 
     public Http1ServerResponseOutputStream(Http1ServerConnection connection, boolean closeConnection) {
         this.connection = connection;
@@ -26,7 +26,7 @@ public class Http1ServerResponseOutputStream implements ByteOutput {
     }
 
     @Override
-    public void write(byte b)  {
+    public void write(byte b) {
         ensureOpen();
         connection.dataWriter.write(b);
     }
@@ -38,7 +38,7 @@ public class Http1ServerResponseOutputStream implements ByteOutput {
     }
 
     @Override
-    public void flush()  {
+    public void flush() {
         ensureOpen();
         connection.dataWriter.flush();
     }
@@ -49,15 +49,18 @@ public class Http1ServerResponseOutputStream implements ByteOutput {
     }
 
     @Override
-    public void close()  {
+    public void close() {
         closed = true;
-        //3, 只有明确表示 close 的时候我们才关闭
+        //3, 只有明确表示 close 的时候我们才真正关闭底层
         if (closeConnection) {
             try {
                 this.connection.close();// 服务器也需要显式关闭连接
             } catch (IOException e) {
                 throw new ScxIOException(e);
             }
+        } else {
+            // 否则只是刷新
+            connection.dataWriter.flush();
         }
     }
 
