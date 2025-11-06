@@ -26,8 +26,6 @@ public class EventStreamTest {
                     eventStream.send(SseEvent.of("hello" + i).id("123").event("message").comment("这是注释"));
                     $.sleep(100);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
             System.out.println("全部发送完成");
         });

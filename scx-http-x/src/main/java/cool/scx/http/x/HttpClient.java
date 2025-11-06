@@ -9,7 +9,7 @@ import cool.scx.tcp.tls.TLS;
 
 import java.io.IOException;
 
-import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
+import static cool.scx.http.media.empty.EmptyMediaWriter.EMPTY_MEDIA_WRITER;
 import static cool.scx.http.method.HttpMethod.CONNECT;
 import static cool.scx.http.status.HttpStatus.OK;
 import static cool.scx.http.x.HttpClientHelper.checkIsTLS;
@@ -66,7 +66,7 @@ public class HttpClient implements ScxHttpClient {
 
     //创建一个 TCP 连接 todo 后期可以创建一个 连接池 用来复用 未断开的 tcp 连接
     public ScxTCPSocket createTCPSocket(ScxURI uri, String... applicationProtocols) throws IOException {
-        //判断是否 tls 
+        //判断是否 tls
         var isTLS = checkIsTLS(uri);
         //判断是否使用代理
         var withProxy = options.proxy() != null && options.proxy().enabled();
@@ -98,7 +98,7 @@ public class HttpClient implements ScxHttpClient {
     /// 创建 具有代理 的 明文 socket
     public ScxTCPSocket createPlainTCPSocketWithProxy() throws IOException {
         var tcpClient = new TCPClient();
-        //我们连接代理地址 
+        //我们连接代理地址
         var remoteAddress = options.proxy().proxyAddress();
         return tcpClient.connect(remoteAddress, options.timeout());
     }
@@ -115,11 +115,11 @@ public class HttpClient implements ScxHttpClient {
                                 .method(CONNECT)
                                 .addHeader("proxy-connection", "keep-alive")
                                 .uri(uri),
-                        EMPTY_WRITER
+                        EMPTY_MEDIA_WRITER
                 )
                 .waitResponse();
 
-        //3, 握手成功 
+        //3, 握手成功
         if (proxyResponse.status() != OK) {
             throw new RuntimeException("代理连接失败 :" + proxyResponse.status());
         }
