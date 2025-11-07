@@ -6,6 +6,7 @@ import cool.scx.http.x.HttpClientOptions;
 import cool.scx.http.x.HttpClientRequest;
 import cool.scx.tcp.ScxTCPSocket;
 
+// todo 待完成
 public class Http2ClientConnection {
 
     public Http2ClientConnection(ScxTCPSocket tcpSocket, HttpClientOptions options) {
@@ -13,11 +14,11 @@ public class Http2ClientConnection {
     }
 
     public Http2ClientConnection sendRequest(HttpClientRequest request, MediaWriter writer) {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public ScxHttpClientResponse waitResponse() {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

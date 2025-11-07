@@ -6,7 +6,7 @@ import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
 import cool.scx.http.x.HttpServerOptions;
 import cool.scx.tcp.ScxTCPSocket;
 
-//todo 未完成
+// todo 待完成
 public class Http2ServerConnection {
 
     public Http2ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, Function1Void<ScxHttpServerRequest, ?> requestHandler, ScxHttpServerErrorHandler errorHandler) {

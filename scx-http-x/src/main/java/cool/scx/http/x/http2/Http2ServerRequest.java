@@ -9,7 +9,7 @@ import cool.scx.http.peer_info.PeerInfo;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.version.HttpVersion;
 
-//todo 未完成
+// todo 待完成
 public class Http2ServerRequest implements ScxHttpServerRequest {
 
     @Override
@@ -51,4 +51,5 @@ public class Http2ServerRequest implements ScxHttpServerRequest {
     public PeerInfo localPeer() {
         return null;
     }
+
 }
