@@ -5,6 +5,9 @@ import cool.scx.app.ScxAppContext;
 import cool.scx.app.ScxAppModule;
 import cool.scx.app.base.BaseModelService;
 import cool.scx.app.enumeration.ScxAppFeature;
+import cool.scx.app.helper.zip.UnZipBuilder;
+import cool.scx.app.helper.zip.ZipBuilder;
+import cool.scx.app.helper.zip.ZipOptions;
 import cool.scx.app.test.car.Car;
 import cool.scx.app.test.car.CarColor;
 import cool.scx.app.test.car.CarOwner;
@@ -22,9 +25,6 @@ import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.routing.handler.StaticHandler;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.ScxHttpClientHelper;
-import cool.scx.io.x.zip.UnZipBuilder;
-import cool.scx.io.x.zip.ZipBuilder;
-import cool.scx.io.x.zip.ZipOptions;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.scheduling.ScxScheduling;
 import org.testng.annotations.BeforeTest;
@@ -179,7 +179,7 @@ public class TestModule extends ScxAppModule {
                             .addQuery("age", 18),
                     MultiPart.of()
                             .add("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8))
-                            .add("content1", ScxAppContext.getTempPath("test.txt"))
+                            .add("content1", ScxAppContext.getTempPath("test.txt").toFile())
             ).body();
             logger.log(ERROR, "测试请求[{0}] : {1}", i, stringHttpResponse.asString());
         }

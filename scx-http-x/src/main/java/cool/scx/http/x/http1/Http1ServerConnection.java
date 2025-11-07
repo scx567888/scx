@@ -1,9 +1,5 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.io.ByteInput;
-import cool.scx.io.DefaultByteInput;
-import cool.scx.io.NullByteInput;
-import cool.scx.io.supplier.InputStreamByteSupplier;
 import cool.scx.function.Function1Void;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.error_handler.ErrorPhase;
@@ -11,13 +7,13 @@ import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.HttpServerOptions;
+import cool.scx.http.x.http1.auto_continue.AutoContinueByteSupplier;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.io.x.io_stream.NullCheckedInputStream;
+import cool.scx.io.*;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.System.Logger;
 
 import static cool.scx.http.error_handler.DefaultHttpServerErrorHandler.DEFAULT_HTTP_SERVER_ERROR_HANDLER;
@@ -28,6 +24,7 @@ import static cool.scx.http.x.http1.Http1Helper.*;
 import static cool.scx.http.x.http1.Http1Reader.*;
 import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
 import static cool.scx.http.x.http1.headers.expect.Expect.CONTINUE;
+import static cool.scx.io.supplier.ClosePolicyByteSupplier.noCloseDrain;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 
@@ -45,7 +42,7 @@ public class Http1ServerConnection {
     public final ScxHttpServerErrorHandler errorHandler;
 
     public final ByteInput dataReader;
-    public final OutputStream dataWriter;
+    public final ByteOutput dataWriter;
 
     private boolean running;
 
@@ -54,8 +51,8 @@ public class Http1ServerConnection {
         this.options = options;
         this.requestHandler = requestHandler;
         this.errorHandler = errorHandler;
-        this.dataReader = new DefaultByteInput(new InputStreamByteSupplier(this.tcpSocket.inputStream()));
-        this.dataWriter = this.tcpSocket.outputStream();
+        this.dataReader = ScxIO.createByteInput(this.tcpSocket.inputStream());
+        this.dataWriter = new OutputStreamByteOutput(this.tcpSocket.outputStream());
         this.running = true;
     }
 
@@ -104,7 +101,7 @@ public class Http1ServerConnection {
         var headers = readHeaders(dataReader, options.maxHeaderSize());
 
         // 3, 读取 请求体流
-        var bodyInputStream = readBodyByteInput(headers, dataReader, options.maxPayloadSize());
+        var bodyByteSupplier = readBodyByteInput(headers, dataReader, options.maxPayloadSize());
 
         // 4, 在交给用户处理器进行处理之前, 我们需要做一些预处理
 
@@ -115,7 +112,7 @@ public class Http1ServerConnection {
 
         // 4.2, 处理 100-continue 临时请求
         if (headers.expect() == CONTINUE) {
-            //如果启用了自动响应 我们直接发送
+            // 如果启用了自动响应 我们直接发送
             if (options.autoRespond100Continue()) {
                 try {
                     sendContinue100(dataWriter);
@@ -123,10 +120,13 @@ public class Http1ServerConnection {
                     throw new CloseConnectionException("Failed to write continue", e);
                 }
             } else {
-                //否则交给用户去处理
-                bodyInputStream = new AutoContinueByteInput(bodyInputStream, dataWriter);
+                // 否则交给用户去处理
+                bodyByteSupplier = new AutoContinueByteSupplier(bodyByteSupplier, dataWriter);
             }
         }
+
+        // 创建一个 ByteInput, 要求是 1, 要隔离 底层 close, 2, 同时在 close 的时候还要排空流.
+        var bodyByteInput = new DefaultByteInput(noCloseDrain(bodyByteSupplier));
 
         // 5, 判断是否为 升级请求 并创建对应请求
         var upgrade = checkUpgradeRequest(requestLine, headers);
@@ -135,12 +135,12 @@ public class Http1ServerConnection {
             for (var upgradeHandler : options.upgradeHandlerList()) {
                 var canHandle = upgradeHandler.canHandle(upgrade);
                 if (canHandle) {
-                    return upgradeHandler.createScxHttpServerRequest(this, requestLine, headers, bodyInputStream);
+                    return upgradeHandler.createScxHttpServerRequest(this, requestLine, headers, bodyByteInput);
                 }
             }
         }
 
-        return new Http1ServerRequest(this, requestLine, headers, bodyInputStream);
+        return new Http1ServerRequest(this, requestLine, headers, bodyByteInput);
     }
 
     public void stop() {

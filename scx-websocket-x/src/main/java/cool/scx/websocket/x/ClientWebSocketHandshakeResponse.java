@@ -34,7 +34,7 @@ public class ClientWebSocketHandshakeResponse implements ScxClientWebSocketHands
             if (!handshakeSucceeded()) {
                 throw new RuntimeException("Unexpected response status: " + response.status());
             }
-            webSocket = new WebSocket(connection.tcpSocket, connection.dataReader, connection.tcpSocket.outputStream(), webSocketOptions, true);
+            webSocket = new WebSocket(connection.tcpSocket, connection.dataReader, connection.dataWriter, webSocketOptions, true);
         }
         return webSocket;
     }

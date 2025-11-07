@@ -1,49 +1,66 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.io.x.io_stream.CheckedOutputStream;
+import cool.scx.io.ByteChunk;
+import cool.scx.io.ByteOutput;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 import java.io.IOException;
 
-public class Http1ServerResponseOutputStream extends CheckedOutputStream {
+public class Http1ServerResponseOutputStream implements ByteOutput {
 
     private final Http1ServerConnection connection;
     private final boolean closeConnection;
+    private boolean closed;
 
     public Http1ServerResponseOutputStream(Http1ServerConnection connection, boolean closeConnection) {
         this.connection = connection;
         this.closeConnection = closeConnection;
+        this.closed = false;
+    }
+
+    private void ensureOpen() throws AlreadyClosedException {
+        if (closed) {
+            throw new AlreadyClosedException();
+        }
     }
 
     @Override
-    public void write(int b) throws IOException {
+    public void write(byte b) {
         ensureOpen();
         connection.dataWriter.write(b);
     }
 
     @Override
-    public void write(byte[] b) throws IOException {
+    public void write(ByteChunk b) throws ScxIOException, AlreadyClosedException {
         ensureOpen();
         connection.dataWriter.write(b);
     }
 
     @Override
-    public void write(byte[] b, int off, int len) throws IOException {
-        ensureOpen();
-        connection.dataWriter.write(b, off, len);
-    }
-
-    @Override
-    public void flush() throws IOException {
+    public void flush() {
         ensureOpen();
         connection.dataWriter.flush();
     }
 
     @Override
-    public void close() throws IOException {
+    public boolean isClosed() {
+        return closed;
+    }
+
+    @Override
+    public void close() {
         closed = true;
-        //3, 只有明确表示 close 的时候我们才关闭
+        //3, 只有明确表示 close 的时候我们才真正关闭底层
         if (closeConnection) {
-            this.connection.close();// 服务器也需要显式关闭连接
+            try {
+                this.connection.close();// 服务器也需要显式关闭连接
+            } catch (IOException e) {
+                throw new ScxIOException(e);
+            }
+        } else {
+            // 否则只是刷新
+            connection.dataWriter.flush();
         }
     }
 

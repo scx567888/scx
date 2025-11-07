@@ -64,7 +64,7 @@ public class StaticHandler implements Function1Void<RoutingContext, Throwable> {
             routingContext.response().setHeader(ETAG, etag);
             routingContext.response().setHeader(LAST_MODIFIED, lastModifiedTime);
 
-            sendStatic(filePath, routingContext);
+            sendStatic(filePath.toFile(), routingContext);
         } catch (IOException e) {
             routingContext.next();
         }

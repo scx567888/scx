@@ -2,6 +2,7 @@ package cool.scx.http.x.http1.chunked;
 
 import cool.scx.io.ByteChunk;
 import cool.scx.io.ByteInput;
+import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.supplier.ByteSupplier;
@@ -14,17 +15,17 @@ import cool.scx.http.exception.ContentTooLargeException;
 /// @version 0.0.1
 public class HttpChunkedByteSupplier implements ByteSupplier {
 
-    private final ByteInput dataReader;
+    private final ByteInput byteInput;
     private final long maxLength;
     private long position;
     private boolean isFinished;
 
-    public HttpChunkedByteSupplier(ByteInput dataReader) {
-        this(dataReader, Long.MAX_VALUE);
+    public HttpChunkedByteSupplier(ByteInput byteInput) {
+        this(byteInput, Long.MAX_VALUE);
     }
 
-    public HttpChunkedByteSupplier(ByteInput dataReader, long maxLength) {
-        this.dataReader = dataReader;
+    public HttpChunkedByteSupplier(ByteInput byteInput, long maxLength) {
+        this.byteInput = byteInput;
         this.maxLength = maxLength;
         this.position = 0;
         this.isFinished = false;
@@ -36,7 +37,7 @@ public class HttpChunkedByteSupplier implements ByteSupplier {
             return null;
         }
 
-        var chunkLengthBytes = dataReader.readUntil("\r\n".getBytes());
+        var chunkLengthBytes = byteInput.readUntil("\r\n".getBytes());
         var chunkLengthStr = new String(chunkLengthBytes);
         int chunkLength;
         try {
@@ -52,7 +53,7 @@ public class HttpChunkedByteSupplier implements ByteSupplier {
         if (chunkLength == 0) {
             byte[] endBytes;
             try {
-                endBytes = dataReader.readUntil("\r\n".getBytes());
+                endBytes = byteInput.readUntil("\r\n".getBytes());
             } catch (NoMatchFoundException e) {
                 throw new BadRequestException("错误的终结分块, 终结块不完整: 缺少 \\r\\n !!!");
             }
@@ -63,9 +64,9 @@ public class HttpChunkedByteSupplier implements ByteSupplier {
             isFinished = true;
             return null;
         }
-        var nextChunkData = dataReader.read(chunkLength);
-        dataReader.skip(2); // skip \r\n after the chunk
-        return new ByteChunk(nextChunkData);
+        var nextChunkData = byteInput.read(chunkLength);
+        byteInput.skip(2); // skip \r\n after the chunk
+        return ByteChunk.of(nextChunkData);
     }
 
     public void checkMaxPayload(int chunkLength) {
@@ -74,6 +75,11 @@ public class HttpChunkedByteSupplier implements ByteSupplier {
             throw new ContentTooLargeException();
         }
         position += chunkLength;
+    }
+
+    @Override
+    public void close() throws ScxIOException, AlreadyClosedException {
+        byteInput.close();
     }
 
 }

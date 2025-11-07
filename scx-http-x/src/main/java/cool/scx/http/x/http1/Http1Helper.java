@@ -12,6 +12,7 @@ import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.headers.upgrade.ScxUpgrade;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.io.ByteInput;
+import cool.scx.io.ByteOutput;
 import cool.scx.io.exception.AlreadyClosedException;
 import cool.scx.io.exception.ScxIOException;
 import cool.scx.tcp.ScxTCPSocket;
@@ -38,13 +39,14 @@ public final class Http1Helper {
         return requestLine.method() == GET && headers.connection() == UPGRADE ? headers.upgrade() : null;
     }
 
-    public static void sendContinue100(OutputStream out) throws IOException {
+    public static void sendContinue100(ByteOutput out) throws IOException {
         out.write(CONTINUE_100);
     }
 
     public static void consumeByteInput(ByteInput byteInput) {
-        try (byteInput) {
-            byteInput.skipAll();
+        // 因为我们的流 在 close 时会自动排空, 这里直接 close 即可
+        try {
+            byteInput.close();
         } catch (AlreadyClosedException | ScxIOException e) {
             // 忽略
         }

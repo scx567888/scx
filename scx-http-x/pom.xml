@@ -21,31 +21,13 @@
     <dependencies>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-http</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-codec</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>cool.scx</groupId>
-            <artifactId>scx-reflect</artifactId>
+            <artifactId>scx-http</artifactId>
         </dependency>
 
         <dependency>
             <groupId>cool.scx</groupId>
             <artifactId>scx-tcp</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-io-x</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <!-- ****************** 以下为测试依赖 ****************** -->

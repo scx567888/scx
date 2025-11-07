@@ -1,7 +1,7 @@
 package cool.scx.web.vo;
 
+import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Path;
 
 import static cool.scx.web.HttpHelper.getDownloadContentDisposition;
 import static cool.scx.web.HttpHelper.getMediaTypeByFileName;
@@ -16,8 +16,8 @@ public final class Download extends BaseWriter {
         super(inputStream, getMediaTypeByFileName(downloadName), getDownloadContentDisposition(downloadName));
     }
 
-    private Download(Path path, String downloadName) {
-        super(path, getMediaTypeByFileName(downloadName), getDownloadContentDisposition(downloadName));
+    private Download(File file, String downloadName) {
+        super(file, getMediaTypeByFileName(downloadName), getDownloadContentDisposition(downloadName));
     }
 
     private Download(byte[] bytes, String downloadName) {
@@ -32,12 +32,12 @@ public final class Download extends BaseWriter {
         return new Download(bytes, downloadName);
     }
 
-    public static Download of(Path path, String downloadName) {
-        return new Download(path, downloadName);
+    public static Download of(File file, String downloadName) {
+        return new Download(file, downloadName);
     }
 
-    public static Download of(Path path) {
-        return new Download(path, path.getFileName().toString());
+    public static Download of(File file) {
+        return new Download(file, file.getName());
     }
 
 }

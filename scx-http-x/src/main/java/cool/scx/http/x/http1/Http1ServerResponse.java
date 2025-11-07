@@ -8,14 +8,12 @@ import cool.scx.http.sender.BodyAlreadySentException;
 import cool.scx.http.sender.HttpSendException;
 import cool.scx.http.status.HttpStatus;
 import cool.scx.http.status.ScxHttpStatus;
-import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
+import cool.scx.http.x.http1.chunked.HttpChunkedByteOutput;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.status_line.Http1StatusLine;
-import cool.scx.io.x.io_stream.CheckedOutputStream;
-import cool.scx.io.x.io_stream.StreamClosedException;
-
-import java.io.IOException;
-import java.io.OutputStream;
+import cool.scx.io.ByteOutput;
+import cool.scx.io.exception.AlreadyClosedException;
+import cool.scx.io.exception.ScxIOException;
 
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 import static cool.scx.http.x.http1.Http1Helper.checkResponseHasBody;
@@ -36,7 +34,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     private Http1Headers headers;
     private ScxHttpStatus status;
     private String reasonPhrase;
-    private OutputStream outputStream;
+    private ByteOutput byteOutput;
 
     Http1ServerResponse(Http1ServerConnection connection, Http1ServerRequest request) {
         this.connection = connection;
@@ -86,9 +84,9 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         var expectedLength = writer.beforeWrite(headers, request.headers());
         try {
             writer.write(outputStream(expectedLength));
-        } catch (IOException e) {
+        } catch (ScxIOException e) {
             throw new HttpSendException("发送 HTTP 响应失败 !!!", e);
-        } catch (StreamClosedException e) {
+        } catch (AlreadyClosedException e) {
             throw new BodyAlreadySentException();
         }
         return null;
@@ -96,28 +94,24 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
 
     @Override
     public boolean isSent() {
-        if (outputStream == null) {
+        if (byteOutput == null) {
             return false;
         }
-        var o = outputStream instanceof HttpChunkedOutputStream c ? c.outputStream() : outputStream;
-        if (o instanceof CheckedOutputStream c) {
-            return c.isClosed();
-        }
-        throw new IllegalStateException("unknown type output stream");
+        return byteOutput.isClosed();
     }
 
     public String createReasonPhrase() {
         return reasonPhrase != null ? reasonPhrase : getReasonPhrase(status, "unknown");
     }
 
-    private OutputStream outputStream(long expectedLength) throws IOException {
-        if (outputStream == null) {
-            outputStream = sendHeaders(expectedLength);
+    private ByteOutput outputStream(long expectedLength)  {
+        if (byteOutput == null) {
+            byteOutput = sendHeaders(expectedLength);
         }
-        return outputStream;
+        return byteOutput;
     }
 
-    private OutputStream sendHeaders(long expectedLength) throws IOException {
+    private ByteOutput sendHeaders(long expectedLength)  {
         // 1, 创建 响应行
         var statusLine = new Http1StatusLine(request.version(), status.code(), createReasonPhrase());
 
@@ -170,11 +164,11 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         // 只有明确表示 分块的时候才使用分块
         var useChunkedTransfer = headers.transferEncoding() == CHUNKED;
 
-        // todo 这里的 Http1ServerResponseOutputStream 应该根据 contentLength 进行限制
+        // todo 这里的 Http1ServerResponseOutputStream 应该根据 contentLength 进行限制, 可以使用 使用 LengthBoundedOutput
         var baseOutputStream = new Http1ServerResponseOutputStream(connection, closeConnection);
-        //采用分块传输
-        return useChunkedTransfer ? new HttpChunkedOutputStream(baseOutputStream) : baseOutputStream;
 
+        // 判断是否采用分块传输
+        return useChunkedTransfer ? new HttpChunkedByteOutput(baseOutputStream) : baseOutputStream;
     }
 
 }

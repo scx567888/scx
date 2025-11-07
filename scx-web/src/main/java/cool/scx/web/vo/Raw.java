@@ -2,8 +2,8 @@ package cool.scx.web.vo;
 
 import cool.scx.http.media_type.FileFormat;
 
+import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Path;
 
 /// 原始文件 但不需要下载的 vo 比如 pdf 之类
 ///
@@ -15,8 +15,8 @@ public final class Raw extends BaseWriter {
         super(inputStream, fileFormat.mediaType(), "inline");
     }
 
-    private Raw(Path path) {
-        super(path, null, "inline");
+    private Raw(File file) {
+        super(file, null, "inline");
     }
 
     private Raw(byte[] bytes, FileFormat fileFormat) {
@@ -27,8 +27,8 @@ public final class Raw extends BaseWriter {
         return new Raw(bytes, fileFormat);
     }
 
-    public static Raw of(Path path) {
-        return new Raw(path);
+    public static Raw of(File file) {
+        return new Raw(file);
     }
 
     public static Raw of(InputStream inputStream, FileFormat fileFormat) {
