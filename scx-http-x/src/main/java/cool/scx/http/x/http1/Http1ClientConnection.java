@@ -93,6 +93,8 @@ public class Http1ClientConnection {
         // 这里需要做一个 close 的中断传递. 防止用户意外关闭底层
         var noCloseByteOutput = new NoCloseByteOutput(dataWriter);
 
+        // todo 使用 LengthBoundedOutput 限制 output 写入长度 保证和 contentLength 相同(假设设置了的话).
+
         var out = useChunkedTransfer ? new HttpChunkedByteOutput(noCloseByteOutput) : noCloseByteOutput;
 
         // 调用处理器

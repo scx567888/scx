@@ -164,7 +164,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         // 只有明确表示 分块的时候才使用分块
         var useChunkedTransfer = headers.transferEncoding() == CHUNKED;
 
-        // todo 这里的 Http1ServerResponseOutputStream 应该根据 contentLength 进行限制
+        // todo 这里的 Http1ServerResponseOutputStream 应该根据 contentLength 进行限制, 可以使用 使用 LengthBoundedOutput
         var baseOutputStream = new Http1ServerResponseOutputStream(connection, closeConnection);
 
         // 判断是否采用分块传输
