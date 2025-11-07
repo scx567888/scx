@@ -51,7 +51,7 @@ public class HttpServer implements ScxHttpServer {
     }
 
     private void handle(ScxTCPSocket tcpSocket) {
-        //配置 tls
+        // 1. 配置 tls
         if (options.tls() != null) {
             try {
                 tcpSocket.upgradeToTLS(options.tls());
@@ -72,6 +72,7 @@ public class HttpServer implements ScxHttpServer {
             }
         }
 
+        // 2, 检测是否使用 Http2
         var useHttp2 = false;
 
         if (tcpSocket.isTLS()) {
@@ -79,6 +80,7 @@ public class HttpServer implements ScxHttpServer {
             useHttp2 = HTTP_2.alpnValue().equals(applicationProtocol);
         }
 
+        // 3, 根据协议不同选择不同的连接处理器
         if (useHttp2) {
             new Http2ServerConnection(tcpSocket, options, requestHandler, errorHandler).start();
         } else {

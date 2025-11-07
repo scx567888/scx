@@ -21,8 +21,8 @@ public class HttpServerOptions {
     public HttpServerOptions() {
         this.tcpServerOptions = new TCPServerOptions();
         this.http1ConnectionOptions = new Http1ServerConnectionOptions();
-        this.tls = null; //默认没有 tls
-        this.enableHttp2 = false;//默认不启用 http2
+        this.tls = null; // 默认没有 tls
+        this.enableHttp2 = false;// 默认不启用 http2
     }
 
     public HttpServerOptions(HttpServerOptions oldOptions) {
@@ -32,7 +32,7 @@ public class HttpServerOptions {
         enableHttp2(oldOptions.enableHttp2());
     }
 
-    //因为涉及到一些底层实现, 所以不允许外界访问
+    // 因为涉及到一些底层实现, 所以不允许外界访问
     TCPServerOptions tcpServerOptions() {
         return tcpServerOptions;
     }
