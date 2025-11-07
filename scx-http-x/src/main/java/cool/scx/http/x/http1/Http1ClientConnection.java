@@ -16,7 +16,7 @@ import static cool.scx.http.headers.HttpFieldName.HOST;
 import static cool.scx.http.x.http1.Http1Helper.checkRequestHasBody;
 import static cool.scx.http.x.http1.Http1Reader.*;
 import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
-import static cool.scx.io.supplier.SpecialCloseByteSupplier.noCloseDrain;
+import static cool.scx.io.supplier.ClosePolicyByteSupplier.noCloseDrain;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Http1ClientConnection {

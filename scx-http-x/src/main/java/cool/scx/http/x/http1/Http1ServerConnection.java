@@ -24,7 +24,7 @@ import static cool.scx.http.x.http1.Http1Helper.*;
 import static cool.scx.http.x.http1.Http1Reader.*;
 import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
 import static cool.scx.http.x.http1.headers.expect.Expect.CONTINUE;
-import static cool.scx.io.supplier.SpecialCloseByteSupplier.noCloseDrain;
+import static cool.scx.io.supplier.ClosePolicyByteSupplier.noCloseDrain;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 
