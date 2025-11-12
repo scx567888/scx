@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-import static cool.scx.http.status.HttpStatus.FORBIDDEN;
+import static cool.scx.http.status_code.HttpStatusCode.FORBIDDEN;
 
 public class ScxWebTest {
 
@@ -32,7 +32,7 @@ public class ScxWebTest {
 
         router.addRoute(Route.of().path("/no-perm2").handler(c -> {
             //或者用这种 httpServer 的形式 和上方是一样的
-            c.response().status(FORBIDDEN).send("Error");
+            c.response().statusCode(FORBIDDEN).send("Error");
         }));
 
         httpServer.onRequest(router).start(8080);
