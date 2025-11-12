@@ -2,13 +2,13 @@ package cool.scx.http.test;
 
 import cool.scx.http.exception.UnauthorizedException;
 import cool.scx.http.routing.Router;
-import cool.scx.http.x.HttpServer;
 
 import java.io.IOException;
 
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.method.HttpMethod.POST;
 
+// todo 待改造
 public class Test {
 
     public static void main(String[] args) throws IOException {
@@ -17,7 +17,7 @@ public class Test {
 
     public static void test1() throws IOException {
         var l = System.nanoTime();
-        var server = new HttpServer();
+//        var server = new HttpServer();
 
         var router = Router.of();
 
@@ -59,9 +59,9 @@ public class Test {
             var r = 1 / 0;
         });
 
-        server.onRequest(router);
+//        server.onRequest(router);
 
-        server.start(8080);
+//        server.start(8080);
 
         System.out.println("HttpServer 启动完成 !!! 耗时 : " + (System.nanoTime() - l) / 1000_000);
     }
