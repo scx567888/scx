@@ -222,12 +222,12 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <scx-data.version>4.1.0</scx-data.version>
-        <scx-collections.version>4.1.0</scx-collections.version>
+        <scx-data.version>4.3.0</scx-data.version>
+        <scx-collections.version>4.3.0</scx-collections.version>
         <scx-logging.version>4.1.0</scx-logging.version>
-        <scx-timer.version>2.0.0</scx-timer.version>
-        <scx-tcp.version>4.1.0</scx-tcp.version>
-        <scx-common.version>4.1.0</scx-common.version>
+        <scx-timer.version>3.1.0</scx-timer.version>
+        <scx-tcp.version>4.3.0</scx-tcp.version>
+        <scx-common.version>4.3.0</scx-common.version>
         <scx-ansi.version>4.2.0</scx-ansi.version>
         <scx-reflect.version>4.2.0</scx-reflect.version>
         <scx-object.version>2.0.0</scx-object.version>
@@ -238,7 +238,7 @@
         <thumbnailator.version>0.4.21</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
         <cron-utils.version>9.2.1</cron-utils.version>
-        <mysql-connector-j.version>9.2.0</mysql-connector-j.version>
+        <mysql-connector-j.version>9.5.0</mysql-connector-j.version>
         <slf4j.version>2.0.17</slf4j.version>
         <log4j2.version>2.25.2</log4j2.version>
         <testng.version>7.11.0</testng.version>
