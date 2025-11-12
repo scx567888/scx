@@ -17,7 +17,7 @@ import static org.testng.Assert.*;
 
 public class WebSocketFrameHelperTest {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoMoreDataException {
         testReadFrame();
         testWriteFrame();
         testReadFrameUntilLast();

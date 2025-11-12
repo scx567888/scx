@@ -10,10 +10,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import static cool.scx.http.headers.HttpFieldName.ACCEPT_RANGES;
-import static cool.scx.http.headers.HttpFieldName.CONTENT_RANGE;
+import static cool.scx.http.headers.HttpHeaderName.ACCEPT_RANGES;
+import static cool.scx.http.headers.HttpHeaderName.CONTENT_RANGE;
 import static cool.scx.http.media_type.MediaType.*;
-import static cool.scx.http.status.HttpStatus.PARTIAL_CONTENT;
+import static cool.scx.http.status_code.HttpStatusCode.PARTIAL_CONTENT;
 
 /// StaticHelper
 ///
@@ -65,7 +65,7 @@ public class StaticHelper {
 
             //我们需要构建如下的结构
             // status: 206 Partial Content
-            response.status(PARTIAL_CONTENT);
+            response.statusCode(PARTIAL_CONTENT);
             // Content-Range: bytes 0-1023/146515
             response.setHeader(CONTENT_RANGE, "bytes " + start + "-" + end + "/" + fileLength);
             // Content-Length: 1024

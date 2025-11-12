@@ -2,6 +2,7 @@ package cool.scx.websocket.x;
 
 import cool.scx.io.ByteInput;
 import cool.scx.io.ByteOutput;
+import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.websocket.WebSocketOpCode;
 import cool.scx.websocket.exception.WebSocketException;
 
@@ -18,8 +19,8 @@ import static cool.scx.websocket.close_info.WebSocketCloseInfo.TOO_BIG;
 /// @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
 public class WebSocketProtocolFrameHelper {
 
-    public static WebSocketProtocolFrame readFrameHeader(ByteInput reader) {
-        byte[] header = reader.read(2);
+    public static WebSocketProtocolFrame readFrameHeader(ByteInput reader) throws NoMoreDataException {
+        byte[] header = reader.readFully(2);
 
         var b1 = header[0];
 
@@ -36,11 +37,11 @@ public class WebSocketProtocolFrameHelper {
 
         // 读取扩展长度
         if (payloadLength == 126) {
-            byte[] extendedPayloadLength = reader.read(2);
+            byte[] extendedPayloadLength = reader.readFully(2);
             payloadLength = (extendedPayloadLength[0] & 0b1111_1111) << 8 |
                     extendedPayloadLength[1] & 0b1111_1111;
         } else if (payloadLength == 127) {
-            byte[] extendedPayloadLength = reader.read(8);
+            byte[] extendedPayloadLength = reader.readFully(8);
             // 我们假定长度都是在 int 范围内的 (理论上不会有 2GB 的文件会通过 websocket 发送)
             payloadLength = (int) ((extendedPayloadLength[0] & 0b1111_1111L) << 56 |
                     (extendedPayloadLength[1] & 0b1111_1111L) << 48 |
@@ -55,18 +56,18 @@ public class WebSocketProtocolFrameHelper {
         byte[] maskingKey = null;
 
         if (masked) {
-            maskingKey = reader.read(4);
+            maskingKey = reader.readFully(4);
         }
 
         return new WebSocketProtocolFrame(fin, rsv1, rsv2, rsv3, opCode, masked, payloadLength, maskingKey);
     }
 
-    public static WebSocketProtocolFrame readFramePayload(WebSocketProtocolFrame frame, ByteInput reader) {
+    public static WebSocketProtocolFrame readFramePayload(WebSocketProtocolFrame frame, ByteInput reader) throws NoMoreDataException {
         var payloadLength = frame.payloadLength();
         var masked = frame.masked();
         var maskingKey = frame.maskingKey();
 
-        var payloadData = reader.read(payloadLength);
+        var payloadData = reader.readFully(payloadLength);
 
         // 掩码计算
         if (masked) {
@@ -126,7 +127,7 @@ public class WebSocketProtocolFrameHelper {
     }
 
     //读取单个帧
-    public static WebSocketProtocolFrame readFrame(ByteInput reader, long maxWebSocketFrameSize) {
+    public static WebSocketProtocolFrame readFrame(ByteInput reader, long maxWebSocketFrameSize) throws NoMoreDataException {
         var webSocketFrame = readFrameHeader(reader);
 
         //这里检查 最大帧大小
@@ -137,7 +138,7 @@ public class WebSocketProtocolFrameHelper {
         return readFramePayload(webSocketFrame, reader);
     }
 
-    public static WebSocketProtocolFrame readFrameUntilLast(ByteInput reader, long maxWebSocketFrameSize, long maxWebSocketMessageSize) {
+    public static WebSocketProtocolFrame readFrameUntilLast(ByteInput reader, long maxWebSocketFrameSize, long maxWebSocketMessageSize) throws NoMoreDataException {
         var frameList = new ArrayList<WebSocketProtocolFrame>();
         long totalPayloadLength = 0;
 

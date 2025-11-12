@@ -1,12 +1,14 @@
 package cool.scx.app;
 
-import cool.scx.http.headers.HttpFieldName;
+
+import cool.scx.http.headers.HttpHeaderName;
 import cool.scx.http.method.HttpMethod;
 import cool.scx.http.routing.Route;
 import cool.scx.http.routing.RouterImpl;
 import cool.scx.http.routing.handler.CorsHandler;
 
-import static cool.scx.http.headers.HttpFieldName.*;
+
+import static cool.scx.http.headers.HttpHeaderName.*;
 import static cool.scx.http.method.HttpMethod.*;
 
 /// ScxHttp 路由 内部使用 Router 进行具体路由的处理
@@ -16,8 +18,8 @@ import static cool.scx.http.method.HttpMethod.*;
 public final class ScxAppHttpRouter extends RouterImpl {
 
     private static final HttpMethod[] DEFAULT_ALLOWED_METHODS = new HttpMethod[]{GET, POST, OPTIONS, DELETE, PATCH, PUT};
-    private static final HttpFieldName[] DEFAULT_ALLOWED_HEADERS = new HttpFieldName[]{ACCEPT, CONTENT_TYPE};
-    private static final HttpFieldName[] DEFAULT_EXPOSED_HEADERS = new HttpFieldName[]{CONTENT_DISPOSITION};
+    private static final HttpHeaderName[] DEFAULT_ALLOWED_HEADERS = new HttpHeaderName[]{ACCEPT, CONTENT_TYPE};
+    private static final HttpHeaderName[] DEFAULT_EXPOSED_HEADERS = new HttpHeaderName[]{CONTENT_DISPOSITION};
 
     //基本 handler
     private final CorsHandler corsHandler;
