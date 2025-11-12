@@ -194,17 +194,20 @@ public final class ScxApp {
         var httpServerOptions = (this.defaultHttpServerOptions != null ?
                 new HttpServerOptions((HttpServerOptions) this.defaultHttpServerOptions) :
                 new HttpServerOptions());
-        var http1ServerConnectionOptions = httpServerOptions.http1ServerConnectionOptions();
-        http1ServerConnectionOptions.maxPayloadSize(DEFAULT_BODY_LIMIT);
+
+        httpServerOptions.maxPayloadSize(DEFAULT_BODY_LIMIT);
+
         if (this.scxOptions.isHttpsEnabled()) {
             var tls = TLS.of(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
             httpServerOptions.tls(tls);
         }
-        var hasWebSocketUpgradeHandler = http1ServerConnectionOptions.upgradeHandlerList().stream().anyMatch(http1UpgradeHandler -> http1UpgradeHandler instanceof WebSocketUpgradeHandler);
+
+        var hasWebSocketUpgradeHandler = httpServerOptions.http1ServerConnectionOptions().upgradeHandlerList().stream().anyMatch(http1UpgradeHandler -> http1UpgradeHandler instanceof WebSocketUpgradeHandler);
         //别忘了添加一个 websocket 处理器
         if (!hasWebSocketUpgradeHandler) {
-            http1ServerConnectionOptions.addUpgradeHandler(new WebSocketUpgradeHandler());
+            httpServerOptions.addUpgradeHandler(new WebSocketUpgradeHandler());
         }
+
         return new HttpServer(httpServerOptions).onError(new DefaultHttpServerErrorHandler(scxFeatureConfig.get(USE_DEVELOPMENT_ERROR_PAGE)));
     }
 
