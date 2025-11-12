@@ -225,7 +225,7 @@
         <scx-data.version>4.3.0</scx-data.version>
         <scx-collections.version>4.3.0</scx-collections.version>
         <scx-logging.version>4.1.0</scx-logging.version>
-        <scx-timer.version>3.1.0</scx-timer.version>
+        <scx-timer.version>4.0.0</scx-timer.version>
         <scx-tcp.version>4.3.0</scx-tcp.version>
         <scx-common.version>4.3.0</scx-common.version>
         <scx-ansi.version>4.2.0</scx-ansi.version>
