@@ -1,4 +1,4 @@
-package cool.scx.http.x.test;
+package cool.scx.http.test;
 
 import cool.scx.http.exception.UnauthorizedException;
 import cool.scx.http.routing.Router;

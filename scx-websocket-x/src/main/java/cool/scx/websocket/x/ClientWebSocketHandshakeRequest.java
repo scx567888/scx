@@ -18,8 +18,8 @@ import cool.scx.websocket.ScxClientWebSocketHandshakeResponse;
 import java.io.IOException;
 import java.util.Base64;
 
-import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
-import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
+import static cool.scx.http.headers.HttpHeaderName.SEC_WEBSOCKET_KEY;
+import static cool.scx.http.headers.HttpHeaderName.SEC_WEBSOCKET_VERSION;
 import static cool.scx.http.media.empty.EmptyMediaWriter.EMPTY_MEDIA_WRITER;
 import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 import static cool.scx.http.x.http1.headers.connection.Connection.UPGRADE;
@@ -90,10 +90,10 @@ public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandsh
         this.headers.set(SEC_WEBSOCKET_VERSION, "13");
 
         //仅当 http 协议并且开启代理的时候才使用 绝对路径
-        if (!tcpSocket.isTLS() && httpClient.options().proxy() != null && httpClient.options().proxy().enabled()) {
+        if (!tcpSocket.isTLS() && httpClient.options().proxy() != null) {
             this.requestTargetForm = ABSOLUTE_FORM;
         }
-        var connection = new Http1ClientConnection(tcpSocket, httpClient.options());
+        var connection = new Http1ClientConnection(tcpSocket, httpClient.options().http1ClientConnectionOptions());
 
         try {
             var response = connection.sendRequest(this, EMPTY_MEDIA_WRITER).waitResponse();

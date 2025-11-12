@@ -2,8 +2,9 @@ package cool.scx.websocket;
 
 import cool.scx.http.ScxHttpServerRequest;
 
-import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
-import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
+import static cool.scx.http.headers.HttpHeaderName.SEC_WEBSOCKET_KEY;
+import static cool.scx.http.headers.HttpHeaderName.SEC_WEBSOCKET_VERSION;
+
 
 /// ScxServerWebSocketHandshakeRequest
 ///

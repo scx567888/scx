@@ -3,12 +3,13 @@ package cool.scx.websocket.x;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.headers.ScxHttpHeaders;
-import cool.scx.http.status.ScxHttpStatus;
+import cool.scx.http.status_code.ScxHttpStatusCode;
 import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.websocket.ScxClientWebSocketHandshakeResponse;
 import cool.scx.websocket.ScxWebSocket;
 
-import static cool.scx.http.status.HttpStatus.SWITCHING_PROTOCOLS;
+import static cool.scx.http.status_code.HttpStatusCode.SWITCHING_PROTOCOLS;
+
 
 public class ClientWebSocketHandshakeResponse implements ScxClientWebSocketHandshakeResponse {
 
@@ -25,14 +26,14 @@ public class ClientWebSocketHandshakeResponse implements ScxClientWebSocketHands
 
     @Override
     public boolean handshakeSucceeded() {
-        return SWITCHING_PROTOCOLS.equals(response.status());
+        return SWITCHING_PROTOCOLS.equals(response.statusCode());
     }
 
     @Override
     public ScxWebSocket webSocket() {
         if (webSocket == null) {
             if (!handshakeSucceeded()) {
-                throw new RuntimeException("Unexpected response status: " + response.status());
+                throw new RuntimeException("Unexpected response status: " + response.statusCode());
             }
             webSocket = new WebSocket(connection.tcpSocket, connection.dataReader, connection.dataWriter, webSocketOptions, true);
         }
@@ -40,8 +41,8 @@ public class ClientWebSocketHandshakeResponse implements ScxClientWebSocketHands
     }
 
     @Override
-    public ScxHttpStatus status() {
-        return response.status();
+    public ScxHttpStatusCode statusCode() {
+        return response.statusCode();
     }
 
     @Override

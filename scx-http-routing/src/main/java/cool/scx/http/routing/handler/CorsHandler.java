@@ -13,7 +13,7 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static cool.scx.http.headers.HttpFieldName.*;
+import static cool.scx.http.headers.HttpHeaderName.*;
 import static java.util.Collections.addAll;
 
 /// CorsHandler
@@ -121,7 +121,7 @@ public class CorsHandler implements Function1Void<RoutingContext, Throwable> {
                     response.setHeader(ACCESS_CONTROL_MAX_AGE, maxAgeSeconds);
                 }
 
-                response.status(204).send();
+                response.statusCode(204).send();
 
             } else {
                 addCredentialsAndOriginHeader(response, origin);

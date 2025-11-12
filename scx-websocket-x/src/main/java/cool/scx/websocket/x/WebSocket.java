@@ -122,7 +122,7 @@ public class WebSocket implements ScxWebSocket {
         }
     }
 
-    private WebSocketProtocolFrame readProtocolFrame() {
+    private WebSocketProtocolFrame readProtocolFrame() throws NoMoreDataException {
         if (options.mergeWebSocketFrame()) {
             return WebSocketProtocolFrameHelper.readFrameUntilLast(reader, options.maxWebSocketFrameSize(), options.maxWebSocketMessageSize());
         } else {

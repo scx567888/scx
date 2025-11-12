@@ -21,8 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-import static cool.scx.http.headers.HttpFieldName.ACCEPT_RANGES;
-import static cool.scx.http.headers.HttpFieldName.CACHE_CONTROL;
+import static cool.scx.http.headers.HttpHeaderName.ACCEPT_RANGES;
+import static cool.scx.http.headers.HttpHeaderName.CACHE_CONTROL;
 import static cool.scx.http.media_type.MediaType.IMAGE_PNG;
 
 /// Image

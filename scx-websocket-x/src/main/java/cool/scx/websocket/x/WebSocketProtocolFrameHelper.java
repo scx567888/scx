@@ -2,6 +2,7 @@ package cool.scx.websocket.x;
 
 import cool.scx.io.ByteInput;
 import cool.scx.io.ByteOutput;
+import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.websocket.WebSocketOpCode;
 import cool.scx.websocket.exception.WebSocketException;
 
@@ -18,7 +19,7 @@ import static cool.scx.websocket.close_info.WebSocketCloseInfo.TOO_BIG;
 /// @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
 public class WebSocketProtocolFrameHelper {
 
-    public static WebSocketProtocolFrame readFrameHeader(ByteInput reader) {
+    public static WebSocketProtocolFrame readFrameHeader(ByteInput reader) throws NoMoreDataException {
         byte[] header = reader.read(2);
 
         var b1 = header[0];
@@ -61,7 +62,7 @@ public class WebSocketProtocolFrameHelper {
         return new WebSocketProtocolFrame(fin, rsv1, rsv2, rsv3, opCode, masked, payloadLength, maskingKey);
     }
 
-    public static WebSocketProtocolFrame readFramePayload(WebSocketProtocolFrame frame, ByteInput reader) {
+    public static WebSocketProtocolFrame readFramePayload(WebSocketProtocolFrame frame, ByteInput reader) throws NoMoreDataException {
         var payloadLength = frame.payloadLength();
         var masked = frame.masked();
         var maskingKey = frame.maskingKey();
@@ -126,7 +127,7 @@ public class WebSocketProtocolFrameHelper {
     }
 
     //读取单个帧
-    public static WebSocketProtocolFrame readFrame(ByteInput reader, long maxWebSocketFrameSize) {
+    public static WebSocketProtocolFrame readFrame(ByteInput reader, long maxWebSocketFrameSize) throws NoMoreDataException {
         var webSocketFrame = readFrameHeader(reader);
 
         //这里检查 最大帧大小
@@ -137,7 +138,7 @@ public class WebSocketProtocolFrameHelper {
         return readFramePayload(webSocketFrame, reader);
     }
 
-    public static WebSocketProtocolFrame readFrameUntilLast(ByteInput reader, long maxWebSocketFrameSize, long maxWebSocketMessageSize) {
+    public static WebSocketProtocolFrame readFrameUntilLast(ByteInput reader, long maxWebSocketFrameSize, long maxWebSocketMessageSize) throws NoMoreDataException {
         var frameList = new ArrayList<WebSocketProtocolFrame>();
         long totalPayloadLength = 0;
 

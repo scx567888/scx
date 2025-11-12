@@ -10,7 +10,7 @@ import cool.scx.io.ByteInput;
 
 import static cool.scx.http.x.http1.headers.upgrade.Upgrade.WEB_SOCKET;
 
-public class WebSocketUpgradeHandler implements Http1UpgradeHandler {
+public class WebSocketUpgradeHandler implements Http1UpgradeHandler<Http1ServerWebSocketHandshakeRequest> {
 
     private final WebSocketOptions webSocketOptions;
 
@@ -23,12 +23,12 @@ public class WebSocketUpgradeHandler implements Http1UpgradeHandler {
     }
 
     @Override
-    public boolean canHandle(ScxUpgrade scxUpgrade) {
+    public boolean canUpgrade(ScxUpgrade scxUpgrade) {
         return scxUpgrade == WEB_SOCKET;
     }
 
     @Override
-    public ScxHttpServerRequest createScxHttpServerRequest(Http1ServerConnection connection, Http1RequestLine requestLine, Http1Headers headers, ByteInput bodyByteInput) {
+    public Http1ServerWebSocketHandshakeRequest createUpgradedRequest(Http1ServerConnection connection, Http1RequestLine requestLine, Http1Headers headers, ByteInput bodyByteInput) {
         return new Http1ServerWebSocketHandshakeRequest(connection, requestLine, headers, bodyByteInput, webSocketOptions);
     }
 

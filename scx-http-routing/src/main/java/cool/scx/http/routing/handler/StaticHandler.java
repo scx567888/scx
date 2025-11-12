@@ -11,7 +11,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-import static cool.scx.http.headers.HttpFieldName.*;
+import static cool.scx.http.headers.HttpHeaderName.*;
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.method.HttpMethod.HEAD;
 import static cool.scx.http.routing.handler.StaticHelper.sendStatic;
@@ -56,7 +56,7 @@ public class StaticHandler implements Function1Void<RoutingContext, Throwable> {
             var ifModifiedSince = request.getHeader("If-Modified-Since");
 
             if (etag.equals(ifNoneMatch) || lastModifiedTime.equals(ifModifiedSince)) {
-                routingContext.response().status(304).send();
+                routingContext.response().statusCode(304).send();
                 return;
             }
 

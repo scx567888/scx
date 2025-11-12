@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static cool.scx.http.headers.HttpFieldName.CONTENT_DISPOSITION;
+import static cool.scx.http.headers.HttpHeaderName.CONTENT_DISPOSITION;
 import static cool.scx.http.media_type.MediaType.APPLICATION_OCTET_STREAM;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
