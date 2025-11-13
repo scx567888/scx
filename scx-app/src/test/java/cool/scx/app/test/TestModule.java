@@ -269,7 +269,7 @@ public class TestModule extends ScxAppModule {
         //测试定时任务
         ScxScheduling.fixedRate()
                 .startTime(Instant.now().plusSeconds(3))
-                .delay(Duration.of(1, ChronoUnit.SECONDS))
+                .interval(Duration.of(1, ChronoUnit.SECONDS))
                 .maxRunCount(10)
                 .start((a) -> {
                     //测试
@@ -277,7 +277,7 @@ public class TestModule extends ScxAppModule {
                 });
 
         ScxScheduling.cron()
-                .expression("*/1 * * * * ?")
+                .cronExpression("*/1 * * * * ?")
                 .start((a) -> {
                     //测试
                     logger.log(ERROR, "这是通过 ScxContext.scheduler() 使用 Cron 表达式 打印的 : 这时第 " + a.currentRunCount() + " 次执行 !!!");
@@ -285,7 +285,7 @@ public class TestModule extends ScxAppModule {
 
         ScxScheduling.fixedRate()
                 .startTime(Instant.now().plusSeconds(3))
-                .delay(Duration.of(1, ChronoUnit.SECONDS))
+                .interval(Duration.of(1, ChronoUnit.SECONDS))
                 .start((a) -> {
                     logger.log(ERROR, "这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 不限次数 不过到 第 10 次手动取消 , 这是第 " + a.currentRunCount() + " 次执行 !!!");
                     if (a.currentRunCount() >= 10) {

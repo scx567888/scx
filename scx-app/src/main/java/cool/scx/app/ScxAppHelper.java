@@ -226,7 +226,7 @@ public final class ScxAppHelper {
                     }
                     if (method.isStatic()) {
                         ScxScheduling.cron()
-                                .expression(scheduled.cron())
+                                .cronExpression(scheduled.cron())
                                 .start(c -> {
                                     try {
                                         method.invoke(null);
@@ -236,7 +236,7 @@ public final class ScxAppHelper {
                                 });
                     } else {
                         ScxScheduling.cron()
-                                .expression(scheduled.cron())
+                                .cronExpression(scheduled.cron())
                                 .start(c -> {
                                     try {
                                         method.invoke(bean);
