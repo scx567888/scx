@@ -106,18 +106,6 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
-                <artifactId>scx-timer</artifactId>
-                <version>${scx-timer.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-tcp</artifactId>
-                <version>${scx-tcp.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
                 <artifactId>scx-common</artifactId>
                 <version>${scx-common.version}</version>
             </dependency>
@@ -186,13 +174,6 @@
                 <version>${jasypt.version}</version>
             </dependency>
 
-            <!-- 解析 Cron 表达式 -->
-            <dependency>
-                <groupId>com.cronutils</groupId>
-                <artifactId>cron-utils</artifactId>
-                <version>${cron-utils.version}</version>
-            </dependency>
-
             <!-- mysql 驱动 -->
             <dependency>
                 <groupId>com.mysql</groupId>
@@ -230,20 +211,17 @@
         <scx-data.version>4.3.0</scx-data.version>
         <scx-collections.version>4.3.0</scx-collections.version>
         <scx-logging.version>4.1.0</scx-logging.version>
-        <scx-timer.version>4.0.0</scx-timer.version>
-        <scx-tcp.version>4.3.0</scx-tcp.version>
         <scx-common.version>4.3.0</scx-common.version>
         <scx-ansi.version>4.2.0</scx-ansi.version>
         <scx-reflect.version>4.2.0</scx-reflect.version>
         <scx-object.version>2.0.0</scx-object.version>
+        <scx-scheduling.version>4.0.0</scx-scheduling.version>
         <scx-http.version>3.9.6</scx-http.version>
         <scx-http-x.version>3.9.1</scx-http-x.version>
-        <scx-scheduling.version>3.9.0</scx-scheduling.version>
         <hikaricp.version>7.0.2</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
         <thumbnailator.version>0.4.21</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
-        <cron-utils.version>9.2.1</cron-utils.version>
         <mysql-connector-j.version>9.2.0</mysql-connector-j.version>
         <slf4j.version>2.0.17</slf4j.version>
         <log4j2.version>2.25.2</log4j2.version>
