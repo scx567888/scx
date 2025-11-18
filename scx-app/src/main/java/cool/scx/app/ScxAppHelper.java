@@ -9,7 +9,12 @@ import cool.scx.app.base.BaseModel;
 import cool.scx.app.base.BaseModelService;
 import cool.scx.bean.BeanFactory;
 import cool.scx.bean.BeanFactoryImpl;
-import cool.scx.bean.resolver.AutowiredAnnotationResolver;
+import cool.scx.bean.dependency_resolver.AutowiredAnnotationDependencyResolver;
+import cool.scx.bean.dependency_resolver.ValueAnnotationDependencyResolver;
+import cool.scx.bean.exception.DuplicateBeanNameException;
+import cool.scx.bean.exception.IllegalBeanClassException;
+import cool.scx.bean.exception.NoSuchConstructorException;
+import cool.scx.bean.exception.NoUniqueConstructorException;
 import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.StringUtils;
 import cool.scx.config.ScxConfig;
@@ -184,10 +189,12 @@ public final class ScxAppHelper {
         return scxModules;
     }
 
-    static BeanFactory initBeanFactory(ScxAppModule[] modules, ScxFeatureConfig scxFeatureConfig) {
+    static BeanFactory initBeanFactory(ScxAppModule[] modules, ScxFeatureConfig scxFeatureConfig) throws NoSuchConstructorException, DuplicateBeanNameException, NoUniqueConstructorException, IllegalBeanClassException {
         var beanFactory = new BeanFactoryImpl();
+        // todo 这里应该注入 一些有用的 Map 变量
+        beanFactory.beanDependencyResolvers().add(new ValueAnnotationDependencyResolver(Map.of()));
         //这里添加一个 bean 的后置处理器以便可以使用 @Autowired 注解
-        beanFactory.addBeanResolver(new AutowiredAnnotationResolver(beanFactory));
+        beanFactory.beanDependencyResolvers().add(new AutowiredAnnotationDependencyResolver(beanFactory));
         //注册 bean
         var beanClass = Arrays.stream(modules)
                 .flatMap(c -> c.classList().stream())
