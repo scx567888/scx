@@ -222,13 +222,13 @@
         <scx-object.version>2.0.0</scx-object.version>
         <scx-scheduling.version>4.0.0</scx-scheduling.version>
         <scx-bean.version>4.1.0</scx-bean.version>
-        <scx-http.version>3.9.6</scx-http.version>
+        <scx-http.version>4.0.0</scx-http.version>
         <scx-http-x.version>3.9.1</scx-http-x.version>
         <hikaricp.version>7.0.2</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
         <thumbnailator.version>0.4.21</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
-        <mysql-connector-j.version>9.2.0</mysql-connector-j.version>
+        <mysql-connector-j.version>9.5.0</mysql-connector-j.version>
         <slf4j.version>2.0.17</slf4j.version>
         <log4j2.version>2.25.2</log4j2.version>
         <testng.version>7.11.0</testng.version>
