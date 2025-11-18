@@ -43,7 +43,6 @@
 
     <modules>
         <module>scx-app</module>
-        <module>scx-bean</module>
         <module>scx-config</module>
         <module>scx-data-serialization</module>
         <module>scx-data-jdbc</module>
@@ -146,6 +145,12 @@
                 <version>${scx-scheduling.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-bean</artifactId>
+                <version>${scx-bean.version}</version>
+            </dependency>
+
             <!-- 数据库连接池 用于减少数据库连接创建时的性能消耗 -->
             <dependency>
                 <groupId>com.zaxxer</groupId>
@@ -216,6 +221,7 @@
         <scx-reflect.version>4.2.0</scx-reflect.version>
         <scx-object.version>2.0.0</scx-object.version>
         <scx-scheduling.version>4.0.0</scx-scheduling.version>
+        <scx-bean.version>4.1.0</scx-bean.version>
         <scx-http.version>3.9.6</scx-http.version>
         <scx-http-x.version>3.9.1</scx-http-x.version>
         <hikaricp.version>7.0.2</hikaricp.version>

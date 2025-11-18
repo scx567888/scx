@@ -59,14 +59,13 @@
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-websocket-x</artifactId>
-            <version>${project.version}</version>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-bean</artifactId>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-bean</artifactId>
+            <artifactId>scx-websocket-x</artifactId>
             <version>${project.version}</version>
         </dependency>
 
