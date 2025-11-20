@@ -54,6 +54,7 @@ public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandsh
         this.uri = ScxURI.of();
         this.headers = new Http1Headers();
         this.requestTargetForm = ORIGIN_FORM;
+        this.senderStatus = NOT_SENT;
     }
 
     @Override
