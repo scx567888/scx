@@ -2,6 +2,7 @@ package cool.scx.web.exception_handler;
 
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.routing.RoutingContext;
+import cool.scx.http.sender.ScxHttpSenderStatus;
 
 import java.lang.System.Logger;
 
@@ -27,7 +28,7 @@ public final class LastExceptionHandler extends ScxHttpExceptionHandler {
     @Override
     public void handle(Throwable throwable, RoutingContext routingContext) {
         //1, 如果这时 response 还没有被关闭的话 就返回 500 错误信息
-        if (!routingContext.response().isSent()) {
+        if (routingContext.response().senderStatus()== ScxHttpSenderStatus.NOT_SENT) {
             //打印错误信息
             logger.log(ERROR, "ScxHttpRouter 发生异常 !!!", throwable);
             this.handleScxHttpException(new InternalServerErrorException(throwable), routingContext);

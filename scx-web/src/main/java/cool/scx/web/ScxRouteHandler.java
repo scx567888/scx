@@ -6,6 +6,7 @@ import cool.scx.function.Function1Void;
 import cool.scx.http.method.HttpMethod;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.routing.*;
+import cool.scx.http.sender.ScxHttpSenderStatus;
 import cool.scx.reflect.MethodInfo;
 import cool.scx.web.annotation.ScxRoute;
 import cool.scx.web.parameter_handler.ParameterHandler;
@@ -95,7 +96,7 @@ public final class ScxRouteHandler implements Route, Function1Void<RoutingContex
             //4, 执行后置处理器
             var finalResult = this.scxWeb.interceptor().postHandle(context, this, tempResult);
             //5, 如果方法返回值不为 void 并且 response 可用 , 则调用返回值处理器
-            if (!isVoid && !context.response().isSent()) {
+            if (!isVoid && context.response().senderStatus()== ScxHttpSenderStatus.NOT_SENT) {
                 this.scxWeb.findReturnValueHandler(finalResult).handle(finalResult, context);
             }
         } catch (Throwable e) {

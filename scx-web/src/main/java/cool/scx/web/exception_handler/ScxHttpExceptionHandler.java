@@ -4,6 +4,7 @@ import cool.scx.common.util.ExceptionUtils;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
+import cool.scx.http.sender.ScxHttpSenderStatus;
 import cool.scx.http.status_code.ScxHttpStatusCode;
 
 import java.lang.System.Logger;
@@ -90,7 +91,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
 
     @Override
     public void handle(Throwable throwable, RoutingContext routingContext) {
-        if (!routingContext.response().isSent()) {
+        if (routingContext.response().senderStatus()== ScxHttpSenderStatus.NOT_SENT) {
             //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
             this.handleScxHttpException((ScxHttpException) throwable, routingContext);
         } else {
