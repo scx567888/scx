@@ -222,8 +222,8 @@
         <scx-object.version>2.0.0</scx-object.version>
         <scx-scheduling.version>4.0.0</scx-scheduling.version>
         <scx-bean.version>4.1.0</scx-bean.version>
-        <scx-http.version>4.0.0</scx-http.version>
-        <scx-http-x.version>3.9.2</scx-http-x.version>
+        <scx-http.version>4.3.0</scx-http.version>
+        <scx-http-x.version>3.9.4</scx-http-x.version>
         <hikaricp.version>7.0.2</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
         <thumbnailator.version>0.4.21</thumbnailator.version>
