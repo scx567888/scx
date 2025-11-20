@@ -69,9 +69,8 @@
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>cool.scx</groupId>
             <artifactId>scx-jdbc-spy</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <!-- 数据库连接池 用于减少数据库连接创建时的性能消耗 -->

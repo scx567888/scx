@@ -39,9 +39,8 @@
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>cool.scx</groupId>
             <artifactId>scx-jdbc-spy</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
 
