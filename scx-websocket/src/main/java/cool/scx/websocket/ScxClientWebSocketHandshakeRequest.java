@@ -7,12 +7,11 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.method.ScxHttpMethod;
-import cool.scx.http.sender.BodyAlreadySentException;
+import cool.scx.http.sender.HttpSendException;
+import cool.scx.http.sender.IllegalSenderStateException;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.http.version.HttpVersion;
 
 import static cool.scx.http.method.HttpMethod.GET;
-import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 
 /// ScxClientWebSocketHandshakeRequest
 /// 1, WebSocket 协议中指定了 必须由 GET 方法 和 空请求体 所以我们这里屏蔽掉一些方法
@@ -72,19 +71,10 @@ public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest
     }
 
     //************ 屏蔽方法 ****************
-    @Override
-    default HttpVersion version() {
-        return HTTP_1_1;
-    }
 
     @Override
     default ScxHttpMethod method() {
         return GET;
-    }
-
-    @Override
-    default ScxHttpClientRequest version(HttpVersion version) {
-        throw new UnsupportedOperationException("Not supported Custom HttpVersion.");
     }
 
     @Override
@@ -93,7 +83,7 @@ public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest
     }
 
     @Override
-    default ScxHttpClientResponse send(MediaWriter writer) throws BodyAlreadySentException {
+    default ScxHttpClientResponse send(MediaWriter writer) throws IllegalSenderStateException, HttpSendException {
         throw new UnsupportedOperationException("Not supported Custom HttpBody.");
     }
 
