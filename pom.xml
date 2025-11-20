@@ -47,7 +47,6 @@
         <module>scx-data-serialization</module>
         <module>scx-data-jdbc</module>
         <module>scx-http-routing</module>
-        <module>scx-jdbc-mysql</module>
         <module>scx-web</module>
         <module>scx-websocket-routing</module>
     </modules>
@@ -171,6 +170,12 @@
                 <version>${scx-jdbc-spy.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-jdbc-mysql</artifactId>
+                <version>${scx-jdbc-mysql.version}</version>
+            </dependency>
+
             <!-- 数据库连接池 用于减少数据库连接创建时的性能消耗 -->
             <dependency>
                 <groupId>com.zaxxer</groupId>
@@ -248,6 +253,7 @@
         <scx-websocket-x.version>3.9.0</scx-websocket-x.version>
         <scx-jdbc.version>3.9.0</scx-jdbc.version>
         <scx-jdbc-spy.version>3.9.0</scx-jdbc-spy.version>
+        <scx-jdbc-mysql.version>3.9.0</scx-jdbc-mysql.version>
         <hikaricp.version>7.0.2</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
         <thumbnailator.version>0.4.21</thumbnailator.version>
