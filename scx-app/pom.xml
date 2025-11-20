@@ -64,9 +64,8 @@
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>cool.scx</groupId>
             <artifactId>scx-websocket-x</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
