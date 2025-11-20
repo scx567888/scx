@@ -88,13 +88,12 @@ public class WebSocket implements ScxWebSocket {
     }
 
     @Override
-    public ScxWebSocket terminate() {
+    public void close() {
         try {
             tcpSocket.close();  // 这里有可能已经被远端关闭 我们忽略异常
         } catch (IOException e) {
 
         }
-        return this;
     }
 
     @Override
@@ -133,12 +132,12 @@ public class WebSocket implements ScxWebSocket {
         var closeInfo = WebSocketHelper.parseCloseInfo(protocolFrame.payloadData());
         //1, 发送关闭响应帧
         try {
-            close(closeInfo); // 这里有可能无法发送 我们忽略异常
+            sendClose(closeInfo); // 这里有可能无法发送 我们忽略异常
         } catch (Exception _) {
 
         }
         //2, 关闭底层 tcp 连接
-        this.terminate();
+        this.close();
     }
 
 }
