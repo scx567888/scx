@@ -4,15 +4,14 @@ import cool.scx.io.ByteInput;
 import cool.scx.io.ByteOutput;
 import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.common.util.RandomUtils;
-import cool.scx.tcp.ScxTCPSocket;
 import cool.scx.websocket.ScxWebSocket;
 import cool.scx.websocket.WebSocketFrame;
 import cool.scx.websocket.WebSocketHelper;
 import cool.scx.websocket.exception.WebSocketException;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.net.Socket;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static cool.scx.websocket.WebSocketOpCode.CLOSE;
@@ -25,7 +24,7 @@ import static cool.scx.websocket.x.WebSocketProtocolFrameHelper.writeFrame;
 /// @version 0.0.1
 public class WebSocket implements ScxWebSocket {
 
-    private final ScxTCPSocket tcpSocket;
+    private final Socket tcpSocket;
     private final ByteInput reader;
     private final ByteOutput writer;
     private final WebSocketOptions options;
@@ -36,7 +35,7 @@ public class WebSocket implements ScxWebSocket {
     //限制只发送一次 close 帧
     protected boolean closeSent;
 
-    public WebSocket(ScxTCPSocket tcpSocket, ByteInput reader, ByteOutput writer, WebSocketOptions options, boolean isClient) {
+    public WebSocket(Socket tcpSocket, ByteInput reader, ByteOutput writer, WebSocketOptions options, boolean isClient) {
         this.tcpSocket = tcpSocket;
         this.reader = reader;
         this.writer = writer;
