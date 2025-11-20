@@ -4,6 +4,7 @@ import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.http.sender.ScxHttpSenderStatus;
 import cool.scx.http.status_code.ScxHttpStatusCode;
 import cool.scx.http.x.http1.Http1ServerConnection;
 import cool.scx.http.x.http1.Http1ServerResponse;
@@ -68,8 +69,8 @@ public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocket
     }
 
     @Override
-    public boolean isSent() {
-        return _response.isSent();
+    public ScxHttpSenderStatus senderStatus() {
+        return _response.senderStatus();
     }
 
     private ScxWebSocket acceptHandshake() {
