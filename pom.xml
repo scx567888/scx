@@ -87,12 +87,6 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
-                <artifactId>scx-collections</artifactId>
-                <version>${scx-collections.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
                 <artifactId>scx-logging</artifactId>
                 <version>${scx-logging.version}</version>
             </dependency>
@@ -159,12 +153,6 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
-                <artifactId>scx-jdbc</artifactId>
-                <version>${scx-jdbc.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
                 <artifactId>scx-jdbc-spy</artifactId>
                 <version>${scx-jdbc-spy.version}</version>
             </dependency>
@@ -209,13 +197,6 @@
                 <version>${jasypt.version}</version>
             </dependency>
 
-            <!-- mysql 驱动 -->
-            <dependency>
-                <groupId>com.mysql</groupId>
-                <artifactId>mysql-connector-j</artifactId>
-                <version>${mysql-connector-j.version}</version>
-            </dependency>
-
             <!-- slf4j 日志框架 -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -244,7 +225,6 @@
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <scx-data.version>4.3.0</scx-data.version>
-        <scx-collections.version>4.3.0</scx-collections.version>
         <scx-logging.version>4.1.0</scx-logging.version>
         <scx-common.version>4.3.0</scx-common.version>
         <scx-ansi.version>4.2.0</scx-ansi.version>
@@ -256,7 +236,6 @@
         <scx-websocket.version>4.0.0</scx-websocket.version>
         <scx-http-x.version>3.9.4</scx-http-x.version>
         <scx-websocket-x.version>3.9.0</scx-websocket-x.version>
-        <scx-jdbc.version>3.9.0</scx-jdbc.version>
         <scx-jdbc-spy.version>3.9.0</scx-jdbc-spy.version>
         <scx-jdbc-mysql.version>3.9.0</scx-jdbc-mysql.version>
         <scx-data-jdbc.version>3.9.0</scx-data-jdbc.version>
@@ -264,7 +243,6 @@
         <freemarker.version>2.3.34</freemarker.version>
         <thumbnailator.version>0.4.21</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
-        <mysql-connector-j.version>9.2.0</mysql-connector-j.version>
         <slf4j.version>2.0.17</slf4j.version>
         <log4j2.version>2.25.2</log4j2.version>
         <testng.version>7.11.0</testng.version>
