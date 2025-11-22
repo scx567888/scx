@@ -1,13 +1,13 @@
 package cool.scx.app.base;
 
 import cool.scx.app.ScxAppContext;
-import cool.scx.data.Aggregator;
-import cool.scx.data.Finder;
-import cool.scx.data.Repository;
-import cool.scx.data.aggregation.Aggregation;
-import cool.scx.data.field_policy.FieldPolicy;
+import dev.scx.data.Aggregator;
+import dev.scx.data.Finder;
+import dev.scx.data.Repository;
+import dev.scx.data.aggregation.Aggregation;
+import dev.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.JDBCRepository;
-import cool.scx.data.query.Query;
+import dev.scx.data.query.Query;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.jdbc.sql.SQLRunner;
 
@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import static cool.scx.app.ScxAppHelper.findBaseModelServiceEntityClass;
-import static cool.scx.data.field_policy.FieldPolicyBuilder.includeAll;
-import static cool.scx.data.query.QueryBuilder.*;
+import static dev.scx.data.field_policy.FieldPolicyBuilder.includeAll;
+import static dev.scx.data.query.QueryBuilder.*;
 
 /// 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类
 /// 业务 service 可以继承此类 (注意 : 如需要被 beanFactory 扫描到 请标注 [cool.scx.app.annotation.ScxService] 注解)

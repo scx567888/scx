@@ -2,12 +2,12 @@ package cool.scx.web;
 
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.URIUtils;
-import cool.scx.function.Function1Void;
+import dev.scx.function.Function1Void;
 import cool.scx.http.method.HttpMethod;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.routing.*;
 import cool.scx.http.sender.ScxHttpSenderStatus;
-import cool.scx.reflect.MethodInfo;
+import dev.scx.reflect.MethodInfo;
 import cool.scx.web.annotation.ScxRoute;
 import cool.scx.web.parameter_handler.ParameterHandler;
 

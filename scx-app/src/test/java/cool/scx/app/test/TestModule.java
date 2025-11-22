@@ -26,7 +26,7 @@ import cool.scx.http.routing.handler.StaticHandler;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.ScxHttpClientHelper;
 import cool.scx.jdbc.sql.SQL;
-import cool.scx.scheduling.ScxScheduling;
+import dev.scx.scheduling.ScxScheduling;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -41,9 +41,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static cool.scx.common.constant.CharPools.NUMBER_AND_LETTER;
-import static cool.scx.data.field_policy.FieldPolicyBuilder.*;
-import static cool.scx.data.query.BuildControl.USE_EXPRESSION;
-import static cool.scx.data.query.QueryBuilder.*;
+import static dev.scx.data.field_policy.FieldPolicyBuilder.*;
+import static dev.scx.data.query.BuildControl.USE_EXPRESSION;
+import static dev.scx.data.query.QueryBuilder.*;
 import static java.lang.System.Logger.Level.ERROR;
 import static org.testng.AssertJUnit.assertEquals;
 

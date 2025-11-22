@@ -1,8 +1,8 @@
 package cool.scx.data.serialization;
 
-import cool.scx.data.field_policy.AssignField;
-import cool.scx.data.field_policy.FieldPolicy;
-import cool.scx.data.field_policy.VirtualField;
+import dev.scx.data.field_policy.AssignField;
+import dev.scx.data.field_policy.FieldPolicy;
+import dev.scx.data.field_policy.VirtualField;
 import cool.scx.object.ScxObject;
 import cool.scx.object.mapping.NodeMappingException;
 import cool.scx.object.serializer.NodeSerializeException;

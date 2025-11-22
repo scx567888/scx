@@ -1,12 +1,12 @@
 package cool.scx.data.serialization;
 
-import cool.scx.data.field_policy.*;
+import dev.scx.data.field_policy.*;
 import cool.scx.object.ScxObject;
 import cool.scx.object.node.ArrayNode;
 import cool.scx.object.node.Node;
 import cool.scx.object.node.ObjectNode;
 import cool.scx.object.node.ValueNode;
-import cool.scx.reflect.TypeReference;
+import dev.scx.reflect.TypeReference;
 
 import java.util.ArrayList;
 import java.util.List;

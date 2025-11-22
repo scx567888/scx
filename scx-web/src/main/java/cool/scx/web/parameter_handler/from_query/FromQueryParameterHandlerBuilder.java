@@ -1,6 +1,6 @@
 package cool.scx.web.parameter_handler.from_query;
 
-import cool.scx.reflect.ParameterInfo;
+import dev.scx.reflect.ParameterInfo;
 import cool.scx.web.annotation.FromQuery;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.ParameterHandlerBuilder;

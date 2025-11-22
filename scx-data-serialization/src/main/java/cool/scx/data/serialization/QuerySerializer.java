@@ -1,6 +1,6 @@
 package cool.scx.data.serialization;
 
-import cool.scx.data.query.*;
+import dev.scx.data.query.*;
 import cool.scx.object.ScxObject;
 import cool.scx.object.mapping.NodeMappingException;
 import cool.scx.object.serializer.NodeSerializeException;

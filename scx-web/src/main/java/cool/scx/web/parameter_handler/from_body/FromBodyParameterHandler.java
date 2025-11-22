@@ -1,8 +1,8 @@
 package cool.scx.web.parameter_handler.from_body;
 
 import cool.scx.object.NodeHelper;
-import cool.scx.reflect.ParameterInfo;
-import cool.scx.reflect.TypeInfo;
+import dev.scx.reflect.ParameterInfo;
+import dev.scx.reflect.TypeInfo;
 import cool.scx.web.annotation.FromBody;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.RequestInfo;
