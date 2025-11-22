@@ -3,7 +3,7 @@ package cool.scx.web;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.routing.Router;
 import cool.scx.http.routing.RoutingContext;
-import cool.scx.reflect.ParameterInfo;
+import dev.scx.reflect.ParameterInfo;
 import cool.scx.web.interceptor.DefaultInterceptor;
 import cool.scx.web.interceptor.Interceptor;
 import cool.scx.web.parameter_handler.ParameterHandler;

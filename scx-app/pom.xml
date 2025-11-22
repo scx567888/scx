@@ -38,17 +38,17 @@
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>dev.scx</groupId>
             <artifactId>scx-logging</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>dev.scx</groupId>
             <artifactId>scx-reflect</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>dev.scx</groupId>
             <artifactId>scx-scheduling</artifactId>
         </dependency>
 

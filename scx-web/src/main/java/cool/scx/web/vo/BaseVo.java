@@ -1,6 +1,6 @@
 package cool.scx.web.vo;
 
-import cool.scx.function.Function1Void;
+import dev.scx.function.Function1Void;
 import cool.scx.http.routing.RoutingContext;
 
 /// BaseVo 接口

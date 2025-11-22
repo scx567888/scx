@@ -1,6 +1,6 @@
 package cool.scx.http.routing;
 
-import cool.scx.function.Function1Void;
+import dev.scx.function.Function1Void;
 import cool.scx.http.ScxHttpServerRequest;
 
 import java.util.List;

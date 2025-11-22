@@ -3,7 +3,7 @@ package cool.scx.app;
 import cool.scx.ansi.Ansi;
 import cool.scx.app.eventbus.EventBus;
 import cool.scx.bean.BeanFactory;
-import cool.scx.collections.ScxCollections;
+import dev.scx.collections.ScxCollections;
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.StopWatch;
 import cool.scx.config.ScxConfig;

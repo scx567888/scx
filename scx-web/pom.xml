@@ -43,7 +43,7 @@
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>dev.scx</groupId>
             <artifactId>scx-reflect</artifactId>
         </dependency>
 

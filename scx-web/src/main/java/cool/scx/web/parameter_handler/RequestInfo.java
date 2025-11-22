@@ -1,6 +1,6 @@
 package cool.scx.web.parameter_handler;
 
-import cool.scx.collections.multi_map.MultiMap;
+import dev.scx.collections.multi_map.MultiMap;
 import cool.scx.http.body.CacheHttpBody;
 import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.media.multi_part.MultiPartPartImpl;

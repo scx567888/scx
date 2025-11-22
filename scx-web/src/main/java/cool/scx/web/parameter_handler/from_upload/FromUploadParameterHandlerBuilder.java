@@ -1,10 +1,10 @@
 package cool.scx.web.parameter_handler.from_upload;
 
 import cool.scx.http.media.multi_part.MultiPartPart;
-import cool.scx.reflect.ArrayTypeInfo;
-import cool.scx.reflect.ClassInfo;
-import cool.scx.reflect.ParameterInfo;
-import cool.scx.reflect.TypeInfo;
+import dev.scx.reflect.ArrayTypeInfo;
+import dev.scx.reflect.ClassInfo;
+import dev.scx.reflect.ParameterInfo;
+import dev.scx.reflect.TypeInfo;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
 
