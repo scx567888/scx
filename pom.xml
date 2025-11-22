@@ -45,7 +45,6 @@
     <modules>
         <module>scx-app</module>
         <module>scx-config</module>
-        <module>scx-data-serialization</module>
         <module>scx-http-routing</module>
         <module>scx-web</module>
         <module>scx-websocket-routing</module>
