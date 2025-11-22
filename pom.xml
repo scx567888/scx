@@ -78,12 +78,6 @@
 
             <dependency>
                 <groupId>dev.scx</groupId>
-                <artifactId>scx-data</artifactId>
-                <version>${scx-data.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>dev.scx</groupId>
                 <artifactId>scx-logging</artifactId>
                 <version>${scx-logging.version}</version>
             </dependency>
@@ -114,12 +108,6 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
-                <artifactId>scx-http</artifactId>
-                <version>${scx-http.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
                 <artifactId>scx-http-x</artifactId>
                 <version>${scx-http-x.version}</version>
             </dependency>
@@ -134,24 +122,6 @@
                 <groupId>cool.scx</groupId>
                 <artifactId>scx-bean</artifactId>
                 <version>${scx-bean.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-websocket</artifactId>
-                <version>${scx-websocket.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-http-routing</artifactId>
-                <version>${scx-http-routing.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-websocket-routing</artifactId>
-                <version>${scx-websocket-routing.version}</version>
             </dependency>
 
             <dependency>
@@ -239,7 +209,6 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <scx-data.version>0.0.1</scx-data.version>
         <scx-logging.version>0.0.1</scx-logging.version>
         <scx-common.version>4.5.0-SNAPSHOT</scx-common.version>
         <scx-ansi.version>4.5.0-SNAPSHOT</scx-ansi.version>
@@ -247,10 +216,6 @@
         <scx-object.version>4.5.0-SNAPSHOT</scx-object.version>
         <scx-scheduling.version>0.0.1</scx-scheduling.version>
         <scx-bean.version>4.5.0-SNAPSHOT</scx-bean.version>
-        <scx-http.version>4.5.0-SNAPSHOT</scx-http.version>
-        <scx-websocket.version>4.5.0-SNAPSHOT</scx-websocket.version>
-        <scx-http-routing.version>4.5.0-SNAPSHOT</scx-http-routing.version>
-        <scx-websocket-routing.version>4.5.0-SNAPSHOT</scx-websocket-routing.version>
         <scx-http-x.version>4.5.0-SNAPSHOT</scx-http-x.version>
         <scx-web.version>4.5.0-SNAPSHOT</scx-web.version>
         <scx-websocket-x.version>4.5.0-SNAPSHOT</scx-websocket-x.version>
