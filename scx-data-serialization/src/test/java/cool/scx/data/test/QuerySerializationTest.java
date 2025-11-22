@@ -1,6 +1,6 @@
 package cool.scx.data.test;
 
-import cool.scx.data.query.*;
+import dev.scx.data.query.*;
 import cool.scx.data.serialization.DeserializationException;
 import cool.scx.data.serialization.QueryDeserializer;
 import cool.scx.data.serialization.QuerySerializer;
@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static cool.scx.data.query.QueryBuilder.*;
+import static dev.scx.data.query.QueryBuilder.*;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNull;

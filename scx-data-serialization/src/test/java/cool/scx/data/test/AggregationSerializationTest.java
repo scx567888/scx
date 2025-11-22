@@ -1,6 +1,6 @@
 package cool.scx.data.test;
 
-import cool.scx.data.aggregation.*;
+import dev.scx.data.aggregation.*;
 import cool.scx.data.serialization.AggregationDeserializer;
 import cool.scx.data.serialization.AggregationSerializer;
 import cool.scx.data.serialization.DeserializationException;

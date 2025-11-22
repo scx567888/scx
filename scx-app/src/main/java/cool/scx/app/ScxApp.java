@@ -21,7 +21,7 @@ import cool.scx.http.x.http1.Http1ServerConnectionOptions;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.SchemaHelper;
 import cool.scx.jdbc.sql.SQLRunner;
-import cool.scx.tcp.tls.TLS;
+import dev.scx.tcp.tls.TLS;
 import cool.scx.web.RouteRegistrar;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.ScxWebOptions;

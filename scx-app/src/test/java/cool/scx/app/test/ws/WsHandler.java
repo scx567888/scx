@@ -1,7 +1,7 @@
 package cool.scx.app.test.ws;
 
 import cool.scx.common.constant.DateTimeFormatters;
-import cool.scx.scheduling.ScxScheduling;
+import dev.scx.scheduling.ScxScheduling;
 import cool.scx.web.BaseWebSocketHandler;
 import cool.scx.web.annotation.ScxWebSocketRoute;
 import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;

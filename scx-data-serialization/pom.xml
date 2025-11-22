@@ -21,7 +21,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>dev.scx</groupId>
             <artifactId>scx-data</artifactId>
         </dependency>
 

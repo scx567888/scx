@@ -1,6 +1,6 @@
 package cool.scx.data.serialization;
 
-import cool.scx.data.aggregation.*;
+import dev.scx.data.aggregation.*;
 import cool.scx.object.ScxObject;
 import cool.scx.object.node.ArrayNode;
 import cool.scx.object.node.Node;
