@@ -45,7 +45,6 @@
     <modules>
         <module>scx-app</module>
         <module>scx-config</module>
-        <module>scx-http-routing</module>
         <module>scx-web</module>
         <module>scx-websocket-routing</module>
     </modules>
@@ -147,6 +146,12 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
+                <artifactId>scx-http-routing</artifactId>
+                <version>${scx-http-routing.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cool.scx</groupId>
                 <artifactId>scx-websocket-x</artifactId>
                 <version>${scx-websocket-x.version}</version>
             </dependency>
@@ -234,6 +239,7 @@
         <scx-bean.version>4.5.0-SNAPSHOT</scx-bean.version>
         <scx-http.version>4.5.0-SNAPSHOT</scx-http.version>
         <scx-websocket.version>4.5.0-SNAPSHOT</scx-websocket.version>
+        <scx-http-routing.version>4.5.0-SNAPSHOT</scx-http-routing.version>
         <scx-http-x.version>4.5.0-SNAPSHOT</scx-http-x.version>
         <scx-websocket-x.version>4.5.0-SNAPSHOT</scx-websocket-x.version>
         <scx-jdbc-spy.version>4.5.0-SNAPSHOT</scx-jdbc-spy.version>
