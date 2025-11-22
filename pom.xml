@@ -44,7 +44,6 @@
 
     <modules>
         <module>scx-app</module>
-        <module>scx-config</module>
     </modules>
 
     <build>
@@ -132,6 +131,12 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
+                <artifactId>scx-config</artifactId>
+                <version>${scx-config.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cool.scx</groupId>
                 <artifactId>scx-websocket-x</artifactId>
                 <version>${scx-websocket-x.version}</version>
             </dependency>
@@ -204,6 +209,7 @@
         <scx-bean.version>4.5.0-SNAPSHOT</scx-bean.version>
         <scx-http-x.version>4.5.0-SNAPSHOT</scx-http-x.version>
         <scx-web.version>4.5.0-SNAPSHOT</scx-web.version>
+        <scx-config.version>4.5.0-SNAPSHOT</scx-config.version>
         <scx-websocket-x.version>4.5.0-SNAPSHOT</scx-websocket-x.version>
         <scx-jdbc-spy.version>4.5.0-SNAPSHOT</scx-jdbc-spy.version>
         <scx-jdbc-mysql.version>4.5.0-SNAPSHOT</scx-jdbc-mysql.version>
