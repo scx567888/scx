@@ -21,9 +21,8 @@
     <dependencies>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>cool.scx</groupId>
             <artifactId>scx-web</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -59,12 +58,12 @@
 
         <dependency>
             <groupId>cool.scx</groupId>
-            <artifactId>scx-bean</artifactId>
+            <artifactId>scx-websocket-x</artifactId>
         </dependency>
 
         <dependency>
             <groupId>cool.scx</groupId>
-            <artifactId>scx-websocket-x</artifactId>
+            <artifactId>scx-bean</artifactId>
         </dependency>
 
         <dependency>

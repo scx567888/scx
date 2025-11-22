@@ -45,7 +45,6 @@
     <modules>
         <module>scx-app</module>
         <module>scx-config</module>
-        <module>scx-web</module>
     </modules>
 
     <build>
@@ -79,12 +78,6 @@
 
             <dependency>
                 <groupId>dev.scx</groupId>
-                <artifactId>scx-data</artifactId>
-                <version>${scx-data.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>dev.scx</groupId>
                 <artifactId>scx-logging</artifactId>
                 <version>${scx-logging.version}</version>
             </dependency>
@@ -115,12 +108,6 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
-                <artifactId>scx-http</artifactId>
-                <version>${scx-http.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
                 <artifactId>scx-http-x</artifactId>
                 <version>${scx-http-x.version}</version>
             </dependency>
@@ -139,20 +126,8 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
-                <artifactId>scx-websocket</artifactId>
-                <version>${scx-websocket.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-http-routing</artifactId>
-                <version>${scx-http-routing.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-websocket-routing</artifactId>
-                <version>${scx-websocket-routing.version}</version>
+                <artifactId>scx-web</artifactId>
+                <version>${scx-web.version}</version>
             </dependency>
 
             <dependency>
@@ -184,20 +159,6 @@
                 <groupId>com.zaxxer</groupId>
                 <artifactId>HikariCP</artifactId>
                 <version>${hikaricp.version}</version>
-            </dependency>
-
-            <!-- Freemarker 用于前台页面渲染工作 -->
-            <dependency>
-                <groupId>org.freemarker</groupId>
-                <artifactId>freemarker</artifactId>
-                <version>${freemarker.version}</version>
-            </dependency>
-
-            <!-- 图像处理包工具包 , 用于对图片进行简单的处理,如 切割,缩放 ,转码等 -->
-            <dependency>
-                <groupId>net.coobird</groupId>
-                <artifactId>thumbnailator</artifactId>
-                <version>${thumbnailator.version}</version>
             </dependency>
 
             <!-- 轻量级的加密解密工具包 , 用于简化一些密码校验及敏感数据加密的操作 -->
@@ -234,7 +195,6 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <scx-data.version>0.0.1</scx-data.version>
         <scx-logging.version>0.0.1</scx-logging.version>
         <scx-common.version>4.5.0-SNAPSHOT</scx-common.version>
         <scx-ansi.version>4.5.0-SNAPSHOT</scx-ansi.version>
@@ -242,18 +202,13 @@
         <scx-object.version>4.5.0-SNAPSHOT</scx-object.version>
         <scx-scheduling.version>0.0.1</scx-scheduling.version>
         <scx-bean.version>4.5.0-SNAPSHOT</scx-bean.version>
-        <scx-http.version>4.5.0-SNAPSHOT</scx-http.version>
-        <scx-websocket.version>4.5.0-SNAPSHOT</scx-websocket.version>
-        <scx-http-routing.version>4.5.0-SNAPSHOT</scx-http-routing.version>
-        <scx-websocket-routing.version>4.5.0-SNAPSHOT</scx-websocket-routing.version>
         <scx-http-x.version>4.5.0-SNAPSHOT</scx-http-x.version>
+        <scx-web.version>4.5.0-SNAPSHOT</scx-web.version>
         <scx-websocket-x.version>4.5.0-SNAPSHOT</scx-websocket-x.version>
         <scx-jdbc-spy.version>4.5.0-SNAPSHOT</scx-jdbc-spy.version>
         <scx-jdbc-mysql.version>4.5.0-SNAPSHOT</scx-jdbc-mysql.version>
         <scx-data-jdbc.version>4.5.0-SNAPSHOT</scx-data-jdbc.version>
         <hikaricp.version>7.0.2</hikaricp.version>
-        <freemarker.version>2.3.34</freemarker.version>
-        <thumbnailator.version>0.4.21</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
         <slf4j.version>2.0.17</slf4j.version>
         <log4j2.version>2.25.2</log4j2.version>
