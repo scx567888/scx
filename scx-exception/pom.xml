@@ -9,30 +9,19 @@
         <version>4.5.0</version>
     </parent>
 
-    <artifactId>scx-scheduling</artifactId>
+    <artifactId>scx-exception</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX Scheduling</name>
+    <name>SCX Exception</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX Scheduling
+        SCX Exception
     </description>
 
     <dependencies>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-timer</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+        <!-- ****************** 以下为测试依赖 ****************** -->
 
-        <!-- 解析 cron 表达式 -->
-        <dependency>
-            <groupId>com.cronutils</groupId>
-            <artifactId>cron-utils</artifactId>
-        </dependency>
-
-        <!-- TestNG 测试包 -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
