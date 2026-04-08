@@ -22,7 +22,7 @@ public final class TCPServer implements ScxTCPServer {
 
     private final TCPServerOptions options;
     private final Thread serverThread;
-    private Function1Void<Socket, ?> connectHandler;
+    private Function1Void<ScxTCPSocket, ?> connectHandler;
     private ServerSocket serverSocket;
     private volatile boolean running;
 
@@ -37,7 +37,7 @@ public final class TCPServer implements ScxTCPServer {
     }
 
     @Override
-    public ScxTCPServer onConnect(Function1Void<Socket, ?> connectHandler) {
+    public ScxTCPServer onConnect(Function1Void<ScxTCPSocket, ?> connectHandler) {
         this.connectHandler = connectHandler;
         return this;
     }
@@ -94,8 +94,8 @@ public final class TCPServer implements ScxTCPServer {
     private void listen() {
         while (running) {
             try {
-                var tcpSocket = this.serverSocket.accept();
-                Thread.ofVirtual().name("TCPServer-Handler-" + tcpSocket.getRemoteSocketAddress()).start(() -> handle(tcpSocket));
+                var socket = this.serverSocket.accept();
+                Thread.ofVirtual().name("TCPServer-Handler-" + socket.getRemoteSocketAddress()).start(() -> handle(socket));
             } catch (IOException e) {
                 //第一种情况 服务器主动关闭, 无需处理, 直接跳出循环即可
                 if (!running) {
@@ -103,29 +103,52 @@ public final class TCPServer implements ScxTCPServer {
                 }
                 //第二种情况 accept 出现异常
                 running = false;
+                LOGGER.log(ERROR, "服务器 接受连接 时发生错误 !!!", e);
                 try {
                     serverSocket.close();
                 } catch (IOException ex) {
-                    e.addSuppressed(ex);
+                    LOGGER.log(TRACE, "关闭 ServerSocket 时发生错误 !!!", ex);
                 }
-                LOGGER.log(ERROR, "服务器 接受连接 时发生错误 !!!", e);
                 break;
             }
         }
     }
 
-    private void handle(Socket tcpSocket) {
-        // 这里 我们不在 connectHandler 结束后去关闭 tcpSocket, 因为 connectHandler 中可能正在异步使用
+    private void handle(Socket socket) {
+
+        ScxTCPSocket tcpSocket;
+
+        try {
+            tcpSocket = new TCPSocket(socket);
+        } catch (IOException e) {
+            LOGGER.log(ERROR, "创建 TCPSocket 时发生错误 !!!", e);
+            tryCloseSocket(socket);
+            return;
+        }
+
         try {
             // 调用用户处理器
             connectHandler.apply(tcpSocket);
         } catch (Throwable e) {
-            try {
-                tcpSocket.close();
-            } catch (IOException ex) {
-                e.addSuppressed(ex);
-            }
             LOGGER.log(ERROR, "调用 连接处理器 时发生错误 !!!", e);
+            tryCloseSocket(tcpSocket);
+        }
+
+    }
+
+    private void tryCloseSocket(ScxTCPSocket tcpSocket) {
+        try {
+            tcpSocket.close();
+        } catch (IOException ex) {
+            LOGGER.log(TRACE, "关闭 TCPSocket 时发生错误 !!!", ex);
+        }
+    }
+
+    private void tryCloseSocket(Socket tcpSocket) {
+        try {
+            tcpSocket.close();
+        } catch (IOException ex) {
+            LOGGER.log(TRACE, "关闭 Socket 时发生错误 !!!", ex);
         }
     }
 

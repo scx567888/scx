@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>scx-data</artifactId>
-    <version>4.3.0</version>
     <packaging>jar</packaging>
 
     <name>SCX Data</name>
@@ -22,9 +21,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-function</artifactId>
-            <version>3.0.0</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- ****************** 以下为测试依赖 ****************** -->

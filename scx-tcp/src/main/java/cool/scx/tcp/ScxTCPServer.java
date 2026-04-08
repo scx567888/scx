@@ -4,7 +4,6 @@ import cool.scx.function.Function1Void;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.SocketAddress;
 
 /// ScxTCPServer
@@ -35,7 +34,7 @@ import java.net.SocketAddress;
 /// @version 0.0.1
 public interface ScxTCPServer {
 
-    ScxTCPServer onConnect(Function1Void<Socket, ?> connectHandler);
+    ScxTCPServer onConnect(Function1Void<ScxTCPSocket, ?> connectHandler);
 
     void start(SocketAddress localAddress) throws IOException;
 

@@ -21,15 +21,15 @@
     <dependencies>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-data</artifactId>
-            <version>4.3.0</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-collections</artifactId>
-            <version>4.3.0</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -39,8 +39,9 @@
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-reflect</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- ****************** 以下为测试依赖 ****************** -->
@@ -60,8 +61,9 @@
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-logging</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
 

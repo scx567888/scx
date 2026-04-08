@@ -11,10 +11,10 @@ import java.net.SocketAddress;
 public final class TCPClient implements ScxTCPClient {
 
     @Override
-    public Socket connect(SocketAddress endpoint, int timeout) throws IOException {
-        var tcpSocket = new Socket();
-        tcpSocket.connect(endpoint, timeout);
-        return tcpSocket;
+    public ScxTCPSocket connect(SocketAddress endpoint, int timeout) throws IOException {
+        var socket = new Socket();
+        socket.connect(endpoint, timeout);
+        return new TCPSocket(socket);
     }
 
 }

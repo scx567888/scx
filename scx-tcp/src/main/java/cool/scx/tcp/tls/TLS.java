@@ -2,10 +2,7 @@ package cool.scx.tcp.tls;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
-import java.io.IOException;
-import java.net.Socket;
 import java.nio.file.Path;
 
 import static cool.scx.tcp.tls.TLSHelper.*;
@@ -37,13 +34,5 @@ public interface TLS {
     SSLServerSocketFactory serverSocketFactory();
 
     SSLSocketFactory socketFactory();
-
-    default SSLSocket upgradeToTLS(Socket tcpSocket) throws IOException {
-        return upgradeToTLS(tcpSocket, null);
-    }
-
-    default SSLSocket upgradeToTLS(Socket tcpSocket, String host) throws IOException {
-        return (SSLSocket) socketFactory().createSocket(tcpSocket, host, -1, true);
-    }
 
 }
