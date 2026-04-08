@@ -68,6 +68,7 @@
         <module>scx-websocket</module>
         <module>scx-websocket-routing</module>
         <module>scx-websocket-x</module>
+        <module>scx-logging</module>
     </modules>
 
     <build>

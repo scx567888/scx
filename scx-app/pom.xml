@@ -39,8 +39,9 @@
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-logging</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
