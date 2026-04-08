@@ -9,38 +9,20 @@
         <version>4.5.0</version>
     </parent>
 
-    <artifactId>scx-http</artifactId>
+    <artifactId>scx-ffm-platform</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX HTTP</name>
+    <name>SCX FFM Platform</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX HTTP
+        SCX FFM Platform
     </description>
 
     <dependencies>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-collections</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-io</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-object</artifactId>
+            <artifactId>scx-ffm</artifactId>
             <version>${project.version}</version>
         </dependency>
 

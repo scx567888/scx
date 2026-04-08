@@ -72,6 +72,8 @@
         <module>scx-object</module>
         <module>scx-exception</module>
         <module>scx-ansi</module>
+        <module>scx-ffm</module>
+        <module>scx-ffm-platform</module>
     </modules>
 
     <build>
