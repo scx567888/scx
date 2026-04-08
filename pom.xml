@@ -194,15 +194,15 @@
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <hikaricp.version>7.0.2</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
-        <thumbnailator.version>0.4.20</thumbnailator.version>
+        <thumbnailator.version>0.4.21</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
         <cron-utils.version>9.2.1</cron-utils.version>
-        <jackson.version>2.20.0</jackson.version>
+        <jackson.version>2.21.2</jackson.version>
         <woodstox.version>7.1.1</woodstox.version>
-        <mysql-connector-j.version>9.2.0</mysql-connector-j.version>
+        <mysql-connector-j.version>9.6.0</mysql-connector-j.version>
         <slf4j.version>2.0.17</slf4j.version>
-        <log4j2.version>2.25.2</log4j2.version>
-        <testng.version>7.11.0</testng.version>
+        <log4j2.version>2.25.4</log4j2.version>
+        <testng.version>7.12.0</testng.version>
 
     </properties>
 
