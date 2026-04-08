@@ -59,6 +59,7 @@
         <module>scx-jdbc-spy</module>
         <module>scx-jdbc-mysql</module>
         <module>scx-scheduling</module>
+        <module>scx-tcp</module>
         <module>scx-timer</module>
         <module>scx-web</module>
         <module>scx-websocket</module>
@@ -105,12 +106,6 @@
                 <groupId>cool.scx</groupId>
                 <artifactId>scx-logging</artifactId>
                 <version>${scx-logging.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-tcp</artifactId>
-                <version>${scx-tcp.version}</version>
             </dependency>
 
             <dependency>
@@ -208,7 +203,6 @@
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <scx-bytes.version>4.1.0</scx-bytes.version>
         <scx-logging.version>4.1.0</scx-logging.version>
-        <scx-tcp.version>4.1.0</scx-tcp.version>
         <scx-common.version>4.1.0</scx-common.version>
         <scx-ansi.version>4.2.0</scx-ansi.version>
         <scx-reflect.version>4.2.0</scx-reflect.version>

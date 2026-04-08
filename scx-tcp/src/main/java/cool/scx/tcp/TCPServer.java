@@ -1,0 +1,132 @@
+package cool.scx.tcp;
+
+import cool.scx.function.Function1Void;
+
+import java.io.IOException;
+import java.lang.System.Logger;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketAddress;
+
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.TRACE;
+
+/// TCPServer
+///
+/// @author scx567888
+/// @version 0.0.1
+public final class TCPServer implements ScxTCPServer {
+
+    private static final Logger LOGGER = System.getLogger(TCPServer.class.getName());
+
+    private final TCPServerOptions options;
+    private final Thread serverThread;
+    private Function1Void<Socket, ?> connectHandler;
+    private ServerSocket serverSocket;
+    private volatile boolean running;
+
+    public TCPServer() {
+        this(new TCPServerOptions());
+    }
+
+    public TCPServer(TCPServerOptions options) {
+        this.options = options;
+        this.serverThread = Thread.ofPlatform().name("TCPServer-Listener").unstarted(this::listen);
+        this.running = false;
+    }
+
+    @Override
+    public ScxTCPServer onConnect(Function1Void<Socket, ?> connectHandler) {
+        this.connectHandler = connectHandler;
+        return this;
+    }
+
+    @Override
+    public void start(SocketAddress localAddress) throws IOException {
+        if (running) {
+            throw new IllegalStateException("服务器已在运行 !!!");
+        }
+
+        if (connectHandler == null) {
+            throw new IllegalStateException("未设置 连接处理器 !!!");
+        }
+
+        this.serverSocket = new ServerSocket();
+        this.serverSocket.bind(localAddress, options.backlog());
+
+        running = true;
+
+        serverThread.start();
+    }
+
+    @Override
+    public void stop() {
+        if (!running) {
+            return;
+        }
+
+        running = false;
+
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            LOGGER.log(TRACE, "关闭 ServerSocket 时发生错误 !!!", e);
+        }
+
+        try {
+            serverThread.join();
+        } catch (InterruptedException _) {
+            // 这里理论上永远都不会发生
+        }
+
+    }
+
+    @Override
+    public InetSocketAddress localAddress() {
+        return (InetSocketAddress) serverSocket.getLocalSocketAddress();
+    }
+
+    public TCPServerOptions options() {
+        return options;
+    }
+
+    private void listen() {
+        while (running) {
+            try {
+                var tcpSocket = this.serverSocket.accept();
+                Thread.ofVirtual().name("TCPServer-Handler-" + tcpSocket.getRemoteSocketAddress()).start(() -> handle(tcpSocket));
+            } catch (IOException e) {
+                //第一种情况 服务器主动关闭, 无需处理, 直接跳出循环即可
+                if (!running) {
+                    break;
+                }
+                //第二种情况 accept 出现异常
+                running = false;
+                try {
+                    serverSocket.close();
+                } catch (IOException ex) {
+                    e.addSuppressed(ex);
+                }
+                LOGGER.log(ERROR, "服务器 接受连接 时发生错误 !!!", e);
+                break;
+            }
+        }
+    }
+
+    private void handle(Socket tcpSocket) {
+        // 这里 我们不在 connectHandler 结束后去关闭 tcpSocket, 因为 connectHandler 中可能正在异步使用
+        try {
+            // 调用用户处理器
+            connectHandler.apply(tcpSocket);
+        } catch (Throwable e) {
+            try {
+                tcpSocket.close();
+            } catch (IOException ex) {
+                e.addSuppressed(ex);
+            }
+            LOGGER.log(ERROR, "调用 连接处理器 时发生错误 !!!", e);
+        }
+    }
+
+}
