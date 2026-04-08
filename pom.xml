@@ -71,6 +71,7 @@
         <module>scx-logging</module>
         <module>scx-object</module>
         <module>scx-exception</module>
+        <module>scx-ansi</module>
     </modules>
 
     <build>

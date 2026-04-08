@@ -9,45 +9,21 @@
         <version>4.5.0</version>
     </parent>
 
-    <artifactId>scx-config</artifactId>
+    <artifactId>scx-ansi</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX Config</name>
+    <name>SCX ANSI</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX Config
+        SCX ANSI
     </description>
 
     <dependencies>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-ansi</artifactId>
+            <artifactId>scx-ffm-platform</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-object</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-io</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- 轻量级的加密解密工具包 , 用于简化一些密码校验及敏感数据加密的操作 -->
-        <dependency>
-            <groupId>org.jasypt</groupId>
-            <artifactId>jasypt</artifactId>
         </dependency>
 
         <!-- ****************** 以下为测试依赖 ****************** -->
