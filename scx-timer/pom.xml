@@ -9,30 +9,32 @@
         <version>3.8.10</version>
     </parent>
 
-    <artifactId>scx-scheduling</artifactId>
+    <artifactId>scx-timer</artifactId>
+    <version>4.0.0</version>
     <packaging>jar</packaging>
 
-    <name>SCX Scheduling</name>
+    <name>SCX Timer</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX Scheduling
+        SCX Timer
     </description>
 
     <dependencies>
 
         <dependency>
             <groupId>cool.scx</groupId>
-            <artifactId>scx-timer</artifactId>
-            <version>4.0.0</version>
+            <artifactId>scx-function</artifactId>
+            <version>3.0.0</version>
         </dependency>
 
-        <!-- 解析 cron 表达式 -->
         <dependency>
-            <groupId>com.cronutils</groupId>
-            <artifactId>cron-utils</artifactId>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-exception</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
-        <!-- TestNG 测试包 -->
+        <!-- ****************** 以下为测试依赖 ****************** -->
+
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
