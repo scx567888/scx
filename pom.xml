@@ -60,6 +60,7 @@
         <module>scx-jdbc</module>
         <module>scx-jdbc-spy</module>
         <module>scx-jdbc-mysql</module>
+        <module>scx-reflect</module>
         <module>scx-scheduling</module>
         <module>scx-tcp</module>
         <module>scx-timer</module>
