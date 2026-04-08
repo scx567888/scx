@@ -140,6 +140,24 @@
                 <version>${cron-utils.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-xml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.woodstox</groupId>
+                <artifactId>woodstox-core</artifactId>
+                <version>${woodstox.version}</version>
+            </dependency>
+
             <!-- mysql 驱动 -->
             <dependency>
                 <groupId>com.mysql</groupId>
@@ -179,6 +197,8 @@
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
         <cron-utils.version>9.2.1</cron-utils.version>
+        <jackson.version>2.20.0</jackson.version>
+        <woodstox.version>7.1.1</woodstox.version>
         <mysql-connector-j.version>9.2.0</mysql-connector-j.version>
         <slf4j.version>2.0.17</slf4j.version>
         <log4j2.version>2.25.2</log4j2.version>
