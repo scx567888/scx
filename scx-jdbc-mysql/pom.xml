@@ -34,8 +34,9 @@
         <!-- ****************** 以下为测试依赖 ****************** -->
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-logging</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
 
