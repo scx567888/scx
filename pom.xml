@@ -95,12 +95,6 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
-                <artifactId>scx-data</artifactId>
-                <version>${scx-data.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
                 <artifactId>scx-collections</artifactId>
                 <version>${scx-collections.version}</version>
             </dependency>
@@ -222,7 +216,6 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <scx-data.version>4.1.0</scx-data.version>
         <scx-collections.version>4.1.0</scx-collections.version>
         <scx-bytes.version>4.1.0</scx-bytes.version>
         <scx-logging.version>4.1.0</scx-logging.version>

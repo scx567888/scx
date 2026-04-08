@@ -23,6 +23,7 @@
         <dependency>
             <groupId>cool.scx</groupId>
             <artifactId>scx-data</artifactId>
+            <version>4.3.0</version>
         </dependency>
 
         <dependency>
