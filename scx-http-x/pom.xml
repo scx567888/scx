@@ -33,14 +33,15 @@
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-reflect</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-tcp</artifactId>
-            <version>4.4.0</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- ****************** 以下为测试依赖 ****************** -->
