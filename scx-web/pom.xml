@@ -45,8 +45,9 @@
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-reflect</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
