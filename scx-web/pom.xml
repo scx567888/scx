@@ -51,8 +51,9 @@
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

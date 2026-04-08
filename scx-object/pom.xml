@@ -9,13 +9,13 @@
         <version>4.5.0</version>
     </parent>
 
-    <artifactId>scx-bean</artifactId>
+    <artifactId>scx-object</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX Bean</name>
+    <name>SCX Object</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX Bean
+        SCX Object
     </description>
 
     <dependencies>
@@ -27,15 +27,23 @@
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-common</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-object</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
+            <version>${woodstox.version}</version>
+        </dependency>
+
+        <!--  Jackson XML 测试包  -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>${jackson.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- ****************** 以下为测试依赖 ****************** -->
@@ -47,5 +55,11 @@
         </dependency>
 
     </dependencies>
+
+    <properties>
+        <!--  *********************** 以下为依赖包版本 ***********************  -->
+        <jackson.version>2.20.0</jackson.version>
+        <woodstox.version>7.1.1</woodstox.version>
+    </properties>
 
 </project>
