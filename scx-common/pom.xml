@@ -9,30 +9,25 @@
         <version>4.5.0</version>
     </parent>
 
-    <artifactId>scx-io</artifactId>
+    <artifactId>scx-common</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX IO</name>
+    <name>SCX Common</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX IO
+        SCX Common
     </description>
 
     <dependencies>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-common</artifactId>
+            <artifactId>scx-function</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-bytes</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+        <!-- ****************** 以下为测试依赖 ****************** -->
 
-        <!-- TestNG 测试包 -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
