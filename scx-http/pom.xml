@@ -6,7 +6,7 @@
     <parent>
         <groupId>cool.scx</groupId>
         <artifactId>scx</artifactId>
-        <version>3.8.10</version>
+        <version>4.5.0</version>
     </parent>
 
     <artifactId>scx-http</artifactId>
@@ -21,13 +21,15 @@
     <dependencies>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-collections</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -37,8 +39,9 @@
         </dependency>
 
         <dependency>
-            <groupId>cool.scx</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-object</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- ****************** 以下为测试依赖 ****************** -->
