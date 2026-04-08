@@ -24,7 +24,7 @@
         <dependency>
             <groupId>cool.scx</groupId>
             <artifactId>scx-function</artifactId>
-            <version>${scx-function.version}</version>
+            <version>3.0.0</version>
         </dependency>
 
         <!-- ****************** 以下为测试依赖 ****************** -->
@@ -36,9 +36,5 @@
         </dependency>
 
     </dependencies>
-
-    <properties>
-        <scx-function.version>3.0.0</scx-function.version>
-    </properties>
 
 </project>

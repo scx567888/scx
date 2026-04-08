@@ -45,6 +45,7 @@
         <module>scx-app</module>
         <module>scx-bean</module>
         <module>scx-codec</module>
+        <module>scx-collections</module>
         <module>scx-config</module>
         <module>scx-data</module>
         <module>scx-data-serialization</module>
@@ -92,12 +93,6 @@
 
     <dependencyManagement>
         <dependencies>
-
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-collections</artifactId>
-                <version>${scx-collections.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>cool.scx</groupId>

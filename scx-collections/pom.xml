@@ -9,29 +9,26 @@
         <version>3.8.10</version>
     </parent>
 
-    <artifactId>scx-codec</artifactId>
+    <artifactId>scx-collections</artifactId>
+    <version>4.3.0</version>
     <packaging>jar</packaging>
 
-    <name>SCX Codec</name>
+    <name>SCX Collections</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX Codec
+        SCX Collections
     </description>
 
     <dependencies>
 
         <dependency>
             <groupId>cool.scx</groupId>
-            <artifactId>scx-common</artifactId>
+            <artifactId>scx-function</artifactId>
+            <version>3.0.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>cool.scx</groupId>
-            <artifactId>scx-collections</artifactId>
-            <version>4.3.0</version>
-        </dependency>
+        <!-- ****************** 以下为测试依赖 ****************** -->
 
-        <!-- TestNG 测试包 -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

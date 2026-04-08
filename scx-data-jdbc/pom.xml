@@ -29,6 +29,7 @@
         <dependency>
             <groupId>cool.scx</groupId>
             <artifactId>scx-collections</artifactId>
+            <version>4.3.0</version>
         </dependency>
 
         <dependency>
