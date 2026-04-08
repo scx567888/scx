@@ -46,6 +46,7 @@
         <module>scx-bean</module>
         <module>scx-codec</module>
         <module>scx-config</module>
+        <module>scx-data</module>
         <module>scx-data-serialization</module>
         <module>scx-function</module>
         <module>scx-data-jdbc</module>
